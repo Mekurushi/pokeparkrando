@@ -25,11 +25,6 @@ jobs:
           POETRY_VIRTUALENVS_CREATE: false
       - name: Build distribution
         run: python3 -mPyInstaller pokeparkrando.spec
-      - uses: SebRollen/toml-action@v1.2.0
-        id: read_toml
-        with:
-          file: "pyproject.toml"
-          field: "tool.poetry.version"
       - uses: actions/upload-artifact@v4
         with:
           name: PokéPark Randomizer Patcher
