@@ -61,6 +61,8 @@ class BasePatcher(ABC):
                         if len(current_bytes) != operation.size:
                             raise Exception(f"Could not read {operation.size} bytes at offset 0x{operation.offset:08x}")
 
+                        if operation.byteorder not in ['little', 'big']:
+                            operation.byteorder = 'big'
                         current_value = int.from_bytes(current_bytes, byteorder=operation.byteorder)
                         if current_value != operation.original_value:
                             print(
@@ -74,6 +76,8 @@ class BasePatcher(ABC):
                     # Verify patch was applied
                     f.seek(operation.offset)
                     verify_bytes = f.read(operation.size)
+                    if operation.byteorder not in ['little', 'big']:
+                        operation.byteorder = 'big'
                     verify_value = int.from_bytes(verify_bytes, byteorder=operation.byteorder)
 
                     if verify_value != operation.new_value:
@@ -244,7 +248,8 @@ class MainDolPatcher(BasePatcher):
                         current_bytes = f.read(operation.size)
                         if len(current_bytes) != operation.size:
                             raise Exception(f"Could not read {operation.size} bytes at offset 0x{operation.offset:08x}")
-
+                        if operation.byteorder not in ['little', 'big']:
+                            operation.byteorder = 'big'
                         current_value = int.from_bytes(current_bytes, byteorder=operation.byteorder)
                         if current_value != operation.original_value:
                             print(
@@ -258,6 +263,8 @@ class MainDolPatcher(BasePatcher):
                     # Verify patch was applied
                     f.seek(operation.offset)
                     verify_bytes = f.read(operation.size)
+                    if operation.byteorder not in ['little', 'big']:
+                        operation.byteorder = 'big'
                     verify_value = int.from_bytes(verify_bytes, byteorder=operation.byteorder)
 
                     if verify_value != operation.new_value:
