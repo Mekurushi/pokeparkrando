@@ -1,4 +1,5 @@
 import shutil
+import traceback
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import List, Optional
@@ -54,12 +55,6 @@ class BasePatcher(ABC):
 
             with open(file_path, 'r+b') as f:
                 for operation in self.config.patch_operations:
-                    print(f"Debug - Operation type: {type(operation)}")
-                    print(f"Debug - Operation attributes: {dir(operation)}")
-                    print(f"Debug - Has byteorder: {hasattr(operation, 'byteorder')}")
-                    print(f"Debug - Byteorder value: {getattr(operation, 'byteorder', 'MISSING')}")
-                    print(f"Debug - Byteorder type: {type(getattr(operation, 'byteorder', None))}")
-
                     f.seek(operation.offset)
 
                     if operation.original_value is not None:
@@ -67,8 +62,6 @@ class BasePatcher(ABC):
                         if len(current_bytes) != operation.size:
                             raise Exception(f"Could not read {operation.size} bytes at offset 0x{operation.offset:08x}")
 
-                        if operation.byteorder not in ['little', 'big']:
-                            operation.byteorder = 'big'
                         current_value = int.from_bytes(current_bytes, byteorder=operation.byteorder)
                         if current_value != operation.original_value:
                             print(
@@ -82,8 +75,6 @@ class BasePatcher(ABC):
                     # Verify patch was applied
                     f.seek(operation.offset)
                     verify_bytes = f.read(operation.size)
-                    if operation.byteorder not in ['little', 'big']:
-                        operation.byteorder = 'big'
                     verify_value = int.from_bytes(verify_bytes, byteorder=operation.byteorder)
 
                     if verify_value != operation.new_value:
@@ -97,6 +88,9 @@ class BasePatcher(ABC):
 
         except Exception as e:
             print(f"Patch operation failed for {self.config.file_id}: {e}")
+            print(f"Error in patcher: {self.__class__.__name__}")
+            print("Full stack trace:")
+            print(traceback.format_exc())
             return False
 
 
@@ -115,7 +109,7 @@ class NestedDacU8Patcher(BasePatcher):
         u8_main_dir = temp_dir / "u8_main"
         u8_nested_dir = temp_dir / "u8_nested"
         temp_dir.mkdir(parents=True, exist_ok=True)
-
+        print(self.config.patch_operations)
         try:
             # Step 1: Decompress DAC file
             progress_callback(f"Decompressing {dac_file_path.name}", 10)
@@ -194,11 +188,15 @@ class NestedDacU8Patcher(BasePatcher):
 
         except Exception as e:
             print(f"Nested DAC/U8 processing failed for {self.config.file_id}: {e}")
+            print(f"Error in patcher: {self.__class__.__name__}")
+            print("Full stack trace:")
+            print(traceback.format_exc())
             return False
         finally:
             # Cleanup temp directory
             if temp_dir.exists():
                 shutil.rmtree(temp_dir, ignore_errors=True)
+
 
 class MainDolPatcher(BasePatcher):
 
@@ -224,7 +222,7 @@ class MainDolPatcher(BasePatcher):
             return True
 
         except Exception as e:
-            print(f"Nested DAC/U8 processing failed for {self.config.file_id}: {e}")
+            print(f"main dol processing failed for {self.config.file_id}: {e}")
             return False
         finally:
             # Cleanup temp directory
@@ -254,8 +252,7 @@ class MainDolPatcher(BasePatcher):
                         current_bytes = f.read(operation.size)
                         if len(current_bytes) != operation.size:
                             raise Exception(f"Could not read {operation.size} bytes at offset 0x{operation.offset:08x}")
-                        if operation.byteorder not in ['little', 'big']:
-                            operation.byteorder = 'big'
+
                         current_value = int.from_bytes(current_bytes, byteorder=operation.byteorder)
                         if current_value != operation.original_value:
                             print(
@@ -269,8 +266,6 @@ class MainDolPatcher(BasePatcher):
                     # Verify patch was applied
                     f.seek(operation.offset)
                     verify_bytes = f.read(operation.size)
-                    if operation.byteorder not in ['little', 'big']:
-                        operation.byteorder = 'big'
                     verify_value = int.from_bytes(verify_bytes, byteorder=operation.byteorder)
 
                     if verify_value != operation.new_value:
@@ -286,12 +281,13 @@ class MainDolPatcher(BasePatcher):
             print(f"Patch operation failed for {self.config.file_id}: {e}")
             return False
 
+
 class PatcherFactory:
     @staticmethod
     def create_patcher(config: FilePatchConfig, work_dir: Path) -> BasePatcher:
         if config.processing_type == FileProcessingType.NESTED_DAC_U8:
             return NestedDacU8Patcher(config, work_dir)
         elif config.processing_type == FileProcessingType.MAIN_DOL:
-            return MainDolPatcher(config,work_dir)
+            return MainDolPatcher(config, work_dir)
         else:
             raise ValueError(f"Unknown processing type: {config.processing_type}")
