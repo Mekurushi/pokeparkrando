@@ -54,6 +54,12 @@ class BasePatcher(ABC):
 
             with open(file_path, 'r+b') as f:
                 for operation in self.config.patch_operations:
+                    print(f"Debug - Operation type: {type(operation)}")
+                    print(f"Debug - Operation attributes: {dir(operation)}")
+                    print(f"Debug - Has byteorder: {hasattr(operation, 'byteorder')}")
+                    print(f"Debug - Byteorder value: {getattr(operation, 'byteorder', 'MISSING')}")
+                    print(f"Debug - Byteorder type: {type(getattr(operation, 'byteorder', None))}")
+
                     f.seek(operation.offset)
 
                     if operation.original_value is not None:
