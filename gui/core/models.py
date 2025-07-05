@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import List, Optional, Callable, Protocol
+from typing import List, Optional, Callable, Protocol, Literal
 
 
 class FileProcessingType(Enum):
@@ -16,7 +16,7 @@ class PatchOperation:
     original_value: Optional[int]  # For verification, None to skip check
     new_value: int
     size: int = 2  # bytes
-    byteorder: str = "big"
+    byteorder: Literal["little", "big"] = "big"
     description: str = ""
 
 
