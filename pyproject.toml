@@ -7,7 +7,7 @@ authors = [
 ]
 readme = "README.md"
 [tool.poetry.dependencies]
-python = ">=3.10,<3.13"
+python = ">=3.11,<3.13"
 nlzss11 = "^1.6"
 libwiipy = "^0.6.0"
 disc-riider-py = "==0.3.1"

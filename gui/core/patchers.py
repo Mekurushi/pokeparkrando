@@ -109,7 +109,6 @@ class NestedDacU8Patcher(BasePatcher):
         u8_main_dir = temp_dir / "u8_main"
         u8_nested_dir = temp_dir / "u8_nested"
         temp_dir.mkdir(parents=True, exist_ok=True)
-        print(self.config.patch_operations)
         try:
             # Step 1: Decompress DAC file
             progress_callback(f"Decompressing {dac_file_path.name}", 10)
