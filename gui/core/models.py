@@ -8,6 +8,7 @@ class FileProcessingType(Enum):
     """Defines different types of file processing needed"""
     NESTED_DAC_U8 = "nested_dac_u8"
     MAIN_DOL = "main_dol"
+    DAC_U8 = "dac_u8"
 
 
 @dataclass

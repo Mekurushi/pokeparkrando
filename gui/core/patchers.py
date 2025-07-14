@@ -197,6 +197,85 @@ class NestedDacU8Patcher(BasePatcher):
                 shutil.rmtree(temp_dir, ignore_errors=True)
 
 
+class DacU8Patcher(BasePatcher):
+
+    def process_file(self, extract_dir: Path, progress_callback: ProgressCallback) -> bool:
+        progress_callback(f"Processing DAC/U8: {self.config.description}", 0)
+
+        dac_file_path = self._find_file(extract_dir, self.config.primary_file_path, self.config.alternative_paths)
+
+        if not dac_file_path:
+            print(f"DAC file not found for {self.config.file_id}: {self.config.primary_file_path}")
+            return False
+
+        temp_dir = self.work_dir / f"temp_{self.config.file_id}"
+        u8_main_dir = temp_dir / "u8_main"
+        temp_dir.mkdir(parents=True, exist_ok=True)
+        try:
+            # Step 1: Decompress DAC file
+            progress_callback(f"Decompressing {dac_file_path.name}", 10)
+
+            with open(dac_file_path, 'rb') as f:
+                dac_data = f.read()
+
+            decompressed_data = nlzss11.decompress(dac_data)
+            decompressed_bin = temp_dir / "decompressed.bin"
+
+            with open(decompressed_bin, 'wb') as f:
+                f.write(decompressed_data)
+
+            # Step 2: Extract main U8 archive
+            progress_callback(f"Extracting main U8 archive", 25)
+
+            if not decompressed_data.startswith(b'U\xaa8-'):
+                raise Exception("Decompressed data is not a valid U8 archive")
+
+            libWiiPy.archive.extract_u8(decompressed_data, str(u8_main_dir))
+
+
+            # Step 3: Apply patches to target file
+            progress_callback(f"Applying patches", 55)
+
+            target_file_path = u8_main_dir / self.config.target_file_path
+
+            if not target_file_path.exists():
+                raise Exception(f"Target file not found: {self.config.target_file_path}")
+
+            if not self._apply_patch_operations(target_file_path):
+                return False
+
+
+            # Step 4: Repack main archive
+            progress_callback(f"Repacking main archive", 85)
+
+            main_packed_data = libWiiPy.archive.pack_u8(str(u8_main_dir))
+
+            # Step 5: Recompress and write back to DAC
+            progress_callback(f"Recompressing DAC file", 95)
+
+            # Create backup of original DAC
+            self._create_backup(dac_file_path)
+
+            compressed_data = nlzss11.compress(main_packed_data)
+
+            with open(dac_file_path, 'wb') as f:
+                f.write(compressed_data)
+
+            progress_callback(f"Completed {self.config.description}", 100)
+            return True
+
+        except Exception as e:
+            print(f"Nested DAC/U8 processing failed for {self.config.file_id}: {e}")
+            print(f"Error in patcher: {self.__class__.__name__}")
+            print("Full stack trace:")
+            print(traceback.format_exc())
+            return False
+        finally:
+            # Cleanup temp directory
+            if temp_dir.exists():
+                shutil.rmtree(temp_dir, ignore_errors=True)
+
+
 class MainDolPatcher(BasePatcher):
 
     def process_file(self, extract_dir: Path, progress_callback: ProgressCallback) -> bool:
@@ -288,5 +367,7 @@ class PatcherFactory:
             return NestedDacU8Patcher(config, work_dir)
         elif config.processing_type == FileProcessingType.MAIN_DOL:
             return MainDolPatcher(config, work_dir)
+        elif config.processing_type == FileProcessingType.DAC_U8:
+            return DacU8Patcher(config, work_dir)
         else:
             raise ValueError(f"Unknown processing type: {config.processing_type}")
