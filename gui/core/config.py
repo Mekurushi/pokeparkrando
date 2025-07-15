@@ -828,37 +828,11 @@ def get_default_patch_configs() -> List[FilePatchConfig]:
                 byteorder="big",
                 description="Deactivate PowerUp levelup"
             ),
-            PatchOperation(
-                offset=0x80123da0,
-                original_value=0x38a00063,
-                new_value=0x38a00002,
-                size=4,
-                byteorder="big",
-                description="spawn in treehouse"
-            ),
         ]
     )
 
     configs.append(main_dol)
-
-    # start_menu_script = FilePatchConfig(
-    #     file_id="start_menu_script",
-    #     description="Start Menu Script",
-    #     processing_type=FileProcessingType.DAC_U8,
-    #     primary_file_path="DATA/files/Archive/StartMenuDat.dac",
-    #     target_file_path="Script/mnStartMenu.fsb",
-    #     patch_operations=[
-    #         PatchOperation(
-    #             offset=0x0001db0,
-    #             original_value=0xfffa000b,
-    #             new_value=0x02010010,
-    #             size=4,
-    #             byteorder="big",
-    #             description="test skip"
-    #         ),
-    #     ]
-    # )
-    # configs.append(start_menu_script)
+    configs.append(main_dol)
 
     lobby1_script = FilePatchConfig(
         file_id="lobby1_script",
