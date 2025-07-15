@@ -832,7 +832,6 @@ def get_default_patch_configs() -> List[FilePatchConfig]:
     )
 
     configs.append(main_dol)
-    configs.append(main_dol)
 
     lobby1_script = FilePatchConfig(
         file_id="lobby1_script",
