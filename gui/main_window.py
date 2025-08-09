@@ -15,9 +15,10 @@ from PySide6.QtWidgets import (
 from pathlib import Path
 import os
 
-from gui.core.config import get_default_patch_configs
-from gui.core.models import PatchRequest, PatchResult
+
 from gui.worker_thread import PatcherWorkerThread
+from patcher.config.config import get_default_patch_configs
+from patcher.models.models import PatchRequest, PatchResult
 
 
 class RandoGUI(QMainWindow):
@@ -28,7 +29,8 @@ class RandoGUI(QMainWindow):
         self.setFixedSize(700, 450)
         self.patcher_thread = None
         self.iso_path = ""
-        self.output_path = str(Path.home() / "Documents" / "PokeParkRandomizer" / "R8AJ01.iso")
+        self.appkprk_path = ""
+        self.output_path = str(Path.cwd())
         self.patch_configs = get_default_patch_configs()
         self.setup_ui()
 
@@ -79,6 +81,26 @@ class RandoGUI(QMainWindow):
         iso_layout.addWidget(self.iso_line_edit)
         iso_layout.addWidget(iso_browse_btn)
         main_layout.addWidget(iso_group)
+
+        # .appokprk Selection
+        appokprk_group = QWidget()
+        appokprk_layout = QHBoxLayout(appokprk_group)
+        appokprk_label = QLabel("Patch File:")
+        appokprk_label.setMinimumWidth(80)
+        appokprk_label.setStyleSheet("font-weight: bold;")
+
+        self.appkprk_line_edit = QLineEdit()
+        self.appkprk_line_edit.setPlaceholderText("Select .appokprk patch file...")
+        self.appkprk_line_edit.setStyleSheet(self.iso_line_edit.styleSheet())
+
+        appokprk_browse_btn = QPushButton("Browse")
+        appokprk_browse_btn.setStyleSheet(self._get_button_style("#3498db"))
+        appokprk_browse_btn.clicked.connect(self.browse_appokprk)
+
+        appokprk_layout.addWidget(appokprk_label)
+        appokprk_layout.addWidget(self.appkprk_line_edit)
+        appokprk_layout.addWidget(appokprk_browse_btn)
+        main_layout.addWidget(appokprk_group)
 
         # Output File
         output_group = QWidget()
@@ -217,27 +239,34 @@ class RandoGUI(QMainWindow):
             self.iso_line_edit.setText(file_path)
 
     def browse_output(self):
-        if self.iso_path:
-            input_name = Path(self.iso_path).stem
-            default_name = f"{input_name}_randomized.iso"
-        else:
-            default_name = "R8AJ01_randomized.iso"
+        default_dir = Path.cwd()  # Current working directory
 
-        default_dir = Path.home() / "Documents" / "PokeParkRandomizer"
-        default_dir.mkdir(parents=True, exist_ok=True)
-        default_file = default_dir / default_name
-
-        file_path, _ = QFileDialog.getSaveFileName(
+        # Let user select folder instead of specific file
+        folder_path = QFileDialog.getExistingDirectory(
             self,
-            "Save Randomized ISO As",
-            str(default_file),
-            "ISO Files (*.iso);;All Files (*)"
+            "Select Output Folder",
+            str(default_dir),
+            QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks
+        )
+
+        if folder_path:
+            self.output_path = folder_path
+            self.output_line_edit.setText(folder_path)
+    def browse_appokprk(self):
+        file_path, _ = QFileDialog.getOpenFileName(
+            self,
+            "Select .appkprk Patch File",
+            "",
+            "PokéPark Patch Files (*.appkprk);;All Files (*)"
         )
 
         if file_path:
-            self.output_path = file_path
-            self.output_line_edit.setText(file_path)
+            if not Path(file_path).exists():
+                QMessageBox.warning(self, "Error", "Selected patch file does not exist!")
+                return
 
+            self.appkprk_path = file_path
+            self.appkprk_line_edit.setText(file_path)
     def start_patching(self):
         # Validation
         if not self._validate_inputs():
@@ -250,6 +279,7 @@ class RandoGUI(QMainWindow):
 
         request = PatchRequest(
             iso_path=self.iso_path,
+            appkprk_path=self.appkprk_path,
             output_path=self.output_path,
             patch_configs=self.patch_configs
         )
@@ -271,16 +301,22 @@ class RandoGUI(QMainWindow):
             QMessageBox.warning(self, "Error", "Selected ISO file does not exist!")
             return False
 
+        if not self.appkprk_path:
+            QMessageBox.warning(self, "Error", "Please select an .appkprk file first!")
+            return False
+
+        if not Path(self.appkprk_path).exists():
+            QMessageBox.warning(self, "Error", "Selected .appkprk file does not exist!")
+            return False
+
         self.output_path = self.output_line_edit.text().strip()
         if not self.output_path:
             QMessageBox.warning(self, "Error", "Please specify an output file!")
             return False
 
         output_path = Path(self.output_path)
-        if output_path.suffix.lower() != '.iso':
-            output_path = output_path.with_suffix('.iso')
-            self.output_path = str(output_path)
-            self.output_line_edit.setText(self.output_path)
+        self.output_path = str(output_path)
+        self.output_line_edit.setText(self.output_path)
 
         output_dir = output_path.parent
         try:

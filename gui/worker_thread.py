@@ -1,7 +1,7 @@
 from PySide6.QtCore import QThread, Signal
 
-from gui.core.models import PatchRequest
-from gui.core.randomizer_service import PatcherService
+from patcher.models.models import PatchRequest
+from patcher.randomizer_service import PatcherService
 
 
 class PatcherWorkerThread(QThread):

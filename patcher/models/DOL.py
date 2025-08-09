@@ -3,8 +3,8 @@ from io import BytesIO
 
 
 class DOL:
-    TEXT_SECTION_COUNT = 2
-    DATA_SECTION_COUNT = 8
+    TEXT_SECTION_COUNT = 7
+    DATA_SECTION_COUNT = 11
 
     def __init__(self):
         self.data = BytesIO()
