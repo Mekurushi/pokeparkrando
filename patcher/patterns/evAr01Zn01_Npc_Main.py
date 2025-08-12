@@ -1,5 +1,5 @@
 from patcher.helper.patttern_handler import parse_pattern_bytes, compute_bl_to_function_script, \
-    get_num_battle_count_from_dict_as_instruction, fill_with_delay_instructions_script, create_lstr_script, \
+    get_num_battle_count_from_dict_as_instruction, create_lstr_script, \
     create_jmp_instruction_script
 from patcher.models.models import PatchPattern, Instruction, Patch
 
@@ -14,6 +14,28 @@ string_section_start = PatchPattern(
     ],
 )
 
+globalManager = PatchPattern(
+    name="ds GlobalManager",
+    description="using GlobalManager string for custom get_module calls",
+    pattern=[
+        Instruction(identifier=1, offset=0x0,
+                    pattern=parse_pattern_bytes("47 6c 6f 62 61 6c 4d 61 6e 61 67 65 72 00"),
+                    instruction_readable="ds GlobalManager"),
+
+    ],
+)
+
+f0301BippaFlag = PatchPattern(
+    name="ds f0301BippaFlag",
+    description="using f0301BippaFlag string for custom get_module calls",
+    pattern=[
+        Instruction(identifier=1, offset=0x0,
+                    pattern=parse_pattern_bytes("66 30 33 30 31 42 69 70 70 61 46 6c 61 67 00"),
+                    instruction_readable="ds f0301BippaFlag"),
+
+    ],
+)
+
 f0101TalkOnisuzume = PatchPattern(
     name="ds f0101TalkOnisuzume",
     description="using f0101TalkOnisuzume for lstr instructions",
@@ -22,6 +44,22 @@ f0101TalkOnisuzume = PatchPattern(
                     pattern=parse_pattern_bytes("66 30 31 30 31 54 61 6c 6b 4f 6e 69 73 75 7a 75 6d 65 00"),
                     instruction_readable="ds f0101TalkOnisuzume"),
 
+    ]
+)
+
+get_module = PatchPattern(
+    name="get module",
+    description="using get module for calls",
+    pattern=[
+        Instruction(identifier=1, offset=0x0,
+                    pattern=parse_pattern_bytes("00 01 00 07"),
+                    instruction_readable="grow_stack 0x1"),
+        Instruction(identifier=2, offset=0x4,
+                    pattern=parse_pattern_bytes("00 00 00 0b"),
+                    instruction_readable="load_arg 0x0"),
+        Instruction(identifier=3, offset=0x8,
+                    pattern=parse_pattern_bytes("00 10 01 01"),
+                    instruction_readable="SC1 0x0:0x10"),
     ]
 )
 
@@ -5353,7 +5391,7 @@ drifblim_friendship_pattern = PatchPattern(
         Patch(identifier=3,  # removing get_chapter call
               patch_function=lambda offset, data, plando_dict, matches: (0x004a0010).to_bytes(4,
                                                                                               'big'),
-              new_instruction_readable="jmp"),
+              new_instruction_readable="push 0x4a"),
     ])
 
 starly2_friendship_pattern = PatchPattern(
@@ -6848,6 +6886,145 @@ torterra_starly_unlock = PatchPattern(
 
     ])
 
+unlock_beach_bidoof_interaction= PatchPattern(
+    name="Unlock Beach Bidoof Unlock",
+    description="Removing actual unlocks and set flag also trigger only when location is not checked",
+    pattern=[
+        Instruction(identifier=1, offset=0,
+                    pattern=parse_pattern_bytes("00 05 00 07"),
+                    instruction_readable="grow_stack 0x05"),
+
+        # get chapter value for events
+        Instruction(identifier=2, offset=0x4,
+                    pattern=parse_pattern_bytes("?? ?? ?? 03"),
+                    instruction_readable="call get_chapter"),
+        Instruction(identifier=3, offset=0x8,
+                    pattern=parse_pattern_bytes("00 00 00 12"),
+                    instruction_readable="push_result"),
+        Instruction(identifier=4, offset=0xc,
+                    pattern=parse_pattern_bytes("08 02 00 10"),
+                    instruction_readable="push 0x802"),
+        Instruction(identifier=5, offset=0x10,
+                    pattern=parse_pattern_bytes("00 0b 00 16"),
+                    instruction_readable="eq"),
+        Instruction(identifier=6, offset=0x14,
+                    pattern=parse_pattern_bytes("00 51 02 08"),
+                    instruction_readable="jz"),
+
+        Instruction(identifier=7, offset=0x124,
+                    pattern=parse_pattern_bytes("08 0c 00 10"),
+                    instruction_readable="push 0x80c"),
+        Instruction(identifier=8, offset=0x128,
+                    pattern=parse_pattern_bytes("?? ?? ?? 03"),
+                    instruction_readable="call set_chapter"),
+    ],
+    patchMap=[
+        Patch(identifier=2,
+              patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(offset,data,custom_check_f0301BippaFlag_funtion),
+              new_instruction_readable="call get f0301BippaFlag"),
+        Patch(identifier=4,
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big'),
+              new_instruction_readable="push 0x0"),
+        Patch(identifier=7,
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=8,
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+              new_instruction_readable="delay(0)"),
+    ])
+
+
+custom_check_f0301BippaFlag_funtion = PatchPattern(
+    name="unused code space",
+    description="using unused code space for f0301BippaFlag check",
+    pattern=[
+        Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("ff fe 00 0c"),
+                    instruction_readable="---"),
+        Instruction(identifier=2, offset=0x4, pattern=parse_pattern_bytes("ff fe 00 0b"),
+                    instruction_readable="---"),
+        Instruction(identifier=3, offset=0x8, pattern=parse_pattern_bytes("00 b6 00 10"),
+                    instruction_readable="---"),
+        Instruction(identifier=4, offset=0xc, pattern=parse_pattern_bytes("ff ff 00 0b"),
+                    instruction_readable="---"),
+        Instruction(identifier=5, offset=0x10, pattern=parse_pattern_bytes("00 3d 00 10"),
+                    instruction_readable="---"),
+        Instruction(identifier=6, offset=0x14, pattern=parse_pattern_bytes("00 15 03 01"),
+                    instruction_readable="---"),
+        Instruction(identifier=7, offset=0x18, pattern=parse_pattern_bytes("00 00 00 12"),
+                    instruction_readable="---"),
+        Instruction(identifier=8, offset=0x1c, pattern=parse_pattern_bytes("00 00 00 14"),
+                    instruction_readable="---"),
+        Instruction(identifier=9, offset=0x20, pattern=parse_pattern_bytes("ff fe 00 0c"),
+                    instruction_readable="---"),
+        Instruction(identifier=10, offset=0x24, pattern=parse_pattern_bytes("ff fe 00 0b"),
+                    instruction_readable="---"),
+        Instruction(identifier=11, offset=0x28, pattern=parse_pattern_bytes("00 02 01 06"),
+                    instruction_readable="---"),
+    ],
+    patchMap=[
+        Patch(
+            identifier=1,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010007).to_bytes(4, 'big'),
+            new_instruction_readable="grow_stack 0x1"
+        ),
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(data, string_section_start,
+                                                                                         globalManager),
+            new_instruction_readable="lstr GlobalManager"
+        ),
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(offset, data,
+                                                                                                    get_module),
+            new_instruction_readable="call get_module()"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(4, 'big'),
+            new_instruction_readable="push_result"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0xffff000c).to_bytes(4, 'big'),
+            new_instruction_readable="store_arg -0x1"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(data,string_section_start,f0301BippaFlag),
+            new_instruction_readable="lstr f0301BippaFlag"
+        ),
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(4, 'big'),
+            new_instruction_readable="load_arg -0x1"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x1"
+        ),
+        Patch(
+            identifier=9,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00150301).to_bytes(4, 'big'),
+            new_instruction_readable="SC3 0x0:0x15"
+        ),
+        Patch(
+            identifier=10,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(4, 'big'),
+            new_instruction_readable="push_result"
+        ),
+        Patch(
+            identifier=11,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00020106).to_bytes(4, 'big'),
+            new_instruction_readable="retv -0x2"
+        ),
+
+    ],
+)
+
+# todo: add alt form pokemon
+
 
 evAr01Zn01_Npc_Main_patch_pattern = [
     overworld_pokemon_spawning_Ar01Zn01,
@@ -6898,5 +7075,9 @@ evAr01Zn01_Npc_Main_patch_pattern = [
 
     return_attraction_pattern,
     eventTE03_logic,
-    torterra_starly_unlock
+    torterra_starly_unlock,
+
+    # custom beach bidoof
+unlock_beach_bidoof_interaction,
+custom_check_f0301BippaFlag_funtion
 ]

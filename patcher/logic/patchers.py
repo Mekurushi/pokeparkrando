@@ -43,56 +43,6 @@ class BasePatcher(ABC):
         self.backup_files.append(backup_path)
         return backup_path
 
-    # def _apply_patch_operations(self, file_path: Path) -> bool:
-    #     """Apply the configured patch operations to a file"""
-    #     if not self.config.patch_operations:
-    #         print(f"Warning: No patch operations defined for {self.config.file_id}")
-    #         return True
-    #
-    #     # Create backup
-    #     self._create_backup(file_path)
-    #
-    #     try:
-    #
-    #         with open(file_path, 'r+b') as f:
-    #             for operation in self.config.patch_operations:
-    #                 f.seek(operation.offset)
-    #
-    #                 if operation.original_value is not None:
-    #                     current_bytes = f.read(operation.size)
-    #                     if len(current_bytes) != operation.size:
-    #                         raise Exception(f"Could not read {operation.size} bytes at offset 0x{operation.offset:08x}")
-    #
-    #                     current_value = int.from_bytes(current_bytes, byteorder=operation.byteorder)
-    #                     if current_value != operation.original_value:
-    #                         print(
-    #                             f"WARNING: Expected 0x{operation.original_value:04x} but found 0x{current_value:04x} at offset 0x{operation.offset:08x}")
-    #
-    #                 # Apply patch
-    #                 f.seek(operation.offset)
-    #                 new_bytes = operation.new_value.to_bytes(operation.size, byteorder=operation.byteorder)
-    #                 f.write(new_bytes)
-    #
-    #                 # Verify patch was applied
-    #                 f.seek(operation.offset)
-    #                 verify_bytes = f.read(operation.size)
-    #                 verify_value = int.from_bytes(verify_bytes, byteorder=operation.byteorder)
-    #
-    #                 if verify_value != operation.new_value:
-    #                     raise Exception(
-    #                         f"Patch verification failed at 0x{operation.offset:08x}: expected 0x{operation.new_value:04x}, got 0x{verify_value:04x}")
-    #
-    #                 print(
-    #                     f"SUCCESS: {operation.description} - Patched 0x{operation.offset:08x} to 0x{operation.new_value:04x}")
-    #
-    #         return True
-    #
-    #     except Exception as e:
-    #         print(f"Patch operation failed for {self.config.file_id}: {e}")
-    #         print(f"Error in patcher: {self.__class__.__name__}")
-    #         print("Full stack trace:")
-    #         print(traceback.format_exc())
-    #         return False
 
     def _apply_patch_operations(self, file_path: Path) -> bool:
         """Apply pattern-based binary patches directly to the file"""
@@ -169,7 +119,7 @@ class NestedDacU8Patcher(BasePatcher):
 
             if not dac_file_path:
                 print(f"DAC file not found for {self.config.file_id}: {primary_file_path}")
-                return index != 0
+                return index == 1
             filename = primary_file_path.split("/")[-1].split(".")[0]
             temp_dir = self.work_dir / f"temp_{self.config.file_id}_{filename}"
             u8_main_dir = temp_dir / "u8_main"
@@ -219,7 +169,7 @@ class NestedDacU8Patcher(BasePatcher):
                     raise Exception(f"Target file not found: {target_file_path}")
 
                 if not self._apply_patch_operations(target_file_path):
-                    return index != 0
+                    return False
 
                     # Step 5: Repack nested archive
                 progress_callback(f"Repacking nested archive", 70)
@@ -252,7 +202,7 @@ class NestedDacU8Patcher(BasePatcher):
                 print(f"Error in patcher: {self.__class__.__name__}")
                 print("Full stack trace:")
                 print(traceback.format_exc())
-                return index != 0
+                return False
             finally:
                 # Cleanup temp directory
                 if temp_dir.exists():
@@ -268,7 +218,7 @@ class DacU8Patcher(BasePatcher):
 
             if not dac_file_path:
                 print(f"DAC file not found for {self.config.file_id}: {primary_file_path}")
-                return index != 0
+                return index == 1
             filename = primary_file_path.split("/")[-1].split(".")[0]
             temp_dir = self.work_dir / f"temp_{self.config.file_id}_{filename}"
             u8_main_dir = temp_dir / "u8_main"
@@ -303,7 +253,7 @@ class DacU8Patcher(BasePatcher):
                     raise Exception(f"Target file not found: {target_file_path}")
 
                 if not self._apply_patch_operations(target_file_path):
-                    return index != 0
+                    return False
 
 
                 # Step 6: Repack main archive
@@ -329,7 +279,7 @@ class DacU8Patcher(BasePatcher):
                 print(f"Error in patcher: {self.__class__.__name__}")
                 print("Full stack trace:")
                 print(traceback.format_exc())
-                return index != 0
+                return False
             finally:
                 # Cleanup temp directory
                 if temp_dir.exists():

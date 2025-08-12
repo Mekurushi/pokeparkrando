@@ -5,6 +5,7 @@ from patcher.patterns.evAr01Zn01_Gimmic import evAr01Zn01_Gimmic_patch_pattern
 from patcher.patterns.evAr01Zn01_Npc_Main import \
     evAr01Zn01_Npc_Main_patch_pattern
 from patcher.patterns.evAr01Zn02_Npc_Main import evAr01Zn02_Npc_Main_patterns
+from patcher.patterns.evAr02Zn01_Npc_Main import evAr02Zn01_Npc_Main_pattern
 from patcher.patterns.evAr99Zn01_Npc_Main import evAr99Zn01_Npc_Main_pattern
 from patcher.patterns.gk0101Gate import gate101_close
 from patcher.patterns.gkKabigonWall import gkKabigonWallPattern
@@ -14,6 +15,7 @@ from patcher.patterns.main import stage_setup_new_file_pattern, setup_new_file_p
 from patcher.patterns.mnAttractionInfo import mnAttractionInfo_pattern
 from patcher.patterns.mnLobby import mnLobby_pattern
 from patcher.patterns.mnStartMenu import load_new_file_pattern
+from patcher.patterns.treehouse import treehouse_pattern
 
 plando_dict_ap = None
 
@@ -33,6 +35,50 @@ def get_default_patch_configs() -> List[FilePatchConfig]:
         ]
     )
     configs.append(start_menu_config)
+
+    field_Ar02Zn01_npc_script_config = FilePatchConfig(
+        file_id="Ar02_Zn01",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar02Zn01Dat.dac", "Temporary/Field/ParkAr02Zn01Dat.dan",
+                     "Script/evAr02Zn01_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar02Zn01Dat_Fr.dac", "Temporary/Field/ParkAr02Zn01Dat_Fr.dan",
+                        "Script/evAr02Zn01_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar02Zn01Dat_Ge.dac", "Temporary/Field/ParkAr02Zn01Dat_Ge.dan",
+                        "Script/evAr02Zn01_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar02Zn01Dat_It.dac", "Temporary/Field/ParkAr02Zn01Dat_It.dan",
+                        "Script/evAr02Zn01_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar02Zn01Dat_Sp.dac", "Temporary/Field/ParkAr02Zn01Dat_Sp.dan",
+                        "Script/evAr02Zn01_Npc_Main.fsb"),
+                    ],
+        patch_patterns=evAr02Zn01_Npc_Main_pattern
+    )
+    configs.append(field_Ar02Zn01_npc_script_config)
+
+    treehouse = FilePatchConfig(
+        file_id="treehouse_gimmic",
+        description="Gimmic Treehouse",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Field/Ar02Zn01Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/GkTreeHouse.fsb"),
+                    (
+                        "DATA/files/Field/Ar02Zn01Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkTreeHouse.fsb"), (
+                        "DATA/files/Field/Ar02Zn01Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkTreeHouse.fsb"),
+                    (
+                        "DATA/files/Field/Ar02Zn01Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkTreeHouse.fsb"),
+                    (
+                        "DATA/files/Field/Ar02Zn01Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkTreeHouse.fsb"),
+                    ],
+        patch_patterns=treehouse_pattern
+    )
+    configs.append(treehouse)
 
     field_Ar99Zn01_npc_script_config = FilePatchConfig(
         file_id="Ar99_Zn01",
@@ -105,15 +151,15 @@ def get_default_patch_configs() -> List[FilePatchConfig]:
         file_group=[("DATA/files/Field/Ar99Zn01Dat.dac", "Gimmick/GkDatArc.dan",
                      "Gimmick/GkKabigonWall.fsb"),
                     (
-                        "DATA/files/Field/Ar99Zn01Dat.dac_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "DATA/files/Field/Ar99Zn01Dat_Fr.dac", "Gimmick/GkDatArc.dan",
                         "Gimmick/GkKabigonWall.fsb"), (
-                        "DATA/files/Field/Ar99Zn01Dat.dac_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "DATA/files/Field/Ar99Zn01Dat_Ge.dac", "Gimmick/GkDatArc.dan",
                         "Gimmick/GkKabigonWall.fsb"),
                     (
-                        "DATA/files/Field/Ar99Zn01Dat.dac_It.dac", "Gimmick/GkDatArc.dan",
+                        "DATA/files/Field/Ar99Zn01Dat_It.dac", "Gimmick/GkDatArc.dan",
                         "Gimmick/GkKabigonWall.fsb"),
                     (
-                        "DATA/files/Field/Ar99Zn01Dat.dac_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "DATA/files/Field/Ar99Zn01Dat_Sp.dac", "Gimmick/GkDatArc.dan",
                         "Gimmick/GkKabigonWall.fsb"),
                     ],
         patch_patterns=gkKabigonWallPattern
@@ -167,13 +213,13 @@ def get_default_patch_configs() -> List[FilePatchConfig]:
 
         file_group=[("DATA/files/Attraction/At016Dat.dac", "Temporary/PreAtArc/PreAt016Dat.dan",
                      "Script/mnAttractionInfo.fsb"),
-                    ("DATA/files/Attraction/At016Dat_Fr.dac", "Temporary/PreAtArc/PreAt016Dat.dan",
+                    ("DATA/files/Attraction/At016Dat_Fr.dac", "Temporary/PreAtArc/PreAt016Dat_Fr.dan",
                      "Script/mnAttractionInfo.fsb"),
-                    ("DATA/files/Attraction/At016Dat_Ge.dac", "Temporary/PreAtArc/PreAt016Dat.dan",
+                    ("DATA/files/Attraction/At016Dat_Ge.dac", "Temporary/PreAtArc/PreAt016Dat_Ge.dan",
                      "Script/mnAttractionInfo.fsb"),
-                    ("DATA/files/Attraction/At016Dat_It.dac", "Temporary/PreAtArc/PreAt016Dat.dan",
+                    ("DATA/files/Attraction/At016Dat_It.dac", "Temporary/PreAtArc/PreAt016Dat_It.dan",
                      "Script/mnAttractionInfo.fsb"),
-                    ("DATA/files/Attraction/At016Dat_Sp.dac", "Temporary/PreAtArc/PreAt016Dat.dan",
+                    ("DATA/files/Attraction/At016Dat_Sp.dac", "Temporary/PreAtArc/PreAt016Dat_Sp.dan",
                      "Script/mnAttractionInfo.fsb"),
                     ],
         patch_patterns=mnAttractionInfo_pattern
@@ -187,13 +233,13 @@ def get_default_patch_configs() -> List[FilePatchConfig]:
 
         file_group=[("DATA/files/Attraction/At003Dat.dac", "Temporary/PreAtArc/PreAt003Dat.dan",
                      "Script/mnAttractionInfo.fsb"),
-                    ("DATA/files/Attraction/At003Dat_Fr.dac", "Temporary/PreAtArc/PreAt003Dat.dan",
+                    ("DATA/files/Attraction/At003Dat_Fr.dac", "Temporary/PreAtArc/PreAt003Dat_Fr.dan",
                      "Script/mnAttractionInfo.fsb"),
-                    ("DATA/files/Attraction/At003Dat_Ge.dac", "Temporary/PreAtArc/PreAt003Dat.dan",
+                    ("DATA/files/Attraction/At003Dat_Ge.dac", "Temporary/PreAtArc/PreAt003Dat_Ge.dan",
                      "Script/mnAttractionInfo.fsb"),
-                    ("DATA/files/Attraction/At003Dat_It.dac", "Temporary/PreAtArc/PreAt003Dat.dan",
+                    ("DATA/files/Attraction/At003Dat_It.dac", "Temporary/PreAtArc/PreAt003Dat_It.dan",
                      "Script/mnAttractionInfo.fsb"),
-                    ("DATA/files/Attraction/At003Dat_Sp.dac", "Temporary/PreAtArc/PreAt003Dat.dan",
+                    ("DATA/files/Attraction/At003Dat_Sp.dac", "Temporary/PreAtArc/PreAt003Dat_Sp.dan",
                      "Script/mnAttractionInfo.fsb"),
                     ],
         patch_patterns=mnAttractionInfo_pattern
