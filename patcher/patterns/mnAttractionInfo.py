@@ -4,7 +4,7 @@ from patcher.models.models import PatchPattern, Instruction, Patch
 attraction_result = PatchPattern(
     name="Attraction Result Prisma Check",
     description="patching prisma check to check for checked location",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 18 00 07"),
                     instruction_readable="grow_stack 0x18"),
 
@@ -33,7 +33,7 @@ attraction_result = PatchPattern(
         Instruction(identifier=11, offset=0x220, pattern=parse_pattern_bytes("00 15 04 01"),
                     instruction_readable="SC4 0x0:0x15"),
     ],
-    patchMap=[
+    patchMapJP=[
 
         Patch(
             identifier=5,
@@ -51,7 +51,7 @@ attraction_result = PatchPattern(
 attraction_start_demo = PatchPattern(
     name="Attraction Start Demo Prisma Check",
     description="patching prisma check to check for checked location instead",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0c 00 07"),
                     instruction_readable="grow_stack 0xc"),
 
@@ -68,7 +68,7 @@ attraction_start_demo = PatchPattern(
                     instruction_readable="SC3 0x0:0x15"),
 
     ],
-    patchMap=[
+    patchMapJP=[
 
         Patch(
             identifier=5,
@@ -80,7 +80,7 @@ attraction_start_demo = PatchPattern(
 attraction_start_demo_end = PatchPattern(
     name="Attraction Start Demo End Prisma Check",
     description="patching prisma check to check for checked location instead",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0b 00 07"),
                     instruction_readable="grow_stack 0xb"),
 
@@ -97,7 +97,7 @@ attraction_start_demo_end = PatchPattern(
                     instruction_readable="SC3 0x0:0x15"),
 
     ],
-    patchMap=[
+    patchMapJP=[
 
         Patch(
             identifier=5,
@@ -110,7 +110,7 @@ attraction_start_demo_end = PatchPattern(
 condition_legendary_friendship = PatchPattern(
     name="checking conditions for legendary Pokemon Friendship",
     description="patching so it checks for the checked location",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 08 00 07"),
                     instruction_readable="grow_stack 0x8"),
         # postgame check
@@ -121,7 +121,7 @@ condition_legendary_friendship = PatchPattern(
         Instruction(identifier=3, offset=0xd0, pattern=parse_pattern_bytes("00 3d 00 10"),
                     instruction_readable="push 0x3d"),
     ],
-    patchMap=[
+    patchMapJP=[
 
         Patch(
             identifier=2,
@@ -140,7 +140,7 @@ condition_legendary_friendship = PatchPattern(
 set_friendship = PatchPattern(
     name="set legendary Pokemon friendship + additional features",
     description="removing regular friendship flag and adding location check",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 01 00 07"),
                     instruction_readable="grow_stack 0x7"),
         # set friendship and best friend feature
@@ -153,7 +153,7 @@ set_friendship = PatchPattern(
         Instruction(identifier=5, offset=0x3c, pattern=parse_pattern_bytes("00 15 03 01"),
                     instruction_readable="SC3 0x0:0x15"),
     ],
-    patchMap=[
+    patchMapJP=[
 
         # removing friendship flag
         Patch(

@@ -4,12 +4,12 @@ from patcher.models.models import PatchPattern, Instruction, Patch
 f0301FuwarideTaxiStop_Ar01Zn01 = PatchPattern(
     name="f0301FuwarideTaxiStop",
     description="replacing f0301FuwarideTaxiStop string with string of other flag",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("66 30 33 30 31 46 75 77 61 72 69 64 65 54 61 78 69 53 74 6f 70 00"),
                     instruction_readable="ds f0301FuwarideTaxiStop"),
 
     ],#66 30 33 30 31 46 75 77 61 72 69 64 65 54 61 78 69 53 74 6f 70 00
-    patchMap=[
+    patchMapJP=[
         Patch(
             identifier=1,
             patch_function=lambda offset, data, plando_dict, matches: (0x663031303148696465416e645365656b00).to_bytes(17, 'big'),
@@ -21,12 +21,12 @@ f0301FuwarideTaxiStop_Ar01Zn01 = PatchPattern(
 f0302FuwarideTaxiStop_Ar01Zn01 = PatchPattern(
     name="f0302FuwarideTaxiStop",
     description="replacing f0302FuwarideTaxiStop string with string of other flag",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("66 30 33 30 32 46 75 77 61 72 69 64 65 54 61 78 69 53 74 6f 70 00"),
                     instruction_readable="ds f0302FuwarideTaxiStop"),
 
     ],#66 30 33 30 31 46 75 77 61 72 69 64 65 54 61 78 69 53 74 6f 70 00
-    patchMap=[
+    patchMapJP=[
         Patch(
             identifier=1,
             patch_function=lambda offset, data, plando_dict, matches: (0x66303130314576656e745445303300).to_bytes(15, 'big'),
@@ -40,12 +40,12 @@ f0302FuwarideTaxiStop_Ar01Zn01 = PatchPattern(
 f0401FuwarideTaxiStop_Ar01Zn01 = PatchPattern(
     name="f0401FuwarideTaxiStop",
     description="replacing f0401FuwarideTaxiStop string with string of other flag",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("66 30 34 30 31 46 75 77 61 72 69 64 65 54 61 78 69 53 74 6f 70 00"),
                     instruction_readable="ds f0401FuwarideTaxiStop"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(
             identifier=1,
             patch_function=lambda offset, data, plando_dict, matches: (0x663031303154616c6b4d616e6b657900).to_bytes(16, 'big'),
@@ -59,7 +59,7 @@ f0401FuwarideTaxiStop_Ar01Zn01 = PatchPattern(
 string_section_start = PatchPattern(
     name="string section start",
     description="string section start for lstr instruction computation",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("65 76 41 72 30 31 5a 6e 30 31 5f 47 69 6d 6d 69 63 00"),
                     instruction_readable="ds evAr01Zn01_Gimmic"),
 
@@ -71,7 +71,7 @@ string_section_start = PatchPattern(
 caterpie_tree_gimmic = PatchPattern(
     name="Caterpie Tree Gimmic",
     description="setting hide_and_seek flag insted of unlocking caterpie, also instead of checking if caterpie is unlocked it checks for hide_and_seek flag",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0a 00 10"),
                     instruction_readable="push 0xa"),
         Instruction(identifier=2, offset=0x4, pattern=parse_pattern_bytes("ff fe 00 0b"),
@@ -96,7 +96,7 @@ caterpie_tree_gimmic = PatchPattern(
                     instruction_readable="call unlock_pokemon(0xd)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(
             identifier=1,
             patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(data,string_section_start,f0301FuwarideTaxiStop_Ar01Zn01),
@@ -129,7 +129,7 @@ caterpie_tree_gimmic = PatchPattern(
 weedle_tree_gimmic_logic = PatchPattern(
     name="Weedle Tree Gimmic Logic",
     description="setting hide_and_seek flag insted of unlocking caterpie, also instead of checking if caterpie is unlocked it checks for hide_and_seek flag",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 00 00 0b"),
                     instruction_readable="load_arg 0x0"),
         Instruction(identifier=2, offset=0x4, pattern=parse_pattern_bytes("ff fd 00 0b"),
@@ -146,7 +146,7 @@ weedle_tree_gimmic_logic = PatchPattern(
                     instruction_readable="call unlock_pokemon"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(
             identifier=5,
             patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(data,string_section_start,f0302FuwarideTaxiStop_Ar01Zn01),
@@ -180,7 +180,7 @@ weedle_tree_gimmic_logic = PatchPattern(
 weedle_tree_gimmic = PatchPattern(
     name="Weedle Tree Gimmic",
     description="setting hide_and_seek flag insted of unlocking caterpie, also instead of checking if caterpie is unlocked it checks for hide_and_seek flag",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("ff fd 00 0b"),
                     instruction_readable="load_arg -0x3"),
         Instruction(identifier=2, offset=0x4, pattern=parse_pattern_bytes("ff fc 00 0b"),
@@ -193,7 +193,7 @@ weedle_tree_gimmic = PatchPattern(
 
 
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(
             identifier=1,
             patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(data,string_section_start,f0302FuwarideTaxiStop_Ar01Zn01),
@@ -212,7 +212,7 @@ weedle_tree_gimmic = PatchPattern(
 shroomish_box_gimmic = PatchPattern(
     name="Shroomish Box Gimmic",
     description="setting hide_and_seek flag insted of unlocking caterpie, also instead of checking if caterpie is unlocked it checks for hide_and_seek flag",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0e 00 10"),
                     instruction_readable="push 0xe"),
         Instruction(identifier=2, offset=0x4, pattern=parse_pattern_bytes("ff fe 00 0b"),
@@ -224,7 +224,7 @@ shroomish_box_gimmic = PatchPattern(
 
 
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(
             identifier=1,
             patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(data,string_section_start,f0401FuwarideTaxiStop_Ar01Zn01),
@@ -243,7 +243,7 @@ shroomish_box_gimmic = PatchPattern(
 unlock_function = PatchPattern(
     name="unlock function",
     description="replacing the unlock function to set the flag for shroomish box location",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 03 00 07"),
                     instruction_readable="grow_stack 0x3"),
 
@@ -262,7 +262,7 @@ unlock_function = PatchPattern(
         Instruction(identifier=8, offset=0x3c, pattern=parse_pattern_bytes("ff fd 00 0b"),
                     instruction_readable="load_arg -0x3"),
     ],
-    patchMap=[
+    patchMapJP=[
 
         Patch(
             identifier=2,

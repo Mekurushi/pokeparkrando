@@ -4,7 +4,7 @@ from patcher.models.models import PatchPattern, Instruction, Patch
 gate101_close = PatchPattern(
     name="Close Gate Function from Venusaur Gate in Meadow Zone",
     description="Modyfing the gate open condition for Venusaurs Minigame Area to be Bulbasaur Prisma Shard",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 00 5f 13"),
                     instruction_readable="lstr GF0002"),
         Instruction(identifier=2, offset=0x4, pattern=parse_pattern_bytes("ff fd 00 0b"),
@@ -22,7 +22,7 @@ gate101_close = PatchPattern(
         Instruction(identifier=8, offset=0x1c, pattern=parse_pattern_bytes("00 05 02 08"),
                     instruction_readable="jz"),
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(
             identifier=1,
             patch_function=lambda offset, data, plando_dict, matches: (0x000f0010).to_bytes(4, 'big'),

@@ -4,7 +4,7 @@ from patcher.models.models import PatchPattern, Instruction, Patch
 load_new_file_pattern = PatchPattern(
     name="load new File Logic",
     description="skip opening on new file and init status Menu Flag",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("ff f9 00 0b"),
                     instruction_readable="load_arg -0x7"),
         Instruction(identifier=2, offset=0x4, pattern=parse_pattern_bytes("00 05 02 08"),
@@ -22,7 +22,7 @@ load_new_file_pattern = PatchPattern(
         Instruction(identifier=8, offset=0x1c, pattern=parse_pattern_bytes("ff ff 00 0b"),
                     instruction_readable="load_arg -0x1"),
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),

@@ -4,7 +4,7 @@ from patcher.models.models import Instruction, PatchPattern, Patch
 string_section_start = PatchPattern(
     name="string section start",
     description="string section start for lstr instruction computation",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0,
                     pattern=parse_pattern_bytes("65 76 41 72 39 39 5a 6e 30 31 5f 4e 70 63 5f 4d 61 69 6e 00"),
                     instruction_readable="ds evAr99Zn01_Npc_Main"),
@@ -15,44 +15,56 @@ string_section_start = PatchPattern(
 f9901TalkCelebi = PatchPattern(
     name="f9901TalkCelebi",
     description="f9901TalkCelebi for lstr instruction computation",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0,
                     pattern=parse_pattern_bytes("66 39 39 30 31 54 61 6c 6b 43 65 6c 65 62 69 00"),
                     instruction_readable="ds f9901TalkCelebi"),
 
     ],
 )
-
-a99_z01_init = PatchPattern(
-    name="a99_z01_init remove spawn conditions",
-    description="remove event stuff",
-    pattern=[
+a99_z01_init_patternJP = [
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 05 00 07"),
                     instruction_readable="grow_stack 0x5"),
         # checks if snorlax invisible wall should be removed
         Instruction(identifier=2, offset=0x40, pattern=parse_pattern_bytes("00 01 02 08"),
-                    instruction_readable="jz",
-                    alternate_offset=0x48),
+                    instruction_readable="jz"),
         Instruction(identifier=3, offset=0x48, pattern=parse_pattern_bytes("ff fd 00 0b"),#jump target
-                    instruction_readable="load_arg -0x3",
-                    alternate_offset=0x50),
+                    instruction_readable="load_arg -0x3"),
         # checks if snorlax should spawn
         Instruction(identifier=4, offset=0x54, pattern=parse_pattern_bytes("00 05 02 08"),
-                    instruction_readable="jz",
-                    alternate_offset=0x5c),
+                    instruction_readable="jz"),
         Instruction(identifier=5, offset=0x6c, pattern=parse_pattern_bytes("00 01 00 10"),# jump target
-                    instruction_readable="push 0x1",
-                    alternate_offset=0x74),
+                    instruction_readable="push 0x1"),
         # checks if event chatot should spawn
         Instruction(identifier=6, offset=0xb4, pattern=parse_pattern_bytes("00 16 02 08"),
-                    instruction_readable="jz",
-                    alternate_offset=0xbc),
+                    instruction_readable="jz"),
         Instruction(identifier=7, offset=0x110, pattern=parse_pattern_bytes("00 00 00 0b"), # jump target
-                    instruction_readable="load_arg 0x0",
-                    alternate_offset=0x118),
+                    instruction_readable="load_arg 0x0"),
 
-    ],
-    patchMap=[
+    ]
+
+a99_z01_init_patternPAL = [
+        Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 05 00 07"),
+                    instruction_readable="grow_stack 0x5"),
+        # checks if snorlax invisible wall should be removed
+        Instruction(identifier=2, offset=0x48, pattern=parse_pattern_bytes("00 01 02 08"),
+                    instruction_readable="jz"),
+        Instruction(identifier=3, offset=0x50, pattern=parse_pattern_bytes("ff fd 00 0b"),#jump target
+                    instruction_readable="load_arg -0x3"),
+        # checks if snorlax should spawn
+        Instruction(identifier=4, offset=0x5c, pattern=parse_pattern_bytes("00 05 02 08"),
+                    instruction_readable="jz"),
+        Instruction(identifier=5, offset=0x74, pattern=parse_pattern_bytes("00 01 00 10"),# jump target
+                    instruction_readable="push 0x1"),
+        # checks if event chatot should spawn
+        Instruction(identifier=6, offset=0xbc, pattern=parse_pattern_bytes("00 16 02 08"),
+                    instruction_readable="jz"),
+        Instruction(identifier=7, offset=0x118, pattern=parse_pattern_bytes("00 00 00 0b"), # jump target
+                    instruction_readable="load_arg 0x0"),
+
+    ]
+
+a99_z01_init_patchMapJP = [
 
         Patch(
             identifier=2,
@@ -70,12 +82,39 @@ a99_z01_init = PatchPattern(
             new_instruction_readable="jmp"  # never spawning event chatot
         ),
     ]
+
+a99_z01_init_patchMapPAL = [
+
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            new_instruction_readable="delay(0)"  # always removing invisible snorlax wall
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(offset,5,matches),
+            new_instruction_readable="jmp"  # always spawning snorlax
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(offset,7,matches),
+            new_instruction_readable="jmp"  # never spawning event chatot
+        ),
+    ]
+
+a99_z01_init = PatchPattern(
+    name="a99_z01_init remove spawn conditions",
+    description="remove event stuff",
+    patternJP=a99_z01_init_patternJP,
+    patternPAL=a99_z01_init_patternPAL,
+    patternNA=a99_z01_init_patternPAL,
+    patchMapJP=a99_z01_init_patchMapJP,
+    patchMapPAL=a99_z01_init_patchMapPAL,
+    patchMapNA=a99_z01_init_patchMapPAL,
+
 )
 
-C00000_00010 = PatchPattern(
-    name="C00000_00010",
-    description="C00000_00010 skip mew park entry intro",
-    pattern=[
+C00000_00010_pattern_JP =[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0e 00 07"),
                     instruction_readable="grow_stack 0xe"),
         Instruction(identifier=2, offset=0x4, pattern=parse_pattern_bytes("?? ?? ?? 03"),
@@ -85,27 +124,56 @@ C00000_00010 = PatchPattern(
         Instruction(identifier=4, offset=0xc, pattern=parse_pattern_bytes("ff ff 00 0c"),
                     instruction_readable="store_arg -0x1"),
         Instruction(identifier=5, offset=0x180, pattern=parse_pattern_bytes("00 00 00 0b"),  # jump target
-                    instruction_readable="load_arg 0x0",
-                    alternate_offset=0x188),
+                    instruction_readable="load_arg 0x0"),
         Instruction(identifier=6, offset=0x184, pattern=parse_pattern_bytes("?? ?? ?? 03"),
-                    instruction_readable="call FUN_??????",
-                    alternate_offset=0x18c),
+                    instruction_readable="call FUN_??????"),
 
-    ],
-    patchMap=[
+    ]
+
+C00000_00010_pattern_PAL =[
+        Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0e 00 07"),
+                    instruction_readable="grow_stack 0xe"),
+        Instruction(identifier=2, offset=0x4, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+                    instruction_readable="call FUN_??????"),
+        Instruction(identifier=3, offset=0x8, pattern=parse_pattern_bytes("00 00 00 12"),
+                    instruction_readable="push_result"),
+        Instruction(identifier=4, offset=0xc, pattern=parse_pattern_bytes("ff ff 00 0c"),
+                    instruction_readable="store_arg -0x1"),
+        Instruction(identifier=5, offset=0x188, pattern=parse_pattern_bytes("00 00 00 0b"),  # jump target
+                    instruction_readable="load_arg 0x0"),
+        Instruction(identifier=6, offset=0x18c, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+                    instruction_readable="call FUN_??????"),
+
+    ]
+C00000_00010_patchmap_JP =[
         Patch(
             identifier=1,
             patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(offset,5,matches),
             new_instruction_readable="jmp"
         ),
 
-    ],
+    ]
+
+C00000_00010_patchmap_PAL =[
+        Patch(
+            identifier=1,
+            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(offset,5,matches),
+            new_instruction_readable="jmp"
+        ),
+
+    ]
+C00000_00010 = PatchPattern(
+    name="C00000_00010",
+    description="C00000_00010 skip mew park entry intro",
+    patternJP=C00000_00010_pattern_JP,
+    patternPAL=C00000_00010_pattern_PAL,
+    patternNA=C00000_00010_pattern_PAL,
+    patchMapJP=C00000_00010_patchmap_JP,
+    patchMapPAL=C00000_00010_patchmap_PAL,
+    patchMapNA=C00000_00010_patchmap_PAL,
 )
 
-C00020_00030 = PatchPattern(
-    name="skip event c00020_00030",
-    description="skip event and init zone correct",
-    pattern=[
+C00020_00030_patternJP = [
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 01 00 07"),
                     instruction_readable="grow_stack 0x1"),
         Instruction(identifier=2, offset=0x4, pattern=parse_pattern_bytes("?? ?? ?? 13"),
@@ -115,26 +183,56 @@ C00020_00030 = PatchPattern(
         Instruction(identifier=4, offset=0xc, pattern=parse_pattern_bytes("00 00 00 12"),
                     instruction_readable="push_result"),
         Instruction(identifier=5, offset=0x64, pattern=parse_pattern_bytes("00 00 00 0b"),
-                    instruction_readable="load_arg 0x0",
-                    alternate_offset=0x6c),
+                    instruction_readable="load_arg 0x0"),
         Instruction(identifier=6, offset=0x24, pattern=parse_pattern_bytes("00 15 03 01"),
-                    instruction_readable="SC3 0x0:0x15",
-                    alternate_offset=0x2c),
-    ],
-    patchMap=[
+                    instruction_readable="SC3 0x0:0x15"),
+    ]
+C00020_00030_patternPAL = [
+        Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 01 00 07"),
+                    instruction_readable="grow_stack 0x1"),
+        Instruction(identifier=2, offset=0x4, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+                    instruction_readable="lstr GlobalManager"),
+        Instruction(identifier=3, offset=0x8, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+                    instruction_readable="call get_module"),
+        Instruction(identifier=4, offset=0xc, pattern=parse_pattern_bytes("00 00 00 12"),
+                    instruction_readable="push_result"),
+        Instruction(identifier=5, offset=0x6c, pattern=parse_pattern_bytes("00 00 00 0b"),
+                    instruction_readable="load_arg 0x0"),
+        Instruction(identifier=6, offset=0x2c, pattern=parse_pattern_bytes("00 15 03 01"),
+                    instruction_readable="SC3 0x0:0x15"),
+    ]
+
+C00020_00030_patchMapJP = [
         Patch(
             identifier=1,
             patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(offset, 5, matches),
             new_instruction_readable="jmp"  # skipping all event logic
         ),
 
-    ],
+    ]
+C00020_00030_patchMapPAL = [
+        Patch(
+            identifier=1,
+            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(offset, 5, matches),
+            new_instruction_readable="jmp"  # skipping all event logic
+        ),
+
+    ]
+C00020_00030 = PatchPattern(
+    name="skip event c00020_00030",
+    description="skip event and init zone correct",
+    patternJP=C00020_00030_patternJP,
+    patternPAL=C00020_00030_patternPAL,
+    patternNA=C00020_00030_patternPAL,
+    patchMapJP=C00020_00030_patchMapJP,
+    patchMapPAL=C00020_00030_patchMapPAL,
+    patchMapNA=C00020_00030_patchMapPAL,
 )
 
 C00060_01000 = PatchPattern(
     name="skip event c00060_01000",
     description="skip event and init zone correct",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 00 00 0b"),
                     instruction_readable="load_arg 0x0"),
         Instruction(identifier=2, offset=0x4, pattern=parse_pattern_bytes("?? ?? ?? 03"),
@@ -156,7 +254,7 @@ C00060_01000 = PatchPattern(
         Instruction(identifier=10, offset=-0x4, pattern=parse_pattern_bytes("00 01 00 06"),
                     instruction_readable="ret -0x1"),
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(
             identifier=1,
             patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(offset, 4, matches),
@@ -168,7 +266,7 @@ C00060_01000 = PatchPattern(
 area01 = PatchPattern(
     name="skip event area01",
     description="skip event and init zone correct",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 00 00 0b"),
                     instruction_readable="load_arg 0x0"),
         Instruction(identifier=2, offset=0x4, pattern=parse_pattern_bytes("?? ?? ?? 03"),
@@ -180,7 +278,7 @@ area01 = PatchPattern(
         Instruction(identifier=5, offset=0x10, pattern=parse_pattern_bytes("00 01 00 06"),
                     instruction_readable="ret -0x1"),
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(
             identifier=2,
             patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
@@ -192,7 +290,7 @@ area01 = PatchPattern(
 area04 = PatchPattern(
     name="skip event area04",
     description="skip event and init zone correct",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 01 00 07"),
                     instruction_readable="grow_stack 0x1"),
         Instruction(identifier=2, offset=0x4, pattern=parse_pattern_bytes("?? ?? ?? 13"),
@@ -204,7 +302,7 @@ area04 = PatchPattern(
         Instruction(identifier=5, offset=0x48, pattern=parse_pattern_bytes("00 00 00 0b"),
                     instruction_readable="load_arg 0x0"),
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(
             identifier=1,
             patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(offset, 5, matches),
@@ -217,7 +315,7 @@ area04 = PatchPattern(
 area05 = PatchPattern(
     name="skip event area05",
     description="skip event and init zone correct",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 01 00 07"),
                     instruction_readable="grow_stack 0x1"),
         Instruction(identifier=2, offset=0x4, pattern=parse_pattern_bytes("?? ?? ?? 13"),
@@ -229,7 +327,7 @@ area05 = PatchPattern(
         Instruction(identifier=5, offset=0x34, pattern=parse_pattern_bytes("00 00 00 0b"),
                     instruction_readable="load_arg 0x0"),
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(
             identifier=1,
             patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(offset, 4, matches),
@@ -242,7 +340,7 @@ area05 = PatchPattern(
 area06 = PatchPattern(
     name="skip event area06",
     description="skip event and init zone correct",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 00 00 0b"),
                     instruction_readable="load_arg 0x0"),
         Instruction(identifier=2, offset=0x4, pattern=parse_pattern_bytes("?? ?? ?? 03"),
@@ -259,7 +357,7 @@ area06 = PatchPattern(
         Instruction(identifier=7, offset=-0x4, pattern=parse_pattern_bytes("00 02 00 06"),
                     instruction_readable="ret -0x2"),
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(
             identifier=1,
             patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(offset, 4, matches),
@@ -271,7 +369,7 @@ area06 = PatchPattern(
 area07 = PatchPattern(
     name="skip event area07",
     description="skip event and init zone correct",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 00 00 0b"),
                     instruction_readable="load_arg 0x0"),
         Instruction(identifier=2, offset=0x4, pattern=parse_pattern_bytes("?? ?? ?? 03"),
@@ -290,7 +388,7 @@ area07 = PatchPattern(
         Instruction(identifier=8, offset=-0x1c, pattern=parse_pattern_bytes("00 02 00 06"),
                     instruction_readable="ret -0x2"),
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(
             identifier=1,
             patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(offset, 4, matches),
@@ -303,7 +401,7 @@ area07 = PatchPattern(
 chapter_event_logic = PatchPattern(
     name="skip events based on chapter",
     description="skip event and init zone correct",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 02 00 07"),
                     instruction_readable="grow_stack 0x2"),
         Instruction(identifier=2, offset=0x40, pattern=parse_pattern_bytes("00 00 00 12"),
@@ -313,7 +411,7 @@ chapter_event_logic = PatchPattern(
         Instruction(identifier=4, offset=0xd4, pattern=parse_pattern_bytes("00 03 00 06"),
                     instruction_readable="ret -0x3"),
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(
             identifier=2,
             patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(offset, 4, matches),
@@ -327,7 +425,7 @@ chapter_event_logic = PatchPattern(
 celebi_interaction = PatchPattern(
     name="celebi_interaction",
     description="Celebi Interaction to set flag when winning and removing chapter, postgame checks",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 08 00 07"),
                     instruction_readable="grow_stack 0x8"),
 
@@ -377,7 +475,7 @@ celebi_interaction = PatchPattern(
         Instruction(identifier=19, offset=0x22c, pattern=parse_pattern_bytes("00 03 00 08"),
                     instruction_readable="jmp"),
     ],
-    patchMap=[
+    patchMapJP=[
 
         # skip f9901TalkCelebi check
         Patch(

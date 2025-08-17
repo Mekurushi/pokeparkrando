@@ -4,7 +4,7 @@ from patcher.models.models import PatchPattern, Instruction, Patch
 wait1 = PatchPattern(
     name="Wait1",
     description="Wait1 calling Wait4 (full state Treehouse",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 02 00 07"),
                     instruction_readable="grow_stack 0x2"),
         Instruction(identifier=2, offset=0x4, pattern=parse_pattern_bytes("00 00 00 0b"),
@@ -14,7 +14,7 @@ wait1 = PatchPattern(
         Instruction(identifier=4, offset=0x54, pattern=parse_pattern_bytes("00 03 00 06"),
                     instruction_readable="ret -0x3"),
     ],
-    patchMap=[
+    patchMapJP=[
 
         Patch(
             identifier=1,
@@ -32,7 +32,7 @@ wait1 = PatchPattern(
 wait2 = PatchPattern(
     name="Wait2",
     description="Wait2 calling Wait4 (full state Treehouse",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 02 00 07"),
                     instruction_readable="grow_stack 0x2"),
         Instruction(identifier=2, offset=0x4, pattern=parse_pattern_bytes("00 00 00 0b"),
@@ -42,7 +42,7 @@ wait2 = PatchPattern(
         Instruction(identifier=4, offset=0x54, pattern=parse_pattern_bytes("00 03 00 06"),
                     instruction_readable="ret -0x3"),
     ],
-    patchMap=[
+    patchMapJP=[
 
         Patch(
             identifier=1,
@@ -61,7 +61,7 @@ wait2 = PatchPattern(
 wait3 = PatchPattern(
     name="Wait3",
     description="Wait23 calling Wait4 (full state Treehouse",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 02 00 07"),
                     instruction_readable="grow_stack 0x2"),
         Instruction(identifier=2, offset=0x4, pattern=parse_pattern_bytes("00 00 00 0b"),
@@ -71,7 +71,7 @@ wait3 = PatchPattern(
         Instruction(identifier=4, offset=0x54, pattern=parse_pattern_bytes("00 03 00 06"),
                     instruction_readable="ret -0x3"),
     ],
-    patchMap=[
+    patchMapJP=[
 
         Patch(
             identifier=1,
@@ -89,7 +89,7 @@ wait3 = PatchPattern(
 wait4 = PatchPattern(
     name="Wait4",
     description="Wait2 calling Wait4 (full state Treehouse",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 02 00 07"),
                     instruction_readable="grow_stack 0x2"),
         Instruction(identifier=2, offset=0x4, pattern=parse_pattern_bytes("00 00 00 0b"),

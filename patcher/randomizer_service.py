@@ -243,6 +243,30 @@ class PatcherService:
             with open(file_path, "r+b") as f:
                 f.seek(4)
                 f.write(0x3939.to_bytes(2))
+                f.seek(0x20)
+                f.write("Pokepark Archipelago".encode('ascii'))
+
+
+            file_path = self.extract_dir / "DATA/disc/header.bin"
+            with open(file_path, "r+b") as f:
+                f.seek(4)
+                f.write(0x3939.to_bytes(2))
+                f.seek(0x20)
+                f.write("Pokepark Archipelago".encode('ascii'))
+
+            file_path = self.extract_dir / "DATA/tmd.bin"
+            with open(file_path, "r+b") as f:
+                f.seek(0x0000018C)
+                f.write(0x0099.to_bytes(2))
+                f.seek(0x00000198)
+                f.write(0x3939.to_bytes(2))
+
+
+            file_path = self.extract_dir / "DATA/ticket.bin"
+            with open(file_path, "r+b") as f:
+                f.seek(0x000001DC)
+                f.write(0x0099.to_bytes(2))
+
         except Exception as e:
             raise Exception(f"Updating Maker Code failed: {e}")
 

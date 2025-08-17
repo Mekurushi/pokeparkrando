@@ -6,7 +6,7 @@ from patcher.models.models import PatchPattern, Instruction, Patch
 string_section_start = PatchPattern(
     name="string section start",
     description="string section start for lstr instruction computation",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0,
                     pattern=parse_pattern_bytes("65 76 41 72 30 31 5a 6e 30 31 5f 4e 70 63 5f 4d 61 69 6e 00"),
                     instruction_readable="ds evAr01Zn01_Npc_Main"),
@@ -17,7 +17,7 @@ string_section_start = PatchPattern(
 globalManager = PatchPattern(
     name="ds GlobalManager",
     description="using GlobalManager string for custom get_module calls",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0,
                     pattern=parse_pattern_bytes("47 6c 6f 62 61 6c 4d 61 6e 61 67 65 72 00"),
                     instruction_readable="ds GlobalManager"),
@@ -28,7 +28,7 @@ globalManager = PatchPattern(
 f0301BippaFlag = PatchPattern(
     name="ds f0301BippaFlag",
     description="using f0301BippaFlag string for custom get_module calls",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0,
                     pattern=parse_pattern_bytes("66 30 33 30 31 42 69 70 70 61 46 6c 61 67 00"),
                     instruction_readable="ds f0301BippaFlag"),
@@ -39,7 +39,7 @@ f0301BippaFlag = PatchPattern(
 f0101TalkOnisuzume = PatchPattern(
     name="ds f0101TalkOnisuzume",
     description="using f0101TalkOnisuzume for lstr instructions",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0,
                     pattern=parse_pattern_bytes("66 30 31 30 31 54 61 6c 6b 4f 6e 69 73 75 7a 75 6d 65 00"),
                     instruction_readable="ds f0101TalkOnisuzume"),
@@ -50,7 +50,7 @@ f0101TalkOnisuzume = PatchPattern(
 get_module = PatchPattern(
     name="get module",
     description="using get module for calls",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0,
                     pattern=parse_pattern_bytes("00 01 00 07"),
                     instruction_readable="grow_stack 0x1"),
@@ -66,7 +66,7 @@ get_module = PatchPattern(
 overworld_pokemon_spawning_Ar01Zn01 = PatchPattern(
     name="Overworld Pokemon Spawn Logic",
     description="replacing chapter value call in Pokemon Overworld Spawn decision function, with hardcoded 0xf9f that every pokemon spawns befriendable",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 14 00 07"),
                     instruction_readable="grow_stack 0x14"),
 
@@ -85,7 +85,7 @@ overworld_pokemon_spawning_Ar01Zn01 = PatchPattern(
         Instruction(identifier=7, offset=0x130, pattern=parse_pattern_bytes("ff fd 00 0b"),
                     instruction_readable="load_arg -0x3"),
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(
             identifier=2,
             patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(data, string_section_start,
@@ -109,7 +109,7 @@ overworld_pokemon_spawning_Ar01Zn01 = PatchPattern(
 unlock_function = PatchPattern(
     name="unlock function",
     description="replacing the unlock function to set the flag for Magikarp Archipelago location",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 03 00 07"),
                     instruction_readable="grow_stack 0x3"),
 
@@ -128,7 +128,7 @@ unlock_function = PatchPattern(
         Instruction(identifier=8, offset=0x3c, pattern=parse_pattern_bytes("ff fd 00 0b"),
                     instruction_readable="load_arg -0x3"),
     ],
-    patchMap=[
+    patchMapJP=[
 
         Patch(
             identifier=2,
@@ -173,7 +173,7 @@ unlock_function = PatchPattern(
 set_bestfriend_function_pattern = PatchPattern(
     name="set bestfriend_function",
     description="pattern for finding the best_friend function",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 03 00 07"),
                     instruction_readable="grow_stack 0x3"),
         Instruction(identifier=2, offset=0x4, pattern=parse_pattern_bytes("00 ?? ?? 13"),
@@ -221,7 +221,7 @@ set_bestfriend_function_pattern = PatchPattern(
 turtwig_friendship_pattern = PatchPattern(
     name="Turtwig Friendship Logic",
     description="Winning against Turtwig sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x00,
                     pattern=parse_pattern_bytes("00 3d 00 10"),
                     instruction_readable="push 0x3d"),
@@ -305,7 +305,7 @@ turtwig_friendship_pattern = PatchPattern(
                     instruction_readable="call set_bestfriend(0x5)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(identifier=8,
               patch_function=lambda offset, data, plando_dict, matches: (
                   0x000e0008).to_bytes(4,
@@ -331,7 +331,7 @@ turtwig_friendship_pattern = PatchPattern(
 turtwig_dialog_options_pattern = PatchPattern(
     name="Turtwig dialog options logic",
     description="Winning against Turtwig sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x00,
                     pattern=parse_pattern_bytes("ff f8 00 0b"),
                     instruction_readable="load_arg -0x8"),
@@ -373,7 +373,7 @@ turtwig_dialog_options_pattern = PatchPattern(
                     instruction_readable="jz"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(identifier=4,
               patch_function=lambda offset, data, plando_dict, matches: (
                   0x00000002).to_bytes(4,
@@ -384,7 +384,7 @@ turtwig_dialog_options_pattern = PatchPattern(
 buneary_friendship_pattern = PatchPattern(
     name="Buneary Friendship Logic",
     description="Winning against Buneary sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x00,
                     pattern=parse_pattern_bytes("00 3d 00 10"),
                     instruction_readable="push 0x3d"),
@@ -502,7 +502,7 @@ buneary_friendship_pattern = PatchPattern(
         Instruction(identifier=39, offset=0x98,
                     pattern=parse_pattern_bytes("?? ?? ?? 03"),
                     instruction_readable="call set_bestfriend(0x6)"),
-    ], patchMap=
+    ], patchMapJP=
     [
         Patch(identifier=8,
               patch_function=lambda offset, data, plando_dict, matches: (
@@ -550,7 +550,7 @@ buneary_friendship_pattern = PatchPattern(
 buneary_dialog_options_pattern = PatchPattern(
     name="Buneary dialog options logic",
     description="always allowing power comp dialog, so it is always befriendable",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x00,
                     pattern=parse_pattern_bytes("ff fa 00 0b"),
                     instruction_readable="load_arg -0x6"),
@@ -592,7 +592,7 @@ buneary_dialog_options_pattern = PatchPattern(
                     instruction_readable="jz"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(identifier=4,
               patch_function=lambda offset, data, plando_dict, matches: (
                   0x00000002).to_bytes(4,
@@ -603,7 +603,7 @@ buneary_dialog_options_pattern = PatchPattern(
 pachirisu1_friendship_pattern = PatchPattern(
     name="Pachirisu 1 Friendship Logic",
     description="Winning against Pachirisu sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x00,
                     pattern=parse_pattern_bytes("00 3d 00 10"),
                     instruction_readable="push 0x3d"),
@@ -675,7 +675,7 @@ pachirisu1_friendship_pattern = PatchPattern(
                     instruction_readable="call set_bestfriend(0x7)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(identifier=8,
               patch_function=lambda offset, data, plando_dict, matches: (
                   0x000a0008).to_bytes(4,  # always jump to set best friend flag
@@ -691,7 +691,7 @@ pachirisu1_friendship_pattern = PatchPattern(
 pachirisu2_friendship_pattern = PatchPattern(
     name="Pachirisu 2 Friendship Logic",
     description="Winning against Pachirisu sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 34 00 10"),
                     instruction_readable="push 0x34"),
@@ -764,7 +764,7 @@ pachirisu2_friendship_pattern = PatchPattern(
                     instruction_readable="call set_friend(0x34)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(identifier=2,
               patch_function=lambda offset, data, plando_dict, matches: (
                   0x00000002).to_bytes(4,  # don't request friendship flag
@@ -795,7 +795,7 @@ pachirisu2_friendship_pattern = PatchPattern(
 munchlax_friendship_pattern = PatchPattern(
     name="Munchlax Friendship Logic",
     description="Clearin Munchlax Errand calls the modified set_friend function that only sets best_friend flag also clearing unlocks",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 08 00 10"),
                     instruction_readable="push 0x08"),
@@ -871,7 +871,7 @@ munchlax_friendship_pattern = PatchPattern(
                     instruction_readable="call unlock_pokemon(0x1a)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(identifier=6,
               patch_function=lambda offset, data, plando_dict, matches: (
                   0x00050008).to_bytes(4,
@@ -891,7 +891,7 @@ munchlax_friendship_pattern = PatchPattern(
 munchlax2_friendship_pattern = PatchPattern(
     name="Munchlax 2 Friendship Logic",
     description="Clearin Munchlax Errand calls the modified set_friend function that only sets best_friend flag also clearing unlocks",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 32 00 10"),
                     instruction_readable="push 0x32"),
@@ -967,7 +967,7 @@ munchlax2_friendship_pattern = PatchPattern(
                     instruction_readable="call unlock_pokemon(0x1a)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(identifier=6,
               patch_function=lambda offset, data, plando_dict, matches: (
                   0x00050008).to_bytes(4,
@@ -987,7 +987,7 @@ munchlax2_friendship_pattern = PatchPattern(
 treecko_friendship_pattern = PatchPattern(
     name="Treecko Friendship Logic",
     description="Winning against Treecko sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 09 00 10"),
                     instruction_readable="push 0x9"),
@@ -1069,7 +1069,7 @@ treecko_friendship_pattern = PatchPattern(
                     instruction_readable="call set_bestfriend(0x9)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         # removing unneeded code
         #
         Patch(identifier=2,  # not requesting friendship
@@ -1152,7 +1152,7 @@ treecko_friendship_pattern = PatchPattern(
 chimchar_friendship_pattern = PatchPattern(
     name="Chimchar Friendship Logic",
     description="Winning against Chimchar sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 0a 00 10"),
                     instruction_readable="push 0xa"),
@@ -1234,7 +1234,7 @@ chimchar_friendship_pattern = PatchPattern(
                     instruction_readable="call set_bestfriend(0x9)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         # removing unneeded code
         #
         Patch(identifier=2,  # not requesting friendship
@@ -1317,7 +1317,7 @@ chimchar_friendship_pattern = PatchPattern(
 magikarp_friendship_pattern = PatchPattern(
     name="Magikarp Friendship Logic",
     description="Winning against Magikarp sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 0b 00 10"),
                     instruction_readable="push 0xb"),
@@ -1399,7 +1399,7 @@ magikarp_friendship_pattern = PatchPattern(
                     instruction_readable="call set_bestfriend(0xb)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         # removing unneeded code
         #
         Patch(identifier=2,  # not requesting friendship
@@ -1482,7 +1482,7 @@ magikarp_friendship_pattern = PatchPattern(
 lotad1_friendship_pattern = PatchPattern(
     name="Lotad 1 Friendship Logic",
     description="Winning against Lotad sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 0c 00 10"),
                     instruction_readable="push 0xc"),
@@ -1564,7 +1564,7 @@ lotad1_friendship_pattern = PatchPattern(
                     instruction_readable="call set_bestfriend(0xc)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         # removing unneeded code
         #
         Patch(identifier=2,  # not requesting friendship
@@ -1647,7 +1647,7 @@ lotad1_friendship_pattern = PatchPattern(
 caterpie_friendship_pattern = PatchPattern(
     name="Caterpie Friendship Logic",
     description="Winning against Caterpie sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 0d 00 10"),
                     instruction_readable="push 0xd"),
@@ -1777,7 +1777,7 @@ caterpie_friendship_pattern = PatchPattern(
                     instruction_readable="jmp"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         # removing unneeded code
         #
         Patch(identifier=2,  # not requesting friendship
@@ -1876,7 +1876,7 @@ caterpie_friendship_pattern = PatchPattern(
 weedle_friendship_pattern = PatchPattern(
     name="Weedle Friendship Logic",
     description="Winning against Weedle sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 0e 00 10"),
                     instruction_readable="push 0xe"),
@@ -1958,7 +1958,7 @@ weedle_friendship_pattern = PatchPattern(
                     instruction_readable="call set_bestfriend(0xe)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         # removing unneeded code
         #
         Patch(identifier=2,  # not requesting friendship
@@ -2041,7 +2041,7 @@ weedle_friendship_pattern = PatchPattern(
 event_bidoof_friendship_pattern = PatchPattern(
     name="Event Bidoof Friendship Logic",
     description="Event Bidoof sets",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 18 00 07"),
                     instruction_readable="grow_stack 0x18"),
@@ -2170,7 +2170,7 @@ event_bidoof_friendship_pattern = PatchPattern(
                     instruction_readable="call FUN_??????"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         # removing unneeded code
         #
         Patch(identifier=2,  # removing world state content
@@ -2306,7 +2306,7 @@ event_bidoof_friendship_pattern = PatchPattern(
 oddish_friendship_pattern = PatchPattern(
     name="Oddish Friendship Logic",
     description="Winning against Oddish sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 10 00 10"),
                     instruction_readable="push 0x10"),
@@ -2411,7 +2411,7 @@ oddish_friendship_pattern = PatchPattern(
                     instruction_readable="call FUN_??????"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         # removing unneeded code
         #
         Patch(identifier=2,  # removing tutorial popup
@@ -2519,7 +2519,7 @@ oddish_friendship_pattern = PatchPattern(
 shroomish_friendship_pattern = PatchPattern(
     name="Shroomish Friendship Logic",
     description="Winning against Shroomish sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 11 00 10"),
                     instruction_readable="push 0x11"),
@@ -2595,7 +2595,7 @@ shroomish_friendship_pattern = PatchPattern(
                     instruction_readable="call set_bestfriend(0x11)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         # removing unneeded code
         #
         Patch(identifier=2,  # not requesting friendship
@@ -2663,7 +2663,7 @@ shroomish_friendship_pattern = PatchPattern(
 bonsly_friendship_pattern = PatchPattern(
     name="Bonsly Friendship Logic",
     description="Winning against Bonsly sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 12 00 10"),
                     instruction_readable="push 0x12"),
@@ -2774,7 +2774,7 @@ bonsly_friendship_pattern = PatchPattern(
                     instruction_readable="call unlock_pokemon(0x1d)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         # removing unneeded code
         #
         Patch(identifier=2,  # removing tutorial popup
@@ -2893,7 +2893,7 @@ bonsly_friendship_pattern = PatchPattern(
 shinx_friendship_pattern = PatchPattern(
     name="Shinx Friendship Logic",
     description="Winning against Shinx sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 13 00 10"),
                     instruction_readable="push 0xa"),
@@ -2975,7 +2975,7 @@ shinx_friendship_pattern = PatchPattern(
                     instruction_readable="call set_bestfriend(0x13)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         # removing unneeded code
         #
         Patch(identifier=2,  # not requesting friendship
@@ -3058,7 +3058,7 @@ shinx_friendship_pattern = PatchPattern(
 aipom_tree_friendship_pattern = PatchPattern(
     name="Aipom Tree Friendship Logic",
     description="Winning against Aipom sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 15 00 10"),
                     instruction_readable="push 0x15"),
@@ -3182,7 +3182,7 @@ aipom_tree_friendship_pattern = PatchPattern(
                     instruction_readable="jmp"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         # removing unneeded code
         #
         Patch(identifier=2,  # not requesting friendship
@@ -3273,7 +3273,7 @@ aipom_tree_friendship_pattern = PatchPattern(
 spearow_overworld_friendship_pattern = PatchPattern(
     name="Spearow Overworld Friendship Logic",
     description="Winning against Spearow sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 16 00 10"),
                     instruction_readable="push 0x16"),
@@ -3355,7 +3355,7 @@ spearow_overworld_friendship_pattern = PatchPattern(
                     instruction_readable="call set_bestfriend(0x13)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         # removing unneeded code
         #
         Patch(identifier=2,  # not requesting friendship
@@ -3438,7 +3438,7 @@ spearow_overworld_friendship_pattern = PatchPattern(
 torterra_friendship_pattern = PatchPattern(
     name="Torterra Overworld Friendship Logic",
     description="Winning against Torterra sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 17 00 10"),
                     instruction_readable="push 0x17"),
@@ -3520,7 +3520,7 @@ torterra_friendship_pattern = PatchPattern(
                     instruction_readable="call set_bestfriend(0x17)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         # removing unneeded code
         #
         Patch(identifier=2,  # not requesting friendship
@@ -3603,7 +3603,7 @@ torterra_friendship_pattern = PatchPattern(
 starly_friendship_pattern = PatchPattern(
     name="Starly Overworld Friendship Logic",
     description="Winning against Starly sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 18 00 10"),
                     instruction_readable="push 0x18"),
@@ -3685,7 +3685,7 @@ starly_friendship_pattern = PatchPattern(
                     instruction_readable="call set_bestfriend(0x18)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         # removing unneeded code
         #
         Patch(identifier=2,  # not requesting friendship
@@ -3768,7 +3768,7 @@ starly_friendship_pattern = PatchPattern(
 butterfree_friendship_pattern = PatchPattern(
     name="Butterfree Overworld Friendship Logic",
     description="Winning against Butterfree sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 19 00 10"),
                     instruction_readable="push 0x19"),
@@ -3850,7 +3850,7 @@ butterfree_friendship_pattern = PatchPattern(
                     instruction_readable="call set_bestfriend(0x19)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         # removing unneeded code
         #
         Patch(identifier=2,  # not requesting friendship
@@ -3933,7 +3933,7 @@ butterfree_friendship_pattern = PatchPattern(
 tropius_friendship_pattern = PatchPattern(
     name="Tropius Friendship Logic",
     description="Clearin Tropius Errand calls the modified set_friend function that only sets best_friend flag also clearing unlocks",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 1a 00 10"),
                     instruction_readable="push 0x1a"),
@@ -4003,7 +4003,7 @@ tropius_friendship_pattern = PatchPattern(
                     instruction_readable="call set_friend"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(identifier=2,  # removing is friend calls
               patch_function=lambda offset, data, plando_dict, matches: (
                   0x00000002).to_bytes(4,
@@ -4045,7 +4045,7 @@ tropius_friendship_pattern = PatchPattern(
 bibarel_friendship_pattern = PatchPattern(
     name="Bibarel Friendship Logic",
     description="Winning against Bibarel sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 1b 00 10"),
                     instruction_readable="push 0x1b"),
@@ -4127,7 +4127,7 @@ bibarel_friendship_pattern = PatchPattern(
                     instruction_readable="call set_bestfriend(0x1b)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         # removing unneeded code
         #
         Patch(identifier=2,  # not requesting friendship
@@ -4210,7 +4210,7 @@ bibarel_friendship_pattern = PatchPattern(
 ambipom_friendship_pattern = PatchPattern(
     name="Ambipom Friendship Logic",
     description="Winning against Ambipom sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 1c 00 10"),
                     instruction_readable="push 0x1c"),
@@ -4292,7 +4292,7 @@ ambipom_friendship_pattern = PatchPattern(
                     instruction_readable="call set_bestfriend(0x1c)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         # removing unneeded code
         #
         Patch(identifier=2,  # not requesting friendship
@@ -4372,10 +4372,7 @@ ambipom_friendship_pattern = PatchPattern(
               new_instruction_readable="delay(0)"),
     ])
 
-sudowoodo_friendship_pattern = PatchPattern(
-    name="Sudowoodo Friendship Logic",
-    description="Winning against Sudowoodo sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+sudowoodo_interaction_patternJP = [
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 1d 00 10"),
                     instruction_readable="push 0x1d"),
@@ -4474,38 +4471,159 @@ sudowoodo_friendship_pattern = PatchPattern(
                     instruction_readable="call set_friend(0x1d)"),
         Instruction(identifier=30, offset=0x244,
                     pattern=parse_pattern_bytes("?? ?? ?? 13"),
-                    instruction_readable="lstr 11_00630",
-                    alternate_offset=0x24c),
+                    instruction_readable="lstr 11_00630"),
         Instruction(identifier=31, offset=0x248,
                     pattern=parse_pattern_bytes("?? ?? ?? 03"),
-                    instruction_readable="call FUN_??????",
-                    alternate_offset=0x250),
+                    instruction_readable="call FUN_??????"),
         Instruction(identifier=32, offset=0x24c,
                     pattern=parse_pattern_bytes("00 ?? 00 08"),  # jump is unknown becuase of the version difference
-                    instruction_readable="jmp",
-                    alternate_offset=0x254),
+                    instruction_readable="jmp"),
         Instruction(identifier=33, offset=0x250,
                     pattern=parse_pattern_bytes("?? ?? ?? 13"),
-                    instruction_readable="lstr 11_12380",
-                    alternate_offset=0x258),
+                    instruction_readable="lstr 11_12380"
+                    ),
         Instruction(identifier=34, offset=0x254,
                     pattern=parse_pattern_bytes("00 00 00 0b"),
-                    instruction_readable="load_arg 0x0",
-                    alternate_offset=0x25c),
+                    instruction_readable="load_arg 0x0"
+                    ),
         Instruction(identifier=35, offset=0x258,
                     pattern=parse_pattern_bytes("?? ?? ?? 03"),
-                    instruction_readable="call FUN_??????",
-                    alternate_offset=0x260),
+                    instruction_readable="call FUN_??????"
+                    ),
         Instruction(identifier=36, offset=0x25c,
                     pattern=parse_pattern_bytes("ff fd 00 0b"),
-                    instruction_readable="load_arg -0x3",
-                    alternate_offset=0x244),
+                    instruction_readable="load_arg -0x3"
+                    ),
         Instruction(identifier=37, offset=0x260,
                     pattern=parse_pattern_bytes("?? ?? ?? 03"),
-                    instruction_readable="call set_bestfriend(0x1d)",
-                    alternate_offset=0x248),
-    ],
-    patchMap=[
+                    instruction_readable="call set_bestfriend(0x1d)"
+                    ),
+    ]
+
+sudowoodo_interaction_patternPAL = [
+        Instruction(identifier=1, offset=0,
+                    pattern=parse_pattern_bytes("00 1d 00 10"),
+                    instruction_readable="push 0x1d"),
+
+        # remove hide and seek tutorial popup
+        #
+        Instruction(identifier=2, offset=0x118,
+                    pattern=parse_pattern_bytes("?? ?? ?? 13"),
+                    instruction_readable="lstr f0101HideAndSeek"),
+        Instruction(identifier=3, offset=0x11c,
+                    pattern=parse_pattern_bytes("ff ff 00 0b"),
+                    instruction_readable="load_arg -0x1"),
+        Instruction(identifier=4, offset=0x120,
+                    pattern=parse_pattern_bytes("00 01 00 10"),
+                    instruction_readable="push 0x01"),
+        Instruction(identifier=5, offset=0x124,
+                    pattern=parse_pattern_bytes("00 15 03 01"),
+                    instruction_readable="SC3 0x0:0x15"),
+        Instruction(identifier=6, offset=0x128,
+                    pattern=parse_pattern_bytes("00 00 00 12"),
+                    instruction_readable="push_result"),
+        Instruction(identifier=7, offset=0x12c,
+                    pattern=parse_pattern_bytes("00 00 00 10"),
+                    instruction_readable="push 0x0"),
+        Instruction(identifier=8, offset=0x130,
+                    pattern=parse_pattern_bytes("00 0b 00 16"),
+                    instruction_readable="eq"),
+        Instruction(identifier=9, offset=0x134,
+                    pattern=parse_pattern_bytes("00 03 02 08"),
+                    instruction_readable="jz"),
+        Instruction(identifier=10, offset=0x138,
+                    pattern=parse_pattern_bytes("?? ?? ?? 13"),
+                    instruction_readable="lstr 02_60100"),
+        Instruction(identifier=11, offset=0x13c,
+                    pattern=parse_pattern_bytes("00 00 00 10"),
+                    instruction_readable="push 0x0"),
+        Instruction(identifier=12, offset=0x140,
+                    pattern=parse_pattern_bytes("?? ?? ?? 03"),
+                    instruction_readable="call FUN_??????"),
+
+        # setting hide and seek popup flag
+        #
+        Instruction(identifier=13, offset=0x1F8,
+                    pattern=parse_pattern_bytes("?? ?? ?? 13"),
+                    instruction_readable="lstr f0101HideAndSeek"),
+        Instruction(identifier=14, offset=0x1fc,
+                    pattern=parse_pattern_bytes("ff ff 00 0b"),
+                    instruction_readable="load_arg -0x1"),
+        Instruction(identifier=15, offset=0x200,
+                    pattern=parse_pattern_bytes("00 00 00 10"),
+                    instruction_readable="push 0x0"),
+        Instruction(identifier=16, offset=0x204,
+                    pattern=parse_pattern_bytes("00 15 04 01"),
+                    instruction_readable="SC4 0x0:0x15"),
+
+        # replacing friendship flag with best friend
+        #
+        Instruction(identifier=17, offset=0x210,
+                    pattern=parse_pattern_bytes("ff fd 00 0b"),
+                    instruction_readable="load_arg -0x3"),
+        Instruction(identifier=18, offset=0x214,
+                    pattern=parse_pattern_bytes("?? ?? ?? 03"),
+                    instruction_readable="call FUN_??????"),
+        Instruction(identifier=19, offset=0x218,
+                    pattern=parse_pattern_bytes("00 00 00 12"),
+                    instruction_readable="push_result"),
+        Instruction(identifier=20, offset=0x21c,
+                    pattern=parse_pattern_bytes("ff f8 00 0c"),
+                    instruction_readable="store_arg -0x8"),
+        Instruction(identifier=21, offset=0x220,
+                    pattern=parse_pattern_bytes("ff f8 00 0b"),
+                    instruction_readable="load_arg -0x8"),
+        Instruction(identifier=22, offset=0x224,
+                    pattern=parse_pattern_bytes("00 00 00 10"),
+                    instruction_readable="push 0x0"),
+        Instruction(identifier=23, offset=0x228,
+                    pattern=parse_pattern_bytes("00 0b 00 16"),
+                    instruction_readable="eq"),
+        Instruction(identifier=24, offset=0x22c,
+                    pattern=parse_pattern_bytes("00 ?? 02 08"),  # jump is unknown becuase of the version difference
+                    instruction_readable="jz"),
+        Instruction(identifier=25, offset=0x230,
+                    pattern=parse_pattern_bytes("?? ?? ?? 13"),
+                    instruction_readable="lstr 11_12390"),
+        Instruction(identifier=26, offset=0x234,
+                    pattern=parse_pattern_bytes("00 00 00 0b"),
+                    instruction_readable="load_arg 0x0"),
+        Instruction(identifier=27, offset=0x238,
+                    pattern=parse_pattern_bytes("?? ?? ?? 03"),
+                    instruction_readable="call FUN_??????"),
+        Instruction(identifier=28, offset=0x23c,
+                    pattern=parse_pattern_bytes("ff fd 00 0b"),
+                    instruction_readable="load_arg -0x3"),
+        Instruction(identifier=29, offset=0x240,
+                    pattern=parse_pattern_bytes("?? ?? ?? 03"),
+                    instruction_readable="call set_friend(0x1d)"),
+        Instruction(identifier=30, offset=0x24c,
+                    pattern=parse_pattern_bytes("?? ?? ?? 13"),
+                    instruction_readable="lstr 11_00630"),
+        Instruction(identifier=31, offset=0x250,
+                    pattern=parse_pattern_bytes("?? ?? ?? 03"),
+                    instruction_readable="call FUN_??????"),
+        Instruction(identifier=32, offset=0x254,
+                    pattern=parse_pattern_bytes("00 ?? 00 08"),  # jump is unknown becuase of the version difference
+                    instruction_readable="jmp"),
+        Instruction(identifier=33, offset=0x258,
+                    pattern=parse_pattern_bytes("?? ?? ?? 13"),
+                    instruction_readable="lstr 11_12380"),
+        Instruction(identifier=34, offset=0x25c,
+                    pattern=parse_pattern_bytes("00 00 00 0b"),
+                    instruction_readable="load_arg 0x0"),
+        Instruction(identifier=35, offset=0x260,
+                    pattern=parse_pattern_bytes("?? ?? ?? 03"),
+                    instruction_readable="call FUN_??????"),
+        Instruction(identifier=36, offset=0x244,
+                    pattern=parse_pattern_bytes("ff fd 00 0b"),
+                    instruction_readable="load_arg -0x3"),
+        Instruction(identifier=37, offset=0x248,
+                    pattern=parse_pattern_bytes("?? ?? ?? 03"),
+                    instruction_readable="call set_bestfriend(0x1d)"),
+    ]
+
+sudowoodo_interaction_patchMapJP = [
         # removing unneeded code
         #
         Patch(identifier=2,  # removing tutorial popup
@@ -4616,13 +4734,135 @@ sudowoodo_friendship_pattern = PatchPattern(
               patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
                                                                                               'big'),
               new_instruction_readable="delay(0)"),
-    ])
+    ]
+sudowoodo_interaction_patchMapPAL = [
+        # removing unneeded code
+        #
+        Patch(identifier=2,  # removing tutorial popup
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=3,  # removing tutorial popup
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=4,  # removing tutorial popup
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=5,  # removing tutorial popup
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=6,  # removing tutorial popup
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=7,  # removing tutorial popup
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=8,  # removing tutorial popup
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=9,  # removing tutorial popup
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=10,  # removing tutorial popup
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=11,  # removing tutorial popup
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=12,  # removing tutorial popup
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=13,  # removing tutorial popup
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=14,  # removing tutorial popup
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=15,  # removing tutorial popup
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=16,  # removing tutorial popup
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+
+        # replacing friendship flag with best friend
+        #
+        Patch(identifier=17,  # removing friendship flag request
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=18,  # removing friendship flag request
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=19,  # removing friendship flag request
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=20,  # removing friendship flag request
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=21,  # removing friendship flag request
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=22,  # removing friendship flag request
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=23,  # removing friendship flag request
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=24,  # removing friendship flag request
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+
+        Patch(identifier=29,  # replace friendship flag with bestfriend flag
+              patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(offset, data,
+                                                                                                      set_bestfriend_function_pattern),
+              new_instruction_readable="call set_bestfriend(0x10)"),
+        Patch(identifier=36,  # removing friendship flag request
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=37,  # removing friendship flag request
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+    ]
+sudowoodo_friendship_pattern = PatchPattern(
+    name="Sudowoodo Friendship Logic",
+    description="Winning against Sudowoodo sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
+    patternJP=sudowoodo_interaction_patternJP,
+    patternPAL=sudowoodo_interaction_patternPAL,
+    patternNA=sudowoodo_interaction_patternPAL,
+    patchMapJP=sudowoodo_interaction_patchMapJP,
+    patchMapPAL = sudowoodo_interaction_patchMapPAL,
+    patchMapNA = sudowoodo_interaction_patchMapPAL
+)
 
 scyther_friendship_pattern = PatchPattern(
     name="Scyther Friendship Logic",
     description="Winning against Scyther sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship."
                 "Also sets required battle_count from options",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 1e 00 10"),
                     instruction_readable="push 0x1e"),
@@ -4719,7 +4959,7 @@ scyther_friendship_pattern = PatchPattern(
                     pattern=parse_pattern_bytes("?? ?? ?? 03"),
                     instruction_readable="call set_bestfriend(0x1e)"),
     ],
-    patchMap=[
+    patchMapJP=[
         # setting battle count to option value
         Patch(identifier=2,  # setting battle count with option value
               patch_function=lambda offset, data, plando_dict, matches: get_num_battle_count_from_dict_as_instruction(
@@ -4806,7 +5046,7 @@ scyther_friendship_pattern = PatchPattern(
 leafeon_friendship_pattern = PatchPattern(
     name="Leafeon Friendship Logic",
     description="Winning against Leafeon sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship.",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 1f 00 10"),
                     instruction_readable="push 0x1f"),
@@ -4911,7 +5151,7 @@ leafeon_friendship_pattern = PatchPattern(
                     pattern=parse_pattern_bytes("?? ?? ?? 03"),
                     instruction_readable="call set_bestfriend(0x1f)"),
     ],
-    patchMap=[
+    patchMapJP=[
         # removing friendship flag request
         #
         Patch(identifier=8,  # removing friendship flag request
@@ -4958,13 +5198,13 @@ leafeon_friendship_pattern = PatchPattern(
         # replacing friendship flag with bestfriend
         #
         Patch(identifier=21,  # replace friendship flag with bestfriend flag
-              patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(4,
+              patch_function=lambda offset, data, plando_dict, matches: (0xfffd000b).to_bytes(4,
                                                                                               'big'),
-              new_instruction_readable="load_arg -0x2"),
+              new_instruction_readable="load_arg -0x3"),
         Patch(identifier=22,  # replace friendship flag with bestfriend flag
               patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(offset, data,
                                                                                                       set_bestfriend_function_pattern),
-              new_instruction_readable="call set_bestfriend(0x1b)"),
+              new_instruction_readable="call set_bestfriend(0x1f)"),
 
         # removing unnnecessary friendship/bestfriend flag instruction
         Patch(identifier=23,  # removing friendship flag set
@@ -4985,10 +5225,7 @@ leafeon_friendship_pattern = PatchPattern(
               new_instruction_readable="delay(0)"),
     ])
 
-croagunk_friendship_pattern = PatchPattern(
-    name="Croagunk Friendship Logic",
-    description="Winning against Croagunk sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship also events.",
-    pattern=[
+croagunk_interaction_patternJP = [
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 20 00 10"),
                     instruction_readable="push 0x20"),
@@ -5024,106 +5261,195 @@ croagunk_friendship_pattern = PatchPattern(
         # end of event code
         Instruction(identifier=10, offset=0x430,
                     pattern=parse_pattern_bytes("ff f0 00 0c"),
-                    instruction_readable="store_arg -0x10",
-                    alternate_offset=0x474),
+                    instruction_readable="store_arg -0x10"),
 
         # enter path after winning
         Instruction(identifier=11, offset=0xa68,
                     pattern=parse_pattern_bytes("ff fa 00 0b"),
-                    instruction_readable="load_arg -0x6",
-                    alternate_offset=0xA6C),
+                    instruction_readable="load_arg -0x6"),
         Instruction(identifier=12, offset=0xa6c,
                     pattern=parse_pattern_bytes("00 00 00 10"),
-                    instruction_readable="push 0x0",
-                    alternate_offset=0xA70),
+                    instruction_readable="push 0x0"),
         Instruction(identifier=13, offset=0xa70,
                     pattern=parse_pattern_bytes("00 0b 00 16"),
-                    instruction_readable="eq",
-                    alternate_offset=0xA74),
+                    instruction_readable="eq"),
         Instruction(identifier=14, offset=0xa74,
                     pattern=parse_pattern_bytes("00 0c 02 08"),
-                    instruction_readable="jz",
-                    alternate_offset=0xA78),
+                    instruction_readable="jz"),
         Instruction(identifier=15, offset=0xa78,
                     pattern=parse_pattern_bytes("00 ?? ?? 13"),
-                    instruction_readable="lstr 11_12690",
-                    alternate_offset=0xA7c),
+                    instruction_readable="lstr 11_12690"),
         Instruction(identifier=16, offset=0xa7c,
                     pattern=parse_pattern_bytes("00 00 00 0b"),
-                    instruction_readable="load_arg 0x0",
-                    alternate_offset=0xA80),
+                    instruction_readable="load_arg 0x0"),
         Instruction(identifier=17, offset=0xa80,
                     pattern=parse_pattern_bytes("?? ?? ?? 03"),
-                    instruction_readable="call FUN_??????",
-                    alternate_offset=0xA84),
+                    instruction_readable="call FUN_??????"),
         Instruction(identifier=18, offset=0xa84,
                     pattern=parse_pattern_bytes("00 0b 00 10"),
-                    instruction_readable="push 0xb",
-                    alternate_offset=0xA88),
+                    instruction_readable="push 0xb"),
         Instruction(identifier=19, offset=0xa88,
                     pattern=parse_pattern_bytes("ff ed 00 0b"),
-                    instruction_readable="load_arg -0x13",
-                    alternate_offset=0xA8c),
+                    instruction_readable="load_arg -0x13"),
         Instruction(identifier=20, offset=0xa8c,
                     pattern=parse_pattern_bytes("00 3c 00 10"),
-                    instruction_readable="push 0x3c",
-                    alternate_offset=0xA90),
+                    instruction_readable="push 0x3c"),
         Instruction(identifier=21, offset=0xa90,
                     pattern=parse_pattern_bytes("00 15 03 01"),
-                    instruction_readable="SC 0x0:0x15",
-                    alternate_offset=0xA94),
+                    instruction_readable="SC 0x0:0x15"),
         Instruction(identifier=22, offset=0xa94,
                     pattern=parse_pattern_bytes("00 ?? ?? 13"),
-                    instruction_readable="lstr 11_00660",
-                    alternate_offset=0xA98),
+                    instruction_readable="lstr 11_00660"),
         Instruction(identifier=23, offset=0xa98,
                     pattern=parse_pattern_bytes("?? ?? ?? 03"),
-                    instruction_readable="call FUN_??????",
-                    alternate_offset=0xA9c),
+                    instruction_readable="call FUN_??????"),
         Instruction(identifier=24, offset=0xa9c,
                     pattern=parse_pattern_bytes("00 1e 00 10"),
-                    instruction_readable="push 0x1e",
-                    alternate_offset=0xAa0),
+                    instruction_readable="push 0x1e"),
         Instruction(identifier=25, offset=0xaa0,
                     pattern=parse_pattern_bytes("?? ?? ?? 03"),
-                    instruction_readable="call unlock_pokemon(0x1e)",
-                    alternate_offset=0xAa4),
+                    instruction_readable="call unlock_pokemon(0x1e)"),
         Instruction(identifier=26, offset=0xaa4,
                     pattern=parse_pattern_bytes("00 05 00 08"),
-                    instruction_readable="jmp",
-                    alternate_offset=0xAa8),
+                    instruction_readable="jmp"),
         Instruction(identifier=27, offset=0xaa8,
                     pattern=parse_pattern_bytes("00 ?? ?? 13"),
-                    instruction_readable="lstr 11_12680",
-                    alternate_offset=0xAac),
+                    instruction_readable="lstr 11_12680"),
         Instruction(identifier=28, offset=0xaac,
                     pattern=parse_pattern_bytes("00 00 00 0b"),
-                    instruction_readable="load_arg 0x0",
-                    alternate_offset=0xAb0),
+                    instruction_readable="load_arg 0x0"),
         Instruction(identifier=29, offset=0xab0,
                     pattern=parse_pattern_bytes("?? ?? ?? 03"),
-                    instruction_readable="call FUN_??????",
-                    alternate_offset=0xAb4),
+                    instruction_readable="call FUN_??????"),
         Instruction(identifier=30, offset=0xab4,
                     pattern=parse_pattern_bytes("ff fe 00 0b"),
-                    instruction_readable="load_arg -0x2",
-                    alternate_offset=0xAb8),
+                    instruction_readable="load_arg -0x2"),
         Instruction(identifier=31, offset=0xab8,
                     pattern=parse_pattern_bytes("?? ?? ?? 03"),
-                    instruction_readable="call set_bestfriend(0x20)",
-                    alternate_offset=0xAbc),
+                    instruction_readable="call set_bestfriend(0x20)"),
 
         # skip event
         Instruction(identifier=32, offset=0xae0,
                     pattern=parse_pattern_bytes("?? ?? ?? 03"),
-                    instruction_readable="call get_chapter",
-                    alternate_offset=0xae4),
+                    instruction_readable="call get_chapter"),
         Instruction(identifier=33, offset=0xae4,
                     pattern=parse_pattern_bytes("00 00 00 12"),
-                    instruction_readable="push_result",
-                    alternate_offset=0xae8),
-    ],
-    patchMap=[
+                    instruction_readable="push_result"),
+    ]
+
+croagunk_interaction_patternPAL = [
+        Instruction(identifier=1, offset=0,
+                    pattern=parse_pattern_bytes("00 20 00 10"),
+                    instruction_readable="push 0x20"),
+
+        # get chapter call
+        Instruction(identifier=2, offset=0x28,
+                    pattern=parse_pattern_bytes("?? ?? ?? 03"),
+                    instruction_readable="call get_chapter()"),
+        Instruction(identifier=3, offset=0x2c,
+                    pattern=parse_pattern_bytes("00 00 00 12"),
+                    instruction_readable="push_result"),
+        Instruction(identifier=4, offset=0x30,
+                    pattern=parse_pattern_bytes("ff fb 00 0c"),
+                    instruction_readable="store_arg -0x5"),
+        # get friendship call
+        Instruction(identifier=5, offset=0x34,
+                    pattern=parse_pattern_bytes("ff fe 00 0b"),
+                    instruction_readable="load_arg -0x2"),
+        Instruction(identifier=6, offset=0x38,
+                    pattern=parse_pattern_bytes("?? ?? ?? 03"),
+                    instruction_readable="call get_friendship()"),
+        Instruction(identifier=7, offset=0x3c,
+                    pattern=parse_pattern_bytes("00 00 00 12"),
+                    instruction_readable="push_result"),
+        Instruction(identifier=8, offset=0x40,
+                    pattern=parse_pattern_bytes("ff fa 00 0c"),
+                    instruction_readable="store_arg -0x6"),
+
+        # start of event code
+        Instruction(identifier=9, offset=0x84,
+                    pattern=parse_pattern_bytes("ff fb 00 0b"),
+                    instruction_readable="load_arg -0x5"),
+        # end of event code
+        Instruction(identifier=10, offset=0x474,
+                    pattern=parse_pattern_bytes("ff f0 00 0c"),
+                    instruction_readable="store_arg -0x10"),
+
+        # enter path after winning
+        Instruction(identifier=11, offset=0xa6c,
+                    pattern=parse_pattern_bytes("ff fa 00 0b"),
+                    instruction_readable="load_arg -0x6"),
+        Instruction(identifier=12, offset=0xa70,
+                    pattern=parse_pattern_bytes("00 00 00 10"),
+                    instruction_readable="push 0x0"),
+        Instruction(identifier=13, offset=0xa74,
+                    pattern=parse_pattern_bytes("00 0b 00 16"),
+                    instruction_readable="eq"),
+        Instruction(identifier=14, offset=0xa78,
+                    pattern=parse_pattern_bytes("00 0c 02 08"),
+                    instruction_readable="jz"),
+        Instruction(identifier=15, offset=0xa7c,
+                    pattern=parse_pattern_bytes("00 ?? ?? 13"),
+                    instruction_readable="lstr 11_12690"),
+        Instruction(identifier=16, offset=0xa80,
+                    pattern=parse_pattern_bytes("00 00 00 0b"),
+                    instruction_readable="load_arg 0x0"),
+        Instruction(identifier=17, offset=0xa84,
+                    pattern=parse_pattern_bytes("?? ?? ?? 03"),
+                    instruction_readable="call FUN_??????"),
+        Instruction(identifier=18, offset=0xa88,
+                    pattern=parse_pattern_bytes("00 0b 00 10"),
+                    instruction_readable="push 0xb"),
+        Instruction(identifier=19, offset=0xa8c,
+                    pattern=parse_pattern_bytes("ff ed 00 0b"),
+                    instruction_readable="load_arg -0x13"),
+        Instruction(identifier=20, offset=0xa90,
+                    pattern=parse_pattern_bytes("00 3c 00 10"),
+                    instruction_readable="push 0x3c"),
+        Instruction(identifier=21, offset=0xa94,
+                    pattern=parse_pattern_bytes("00 15 03 01"),
+                    instruction_readable="SC 0x0:0x15"),
+        Instruction(identifier=22, offset=0xa98,
+                    pattern=parse_pattern_bytes("00 ?? ?? 13"),
+                    instruction_readable="lstr 11_00660"),
+        Instruction(identifier=23, offset=0xa9c,
+                    pattern=parse_pattern_bytes("?? ?? ?? 03"),
+                    instruction_readable="call FUN_??????"),
+        Instruction(identifier=24, offset=0xaa0,
+                    pattern=parse_pattern_bytes("00 1e 00 10"),
+                    instruction_readable="push 0x1e"),
+        Instruction(identifier=25, offset=0xaa4,
+                    pattern=parse_pattern_bytes("?? ?? ?? 03"),
+                    instruction_readable="call unlock_pokemon(0x1e)"),
+        Instruction(identifier=26, offset=0xaa8,
+                    pattern=parse_pattern_bytes("00 05 00 08"),
+                    instruction_readable="jmp"),
+        Instruction(identifier=27, offset=0xaac,
+                    pattern=parse_pattern_bytes("00 ?? ?? 13"),
+                    instruction_readable="lstr 11_12680"),
+        Instruction(identifier=28, offset=0xab0,
+                    pattern=parse_pattern_bytes("00 00 00 0b"),
+                    instruction_readable="load_arg 0x0"),
+        Instruction(identifier=29, offset=0xab4,
+                    pattern=parse_pattern_bytes("?? ?? ?? 03"),
+                    instruction_readable="call FUN_??????"),
+        Instruction(identifier=30, offset=0xab8,
+                    pattern=parse_pattern_bytes("ff fe 00 0b"),
+                    instruction_readable="load_arg -0x2"),
+        Instruction(identifier=31, offset=0xabc,
+                    pattern=parse_pattern_bytes("?? ?? ?? 03"),
+                    instruction_readable="call set_bestfriend(0x20)"),
+
+        # skip event
+        Instruction(identifier=32, offset=0xae4,
+                    pattern=parse_pattern_bytes("?? ?? ?? 03"),
+                    instruction_readable="call get_chapter"),
+        Instruction(identifier=33, offset=0xae8,
+                    pattern=parse_pattern_bytes("00 00 00 12"),
+                    instruction_readable="push_result"),
+    ]
+
+croagunk_interaction_patchMapJP =[
         # set chapter value so it skips all events
         #
         Patch(identifier=2,  # removing get_chapter call
@@ -5208,12 +5534,108 @@ croagunk_friendship_pattern = PatchPattern(
               patch_function=lambda offset, data, plando_dict, matches: (0x2af80010).to_bytes(4,
                                                                                               'big'),
               new_instruction_readable="push 0x2af8"),
-    ])
+    ]
+croagunk_interaction_patchMapPAL =[
+        # set chapter value so it skips all events
+        #
+        Patch(identifier=2,  # removing get_chapter call
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=3,  # pushing instead of chapter 0x2af8 so no event is triggerable
+              patch_function=lambda offset, data, plando_dict, matches: (0x2af80010).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="push 0x2af8"),
+
+        # removing friend flag request
+        #
+        Patch(identifier=11,
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=12,
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=13,
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=14,
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+
+        # set best friend flag
+        #
+        Patch(identifier=18,  # replace friendship flag with bestfriend flag
+              patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="load_arg -0x2"),
+        Patch(identifier=19,  # replace friendship flag with bestfriend flag
+              patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(offset, data,
+                                                                                                      set_bestfriend_function_pattern),
+              new_instruction_readable="call set_bestfriend(0x1b)"),
+
+        # remove set friend flag
+        #
+        Patch(identifier=20,  # removing set_bestfriend call
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=21,  # removing set_bestfriend call
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+
+        # remove unlock
+        #
+        Patch(identifier=24,  # removing get_chapter call
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=25,  # removing get_chapter call
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+
+        # remove original set bestfriend flag
+        #
+        Patch(identifier=30,  # removing get_chapter call
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=31,  # removing get_chapter call
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+
+        # remove event interaction
+        #
+        Patch(identifier=32,  # removing get_chapter call
+              patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=33,  # pushing instead of chapter 0x2af8 so no event is triggerable
+              patch_function=lambda offset, data, plando_dict, matches: (0x2af80010).to_bytes(4,
+                                                                                              'big'),
+              new_instruction_readable="push 0x2af8"),
+    ]
+croagunk_friendship_pattern = PatchPattern(
+    name="Croagunk Friendship Logic",
+    description="Winning against Croagunk sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship also events.",
+    patternJP=croagunk_interaction_patternJP,
+    patternPAL=croagunk_interaction_patternPAL,
+    patternNA=croagunk_interaction_patternPAL,
+    patchMapJP=croagunk_interaction_patchMapJP,
+    patchMapPAL=croagunk_interaction_patchMapPAL,
+    patchMapNA=croagunk_interaction_patchMapPAL,
+)
 
 bulbasaur_friendship_pattern = PatchPattern(
     name="Bulbasaur Friendship Logic",
     description="Winning against Bulbasaur sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship also events.",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 21 00 10"),
                     instruction_readable="push 0x21"),
@@ -5329,7 +5751,7 @@ bulbasaur_friendship_pattern = PatchPattern(
                     pattern=parse_pattern_bytes("00 08 02 08"),
                     instruction_readable="jz"),
     ],
-    patchMap=[
+    patchMapJP=[
         # set chapter value so it skips all events
         #
         Patch(identifier=9,  # removing get_chapter call
@@ -5369,7 +5791,7 @@ bulbasaur_friendship_pattern = PatchPattern(
 drifblim_friendship_pattern = PatchPattern(
     name="Drifblim Friendship Logic",
     description="Traveling enough with drifblim sets only the bestfriend flag in Meadow Zone",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 62 00 10"),
                     instruction_readable="push 0x62"),
@@ -5385,7 +5807,7 @@ drifblim_friendship_pattern = PatchPattern(
                     pattern=parse_pattern_bytes("00 15 03 01"),
                     instruction_readable="SC3 0x0:0x15"),
     ],
-    patchMap=[
+    patchMapJP=[
         # replace friendship with bestfriend flag
         #
         Patch(identifier=3,  # removing get_chapter call
@@ -5397,7 +5819,7 @@ drifblim_friendship_pattern = PatchPattern(
 starly2_friendship_pattern = PatchPattern(
     name="Starly 2 Friendship Logic",
     description="Winning against Starly 2 sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship also events.",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 26 00 10"),
                     instruction_readable="push 0x26"),
@@ -5479,7 +5901,7 @@ starly2_friendship_pattern = PatchPattern(
                     pattern=parse_pattern_bytes("?? ?? ?? 03"),
                     instruction_readable="call set_bestfriend(0x26)"),
     ],
-    patchMap=[
+    patchMapJP=[
         # removing unneeded code
         #
         Patch(identifier=2,  # not requesting friendship
@@ -5562,7 +5984,7 @@ starly2_friendship_pattern = PatchPattern(
 starly3_friendship_pattern = PatchPattern(
     name="Starly 3 Friendship Logic",
     description="Winning against Starly 3 sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 27 00 10"),
                     instruction_readable="push 0x27"),
@@ -5644,7 +6066,7 @@ starly3_friendship_pattern = PatchPattern(
                     instruction_readable="call set_bestfriend(0x27)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         # removing unneeded code
         #
         Patch(identifier=2,  # not requesting friendship
@@ -5727,7 +6149,7 @@ starly3_friendship_pattern = PatchPattern(
 aipom_friendship_pattern = PatchPattern(
     name="Aipom Friendship Logic",
     description="Winning against Aipom sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 28 00 10"),
                     instruction_readable="push 0x28"),
@@ -5850,7 +6272,7 @@ aipom_friendship_pattern = PatchPattern(
                     pattern=parse_pattern_bytes("00 03 00 08"),
                     instruction_readable="jmp"),
     ],
-    patchMap=[
+    patchMapJP=[
         # removing unneeded code
         #
         Patch(identifier=2,  # not requesting friendship
@@ -5941,7 +6363,7 @@ aipom_friendship_pattern = PatchPattern(
 starly4_friendship_pattern = PatchPattern(
     name="Starly 4 Friendship Logic",
     description="Winning against Starly 4 sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 29 00 10"),
                     instruction_readable="push 0x29"),
@@ -6014,7 +6436,7 @@ starly4_friendship_pattern = PatchPattern(
                     instruction_readable="call set_friend(0x29)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(identifier=2,
               patch_function=lambda offset, data, plando_dict, matches: (
                   0x00000002).to_bytes(4,  # don't request friendship flag
@@ -6045,7 +6467,7 @@ starly4_friendship_pattern = PatchPattern(
 spearow_attraction_friendship_pattern = PatchPattern(
     name="Spearow Attraction Friendship Logic",
     description="Winning against Spearow Attraction sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship also events.",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 2a 00 10"),
                     instruction_readable="push 0x2a"),
@@ -6170,7 +6592,7 @@ spearow_attraction_friendship_pattern = PatchPattern(
                     instruction_readable="call FUN_??????"),
     ],
 
-    patchMap=[
+    patchMapJP=[
         # set chapter value so it skips all events
         #
         Patch(identifier=2,  # removing get_chapter call
@@ -6212,7 +6634,7 @@ spearow_attraction_friendship_pattern = PatchPattern(
 lotad2_friendship_pattern = PatchPattern(
     name="Lotad 2 Friendship Logic",
     description="Winning against Lotad 2 sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 2b 00 10"),
                     instruction_readable="push 0x2b"),
@@ -6285,7 +6707,7 @@ lotad2_friendship_pattern = PatchPattern(
                     instruction_readable="call set_friend(0x2b)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(identifier=2,
               patch_function=lambda offset, data, plando_dict, matches: (
                   0x00000002).to_bytes(4,  # don't request friendship flag
@@ -6316,7 +6738,7 @@ lotad2_friendship_pattern = PatchPattern(
 lotad3_friendship_pattern = PatchPattern(
     name="Lotad 3 Friendship Logic",
     description="Winning against Lotad 3 sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 2c 00 10"),
                     instruction_readable="push 0x2c"),
@@ -6389,7 +6811,7 @@ lotad3_friendship_pattern = PatchPattern(
                     instruction_readable="call set_friend(0x2c)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(identifier=2,
               patch_function=lambda offset, data, plando_dict, matches: (
                   0x00000002).to_bytes(4,  # don't request friendship flag
@@ -6420,7 +6842,7 @@ lotad3_friendship_pattern = PatchPattern(
 starly5_friendship_pattern = PatchPattern(
     name="Starly 5 Friendship Logic",
     description="Winning against Starly 5 sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 2d 00 10"),
                     instruction_readable="push 0x2d"),
@@ -6493,7 +6915,7 @@ starly5_friendship_pattern = PatchPattern(
                     instruction_readable="call set_friend(0x2d)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(identifier=2,
               patch_function=lambda offset, data, plando_dict, matches: (
                   0x00000002).to_bytes(4,  # don't request friendship flag
@@ -6524,7 +6946,7 @@ starly5_friendship_pattern = PatchPattern(
 shinx2_friendship_pattern = PatchPattern(
     name="Shinx 2 Friendship Logic",
     description="Winning against Shinx 2 sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 2f 00 10"),
                     instruction_readable="push 0x2f"),
@@ -6597,7 +7019,7 @@ shinx2_friendship_pattern = PatchPattern(
                     instruction_readable="call set_friend(0x2f)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(identifier=2,
               patch_function=lambda offset, data, plando_dict, matches: (
                   0x00000002).to_bytes(4,  # don't request friendship flag
@@ -6628,7 +7050,7 @@ shinx2_friendship_pattern = PatchPattern(
 butterfree2_friendship_pattern = PatchPattern(
     name="Butterfree 2 Friendship Logic",
     description="Winning against Butterfree 2 sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 31 00 10"),
                     instruction_readable="push 0x31"),
@@ -6701,7 +7123,7 @@ butterfree2_friendship_pattern = PatchPattern(
                     instruction_readable="call set_friend(0x31)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(identifier=2,
               patch_function=lambda offset, data, plando_dict, matches: (
                   0x00000002).to_bytes(4,  # don't request friendship flag
@@ -6729,10 +7151,7 @@ butterfree2_friendship_pattern = PatchPattern(
               new_instruction_readable="delay(0)"),
     ])
 
-return_attraction_pattern = PatchPattern(
-    name="Return Attraction",
-    description="Returning from Attraction triggers bulbasaur friendship only when the location is not checked, also removing event code",
-    pattern=[
+return_attraction_patternJP =[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 10 00 07"),
                     instruction_readable="grow_stack 0x10"),
@@ -6741,37 +7160,66 @@ return_attraction_pattern = PatchPattern(
         Instruction(identifier=2, offset=0x5c,
                     pattern=parse_pattern_bytes("?? ?? ?? 03"),
                     instruction_readable="call get_chapter",
-                    alternate_offset=0x64
                     ),
         Instruction(identifier=3, offset=0x60,
                     pattern=parse_pattern_bytes("00 00 00 12"),
                     instruction_readable="push_result",
-                    alternate_offset=0x68
                     ),
 
         Instruction(identifier=4, offset=0x300,
                     pattern=parse_pattern_bytes("00 ?? ?? 13"),
                     instruction_readable="lstr f0101EventTE03",
-                    alternate_offset=0x308
                     ),
         Instruction(identifier=5, offset=0x304,
                     pattern=parse_pattern_bytes("ff ff 00 0b"),
                     instruction_readable="load_arg -0x1",
-                    alternate_offset=0x30c
                     ),
         Instruction(identifier=6, offset=0x308,
                     pattern=parse_pattern_bytes("00 01 00 10"),
                     instruction_readable="push 0x1",
-                    alternate_offset=0x310
                     ),
         Instruction(identifier=7, offset=0x30c,
                     pattern=parse_pattern_bytes("00 15 03 01"),
                     instruction_readable="SC3 0x0:0x15",
-                    alternate_offset=0x314
                     ),
 
-    ],
-    patchMap=[
+    ]
+
+return_attraction_patternPAL =[
+        Instruction(identifier=1, offset=0,
+                    pattern=parse_pattern_bytes("00 10 00 07"),
+                    instruction_readable="grow_stack 0x10"),
+
+        # get chapter value for events
+        Instruction(identifier=2, offset=0x64,
+                    pattern=parse_pattern_bytes("?? ?? ?? 03"),
+                    instruction_readable="call get_chapter",
+                    ),
+        Instruction(identifier=3, offset=0x68,
+                    pattern=parse_pattern_bytes("00 00 00 12"),
+                    instruction_readable="push_result",
+                    ),
+
+        Instruction(identifier=4, offset=0x308,
+                    pattern=parse_pattern_bytes("00 ?? ?? 13"),
+                    instruction_readable="lstr f0101EventTE03",
+                    ),
+        Instruction(identifier=5, offset=0x30c,
+                    pattern=parse_pattern_bytes("ff ff 00 0b"),
+                    instruction_readable="load_arg -0x1",
+                    ),
+        Instruction(identifier=6, offset=0x310,
+                    pattern=parse_pattern_bytes("00 01 00 10"),
+                    instruction_readable="push 0x1",
+                    ),
+        Instruction(identifier=7, offset=0x314,
+                    pattern=parse_pattern_bytes("00 15 03 01"),
+                    instruction_readable="SC3 0x0:0x15",
+                    ),
+
+    ]
+
+return_attraction_patchMapJP =[
         Patch(identifier=2,
               patch_function=lambda offset, data, plando_dict, matches: (
                   0x00000002).to_bytes(4,  # don't request chapter
@@ -6792,12 +7240,45 @@ return_attraction_pattern = PatchPattern(
                   0x004b0010).to_bytes(4,
                                        'big'),
               new_instruction_readable="push 0x39"),
-    ])
+    ]
+
+return_attraction_patchMapPAL =[
+        Patch(identifier=2,
+              patch_function=lambda offset, data, plando_dict, matches: (
+                  0x00000002).to_bytes(4,  # don't request chapter
+                                       'big'),
+              new_instruction_readable="delay(0)"),
+        Patch(identifier=3,
+              patch_function=lambda offset, data, plando_dict, matches: (
+                  0x2af80010).to_bytes(4,  # push 0x2af8 chapter so all events are skipped
+                                       'big'),
+              new_instruction_readable="push 0x2af8"),
+        Patch(identifier=4,
+              patch_function=lambda offset, data, plando_dict, matches: (
+                  0x00390010).to_bytes(4,
+                                       'big'),
+              new_instruction_readable="push 0x39"),
+        Patch(identifier=6,
+              patch_function=lambda offset, data, plando_dict, matches: (
+                  0x004b0010).to_bytes(4,
+                                       'big'),
+              new_instruction_readable="push 0x39"),
+    ]
+
+return_attraction_pattern = PatchPattern(
+    name="Return Attraction",
+    description="Returning from Attraction triggers bulbasaur friendship only when the location is not checked, also removing event code",
+    patternJP=return_attraction_patternJP,
+    patternPAL=return_attraction_patternPAL,
+    patternNA=return_attraction_patternPAL,
+    patchMapJP=return_attraction_patchMapJP,
+    patchMapPAL= return_attraction_patchMapPAL,
+    patchMapNA=return_attraction_patchMapPAL)
 
 eventTE03_logic = PatchPattern(
     name="f0101EventTE03 Logic",  # bulbasaur friendship after winning prisma
     description="Returning from Attraction triggers bulbasaur friendship location and doesn't set regular friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 04 00 07"),
                     instruction_readable="grow_stack 0x04"),
@@ -6825,7 +7306,7 @@ eventTE03_logic = PatchPattern(
                     instruction_readable="call set_friend(0x21)"),
 
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(identifier=2,
               patch_function=lambda offset, data, plando_dict, matches: (
                   0x00000002).to_bytes(4,  # don't set event flag
@@ -6859,10 +7340,7 @@ eventTE03_logic = PatchPattern(
 
     ])
 
-torterra_starly_unlock = PatchPattern(
-    name="Torterra Starly Unlock after Venusaur Prisma Logic",
-    description="Removing automatic Unlocks for Torterra and Starly after Venusaur Prisma",
-    pattern=[
+torterra_starly_unlock_patternJP =[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 01 00 07"),
                     instruction_readable="grow_stack 0x01"),
@@ -6870,26 +7348,56 @@ torterra_starly_unlock = PatchPattern(
         # get chapter value for events
         Instruction(identifier=2, offset=0x44,
                     pattern=parse_pattern_bytes("00 04 02 08"),
-                    instruction_readable="jz",
-                    alternate_offset=0x64),
+                    instruction_readable="jz"),
         Instruction(identifier=3, offset=0x58,
                     pattern=parse_pattern_bytes("00 02 00 06"),
-                    instruction_readable="ret -0x2",
-                    alternate_offset=0x78),
+                    instruction_readable="ret -0x2"),
 
-    ],
-    patchMap=[
+    ]
+torterra_starly_unlock_patternPAL =[
+        Instruction(identifier=1, offset=0,
+                    pattern=parse_pattern_bytes("00 01 00 07"),
+                    instruction_readable="grow_stack 0x01"),
+
+        # get chapter value for events
+        Instruction(identifier=2, offset=0x64,
+                    pattern=parse_pattern_bytes("00 04 02 08"),
+                    instruction_readable="jz"),
+        Instruction(identifier=3, offset=0x78,
+                    pattern=parse_pattern_bytes("00 02 00 06"),
+                    instruction_readable="ret -0x2"),
+
+    ]
+
+torterra_starly_unlock_patchmapJP =[
         Patch(identifier=1,
               patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(offset, 3,
                                                                                                       matches),
               new_instruction_readable="jmp"),  # skipping whole function
 
-    ])
+    ]
+torterra_starly_unlock_patchmapPAL =[
+        Patch(identifier=1,
+              patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(offset, 3,
+                                                                                                      matches),
+              new_instruction_readable="jmp"),  # skipping whole function
+
+    ]
+
+torterra_starly_unlock = PatchPattern(
+    name="Torterra Starly Unlock after Venusaur Prisma Logic",
+    description="Removing automatic Unlocks for Torterra and Starly after Venusaur Prisma",
+    patternJP=torterra_starly_unlock_patternJP,
+    patternPAL=torterra_starly_unlock_patternPAL,
+    patternNA=torterra_starly_unlock_patternPAL,
+    patchMapJP=torterra_starly_unlock_patchmapJP,
+    patchMapPAL = torterra_starly_unlock_patchmapPAL,
+    patchMapNA = torterra_starly_unlock_patchmapPAL,)
 
 unlock_beach_bidoof_interaction= PatchPattern(
     name="Unlock Beach Bidoof Unlock",
     description="Removing actual unlocks and set flag also trigger only when location is not checked",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0,
                     pattern=parse_pattern_bytes("00 05 00 07"),
                     instruction_readable="grow_stack 0x05"),
@@ -6918,7 +7426,7 @@ unlock_beach_bidoof_interaction= PatchPattern(
                     pattern=parse_pattern_bytes("?? ?? ?? 03"),
                     instruction_readable="call set_chapter"),
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(identifier=2,
               patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(offset,data,custom_check_f0301BippaFlag_funtion),
               new_instruction_readable="call get f0301BippaFlag"),
@@ -6937,7 +7445,7 @@ unlock_beach_bidoof_interaction= PatchPattern(
 custom_check_f0301BippaFlag_funtion = PatchPattern(
     name="unused code space",
     description="using unused code space for f0301BippaFlag check",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("ff fe 00 0c"),
                     instruction_readable="---"),
         Instruction(identifier=2, offset=0x4, pattern=parse_pattern_bytes("ff fe 00 0b"),
@@ -6961,7 +7469,7 @@ custom_check_f0301BippaFlag_funtion = PatchPattern(
         Instruction(identifier=11, offset=0x28, pattern=parse_pattern_bytes("00 02 01 06"),
                     instruction_readable="---"),
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(
             identifier=1,
             patch_function=lambda offset, data, plando_dict, matches: (0x00010007).to_bytes(4, 'big'),
@@ -7023,7 +7531,50 @@ custom_check_f0301BippaFlag_funtion = PatchPattern(
     ],
 )
 
-# todo: add alt form pokemon
+thunderbolt_hit_magikarp_event_patternJP =[
+        Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 18 00 07"),
+                    instruction_readable="grow_stack 0x18"),
+        Instruction(identifier=2, offset=0x348, pattern=parse_pattern_bytes("00 19 00 06"),
+                    instruction_readable="ret -0x19"),
+    ]
+
+thunderbolt_hit_magikarp_event_patchMapJP = []
+
+thunderbolt_hit_magikarp_event_patternPAL =[
+        Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 18 00 07"),
+                    instruction_readable="grow_stack 0x18"),
+        # start of setting object Magikarp logic
+        Instruction(identifier=2, offset=0x31c, pattern=parse_pattern_bytes("ff f2 00 0b"),
+                    instruction_readable="load_arg -0xe"),
+    # end of magikarp object logic
+    Instruction(
+        identifier=3, offset=0x3b8, pattern=parse_pattern_bytes("00 1e 00 10"),
+        instruction_readable="push 0x1e"
+        ),
+    ]
+thunderbolt_hit_magikarp_event_patchMapPAL = [
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(offset,3,matches),
+            new_instruction_readable="jmp"
+        ),
+
+    ]
+
+
+thunderbolt_hit_magikarp_event = PatchPattern(
+    name="hitting Magikarp with Thunderbolt event Logic",
+    description="skipping additional magikarp object placement in pal and NA version",
+    patternJP=thunderbolt_hit_magikarp_event_patternJP,
+    patternPAL=thunderbolt_hit_magikarp_event_patternPAL,
+    patternNA=thunderbolt_hit_magikarp_event_patternPAL,
+    patchMapJP=thunderbolt_hit_magikarp_event_patchMapJP,
+    patchMapPAL=thunderbolt_hit_magikarp_event_patchMapPAL,
+    patchMapNA=thunderbolt_hit_magikarp_event_patchMapPAL,
+)
+
+
+
 
 
 evAr01Zn01_Npc_Main_patch_pattern = [
@@ -7050,6 +7601,7 @@ evAr01Zn01_Npc_Main_patch_pattern = [
     shinx_friendship_pattern,
     # overworld Mankey does not need a patch, it originally only sets the bestfriend flag and sets no other flags
     aipom_tree_friendship_pattern,
+    aipom_friendship_pattern,
     spearow_overworld_friendship_pattern,
     torterra_friendship_pattern,
     starly_friendship_pattern,
@@ -7079,5 +7631,8 @@ evAr01Zn01_Npc_Main_patch_pattern = [
 
     # custom beach bidoof
 unlock_beach_bidoof_interaction,
-custom_check_f0301BippaFlag_funtion
+custom_check_f0301BippaFlag_funtion,
+
+    # magikarp logic
+thunderbolt_hit_magikarp_event
 ]

@@ -5,7 +5,7 @@ from patcher.models.models import PatchPattern, Instruction, Patch
 prisma_check = PatchPattern(
     name="Prisma check",
     description="patching prisma check to check for checked location",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 03 00 07"),
                     instruction_readable="grow_stack 0x3"),
         Instruction(identifier=2, offset=0x10c, pattern=parse_pattern_bytes("00 08 02 08"),
@@ -20,7 +20,7 @@ prisma_check = PatchPattern(
                     instruction_readable="SC3 0x0:0x15"),
 
     ],
-    patchMap=[
+    patchMapJP=[
 
 
         Patch(
@@ -35,14 +35,14 @@ prisma_check = PatchPattern(
 postgame_check = PatchPattern(
     name="Postgame check",
     description="patching postgame check to always unlock legendary pokemon",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 07 00 07"),
                     instruction_readable="grow_stack 0x7"),
         Instruction(identifier=2, offset=0xa4, pattern=parse_pattern_bytes("00 00 00 12"),
                     instruction_readable="push_result"),
 
     ],
-    patchMap=[
+    patchMapJP=[
 
 
         Patch(

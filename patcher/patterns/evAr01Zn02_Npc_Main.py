@@ -4,7 +4,7 @@ from patcher.models.models import PatchPattern, Instruction, Patch
 NPC_Venusaur = PatchPattern(
     name="Venusaur Interaction Logic",
     description="remove croagunk and spearow requirement, and modify for friendship location",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 37 00 10"),
                     instruction_readable="push 0x37"),
         Instruction(identifier=2, offset=0x70, pattern=parse_pattern_bytes("00 00 00 14"),
@@ -48,7 +48,7 @@ NPC_Venusaur = PatchPattern(
         Instruction(identifier=16, offset=0x4d4, pattern=parse_pattern_bytes("?? ?? ?? 03"),
                     instruction_readable="call prep_prisma_flag"),
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(
             identifier=2,
             patch_function=lambda offset, data, plando_dict, matches: (0x00020010).to_bytes(4, 'big'),

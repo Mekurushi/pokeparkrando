@@ -17,7 +17,7 @@ def search_pattern(data: bytearray, pattern_def: list[Instruction]):
     max_offset = max(pattern.offset + len(pattern.pattern) for pattern in pattern_def)
     anchor_pattern = next(
         (pattern for pattern in pattern_def
-         if pattern.offset == 0 or (hasattr(pattern, 'alternate_offset') and pattern.alternate_offset == 0)),
+         if pattern.offset == 0),
         None
     )
     anchor_pattern_bytes = bytes(anchor_pattern.pattern)
@@ -32,20 +32,11 @@ def search_pattern(data: bytearray, pattern_def: list[Instruction]):
 
         matched = {}
         for pattern in pattern_def:
-            # Try primary offset
             if base + pattern.offset + len(pattern.pattern) <= len(data) and match_at(data, base + pattern.offset,
                                                                                       pattern.pattern):
                 matched[pattern.identifier] = MemoryData(address=base + pattern.offset,
                                                          value=data[base + pattern.offset:base + pattern.offset + 0x4])
 
-            # Try alternate offset if primary failed and alternate exists
-            elif hasattr(pattern,
-                         'alternate_offset') and pattern.alternate_offset is not None and base + pattern.alternate_offset + len(
-                    pattern.pattern) <= len(
-                    data) and match_at(data, base + pattern.alternate_offset, pattern.pattern):
-                matched[pattern.identifier] = MemoryData(address=base + pattern.alternate_offset,
-                                                         value=data[
-                                                               base + pattern.alternate_offset:base + pattern.alternate_offset + 0x4])
             else:
                 break
         else:
@@ -60,8 +51,34 @@ def search_pattern(data: bytearray, pattern_def: list[Instruction]):
     return matches
 
 
+def search_all_pattern(data:bytearray,patch_def: PatchPattern):
+    patch_def.matchesJP = search_pattern(data, patch_def.patternJP)
+    patch_def.matchesPAL = search_pattern(data, patch_def.patternPAL)
+    patch_def.matchesNA = search_pattern(data,patch_def.patternNA)
+
+    if not patch_def.matchesJP and not patch_def.matchesPAL and not patch_def.matchesNA:
+        print(f"ERROR: No match found for pattern: {patch_def.name}")
+        raise ValueError(f"ERROR: No match found for pattern: {patch_def.name}")
+
+    ambiguous_regions = []
+    if len(patch_def.matchesJP) > 1:
+        ambiguous_regions.append(f"JP({len(patch_def.matchesJP)})")
+    if len(patch_def.matchesPAL) > 1:
+        ambiguous_regions.append(f"PAL({len(patch_def.matchesPAL)})")
+    if len(patch_def.matchesNA) > 1:
+        ambiguous_regions.append(f"NA({len(patch_def.matchesNA)})")
+
+    if ambiguous_regions:
+        error_msg = f"ERROR: Ambiguous matches for pattern: {patch_def.name} - {', '.join(ambiguous_regions)}"
+        print(error_msg)
+        raise ValueError(error_msg)
+
+    print(f"Pattern {patch_def.name} matched in region: {patch_def.get_matched_region()}")
+
+
+
 def compute_bl_to_function_script(offset: int, data: bytearray, target_function_pattern: PatchPattern):
-    target_function_match = search_pattern(data, target_function_pattern.pattern)
+    target_function_match = search_pattern(data, target_function_pattern.patternJP)
     new_function_address = target_function_match[0].base_address
     branch_offset = new_function_address - (offset + 0x4)
     operand = branch_offset // 4
@@ -103,8 +120,8 @@ def fill_with_delay_instructions_script(start_offset:int, end_offset:int):
     return  byte_sequence
 
 def create_lstr_script(data:bytearray,start_string_section_pattern: PatchPattern, target_string_pattern: PatchPattern):
-    start_string_section_match = search_pattern(data, start_string_section_pattern.pattern)
-    target_string_match = search_pattern(data, target_string_pattern.pattern)
+    start_string_section_match = search_pattern(data, start_string_section_pattern.patternJP)
+    target_string_match = search_pattern(data, target_string_pattern.patternJP)
     if not start_string_section_match or not target_string_match:
         print(f"ERROR: No match found for pattern: {start_string_section_pattern.name} or {target_string_pattern.name}")
         raise Exception(
@@ -134,6 +151,24 @@ def create_jmp_instruction_script(offset:int, target_identifier:int, matches:dic
 
     operand_bytes = operand.to_bytes(2, 'big', signed=True)
     instruction_bytes = operand_bytes + b'\x00\x08'
+
+    print(
+        f"jmp from offset 0x{offset:08X} to 0x{target_address:08X} "
+        f"→ offset 0x{branch_offset & 0xFFFFFFFF:08X} "
+        f"→ instruction 0x{int.from_bytes(instruction_bytes, 'big'):08X}"
+    )
+    return instruction_bytes
+
+def create_jnz_instruction_script(offset:int, target_identifier:int, matches:dict[int,MemoryData]):
+    target_address = matches.get(target_identifier).address
+    branch_offset = target_address - (offset + 0x4)
+    operand = branch_offset // 4
+
+    if not (-0x8000 <= operand <= 0x7FFF):
+        raise ValueError(f"Operand out of 16-bit signed range: {operand:#x}")
+
+    operand_bytes = operand.to_bytes(2, 'big', signed=True)
+    instruction_bytes = operand_bytes + b'\x01\x08'
 
     print(
         f"jmp from offset 0x{offset:08X} to 0x{target_address:08X} "

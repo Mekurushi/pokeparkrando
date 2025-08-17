@@ -1,10 +1,10 @@
-from patcher.helper.patttern_handler import parse_pattern_bytes, create_lstr_script
+from patcher.helper.patttern_handler import parse_pattern_bytes
 from patcher.models.models import PatchPattern, Instruction, Patch
 
 gk_kabigon_wall_wait = PatchPattern(
     name="Kabigon Wall Wait",
     description="Modyfing Kabigon Wall spawn condition",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 03 00 07"),
                     instruction_readable="grow_stack 0x3"),
         Instruction(identifier=2, offset=0x48, pattern=parse_pattern_bytes("?? ?? ?? 13"),
@@ -13,7 +13,7 @@ gk_kabigon_wall_wait = PatchPattern(
                     instruction_readable="jz"),
 
     ],
-    patchMap=[
+    patchMapJP=[
 
 
         Patch(

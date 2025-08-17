@@ -7,7 +7,7 @@ from typing import Optional
 import libWiiPy
 import nlzss11
 
-from patcher.helper.patttern_handler import search_pattern
+from patcher.helper.patttern_handler import search_pattern, search_all_pattern
 from patcher.models.models import FilePatchConfig, ProgressCallback, FileProcessingType
 
 
@@ -57,20 +57,12 @@ class BasePatcher(ABC):
                 file_data = bytearray(f.read())
 
             for patchpattern in self.config.patch_patterns:
-                matches = search_pattern(file_data, patchpattern.pattern)
-
-                if not matches:
-                    print(f"ERROR: No match found for pattern: {patchpattern.name}")
-                    return False
-
-                if len(matches) > 1:
-                    print(f"ERROR: Ambiguous match ({len(matches)}) for pattern: {patchpattern.name}")
-                    return False
+                search_all_pattern(file_data, patchpattern)
 
                 print(f"Match found for pattern: {patchpattern.name}")
-                match = matches[0].matched_instructions
+                match = patchpattern.get_matches()[0].matched_instructions
 
-                for patch in patchpattern.patchMap:
+                for patch in patchpattern.get_patchmap():
                     mem_data = match.get(patch.identifier)
                     if not mem_data:
                         raise Exception(
@@ -151,7 +143,6 @@ class NestedDacU8Patcher(BasePatcher):
 
                 if not nested_file_path:
                     raise Exception(f"Nested archive not found: {nested_archive_path}")
-
                 with open(nested_file_path, 'rb') as f:
                     nested_data = f.read()
 

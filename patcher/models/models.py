@@ -10,7 +10,6 @@ class Instruction:
     pattern: list[int | None]
     identifier: int
     instruction_readable: str
-    alternate_offset: int | None = None
 
 
 @dataclass
@@ -34,24 +33,40 @@ class PatternMatch:
 @dataclass
 class PatchPattern:
     name: str
-    pattern: list[Instruction]
-    patchMap: list[Patch] = field(default_factory=list)
-    matches: list[PatternMatch] | None = None
+    patternJP: list[Instruction]
+    patternPAL: list[Instruction] | None = None
+    patternNA: list[Instruction] | None = None
+    patchMapJP: list[Patch] = field(default_factory=list)
+    patchMapPAL: list[Patch] = field(default_factory=list)
+    patchMapNA: list[Patch] = field(default_factory=list)
+    matchesJP: list[PatternMatch] | None = None
+    matchesPAL: list[PatternMatch] | None = None
+    matchesNA: list[PatternMatch] | None = None
     description: str = ""
 
     def __post_init__(self):
-        identifiers = [instr.identifier for instr in self.pattern]
+        if not self.patternPAL:
+            self.patternPAL = self.patternJP
+        if not self.patternNA:
+            self.patternNA = self.patternJP
+
+        if not self.patchMapPAL:
+            self.patchMapPAL = self.patchMapJP
+        if not self.patchMapNA:
+            self.patchMapNA = self.patchMapJP
+
+        identifiers = [instr.identifier for instr in self.patternJP]
         identifier_duplicates = {id for id in identifiers if identifiers.count(id) > 1}
         if identifier_duplicates:
             raise ValueError(f"Duplicate identifiers found: {identifier_duplicates}")
-        offsets = [instr.offset for instr in self.pattern]
+        offsets = [instr.offset for instr in self.patternJP]
         offsets_duplicates = {offset for offset in offsets if offsets.count(offset) > 1}
         if offsets_duplicates:
             raise ValueError(f"Duplicate offsets found: {offsets_duplicates}")
 
         anchor_pattern = next(
-            (instr for instr in self.pattern
-             if instr.offset == 0 or (hasattr(instr, 'alternate_offset') and instr.alternate_offset == 0)),
+            (instr for instr in self.patternJP
+             if instr.offset == 0),
             None
         )
 
@@ -63,6 +78,47 @@ class PatchPattern:
             raise ValueError(
                 f"Anchor pattern (instruction '{anchor_pattern.identifier}') must contain only integers, no wildcards (None)")
 
+    def get_patchmap(self):
+        if self.matchesPAL:
+            return self.patchMapPAL
+        elif self.matchesNA:
+            return self.patchMapNA
+        elif self.matchesJP:
+            return self.patchMapJP
+        else:
+            raise ValueError(f"No valid PatchMap available for pattern '{self.name}' - no matches found in any region")
+
+    def get_matches(self):
+        if self.matchesPAL:
+            return self.matchesPAL
+        elif self.matchesNA:
+            return self.matchesNA
+        elif self.matchesJP:
+            return self.matchesJP
+        else:
+            raise ValueError(
+                f"No valid matches available for pattern '{self.name}' - search_all_pattern() may not have been called"
+                )
+
+    def get_matched_region(self) -> str:
+        """Get the name of the region that has matches"""
+        regions_with_matches = []
+        if self.matchesJP:
+            regions_with_matches.append("JP")
+        if self.matchesPAL:
+            regions_with_matches.append("PAL")
+        if self.matchesNA:
+            regions_with_matches.append("NA")
+
+        if not regions_with_matches:
+            raise ValueError(f"No matches found for pattern '{self.name}'")
+
+        if len(regions_with_matches) == 3:
+            return "All"
+        elif len(regions_with_matches) == 2:
+            return f"Multi({'+'.join(regions_with_matches)})"
+        else:
+            return regions_with_matches[0]
 
 class FileProcessingType(Enum):
     """Defines different types of file processing needed"""

@@ -6,6 +6,7 @@ from patcher.patterns.evAr01Zn01_Npc_Main import \
     evAr01Zn01_Npc_Main_patch_pattern
 from patcher.patterns.evAr01Zn02_Npc_Main import evAr01Zn02_Npc_Main_patterns
 from patcher.patterns.evAr02Zn01_Npc_Main import evAr02Zn01_Npc_Main_pattern
+from patcher.patterns.evAr03Zn01_Npc_Main import evAr03Zn01_Npc_Main_pattern
 from patcher.patterns.evAr99Zn01_Npc_Main import evAr99Zn01_Npc_Main_pattern
 from patcher.patterns.gk0101Gate import gate101_close
 from patcher.patterns.gkKabigonWall import gkKabigonWallPattern
@@ -28,6 +29,14 @@ def get_default_patch_configs() -> List[FilePatchConfig]:
         description="",
         processing_type=FileProcessingType.DAC_U8,
         file_group=[("DATA/files/Archive/StartMenuDat.dac", "unused",
+                     "Script/mnStartMenu.fsb"),
+                    ("DATA/files/Archive/StartMenuDat_Fr.dac", "unused",
+                     "Script/mnStartMenu.fsb"),
+                    ("DATA/files/Archive/StartMenuDat_Ge.dac", "unused",
+                     "Script/mnStartMenu.fsb"),
+                    ("DATA/files/Archive/StartMenuDat_It.dac", "unused",
+                     "Script/mnStartMenu.fsb"),
+                    ("DATA/files/Archive/StartMenuDat_Sp.dac", "unused",
                      "Script/mnStartMenu.fsb"),
                     ],
         patch_patterns=[
@@ -56,6 +65,28 @@ def get_default_patch_configs() -> List[FilePatchConfig]:
         patch_patterns=evAr02Zn01_Npc_Main_pattern
     )
     configs.append(field_Ar02Zn01_npc_script_config)
+
+
+    field_Ar03Zn01_npc_script_config = FilePatchConfig(
+        file_id="Ar03_Zn01",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar03Zn01Dat.dac", "Temporary/Field/ParkAr03Zn01Dat.dan",
+                     "Script/evAr03Zn01_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar03Zn01Dat_Fr.dac", "Temporary/Field/ParkAr03Zn01Dat_Fr.dan",
+                        "Script/evAr03Zn01_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar03Zn01Dat_Ge.dac", "Temporary/Field/ParkAr03Zn01Dat_Ge.dan",
+                        "Script/evAr03Zn01_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn01Dat_It.dac", "Temporary/Field/ParkAr03Zn01Dat_It.dan",
+                        "Script/evAr03Zn01_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn01Dat_Sp.dac", "Temporary/Field/ParkAr03Zn01Dat_Sp.dan",
+                        "Script/evAr03Zn01_Npc_Main.fsb"),
+                    ],
+        patch_patterns=evAr03Zn01_Npc_Main_pattern
+    )
+    configs.append(field_Ar03Zn01_npc_script_config)
 
     treehouse = FilePatchConfig(
         file_id="treehouse_gimmic",

@@ -5,7 +5,7 @@ from patcher.models.models import PatchPattern, Instruction, Patch
 string_section_start = PatchPattern(
     name="string section start",
     description="string section start for lstr instruction computation",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0,
                     pattern=parse_pattern_bytes("65 76 41 72 30 32 5a 6e 30 31 5f 4e 70 63 5f 4d 61 69 6e 00"),
                     instruction_readable="ds evAr02Zn01_Npc_Main"),
@@ -16,7 +16,7 @@ string_section_start = PatchPattern(
 globalManager = PatchPattern(
     name="ds GlobalManager",
     description="using GlobalManager for lstr instructions",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0,
                     pattern=parse_pattern_bytes("47 6c 6f 62 61 6c 4d 61 6e 61 67 65 72 00"),
                     instruction_readable="ds GlobalManager"),
@@ -27,7 +27,7 @@ globalManager = PatchPattern(
 get_module = PatchPattern(
     name="get module",
     description="using get module for calls",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0,
                     pattern=parse_pattern_bytes("00 01 00 07"),
                     instruction_readable="grow_stack 0x1"),
@@ -43,7 +43,7 @@ get_module = PatchPattern(
 is_friend_function = PatchPattern(
     name="is_friend_function",
     description="patching is_friend function checks for location (bestfriend flag)",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0,
                     pattern=parse_pattern_bytes("00 04 00 07"),
                     instruction_readable="grow_stack 0x4"),
@@ -51,7 +51,7 @@ is_friend_function = PatchPattern(
                     pattern=parse_pattern_bytes("00 3d 00 10"),
                     instruction_readable="push 0x3d"),
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(
             identifier=2,
             patch_function=lambda offset, data, plando_dict, matches: (0x004b0010).to_bytes(4, 'big'),
@@ -63,7 +63,7 @@ is_friend_function = PatchPattern(
 set_best_friend_function = PatchPattern(
     name="set_best_friend function",
     description="set best friend function used for calls",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0,
                     pattern=parse_pattern_bytes("00 03 00 07"),
                     instruction_readable="grow_stack 0x3"),
@@ -77,7 +77,7 @@ set_best_friend_function = PatchPattern(
 gate_open_logic = PatchPattern(
     name="Close ar02Zn01 Gates depending on",
     description="Modifing gate Logic",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 01 00 07"),
                     instruction_readable="grow_stack 0x1"),
 
@@ -174,7 +174,7 @@ gate_open_logic = PatchPattern(
         Instruction(identifier=30, offset=0x88, pattern=parse_pattern_bytes("?? ?? ?? 03"),
                     instruction_readable="call open_gate(Granite)"),
     ],
-    patchMap=[
+    patchMapJP=[
         # Modifying Beach Gate Condition
         #
         Patch(
@@ -271,7 +271,7 @@ gate_open_logic = PatchPattern(
 custom_prisma_check_function = PatchPattern(
     name="unused code space",
     description="Modifing gate Logic",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 01 00 07"),
                     instruction_readable="---"),
         Instruction(identifier=2, offset=0x4, pattern=parse_pattern_bytes("?? ?? ?? 13"),
@@ -297,7 +297,7 @@ custom_prisma_check_function = PatchPattern(
         Instruction(identifier=99, offset=-0x4, pattern=parse_pattern_bytes("00 02 01 06"),
                     instruction_readable="retv -0x2"),
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(
             identifier=1,
             patch_function=lambda offset, data, plando_dict, matches: (0x00010007).to_bytes(4, 'big'),
@@ -362,7 +362,7 @@ custom_prisma_check_function = PatchPattern(
 treehouse_additional_pokemon_spawn_conditions = PatchPattern(
     name="Treehouse Pokemon Spawns",
     description="Modifying Treehouse pokemon spawn conditions to allow full state start",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 02 00 07"),
                     instruction_readable="grow_stack 0x2"),
         Instruction(identifier=2, offset=0x14, pattern=parse_pattern_bytes("?? ?? ?? 03"),
@@ -391,7 +391,7 @@ treehouse_additional_pokemon_spawn_conditions = PatchPattern(
         Instruction(identifier=99, offset=0x208, pattern=parse_pattern_bytes("00 02 00 07"),
                     instruction_readable="grow_stack 0x2"),
     ],
-    patchMap=[
+    patchMapJP=[
 
         Patch(
             identifier=2,
@@ -435,7 +435,7 @@ treehouse_additional_pokemon_spawn_conditions = PatchPattern(
 treehouse_additional_pokemon_spawn_conditions2 = PatchPattern(
     name="Treehouse Pokemon Spawns 2",
     description="Modifying Treehouse pokemon spawn conditions to remove chapter based conditions",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 02 00 07"),
                     instruction_readable="grow_stack 0x2"),
         Instruction(identifier=2, offset=0x14, pattern=parse_pattern_bytes("?? ?? ?? 03"),
@@ -464,7 +464,7 @@ treehouse_additional_pokemon_spawn_conditions2 = PatchPattern(
         Instruction(identifier=99, offset=0x208, pattern=parse_pattern_bytes("00 01 00 07"),
                     instruction_readable="grow_stack 0x1"),
     ],
-    patchMap=[
+    patchMapJP=[
 
         Patch(
             identifier=2,
@@ -508,7 +508,7 @@ treehouse_additional_pokemon_spawn_conditions2 = PatchPattern(
 powerup_electabuzz_interaction = PatchPattern(
     name="Electabuzz Powerup Interaction",
     description="Modifying Electabuzz Interaction to remove f0201TalkEleboo flag and remove actual unlocks",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 10 00 07"),
                     instruction_readable="grow_stack 0x10"),
 
@@ -578,7 +578,7 @@ powerup_electabuzz_interaction = PatchPattern(
         Instruction(identifier=41, offset=0x430, pattern=parse_pattern_bytes("00 15 04 01"),
                     instruction_readable="SC4 0x0:0x15"),
     ],
-    patchMap=[
+    patchMapJP=[
         # removing f0201TalkEleboo flag request
         Patch(
             identifier=2,
@@ -725,7 +725,7 @@ powerup_electabuzz_interaction = PatchPattern(
 powerup_bibarel_interaction = PatchPattern(
     name="Bibarel Powerup Interaction",
     description="Modifying Bibarel Interaction to remove f0201TalkBeadaru flag and remove actual unlocks",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 08 00 07"),
                     instruction_readable="grow_stack 0x08"),
 
@@ -795,7 +795,7 @@ powerup_bibarel_interaction = PatchPattern(
         Instruction(identifier=41, offset=0x310, pattern=parse_pattern_bytes("00 15 04 01"),
                     instruction_readable="SC4 0x0:0x15"),
     ],
-    patchMap=[
+    patchMapJP=[
         # removing f0201TalkBeadaru flag request
         Patch(
             identifier=2,
@@ -942,7 +942,7 @@ powerup_bibarel_interaction = PatchPattern(
 powerup_ponyta_interaction = PatchPattern(
     name="Ponyta Powerup Interaction",
     description="Modifying Ponyta Interaction to remove f0201TalkPonyta flag and remove actual unlocks",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 08 00 07"),
                     instruction_readable="grow_stack 0x8"),
 
@@ -1044,7 +1044,7 @@ powerup_ponyta_interaction = PatchPattern(
         Instruction(identifier=41, offset=0x38c, pattern=parse_pattern_bytes("00 15 04 01"),
                     instruction_readable="SC4 0x0:0x15"),
     ],
-    patchMap=[
+    patchMapJP=[
         # removing f0201TalkPonyta flag request
         Patch(
             identifier=2,
@@ -1265,7 +1265,7 @@ powerup_ponyta_interaction = PatchPattern(
 powerup_primeape_interaction = PatchPattern(
     name="Primeape Powerup Interaction",
     description="Modifying Primeape Interaction to remove f0201TalkOkorizaru flag and remove actual unlocks",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 08 00 07"),
                     instruction_readable="grow_stack 0x08"),
 
@@ -1335,7 +1335,7 @@ powerup_primeape_interaction = PatchPattern(
         Instruction(identifier=41, offset=0x31c, pattern=parse_pattern_bytes("00 15 04 01"),
                     instruction_readable="SC4 0x0:0x15"),
     ],
-    patchMap=[
+    patchMapJP=[
         # removing f0201TalkOkorizaru flag request
         Patch(
             identifier=2,
@@ -1483,7 +1483,7 @@ powerup_primeape_interaction = PatchPattern(
 drifblim_interaction = PatchPattern(
     name="Drifblim Interaction",
     description="Modifying Drifblim Interaction to remove fTalkFuwaride flag and remove actual unlocks",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 12 00 07"),
                     instruction_readable="grow_stack 0x12"),
 
@@ -1520,7 +1520,7 @@ drifblim_interaction = PatchPattern(
         Instruction(identifier=13, offset=0x314, pattern=parse_pattern_bytes("00 3c 00 10"),
                     instruction_readable="push 0x3c"),
     ],
-    patchMap=[
+    patchMapJP=[
         # removing fTalkFuwaride flag request
         Patch(
             identifier=2,
@@ -1588,7 +1588,7 @@ drifblim_interaction = PatchPattern(
 mime_jr_interaction = PatchPattern(
     name="mime_jr interaction",
     description="patching mime_jr to check location (best friend flag) instead of friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0,
                     pattern=parse_pattern_bytes("00 0d 00 07"),
                     instruction_readable="grow_stack 0xd"),
@@ -1599,7 +1599,7 @@ mime_jr_interaction = PatchPattern(
                     pattern=parse_pattern_bytes("?? ?? ?? 03"),
                     instruction_readable="call set_friendship"),
     ],
-    patchMap=[
+    patchMapJP=[
         Patch(
             identifier=2,
             patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
@@ -1616,7 +1616,7 @@ mime_jr_interaction = PatchPattern(
 abra_interaction = PatchPattern(
     name="abra interaction",
     description="patching abra to check location (best friend flag) instead of friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0,
                     pattern=parse_pattern_bytes("00 09 00 07"),
                     instruction_readable="grow_stack 0x9"),
@@ -1627,7 +1627,7 @@ abra_interaction = PatchPattern(
                     pattern=parse_pattern_bytes("?? ?? ?? 03"),
                     instruction_readable="call set_friendship"),
     ],
-    patchMap=[
+    patchMapJP=[
 
         Patch(
             identifier=3,
@@ -1641,7 +1641,7 @@ abra_interaction = PatchPattern(
 burmy_interaction = PatchPattern(
     name="burmy interaction",
     description="patching burmy to check location (best friend flag) instead of friendship",
-    pattern=[
+    patternJP=[
         Instruction(identifier=1, offset=0x0,
                     pattern=parse_pattern_bytes("00 09 00 07"),
                     instruction_readable="grow_stack 0x9"),
@@ -1652,7 +1652,7 @@ burmy_interaction = PatchPattern(
                     pattern=parse_pattern_bytes("?? ?? ?? 03"),
                     instruction_readable="call set_friendship"),
     ],
-    patchMap=[
+    patchMapJP=[
 
         Patch(
             identifier=2,
