@@ -43,14 +43,13 @@ class BasePatcher(ABC):
         self.backup_files.append(backup_path)
         return backup_path
 
-
     def _apply_patch_operations(self, file_path: Path) -> bool:
         """Apply pattern-based binary patches directly to the file"""
         if not self.config.patch_patterns:
             print(f"Warning: No patch patterns defined for {self.config.file_id}")
             return True
 
-        self._create_backup(file_path)
+        backup_path = self._create_backup(file_path)
 
         try:
             with open(file_path, "rb") as f:
@@ -66,7 +65,8 @@ class BasePatcher(ABC):
                     mem_data = match.get(patch.identifier)
                     if not mem_data:
                         raise Exception(
-                            f"Identifier {patch.identifier} missing in match for pattern {patchpattern.name}")
+                            f"Identifier {patch.identifier} missing in match for pattern {patchpattern.name}"
+                        )
 
                     offset = mem_data.address
                     old_bytes = mem_data.value
@@ -74,7 +74,8 @@ class BasePatcher(ABC):
 
                     if old_bytes != file_data[offset:offset + len(old_bytes)]:
                         print(
-                            f"WARNING: Expected {old_bytes.hex()} at 0x{offset:08X}, but found {file_data[offset:offset + len(old_bytes)].hex()}")
+                            f"WARNING: Expected {old_bytes.hex()} at 0x{offset:08X}, but found {file_data[offset:offset + len(old_bytes)].hex()}"
+                        )
 
                     file_data[offset:offset + len(new_bytes)] = new_bytes
 
@@ -84,13 +85,18 @@ class BasePatcher(ABC):
                         raise Exception(f"Patch verification failed at 0x{offset:08X} for pattern {patchpattern.name}")
 
                     print(
-                        f"SUCCESS: {patchpattern.name} - Patched 0x{offset:08X} from {old_bytes.hex()} to {new_bytes.hex()}")
+                        f"SUCCESS: {patchpattern.name} - Patched 0x{offset:08X} from {old_bytes.hex()} to {new_bytes.hex()}"
+                    )
 
             # Write back patched file
             with open(file_path, "wb") as f:
                 f.write(file_data)
 
             print(f"Patched file saved: {file_path}")
+            
+            if backup_path and backup_path.exists():
+                backup_path.unlink()
+                print(f"Backup cleaned up: {backup_path}")
             return True
 
         except Exception as e:
@@ -162,7 +168,7 @@ class NestedDacU8Patcher(BasePatcher):
                 if not self._apply_patch_operations(target_file_path):
                     return False
 
-                    # Step 5: Repack nested archive
+                # Step 5: Repack nested archive
                 progress_callback(f"Repacking nested archive", 70)
 
                 nested_packed_data = libWiiPy.archive.pack_u8(str(u8_nested_dir))
@@ -199,6 +205,7 @@ class NestedDacU8Patcher(BasePatcher):
                 if temp_dir.exists():
                     shutil.rmtree(temp_dir, ignore_errors=True)
         return True
+
 
 class DacU8Patcher(BasePatcher):
     def process_file(self, extract_dir: Path, progress_callback: ProgressCallback) -> bool:
@@ -246,7 +253,6 @@ class DacU8Patcher(BasePatcher):
                 if not self._apply_patch_operations(target_file_path):
                     return False
 
-
                 # Step 6: Repack main archive
                 progress_callback(f"Repacking main archive", 85)
 
@@ -276,6 +282,7 @@ class DacU8Patcher(BasePatcher):
                 if temp_dir.exists():
                     shutil.rmtree(temp_dir, ignore_errors=True)
         return True
+
 
 class MainDolPatcher(BasePatcher):
 
@@ -318,6 +325,6 @@ class PatcherFactory:
         elif config.processing_type == FileProcessingType.MAIN_DOL:
             return MainDolPatcher(config, work_dir, plando_dict)
         elif config.processing_type == FileProcessingType.DAC_U8:
-            return  DacU8Patcher(config, work_dir, plando_dict)
+            return DacU8Patcher(config, work_dir, plando_dict)
         else:
             raise ValueError(f"Unknown processing type: {config.processing_type}")

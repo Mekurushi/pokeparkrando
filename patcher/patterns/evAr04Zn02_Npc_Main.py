@@ -1,0 +1,166 @@
+from patcher.helper.patttern_handler import parse_pattern_bytes, create_jmp_instruction_script
+from patcher.models.models import PatchPattern, Instruction, Patch
+
+trap_events = PatchPattern(
+    name="Trap Events",
+    description="removing Trap Events",
+    patternJP=[
+        # TRAPEVENT1
+        Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 00 00 0b"),
+                    instruction_readable="load_arg 0x0"),
+
+
+        Instruction(identifier=2, offset=0x4, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+                    instruction_readable="call camerupt_trap_event"),
+        Instruction(
+            identifier=3, offset=0x10, pattern=parse_pattern_bytes("00 01 00 06"),
+            instruction_readable="ret -0x1"
+            ),
+
+        # TRAPEVENT2
+        Instruction(
+            identifier=4, offset=0x14, pattern=parse_pattern_bytes("00 00 00 0b"),
+            instruction_readable="load_arg 0x0"
+            ),
+        Instruction(
+            identifier=5, offset=0x18, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call drill_trap_event"
+            ),
+        Instruction(
+            identifier=6, offset=0x24, pattern=parse_pattern_bytes("00 01 00 06"),
+            instruction_readable="ret -0x1"
+        ),
+
+        # TRAPEVENT3
+        Instruction(
+            identifier=7, offset=0x28, pattern=parse_pattern_bytes("00 00 00 0b"),
+            instruction_readable="load_arg 0x0"
+        ),
+        Instruction(
+            identifier=8, offset=0x2c, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call charmander_trap_event"
+        ),
+        Instruction(
+            identifier=9, offset=0x38, pattern=parse_pattern_bytes("00 01 00 06"),
+            instruction_readable="ret -0x1"
+        ),
+
+        # TRAPEVENT4
+        Instruction(
+            identifier=10, offset=0x3c, pattern=parse_pattern_bytes("00 00 00 0b"),
+            instruction_readable="load_arg 0x0"
+        ),
+        Instruction(
+            identifier=11, offset=0x40, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call meditite_trap_event"
+        ),
+        Instruction(
+            identifier=12, offset=0x4c, pattern=parse_pattern_bytes("00 01 00 06"),
+            instruction_readable="ret -0x1"
+        ),
+
+        # TRAPEVENT5
+        Instruction(
+            identifier=13, offset=0x50, pattern=parse_pattern_bytes("00 00 00 0b"),
+            instruction_readable="load_arg 0x0"
+        ),
+        Instruction(
+            identifier=14, offset=0x54, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call farfetchd_trap_event"
+        ),
+        Instruction(
+            identifier=15, offset=0x60, pattern=parse_pattern_bytes("00 01 00 06"),
+            instruction_readable="ret -0x1"
+        ),
+
+        # TRAPEVENT6
+        Instruction(
+            identifier=16, offset=0x64, pattern=parse_pattern_bytes("00 00 00 0b"),
+            instruction_readable="load_arg 0x0"
+        ),
+        Instruction(
+            identifier=17, offset=0x68, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call ???_trap_event"
+        ),
+        Instruction(
+            identifier=18, offset=0x74, pattern=parse_pattern_bytes("00 01 00 06"),
+            instruction_readable="ret -0x1"
+        ),
+
+        # TRAPEVENT7
+        Instruction(
+            identifier=19, offset=0x78, pattern=parse_pattern_bytes("00 00 00 0b"),
+            instruction_readable="load_arg 0x0"
+        ),
+        Instruction(
+            identifier=20, offset=0x7c, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call ???_trap_event"
+        ),
+        Instruction(
+            identifier=21, offset=0x88, pattern=parse_pattern_bytes("00 01 00 06"),
+            instruction_readable="ret -0x1"
+        ),
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4,
+                                                                                                                  'big'),
+            new_instruction_readable="delay(0)"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+                ),
+            new_instruction_readable="delay(0)"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+                ),
+            new_instruction_readable="delay(0)"
+        ),
+        Patch(
+            identifier=11,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay(0)"
+        ),
+        Patch(
+            identifier=14,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay(0)"
+        ),
+        Patch(
+            identifier=17,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay(0)"
+        ),
+        Patch(
+            identifier=20,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay(0)"
+        ),
+    ]
+)
+
+
+
+evAr04Zn02_Npc_Main_patterns = [
+trap_events
+]

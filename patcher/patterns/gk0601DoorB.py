@@ -1,0 +1,43 @@
+from patcher.helper.patttern_handler import parse_pattern_bytes
+from patcher.models.models import PatchPattern, Instruction, Patch
+
+close = PatchPattern(
+    name="gk0601DoorB Close",
+    description="replacing f0601DoorBOpen with Absol Prisma Condition",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 04 00 07"),
+            instruction_readable="grow_stack 0x4"
+        ),
+        Instruction(
+            identifier=2, offset=0x48, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr f0601DoorBOpen"
+        ),
+        Instruction(
+            identifier=3, offset=0x50, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="push 0x1"
+        ),
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x0"  # Absol prisma id
+        ),
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00510010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x51"  # prisma request opcode
+        ),
+    ],
+)
+
+gk0601DoorB_pattern = [
+    close
+]
