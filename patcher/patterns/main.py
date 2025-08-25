@@ -1491,7 +1491,6 @@ custom_global_manager_syscall_handler_wrapper = PatchPattern(
             instruction_readable="---"
         ),
     ], patchMapJP=[
-        # TODO: remove the 0x3d, 0x69 compares
         Patch(
             identifier=1,
             patch_function=lambda offset, data, plando_dict, matches: (0x7C0802A6).to_bytes(length=4, byteorder='big'),
@@ -1516,7 +1515,7 @@ custom_global_manager_syscall_handler_wrapper = PatchPattern(
             identifier=5,
             patch_function=lambda offset, data, plando_dict, matches:
             compute_conditional_branch_instruction_from_identifier(offset, data, 8, matches, "bne"),
-            new_instruction_readable="bne check_3d"
+            new_instruction_readable="bne check_28"
         ),
         Patch(
             identifier=6,
@@ -1527,106 +1526,62 @@ custom_global_manager_syscall_handler_wrapper = PatchPattern(
             identifier=7,
             patch_function=lambda offset, data, plando_dict, matches: compute_b_instruction_from_identifier(
                 offset,
-                data, 17,
+                data, 10,
                 matches
             ),
             new_instruction_readable="b global_manager_syscall_handler"
         ),
+
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (0x2C04003D).to_bytes(length=4, byteorder='big'),
-            new_instruction_readable="cmpwi r4, 0x3d"
-        ),
-        Patch(
-            identifier=9,
-            patch_function=lambda offset, data, plando_dict, matches:
-            compute_conditional_branch_instruction_from_identifier(offset, data, 12, matches, "bne"),
-            new_instruction_readable="bne check_69"
-        ),
-        Patch(
-            identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (0x3880004B).to_bytes(length=4, byteorder='big'),
-            new_instruction_readable="li r4, 0x4b"
-        ),
-        Patch(
-            identifier=11,
-            patch_function=lambda offset, data, plando_dict, matches: compute_b_instruction_from_identifier(
-                offset,
-                data, 17,
-                matches
-            ),
-            new_instruction_readable="b global_manager_syscall_handler"
-        ),
-        Patch(
-            identifier=12,
-            patch_function=lambda offset, data, plando_dict, matches: (0x2C040069).to_bytes(length=4, byteorder='big'),
-            new_instruction_readable="cmpwi r4, 0x69"
-        ),
-        Patch(
-            identifier=13,
-            patch_function=lambda offset, data, plando_dict, matches:
-            compute_conditional_branch_instruction_from_identifier(offset, data, 15, matches, "bne"),
-            new_instruction_readable="bne check_28"
-        ),
-        Patch(
-            identifier=14,
-            patch_function=lambda offset, data, plando_dict, matches: compute_b_instruction_from_identifier(
-                offset,
-                data, 21,
-                matches
-            ),
-            new_instruction_readable="b skip_global_manager_syscall_handler"
-        ),
-        Patch(
-            identifier=15,
             patch_function=lambda offset, data, plando_dict, matches: (0x2C040028).to_bytes(length=4, byteorder='big'),
             new_instruction_readable="cmpwi r4, 0x28"
         ),
         Patch(
-            identifier=16,
+            identifier=9,
             patch_function=lambda offset, data, plando_dict, matches:
-            compute_conditional_branch_instruction_from_identifier(offset, data, 21, matches, "beq"),
+            compute_conditional_branch_instruction_from_identifier(offset, data, 14, matches, "beq"),
             new_instruction_readable="beq skip_global_manager_syscall_handler"
         ),
         Patch(
-            identifier=17,
+            identifier=10,
             patch_function=lambda offset, data, plando_dict, matches:
             setup_global_manager_syscall_handler_r12_upper_address(data),
             new_instruction_readable="lis r12, 0x8018"
         ),
         Patch(
-            identifier=18,
+            identifier=11,
             patch_function=lambda offset, data, plando_dict, matches:
             setup_global_manager_syscall_handler_r12_lower_address(data),
             new_instruction_readable="ori r12, r12, 0x0790"
         ),
         Patch(
-            identifier=19,
+            identifier=12,
             patch_function=lambda offset, data, plando_dict, matches: (0x7D8903A6).to_bytes(length=4, byteorder='big'),
             new_instruction_readable="mtctr r12"
         ),
         Patch(
-            identifier=20,
+            identifier=13,
             patch_function=lambda offset, data, plando_dict, matches: (0x4E800421).to_bytes(length=4, byteorder='big'),
             new_instruction_readable="bctrl"
         ),
         Patch(
-            identifier=21,
+            identifier=14,
             patch_function=lambda offset, data, plando_dict, matches: (0x80010018).to_bytes(length=4, byteorder='big'),
             new_instruction_readable="lwz r0, 0x18(r1)"
         ),
         Patch(
-            identifier=22,
+            identifier=15,
             patch_function=lambda offset, data, plando_dict, matches: (0x38210014).to_bytes(length=4, byteorder='big'),
             new_instruction_readable="addi r1, r1, 0x14"
         ),
         Patch(
-            identifier=23,
+            identifier=16,
             patch_function=lambda offset, data, plando_dict, matches: (0x7C0803A6).to_bytes(length=4, byteorder='big'),
             new_instruction_readable="mtlr r0"
         ),
         Patch(
-            identifier=24,
+            identifier=17,
             patch_function=lambda offset, data, plando_dict, matches: (0x4E800020).to_bytes(length=4, byteorder='big'),
             new_instruction_readable="blr"
         ),

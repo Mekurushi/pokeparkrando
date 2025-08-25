@@ -7,12 +7,14 @@ from patcher.patterns.evAr01Zn01_Npc_Main import \
 from patcher.patterns.evAr01Zn02_Npc_Main import evAr01Zn02_Npc_Main_patterns
 from patcher.patterns.evAr02Zn01_Npc_Main import evAr02Zn01_Npc_Main_pattern
 from patcher.patterns.evAr03Zn01_Npc_Main import evAr03Zn01_Npc_Main_pattern
+from patcher.patterns.evAr03Zn02_Npc_Main import evAr03Zn02_Npc_Main_patterns
 from patcher.patterns.evAr04Zn01_Npc_Main import evAr04Zn01_Npc_Main_patterns
 from patcher.patterns.evAr04Zn02_Npc_Main import evAr04Zn02_Npc_Main_patterns
 from patcher.patterns.evAr05Zn01_Gimmic import evAr05Zn01_Gimmic_patterns
 from patcher.patterns.evAr05Zn01_Npc_Main import evAr05Zn01_Npc_Main_patterns
 from patcher.patterns.evAr99Zn01_Npc_Main import evAr99Zn01_Npc_Main_pattern
 from patcher.patterns.gk0101Gate import gate101_close
+from patcher.patterns.gk0302Gate import gk0302Gate_pattern
 from patcher.patterns.gk0402Bridge import gk0402Bridge_pattern
 from patcher.patterns.gk0402Gate import gk0402Gate_pattern
 from patcher.patterns.gk0501GateA import gk0501Gate_pattern
@@ -41,6 +43,50 @@ plando_dict_ap = None
 
 def get_default_patch_configs() -> List[FilePatchConfig]:
     configs = []
+
+    gk0302gate = FilePatchConfig(
+        file_id="gate0302_gimmic",
+        description="Empoleon Gate Magma Zone",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Field/Ar03Zn02Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/Gk0302Gate.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn02Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0302Gate.fsb"), (
+                        "DATA/files/Field/Ar03Zn02Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0302Gate.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn02Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0302Gate.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn02Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0302Gate.fsb"),
+                    ],
+        patch_patterns=gk0302Gate_pattern
+    )
+    configs.append(gk0302gate)
+
+    field_Ar03Zn02_npc_script_config = FilePatchConfig(
+        file_id="Ar03_Zn02",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar03Zn02Dat.dac", "Temporary/Field/ParkAr03Zn02Dat.dan",
+                     "Script/evAr03Zn02_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar03Zn02Dat_Fr.dac", "Temporary/Field/ParkAr03Zn02Dat_Fr.dan",
+                        "Script/evAr03Zn02_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar03Zn02Dat_Ge.dac", "Temporary/Field/ParkAr03Zn02Dat_Ge.dan",
+                        "Script/evAr03Zn02_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn02Dat_It.dac", "Temporary/Field/ParkAr03Zn02Dat_It.dan",
+                        "Script/evAr03Zn02_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn02Dat_Sp.dac", "Temporary/Field/ParkAr03Zn02Dat_Sp.dan",
+                        "Script/evAr03Zn02_Npc_Main.fsb"),
+                    ],
+        patch_patterns=evAr03Zn02_Npc_Main_patterns
+    )
+    configs.append(field_Ar03Zn02_npc_script_config)
 
     gk0601DoorB = FilePatchConfig(
         file_id="gk0601_doorb_gimmic",
