@@ -624,8 +624,51 @@ mudkip_interaction = PatchPattern(
     ]
 )
 
-# attraction pokemon
+feraligatr_interaction = PatchPattern(
+    name="feraligatr interaction",
+    description="removing chapter condition",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0e 00 07"),
+            instruction_readable="grow_stack 0xe"
+        ),
 
+        Instruction(
+            identifier=2, offset=0x30, pattern=parse_pattern_bytes("00 85 00 10"),
+            instruction_readable="push 0x85"
+        ),
+        Instruction(
+            identifier=3, offset=0x38, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call get_chapter"
+        ),
+        Instruction(
+            identifier=4, offset=0x3c, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_result"
+        ),
+
+    ],
+    patchMapJP=[
+
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=4,  # pushing 0x900 so only wanted chapter logic triggers
+            patch_function=lambda offset, data, plando_dict, matches: (0x09000010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+    ]
+)
+
+# attraction pokemon
 pelipper_interaction = PatchPattern(
     name="pelipper interaction",
     description="removing unwanted behavior",
@@ -1261,10 +1304,12 @@ evAr03Zn01_Npc_Main_pattern = [
     piplup_interaction,
     psyduck_interaction,
     mudkip_interaction,
-    pelipper_interaction,
+    feraligatr_interaction,
 
     return_at7,
     return_at6,
+    
+    pelipper_interaction,
     pelipper_friendship_event,
 
     gyarados_interaction,
