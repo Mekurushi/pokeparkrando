@@ -464,9 +464,498 @@ piplup_interaction = PatchPattern(
     ]
 )
 
+# hide and seek using flag interactions
+
+psyduck_interaction = PatchPattern(
+    name="psyduck interaction",
+    description="removing psyduck hide and seek flag usage",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 09 00 07"),
+            instruction_readable="grow_stack 0xa"
+        ),
+
+        # hide and seek request branch
+        Instruction(
+            identifier=2, offset=0x190, pattern=parse_pattern_bytes("00 03 02 08"),
+            instruction_readable="jz"
+        ),
+        Instruction(
+            identifier=3, offset=0x1a0, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr 31_10240"
+        ),
+
+        # set hide and seek
+        Instruction(
+            identifier=4, offset=0x250, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=5, offset=0x254, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr f0101HideAndSeek"
+        ),
+        Instruction(
+            identifier=6, offset=0x258, pattern=parse_pattern_bytes("ff fc 00 0b"),
+            instruction_readable="load_arg -0x4"
+        ),
+        Instruction(
+            identifier=7, offset=0x25c, pattern=parse_pattern_bytes("00 00 00 10"),
+            instruction_readable="push 0x0"
+        ),
+        Instruction(
+            identifier=8, offset=0x260, pattern=parse_pattern_bytes("00 15 04 01"),
+            instruction_readable="SC4 0x0:0x15"
+        ),
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
+                offset, 3, matches,
+                "jmp"
+            ),
+            new_instruction_readable="jmp"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            new_instruction_readable="delay0"
+        ),
+
+    ]
+)
+
+mudkip_interaction = PatchPattern(
+    name="mudkip interaction",
+    description="removing mudkip hide and seek flag usage",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 09 00 07"),
+            instruction_readable="grow_stack 0xa"
+        ),
+
+        # hide and seek request branch
+        Instruction(
+            identifier=2, offset=0x164, pattern=parse_pattern_bytes("00 03 02 08"),
+            instruction_readable="jz"
+        ),
+        Instruction(
+            identifier=3, offset=0x174, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr 31_11240"
+        ),
+
+        # set hide and seek
+        Instruction(
+            identifier=4, offset=0x224, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=5, offset=0x228, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr f0101HideAndSeek"
+        ),
+        Instruction(
+            identifier=6, offset=0x22c, pattern=parse_pattern_bytes("ff fc 00 0b"),
+            instruction_readable="load_arg -0x4"
+        ),
+        Instruction(
+            identifier=7, offset=0x230, pattern=parse_pattern_bytes("00 00 00 10"),
+            instruction_readable="push 0x0"
+        ),
+        Instruction(
+            identifier=8, offset=0x234, pattern=parse_pattern_bytes("00 15 04 01"),
+            instruction_readable="SC4 0x0:0x15"
+        ),
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
+                offset, 3, matches,
+                "jmp"
+            ),
+            new_instruction_readable="jmp"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            new_instruction_readable="delay0"
+        ),
+
+    ]
+)
+
+# attraction pokemon
+
+pelipper_interaction = PatchPattern(
+    name="pelipper interaction",
+    description="removing unwanted behavior",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0e 00 07"),
+            instruction_readable="grow_stack 0xe"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x48, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call get chapter"
+        ),
+        Instruction(
+            identifier=3, offset=0x1d0, pattern=parse_pattern_bytes("ff fb 00 0b"),
+            instruction_readable="load_arg -0x5"
+        ),
+        Instruction(
+            identifier=4, offset=0x1e0, pattern=parse_pattern_bytes("ff fa 00 0b"),
+            instruction_readable="load_arg -0x6"
+        ),
+        Instruction(
+            identifier=5, offset=0x3e4, pattern=parse_pattern_bytes("00 0a 00 10"),
+            instruction_readable="push 0xa"
+        ),
+
+        Instruction(
+            identifier=6, offset=0x470, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call getattractionpokemonfriendships"
+        ),
+        Instruction(
+            identifier=7, offset=0x474, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_result"
+        ),
+
+        Instruction(
+            identifier=8, offset=0x538, pattern=parse_pattern_bytes("ff fa 00 0b"),
+            instruction_readable="load_arg -0x6"
+        ),
+
+        Instruction(
+            identifier=9, offset=0x5c4, pattern=parse_pattern_bytes("00 06 00 10"),  # attraction id
+            instruction_readable="push 0x6"
+        ),
+
+        Instruction(
+            identifier=10, offset=0x668, pattern=parse_pattern_bytes("00 06 00 10"),
+            instruction_readable="push 0x6"
+        ),
+        Instruction(
+            identifier=11, offset=0x744, pattern=parse_pattern_bytes("00 00 00 0b"),
+            instruction_readable="load_arg 0x0"
+        ),
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
+                offset, 3, matches,
+                "jmp"
+            ),
+            new_instruction_readable="jmp"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
+                offset, 5, matches,
+                "jmp"
+            ),
+            new_instruction_readable="jmp"
+        ),
+
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(  # allows always
+                # entering attraction
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x1"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(  # allows always
+                # entering attraction
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x0"
+        ),
+
+        Patch(
+            identifier=9,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00060010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x6"
+        ),
+
+        Patch(
+            identifier=10,
+            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
+                offset, 11, matches,
+                "jmp"
+            ),
+            new_instruction_readable="jmp"
+        ),
+    ]
+)
+
+returnAt07_patternPALNA = [
+    Instruction(
+        identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 08 00 07"),
+        instruction_readable="grow_stack 0x8"
+    ),
+
+    Instruction(
+        identifier=2, offset=0xcc, pattern=parse_pattern_bytes("ff fa 00 0b"),
+        instruction_readable="load_arg -0x6"
+    ),
+    Instruction(
+        identifier=3, offset=0xd0, pattern=parse_pattern_bytes("07 da 00 10"),
+        instruction_readable="load_arg -0x6"
+    ),
+    Instruction(
+        identifier=4, offset=0xd4, pattern=parse_pattern_bytes("00 0b 00 16"),
+        instruction_readable="eq"
+    ),
+    Instruction(
+        identifier=5, offset=0xd8, pattern=parse_pattern_bytes("00 09 06 08"),
+        instruction_readable="jzSet"
+    ),
+    Instruction(
+        identifier=6, offset=0xdc, pattern=parse_pattern_bytes("4e 3b 00 10"),
+        instruction_readable="push 0x4e3b"
+    ),
+
+    Instruction(
+        identifier=7, offset=0xe0, pattern=parse_pattern_bytes("ff fd 00 0b"),
+        instruction_readable="load_arg -0x3"
+    ),
+    Instruction(
+        identifier=8, offset=0xe4, pattern=parse_pattern_bytes("00 0a 00 10"),
+        instruction_readable="push 0xa"
+    ),
+
+    Instruction(  # jump target
+        identifier=9, offset=0x294, pattern=parse_pattern_bytes("00 04 00 10"),
+        instruction_readable="push 0x4"
+    ),
+    Instruction(  # chapter condition
+        identifier=10, offset=0x2c4, pattern=parse_pattern_bytes("08 20 00 10"),
+        instruction_readable="push 0x820"
+    ),
+
+]
+
+return_at7 = PatchPattern(
+    name="pelipper return attraction event",
+    description="prep for pelipper friendship location",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 08 00 07"),
+            instruction_readable="grow_stack 0x8"
+        ),
+
+        Instruction(
+            identifier=2, offset=0xc4, pattern=parse_pattern_bytes("ff fa 00 0b"),
+            instruction_readable="load_arg -0x6"
+        ),
+        Instruction(
+            identifier=3, offset=0xc8, pattern=parse_pattern_bytes("07 da 00 10"),
+            instruction_readable="load_arg -0x6"
+        ),
+        Instruction(
+            identifier=4, offset=0xcc, pattern=parse_pattern_bytes("00 0b 00 16"),
+            instruction_readable="eq"
+        ),
+        Instruction(
+            identifier=5, offset=0xd0, pattern=parse_pattern_bytes("00 09 06 08"),
+            instruction_readable="jzSet"
+        ),
+        Instruction(
+            identifier=6, offset=0xd4, pattern=parse_pattern_bytes("4e 3b 00 10"),
+            instruction_readable="push 0x4e3b"
+        ),
+
+        Instruction(
+            identifier=7, offset=0xd8, pattern=parse_pattern_bytes("ff fd 00 0b"),
+            instruction_readable="load_arg -0x3"
+        ),
+        Instruction(
+            identifier=8, offset=0xdc, pattern=parse_pattern_bytes("00 0a 00 10"),
+            instruction_readable="push 0xa"
+        ),
+
+        Instruction(  # jump target
+            identifier=9, offset=0x28c, pattern=parse_pattern_bytes("00 04 00 10"),
+            instruction_readable="push 0x4"
+        ),
+        Instruction(  # chapter condition
+            identifier=10, offset=0x2bc, pattern=parse_pattern_bytes("08 20 00 10"),
+            instruction_readable="push 0x820"
+        ),
+    ],
+    patternPAL=returnAt07_patternPALNA,
+    patternNA=returnAt07_patternPALNA,
+    patchMapJP=[
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: (0x005a0010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x5a"
+        ),
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="load_arg -0x1"  # Global Manager
+        ),
+
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x004b0010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x4b"  # request best friend pelipper (location flag)
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00150301).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="SC3 0x0:0x15"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push_result"
+        ),
+
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: (0xfffa000c).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="store_arg -0x6"
+        ),
+
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
+                offset, 9, matches,
+                "jmp"
+            ),
+            new_instruction_readable="jmp"
+        ),
+
+        Patch(
+            identifier=10,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x0"  # only enter when best friend is 0
+        ),
+    ]
+)
+
+pelipper_friendship_event = PatchPattern(
+    name="pelipper friendship event",
+    description="removing unwanted behavior",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0b 00 07"),
+            instruction_readable="grow_stack 0xb"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x24, pattern=parse_pattern_bytes("00 87 00 10"),
+            instruction_readable="push 0x87"
+        ),
+        Instruction(
+            identifier=3, offset=0x2b4, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call set_chapter"
+        ),
+
+    ],
+    patchMapJP=[
+
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+
+    ]
+)
+
 evAr03Zn01_Npc_Main_pattern = [
     # bidoof_quest_condition,
     # eEvent02090,
     # custom_prisma_check_function
-    piplup_interaction
+    piplup_interaction,
+    psyduck_interaction,
+    mudkip_interaction,
+    pelipper_interaction,
+
+    return_at7,
+    pelipper_friendship_event
 ]
