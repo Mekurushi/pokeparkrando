@@ -1,5 +1,32 @@
-from patcher.helper.patttern_handler import parse_pattern_bytes, create_jmp_instruction_script
+from patcher.helper.patttern_handler import create_lstr_script, get_num_battle_count_from_dict_as_instruction, \
+    parse_pattern_bytes, create_jmp_instruction_script
 from patcher.models.models import PatchPattern, Instruction, Patch
+
+string_section_start = PatchPattern(
+    name="string section start",
+    description="string section start for lstr instruction computation",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0,
+            pattern=parse_pattern_bytes("65 76 41 72 30 33 5a 6e 30 32 5f 4e 70 63 5f 4d 61 69 6e 00"),
+            instruction_readable="evAr03Zn02_Npc_Main"
+        ),
+
+    ],
+)
+
+f0302TalkTree = PatchPattern(
+    name="ds f0302TalkTree",
+    description="replacing EventManager string with string of other flag, breaking the next flag string",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0,
+            pattern=parse_pattern_bytes("66 30 33 30 32 54 61 6c 6b 54 72 65 65 00"),
+            instruction_readable="ds f0302TalkTree"
+        ),
+
+    ]
+)
 
 lift_top = PatchPattern(
     name="Lift Top",
@@ -54,6 +81,446 @@ lift_top = PatchPattern(
     ]
 )
 
+tree_talk_trap_event = PatchPattern(
+    name="Kirlia Tree Talk",
+    description="removing Trap Event Complete",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0f 00 07"),
+            instruction_readable="grow_stack 0xf"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x4, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr EventScript"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x2d8, pattern=parse_pattern_bytes("00 10 00 06"),
+            instruction_readable="ret -0x10"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00100006).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="ret -0x10"
+        ),
+
+    ]
+)
+mamoswine_unlock_event_entry_patternPALNA = [
+    Instruction(
+        identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 01 00 07"),
+        instruction_readable="grow_stack 0x1"
+    ),
+
+    Instruction(
+        identifier=2, offset=0x24, pattern=parse_pattern_bytes("00 01 00 10"),
+        instruction_readable="push 0x1"
+    ),
+
+    Instruction(
+        identifier=3, offset=0x28, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+        instruction_readable="lstr f0302GateOpen"
+    ),
+    Instruction(
+        identifier=4, offset=0x2c, pattern=parse_pattern_bytes("ff ff 00 0b"),
+        instruction_readable="load_arg -0x1"
+    ),
+    Instruction(
+        identifier=5, offset=0x30, pattern=parse_pattern_bytes("00 00 00 10"),
+        instruction_readable="push 0x0"
+    ),
+    Instruction(
+        identifier=6, offset=0x34, pattern=parse_pattern_bytes("00 15 04 01"),
+        instruction_readable="SC4 0x0:0x15"
+    ),
+]
+mamoswine_unlock_event_entry = PatchPattern(
+    name="C03070_03080",
+    description="replace f0302GateOpen flag",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 01 00 07"),
+            instruction_readable="grow_stack 0x1"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x1c, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="push 0x1"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x20, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr f0302GateOpen"
+        ),
+        Instruction(
+            identifier=4, offset=0x24, pattern=parse_pattern_bytes("ff ff 00 0b"),
+            instruction_readable="load_arg -0x1"
+        ),
+        Instruction(
+            identifier=5, offset=0x28, pattern=parse_pattern_bytes("00 00 00 10"),
+            instruction_readable="push 0x0"
+        ),
+        Instruction(
+            identifier=6, offset=0x2c, pattern=parse_pattern_bytes("00 15 04 01"),
+            instruction_readable="SC4 0x0:0x15"
+        ),
+    ],
+    patternPAL=mamoswine_unlock_event_entry_patternPALNA,
+    patternNA=mamoswine_unlock_event_entry_patternPALNA,
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+                data, string_section_start, f0302TalkTree
+            ),
+            new_instruction_readable="lstr f0302TalkTree"
+        ),
+
+    ]
+)
+mamoswine_unlock_event_function_patternPALNA = [
+    Instruction(
+        identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 15 00 07"),
+        instruction_readable="grow_stack 0x15"
+    ),
+
+    Instruction(
+        identifier=2, offset=0x3e8, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+        instruction_readable="call GATEOPEN"
+    ),
+
+    Instruction(
+        identifier=3, offset=0x6b8, pattern=parse_pattern_bytes("0c 08 00 10"),
+        instruction_readable="push 0xc08"
+    ),
+    Instruction(
+        identifier=4, offset=0x6bc, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+        instruction_readable="call set_chapter"
+    ),
+    Instruction(
+        identifier=5, offset=0x6c0, pattern=parse_pattern_bytes("00 16 00 06"),
+        instruction_readable="ret -0x16"
+    ),
+]
+mamoswine_unlock_event_function = PatchPattern(
+    name="piloswine_unlock",
+    description="remove setChapter and other unwanted behavior",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 15 00 07"),
+            instruction_readable="grow_stack 0x15"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x3d4, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call GATEOPEN"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x6a4, pattern=parse_pattern_bytes("0c 08 00 10"),
+            instruction_readable="push 0xc08"
+        ),
+        Instruction(
+            identifier=4, offset=0x6a8, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call set_chapter"
+        ),
+        Instruction(
+            identifier=5, offset=0x6ac, pattern=parse_pattern_bytes("00 16 00 06"),
+            instruction_readable="ret -0x16"
+        ),
+    ],
+    patternPAL=mamoswine_unlock_event_function_patternPALNA,
+    patternNA=mamoswine_unlock_event_function_patternPALNA,
+    patchMapJP=[
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+    ]
+)
+
+piloswine_talk_event = PatchPattern(
+    name="einomu_talk",
+    description="removing event",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0f 00 07"),
+            instruction_readable="grow_stack 0xf"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x4, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr EventScript"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x2a0, pattern=parse_pattern_bytes("00 10 00 06"),
+            instruction_readable="ret -0x10"
+        ),
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00100006).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+
+    ]
+)
+
+froslass_interaction = PatchPattern(
+    name="froslass interaction",
+    description="removing story chapter based logic",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 33 00 07"),
+            instruction_readable="grow_stack 0x33"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x50, pattern=parse_pattern_bytes("00 b5 00 10"),
+            instruction_readable="push 0xb5"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x68, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call get_chapter"
+        ),
+        Instruction(
+            identifier=4, offset=0x6c, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_result"
+        ),
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x0bf60010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0xbf6"
+        ),
+
+    ]
+)
+
+piloswine_interaction = PatchPattern(
+    name="piloswine interaction",
+    description="removing story chapter based logic",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 13 00 07"),
+            instruction_readable="grow_stack 0x13"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x30, pattern=parse_pattern_bytes("00 b7 00 10"),
+            instruction_readable="push 0xb7"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x64, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call get_chapter"
+        ),
+        Instruction(
+            identifier=4, offset=0x68, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_result"
+        ),
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x0c090010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0xc09"
+        ),
+
+    ]
+)
+
+unknown_interaction = PatchPattern(  # TODO: find pokemon
+    name="unkown interaction",
+    description="removing hide and seek flag",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 09 00 07"),
+            instruction_readable="grow_stack 0x9"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x30, pattern=parse_pattern_bytes("00 a0 00 10"),
+            instruction_readable="push 0xa0"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x17c, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_result"
+        ),
+        Instruction(
+            identifier=4, offset=0x2ac, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=5, offset=0x2b0, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=6, offset=0x2b4, pattern=parse_pattern_bytes("ff fd 00 0b"),
+            instruction_readable="load_arg -0x3"
+        ),
+        Instruction(
+            identifier=7, offset=0x2b8, pattern=parse_pattern_bytes("00 00 00 10"),
+            instruction_readable="push 0x0"
+        ),
+        Instruction(
+            identifier=8, offset=0x2bc, pattern=parse_pattern_bytes("00 15 04 01"),
+            instruction_readable="SC4 0x0:0x15"
+        ),
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x1"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+    ]
+)
+
+primeape_interaction = PatchPattern(
+    name="primeape interaction",
+    description="updating wincounter with options",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0a 00 07"),
+            instruction_readable="grow_stack 0xa"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x30, pattern=parse_pattern_bytes("00 af 00 10"),
+            instruction_readable="push 0xaf"
+        ),
+
+        Instruction(
+            identifier=3, offset=0xc0, pattern=parse_pattern_bytes("00 05 00 10"),
+            instruction_readable="push 0x5"
+        ),
+        Instruction(
+            identifier=4, offset=0x1b0, pattern=parse_pattern_bytes("00 05 00 10"),
+            instruction_readable="push 0x5"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: get_num_battle_count_from_dict_as_instruction(
+                plando_dict
+            ),
+            new_instruction_readable="push battlecounter"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: get_num_battle_count_from_dict_as_instruction(
+                plando_dict
+            ),
+            new_instruction_readable="push battlecounter"
+        ),
+
+    ]
+)
+
 evAr03Zn02_Npc_Main_patterns = [
     lift_top,
+    tree_talk_trap_event,
+    mamoswine_unlock_event_entry,
+    mamoswine_unlock_event_function,
+    piloswine_talk_event,
+    froslass_interaction,
+    piloswine_interaction,
+    unknown_interaction,
+    primeape_interaction
 ]

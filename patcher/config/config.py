@@ -26,6 +26,7 @@ from patcher.patterns.gk0601DoorB import gk0601DoorB_pattern
 from patcher.patterns.gkBookShelf import gkBookShelf_pattern
 from patcher.patterns.gkFireWallB import gkFireWall_pattern
 from patcher.patterns.gkKabigonWall import gkKabigonWallPattern
+from patcher.patterns.gkMammoo import gkMammoo_patterns
 from patcher.patterns.gkRecycleSanbasiA import gkRecycleSanbasiA_pattern
 from patcher.patterns.gkRecycleSanbasiB import gkRecycleSanbasiB_pattern
 from patcher.patterns.gkRecycleSanbasiC import gkRecycleSanbasiC_pattern
@@ -43,6 +44,29 @@ plando_dict_ap = None
 
 def get_default_patch_configs() -> List[FilePatchConfig]:
     configs = []
+
+    gkmammoo = FilePatchConfig(
+        file_id="gkmammoo_gimmic",
+        description="frozen Piloswine",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Field/Ar03Zn02Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/GkMammoo.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn02Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkMammoo.fsb"), (
+                        "DATA/files/Field/Ar03Zn02Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkMammoo.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn02Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkMammoo.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn02Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkMammoo.fsb"),
+                    ],
+        patch_patterns=gkMammoo_patterns
+    )
+    configs.append(gkmammoo)
 
     gk0302gate = FilePatchConfig(
         file_id="gate0302_gimmic",
