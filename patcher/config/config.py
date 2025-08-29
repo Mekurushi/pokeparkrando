@@ -8,6 +8,7 @@ from patcher.patterns.evAr01Zn02_Npc_Main import evAr01Zn02_Npc_Main_patterns
 from patcher.patterns.evAr02Zn01_Npc_Main import evAr02Zn01_Npc_Main_pattern
 from patcher.patterns.evAr03Zn01_Npc_Main import evAr03Zn01_Npc_Main_pattern
 from patcher.patterns.evAr03Zn02_Npc_Main import evAr03Zn02_Npc_Main_patterns
+from patcher.patterns.evAr03Zn03_Npc_Main import evAr03Zn03_Npc_Main_patterns
 from patcher.patterns.evAr04Zn01_Npc_Main import evAr04Zn01_Npc_Main_patterns
 from patcher.patterns.evAr04Zn02_Npc_Main import evAr04Zn02_Npc_Main_patterns
 from patcher.patterns.evAr05Zn01_Gimmic import evAr05Zn01_Gimmic_patterns
@@ -44,6 +45,27 @@ plando_dict_ap = None
 
 def get_default_patch_configs() -> List[FilePatchConfig]:
     configs = []
+
+    field_Ar03Zn03_npc_script_config = FilePatchConfig(
+        file_id="Ar03_Zn03",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar03Zn03Dat.dac", "Temporary/Field/ParkAr03Zn03Dat.dan",
+                     "Script/evAr03Zn03_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar03Zn03Dat_Fr.dac", "Temporary/Field/ParkAr03Zn03Dat_Fr.dan",
+                        "Script/evAr03Zn03_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar03Zn03Dat_Ge.dac", "Temporary/Field/ParkAr03Zn03Dat_Ge.dan",
+                        "Script/evAr03Zn03_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn03Dat_It.dac", "Temporary/Field/ParkAr03Zn03Dat_It.dan",
+                        "Script/evAr03Zn03_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn03Dat_Sp.dac", "Temporary/Field/ParkAr03Zn03Dat_Sp.dan",
+                        "Script/evAr03Zn03_Npc_Main.fsb"),
+                    ],
+        patch_patterns=evAr03Zn03_Npc_Main_patterns
+    )
+    configs.append(field_Ar03Zn03_npc_script_config)
 
     gkmammoo = FilePatchConfig(
         file_id="gkmammoo_gimmic",
