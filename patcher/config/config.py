@@ -9,6 +9,7 @@ from patcher.patterns.evAr02Zn01_Npc_Main import evAr02Zn01_Npc_Main_pattern
 from patcher.patterns.evAr03Zn01_Npc_Main import evAr03Zn01_Npc_Main_pattern
 from patcher.patterns.evAr03Zn02_Npc_Main import evAr03Zn02_Npc_Main_patterns
 from patcher.patterns.evAr03Zn03_Npc_Main import evAr03Zn03_Npc_Main_patterns
+from patcher.patterns.evAr04Zn01_Gimmic import evAr04Zn01_Gimmic_patterns
 from patcher.patterns.evAr04Zn01_Npc_Main import evAr04Zn01_Npc_Main_patterns
 from patcher.patterns.evAr04Zn02_Npc_Main import evAr04Zn02_Npc_Main_patterns
 from patcher.patterns.evAr05Zn01_Gimmic import evAr05Zn01_Gimmic_patterns
@@ -668,6 +669,27 @@ def get_default_patch_configs() -> List[FilePatchConfig]:
         patch_patterns=evAr01Zn02_Npc_Main_patterns
     )
     configs.append(field_Ar01Zn02_npc_script_config)
+
+    field_Ar04Zn01_gimmic_config = FilePatchConfig(
+        file_id="Ar04_Zn01_gimmic",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar04Zn01Dat.dac", "Temporary/Field/ParkAr04Zn01Dat.dan",
+                     "Script/evAr04Zn01_Gimmic.fsb"), (
+                        "DATA/files/Field/Ar04Zn01Dat_Fr.dac", "Temporary/Field/ParkAr04Zn01Dat_Fr.dan",
+                        "Script/evAr04Zn01_Gimmic.fsb"), (
+                        "DATA/files/Field/Ar04Zn01Dat_Ge.dac", "Temporary/Field/ParkAr04Zn01Dat_Ge.dan",
+                        "Script/evAr04Zn01_Gimmic.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn01Dat_It.dac", "Temporary/Field/ParkAr04Zn01Dat_It.dan",
+                        "Script/evAr04Zn01_Gimmic.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn01Dat_Sp.dac", "Temporary/Field/ParkAr04Zn01Dat_Sp.dan",
+                        "Script/evAr04Zn01_Gimmic.fsb"),
+                    ],
+        patch_patterns=evAr04Zn01_Gimmic_patterns
+    )
+    configs.append(field_Ar04Zn01_gimmic_config)
 
     field_Ar04Zn01_npc_script_config = FilePatchConfig(
         file_id="Ar04_Zn01",
