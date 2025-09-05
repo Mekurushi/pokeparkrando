@@ -11,6 +11,7 @@ from patcher.patterns.evAr03Zn02_Npc_Main import evAr03Zn02_Npc_Main_patterns
 from patcher.patterns.evAr03Zn03_Npc_Main import evAr03Zn03_Npc_Main_patterns
 from patcher.patterns.evAr04Zn01_Gimmic import evAr04Zn01_Gimmic_patterns
 from patcher.patterns.evAr04Zn01_Npc_Main import evAr04Zn01_Npc_Main_patterns
+from patcher.patterns.evAr04Zn02_Gimmic import evAr04Zn02_Gimmic_patterns
 from patcher.patterns.evAr04Zn02_Npc_Main import evAr04Zn02_Npc_Main_patterns
 from patcher.patterns.evAr05Zn01_Gimmic import evAr05Zn01_Gimmic_patterns
 from patcher.patterns.evAr05Zn01_Npc_Main import evAr05Zn01_Npc_Main_patterns
@@ -19,6 +20,7 @@ from patcher.patterns.gk0101Gate import gate101_close
 from patcher.patterns.gk0302Gate import gk0302Gate_pattern
 from patcher.patterns.gk0402Bridge import gk0402Bridge_pattern
 from patcher.patterns.gk0402Gate import gk0402Gate_pattern
+from patcher.patterns.gk0402Switch import gk0402Switch_pattern
 from patcher.patterns.gk0501GateA import gk0501Gate_pattern
 from patcher.patterns.gk0502DoorB import gk0502DoorB_pattern
 from patcher.patterns.gk0502DoorC import gk0502DoorC_pattern
@@ -405,6 +407,29 @@ def get_default_patch_configs() -> List[FilePatchConfig]:
     )
     configs.append(gk0402bridge)
 
+    gk0402switch = FilePatchConfig(
+        file_id="switch0402_gimmic",
+        description="Blaziken Bridge Switch",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Field/Ar04Zn02Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/Gk0402Switch.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0402Switch.fsb"), (
+                        "DATA/files/Field/Ar04Zn02Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0402Switch.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0402Switch.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0402Switch.fsb"),
+                    ],
+        patch_patterns=gk0402Switch_pattern
+    )
+    configs.append(gk0402switch)
+
     firewall_b = FilePatchConfig(
         file_id="firewallB_gimmic",
         description="Fire Wall Magma Zone",
@@ -669,6 +694,27 @@ def get_default_patch_configs() -> List[FilePatchConfig]:
         patch_patterns=evAr01Zn02_Npc_Main_patterns
     )
     configs.append(field_Ar01Zn02_npc_script_config)
+
+    field_Ar04Zn02_gimmic_config = FilePatchConfig(
+        file_id="Ar04_Zn02_gimmic",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar04Zn02Dat.dac", "Temporary/Field/ParkAr04Zn02Dat.dan",
+                     "Script/evAr04Zn02_Gimmic.fsb"), (
+                        "DATA/files/Field/Ar04Zn02Dat_Fr.dac", "Temporary/Field/ParkAr04Zn02Dat_Fr.dan",
+                        "Script/evAr04Zn02_Gimmic.fsb"), (
+                        "DATA/files/Field/Ar04Zn02Dat_Ge.dac", "Temporary/Field/ParkAr04Zn02Dat_Ge.dan",
+                        "Script/evAr04Zn02_Gimmic.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_It.dac", "Temporary/Field/ParkAr04Zn02Dat_It.dan",
+                        "Script/evAr04Zn02_Gimmic.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_Sp.dac", "Temporary/Field/ParkAr04Zn02Dat_Sp.dan",
+                        "Script/evAr04Zn02_Gimmic.fsb"),
+                    ],
+        patch_patterns=evAr04Zn02_Gimmic_patterns
+    )
+    configs.append(field_Ar04Zn02_gimmic_config)
 
     field_Ar04Zn01_gimmic_config = FilePatchConfig(
         file_id="Ar04_Zn01_gimmic",

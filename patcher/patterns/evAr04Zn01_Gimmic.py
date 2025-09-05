@@ -1,5 +1,4 @@
-from patcher.helper.patttern_handler import compute_bl_to_function_script, create_lstr_script, parse_pattern_bytes, \
-    create_jmp_instruction_script
+from patcher.helper.patttern_handler import compute_bl_to_function_script, create_lstr_script, parse_pattern_bytes
 from patcher.models.models import PatchPattern, Instruction, Patch
 
 string_section_start = PatchPattern(
@@ -165,32 +164,12 @@ box_digda = PatchPattern(
         ),
         # diglett dialog
         Instruction(
-            identifier=6, offset=0x3c8, pattern=parse_pattern_bytes("00 00 00 11"),
-            instruction_readable="push_imm part1"
+            identifier=6, offset=0x444, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr f0401DialogDigda"
         ),
         Instruction(
-            identifier=7, offset=0x3cc, pattern=parse_pattern_bytes("3f 80 00 00"),
-            instruction_readable="push_imm part2"
-        ),
-        Instruction(
-            identifier=8, offset=0x3d0, pattern=parse_pattern_bytes("00 00 00 11"),
-            instruction_readable="push_imm part1"
-        ),
-        Instruction(
-            identifier=9, offset=0x3d4, pattern=parse_pattern_bytes("3f 80 00 00"),
-            instruction_readable="push_imm part2"
-        ),
-        Instruction(
-            identifier=10, offset=0x3d8, pattern=parse_pattern_bytes("00 00 00 10"),
-            instruction_readable="push 0x0"
-        ),
-        Instruction(
-            identifier=11, offset=0x3dc, pattern=parse_pattern_bytes("0c 3e 00 10"),
-            instruction_readable="push 0xc3e"
-        ),
-        Instruction(
-            identifier=12, offset=0x4ac, pattern=parse_pattern_bytes("?? ?? ?? 03"),
-            instruction_readable="call FUN_??????"
+            identifier=7, offset=0x458, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call set_chapter"
         ),
     ],
     patchMapJP=[
@@ -213,14 +192,6 @@ box_digda = PatchPattern(
 
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="push 0x1"
-        ),
-        Patch(
-            identifier=7,
             patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
                 data, string_section_start, f0101FuwarideTaxiStop
             ),
@@ -228,36 +199,12 @@ box_digda = PatchPattern(
         ),
 
         Patch(
-            identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
-            new_instruction_readable="load_arg -0x2"  # global manager
-        ),
-        Patch(
-            identifier=9,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="push 0x0"  # opcode set flag
-        ),
-        Patch(
-            identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00150401).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="SC4 0x0:0x15"
-        ),
-        Patch(
-            identifier=11,  # skipping post unlock dialog
-            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
-                offset, 12,
-                matches, "jmp"
-            ),
-            new_instruction_readable="jmp"
+            new_instruction_readable="delay0"
         ),
     ]
 )
