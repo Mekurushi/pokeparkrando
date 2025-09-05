@@ -756,6 +756,43 @@ geodude_interaction = PatchPattern(
     ]
 )
 
+hitmontop_interaction = PatchPattern(
+    name="hitmontop interaction",
+    description="removing unwanted behavior",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 16 00 07"),
+            instruction_readable="grow_stack 0x16"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x50, pattern=parse_pattern_bytes("01 1a 00 10"),
+            instruction_readable="push 0x11a"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x64, pattern=parse_pattern_bytes("ff f9 00 0b"),
+            instruction_readable="load_arg -0x7"
+        ),
+        Instruction(
+            identifier=4, offset=0x4ec, pattern=parse_pattern_bytes("ff fa 00 0b"),
+            instruction_readable="load_arg -0x6"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
+                offset, 4, matches,
+                "jmp"
+            ),
+            new_instruction_readable="push 0x1"
+        ),
+
+    ]
+)
+
 evAr04Zn02_Npc_Main_patterns = [
     trap_events,
     rhyperior_interaction,
@@ -764,4 +801,5 @@ evAr04Zn02_Npc_Main_patterns = [
     infernape_interaction,
     bonsly_interaction,
     geodude_interaction,
+    hitmontop_interaction
 ]
