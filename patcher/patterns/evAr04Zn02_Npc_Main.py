@@ -787,7 +787,44 @@ hitmontop_interaction = PatchPattern(
                 offset, 4, matches,
                 "jmp"
             ),
-            new_instruction_readable="push 0x1"
+            new_instruction_readable="jmp"
+        ),
+
+    ]
+)
+
+camerupt_interaction = PatchPattern(
+    name="camerupt interaction",
+    description="removing unwanted behavior",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0a 00 07"),
+            instruction_readable="grow_stack 0xa"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x20, pattern=parse_pattern_bytes("01 18 00 10"),
+            instruction_readable="push 0x118"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x50, pattern=parse_pattern_bytes("ff fb 00 0b"),
+            instruction_readable="load_arg -0x2"
+        ),
+        Instruction(
+            identifier=4, offset=0x94, pattern=parse_pattern_bytes("ff fd 00 0b"),
+            instruction_readable="load_arg -0x3"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
+                offset, 4, matches,
+                "jmp"
+            ),
+            new_instruction_readable="jmp"
         ),
 
     ]
