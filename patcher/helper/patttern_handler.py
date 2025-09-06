@@ -114,6 +114,16 @@ def get_num_battle_count_from_dict_as_instruction(plando_dict):
     return battle_count_instruction
 
 
+def get_num_skygarden_prisma_count_from_dict_as_instruction(plando_dict):
+    prisma_count: int = plando_dict["Options"]["num_required_prisma_count_skygarden"]
+    if not (0x0000 <= prisma_count <= 0xe):
+        raise ValueError(f"Invalid prisma Count: {prisma_count}")
+    prisma_count_as_bytes = prisma_count.to_bytes(2, byteorder="big")
+    prisma_count_instruction = prisma_count_as_bytes + b'\x00\x10'
+    print(f"writing prisma Count from option: {prisma_count}")
+    return prisma_count_instruction
+
+
 def fill_with_delay_instructions_script(start_offset: int, end_offset: int):
     num_bytes = end_offset - start_offset
 
