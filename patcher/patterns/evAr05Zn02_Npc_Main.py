@@ -1,4 +1,5 @@
-from patcher.helper.patttern_handler import compute_bl_to_function_script, create_lstr_script, parse_pattern_bytes
+from patcher.helper.patttern_handler import compute_bl_to_function_script, create_lstr_script, \
+    get_num_battle_count_from_dict_as_instruction, parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
 
 string_section_start = PatchPattern(
@@ -85,6 +86,35 @@ set_chapter = PatchPattern(
             patch_function=lambda offset, data, plando_dict, matches: (0x00030006).to_bytes(4, 'big'),
             new_instruction_readable="ret -0x3"
         ),
+    ]
+)
+
+get_friendship = PatchPattern(
+    name="get_friendship function",
+    description="replacing with best friend request",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 04 00 07"),
+            instruction_readable="grow_stack 0x4"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x4c, pattern=parse_pattern_bytes("00 3d 00 10"),
+            instruction_readable="push 0x3d"
+        ),
+        Instruction(
+            identifier=3, offset=0x60, pattern=parse_pattern_bytes("00 05 01 06"),
+            instruction_readable="retv -0x5"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: (0x004b0010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x4b"  # best friend opcode
+        ),
+
     ]
 )
 
@@ -474,11 +504,148 @@ spinarak_interaction = PatchPattern(
     ]
 )
 
+unknown_interaction = PatchPattern(  # TODO: find pokemon
+    name="unkown interaction",
+    description="removing hide and seek flag",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 09 00 07"),
+            instruction_readable="grow_stack 0x9"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x30, pattern=parse_pattern_bytes("01 72 00 10"),
+            instruction_readable="push 0x172"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x158, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_result"
+        ),
+        Instruction(
+            identifier=4, offset=0x234, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=5, offset=0x238, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=6, offset=0x23c, pattern=parse_pattern_bytes("ff fd 00 0b"),
+            instruction_readable="load_arg -0x3"
+        ),
+        Instruction(
+            identifier=7, offset=0x240, pattern=parse_pattern_bytes("00 00 00 10"),
+            instruction_readable="push 0x0"
+        ),
+        Instruction(
+            identifier=8, offset=0x244, pattern=parse_pattern_bytes("00 15 04 01"),
+            instruction_readable="SC4 0x0:0x15"
+        ),
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x1"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+    ]
+)
+
+unknown_interaction2 = PatchPattern(
+    name="unknown interaction",
+    description="updating wincounter with options",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0a 00 07"),
+            instruction_readable="grow_stack 0xa"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x30, pattern=parse_pattern_bytes("01 7d 00 10"),
+            instruction_readable="push 0x17d"
+        ),
+
+        Instruction(
+            identifier=3, offset=0xc0, pattern=parse_pattern_bytes("00 05 00 10"),
+            instruction_readable="push 0x5"
+        ),
+        Instruction(
+            identifier=4, offset=0x1b0, pattern=parse_pattern_bytes("00 05 00 10"),
+            instruction_readable="push 0x5"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: get_num_battle_count_from_dict_as_instruction(
+                plando_dict
+            ),
+            new_instruction_readable="push battlecounter"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: get_num_battle_count_from_dict_as_instruction(
+                plando_dict
+            ),
+            new_instruction_readable="push battlecounter"
+        ),
+
+    ]
+)
+
 evAr05Zn02_Npc_Main_patterns = [
     set_chapter,
+    get_friendship,
     dusknoir_interaction,
     return_at05,
     dusknoir_friendship_event,
     get_dusknoir_friendship_location_state,
-    spinarak_interaction
+    spinarak_interaction,
+    unknown_interaction,
+    unknown_interaction2
 ]

@@ -422,11 +422,40 @@ return_at04 = PatchPattern(
     ]
 )
 
+get_friendship = PatchPattern(
+    name="get_friendship function",
+    description="replacing with best friend request",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 04 00 07"),
+            instruction_readable="grow_stack 0x4"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x4c, pattern=parse_pattern_bytes("00 3d 00 10"),
+            instruction_readable="push 0x3d"
+        ),
+        Instruction(
+            identifier=3, offset=0x60, pattern=parse_pattern_bytes("00 05 01 06"),
+            instruction_readable="retv -0x5"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: (0x004b0010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x4b"  # best friend opcode
+        ),
+
+    ]
+)
+
 evAr05Zn01_Npc_Main_patterns = [
     trap_gate,
     tangrowth_interaction,
     return_at04,
     get_tangrowth_friendship_location_state,
     set_chapter,
-
+    get_friendship
 ]
