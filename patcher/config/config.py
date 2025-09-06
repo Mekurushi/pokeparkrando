@@ -20,6 +20,7 @@ from patcher.patterns.evAr05Zn02_Npc_Main import evAr05Zn02_Npc_Main_patterns
 from patcher.patterns.evAr05Zn03_Npc_Main import evAr05Zn03_Npc_Main_patterns
 from patcher.patterns.evAr06Zn01_Gimmic import evAr06Zn01_Gimmic_patterns
 from patcher.patterns.evAr06Zn01_Npc_Main import evAr06Zn01_Npc_Main_patterns
+from patcher.patterns.evAr06Zn02_Npc_Main import evAr06Zn02_Npc_Main_patterns
 from patcher.patterns.evAr99Zn01_Npc_Main import evAr99Zn01_Npc_Main_pattern
 from patcher.patterns.gk0101Gate import gate101_close
 from patcher.patterns.gk0302Gate import gk0302Gate_pattern
@@ -365,6 +366,27 @@ def get_default_patch_configs() -> List[FilePatchConfig]:
         patch_patterns=evAr06Zn01_Gimmic_patterns
     )
     configs.append(evAr06Zn01_Gimmic)
+
+    field_Ar06Zn02_npc_script_config = FilePatchConfig(
+        file_id="Ar06_Zn02",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar06Zn02Dat.dac", "Temporary/Field/ParkAr06Zn02Dat.dan",
+                     "Script/evAr06Zn02_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar06Zn02Dat_Fr.dac", "Temporary/Field/ParkAr06Zn02Dat_Fr.dan",
+                        "Script/evAr06Zn02_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar06Zn02Dat_Ge.dac", "Temporary/Field/ParkAr06Zn02Dat_Ge.dan",
+                        "Script/evAr06Zn02_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar06Zn02Dat_It.dac", "Temporary/Field/ParkAr06Zn02Dat_It.dan",
+                        "Script/evAr06Zn02_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar06Zn02Dat_Sp.dac", "Temporary/Field/ParkAr06Zn02Dat_Sp.dan",
+                        "Script/evAr06Zn02_Npc_Main.fsb"),
+                    ],
+        patch_patterns=evAr06Zn02_Npc_Main_patterns
+    )
+    configs.append(field_Ar06Zn02_npc_script_config)
 
     field_Ar06Zn01_npc_script_config = FilePatchConfig(
         file_id="Ar06_Zn01",
