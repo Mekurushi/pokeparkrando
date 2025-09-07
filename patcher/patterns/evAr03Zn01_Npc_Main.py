@@ -1297,6 +1297,51 @@ gyarados_friendship_event = PatchPattern(
     ]
 )
 
+special_spawn_conditions = PatchPattern(
+    name="special_spawn_conditions",
+    description="removing drifblim despawn",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 06 00 07"),
+            instruction_readable="grow_stack 0x6"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x210, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr f0301FuwarideTaxiStop"
+        ),
+        Instruction(
+            identifier=3, offset=0x214, pattern=parse_pattern_bytes("ff ff 00 0b"),
+            instruction_readable="load_arg -0x1"
+        ),
+
+        Instruction(
+            identifier=4, offset=0x218, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=5, offset=0x22c, pattern=parse_pattern_bytes("00 02 02 08"),
+            instruction_readable="jz"
+        ),
+        Instruction(
+            identifier=6, offset=0x238, pattern=parse_pattern_bytes("00 07 00 06"),
+            instruction_readable="ret -0x7"
+        ),
+    ],
+    patchMapJP=[
+
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
+                offset, 6, matches,
+                "jmp"
+            ),
+            new_instruction_readable="jmp"
+        ),
+
+    ]
+)
+
 evAr03Zn01_Npc_Main_pattern = [
     # bidoof_quest_condition,
     # eEvent02090,
@@ -1308,10 +1353,11 @@ evAr03Zn01_Npc_Main_pattern = [
 
     return_at7,
     return_at6,
-    
+
     pelipper_interaction,
     pelipper_friendship_event,
 
     gyarados_interaction,
-    gyarados_friendship_event
+    gyarados_friendship_event,
+    special_spawn_conditions
 ]

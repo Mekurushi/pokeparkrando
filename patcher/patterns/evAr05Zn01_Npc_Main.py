@@ -451,11 +451,57 @@ get_friendship = PatchPattern(
     ]
 )
 
+special_spawn_conditions = PatchPattern(
+    name="special_spawn_conditions",
+    description="removing drifblim despawn",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 02 00 07"),
+            instruction_readable="grow_stack 0x2"
+        ),
+
+        Instruction(
+            identifier=2, offset=0xe4, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr f0301FuwarideTaxiStop"
+        ),
+        Instruction(
+            identifier=3, offset=0xe8, pattern=parse_pattern_bytes("ff ff 00 0b"),
+            instruction_readable="load_arg -0x1"
+        ),
+
+        Instruction(
+            identifier=4, offset=0xec, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=5, offset=0x100, pattern=parse_pattern_bytes("00 02 02 08"),
+            instruction_readable="jz"
+        ),
+        Instruction(
+            identifier=6, offset=0x10c, pattern=parse_pattern_bytes("00 03 00 06"),
+            instruction_readable="ret -0x3"
+        ),
+    ],
+    patchMapJP=[
+
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
+                offset, 6, matches,
+                "jmp"
+            ),
+            new_instruction_readable="jmp"
+        ),
+
+    ]
+)
+
 evAr05Zn01_Npc_Main_patterns = [
     trap_gate,
     tangrowth_interaction,
     return_at04,
     get_tangrowth_friendship_location_state,
     set_chapter,
-    get_friendship
+    get_friendship,
+    special_spawn_conditions
 ]

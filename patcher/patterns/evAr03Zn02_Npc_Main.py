@@ -513,6 +513,94 @@ primeape_interaction = PatchPattern(
     ]
 )
 
+special_spawn_conditions = PatchPattern(
+    name="special_spawn_conditions",
+    description="removing drifblim despawn",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 02 00 07"),
+            instruction_readable="grow_stack 0x2"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x108, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr f0301FuwarideTaxiStop"
+        ),
+        Instruction(
+            identifier=3, offset=0x10c, pattern=parse_pattern_bytes("ff ff 00 0b"),
+            instruction_readable="load_arg -0x1"
+        ),
+        Instruction(
+            identifier=4, offset=0x110, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=5, offset=0x124, pattern=parse_pattern_bytes("00 02 02 08"),
+            instruction_readable="jz"
+        ),
+        Instruction(
+            identifier=6, offset=0x130, pattern=parse_pattern_bytes("00 03 00 06"),
+            instruction_readable="ret -0x3"
+        ),
+    ],
+    patchMapJP=[
+
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
+                offset, 6, matches,
+                "jmp"
+            ),
+            new_instruction_readable="jmp"
+        ),
+
+    ]
+)
+
+special_spawn_conditions2 = PatchPattern(
+    name="special_spawn_conditions2",
+    description="removing drifblim despawn",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 02 00 07"),
+            instruction_readable="grow_stack 0x2"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x124, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr f0301FuwarideTaxiStop"
+        ),
+        Instruction(
+            identifier=3, offset=0x128, pattern=parse_pattern_bytes("ff ff 00 0b"),
+            instruction_readable="load_arg -0x1"
+        ),
+        Instruction(
+            identifier=4, offset=0x12c, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=5, offset=0x140, pattern=parse_pattern_bytes("00 02 02 08"),
+            instruction_readable="jz"
+        ),
+        Instruction(
+            identifier=6, offset=0x14c, pattern=parse_pattern_bytes("01 c2 00 10"),
+            instruction_readable="push 0x1c2"
+        ),
+    ],
+    patchMapJP=[
+
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
+                offset, 6, matches,
+                "jmp"
+            ),
+            new_instruction_readable="jmp"
+        ),
+
+    ]
+)
+
 evAr03Zn02_Npc_Main_patterns = [
     lift_top,
     tree_talk_trap_event,
@@ -522,5 +610,7 @@ evAr03Zn02_Npc_Main_patterns = [
     froslass_interaction,
     piloswine_interaction,
     unknown_interaction,
-    primeape_interaction
+    primeape_interaction,
+    special_spawn_conditions,
+    special_spawn_conditions2
 ]

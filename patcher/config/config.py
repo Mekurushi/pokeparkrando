@@ -1,6 +1,7 @@
 from typing import List
 
 from patcher.models.models import FilePatchConfig, FileProcessingType
+from patcher.patterns.disposition import disposition_patterns
 from patcher.patterns.evAr01Zn01_Gimmic import evAr01Zn01_Gimmic_patch_pattern
 from patcher.patterns.evAr01Zn01_Npc_Main import \
     evAr01Zn01_Npc_Main_patch_pattern
@@ -54,6 +55,95 @@ plando_dict_ap = None
 
 def get_default_patch_configs() -> List[FilePatchConfig]:
     configs = []
+    # TODO Add other attractions and lobbies
+
+    ar01zn01Disposition = FilePatchConfig(
+        file_id="disposition_ar01zn01",
+        description="Field Script Main",
+        processing_type=FileProcessingType.DAC_U8,
+        file_group=[("DATA/files/Field/Ar01Zn01Dat.dac", "unused",
+                     "Field/Ar01/Zn01/Ar01Zn01Dp00.rlb"),
+                    ],
+        patch_patterns=disposition_patterns
+    )
+    configs.append(ar01zn01Disposition)
+
+    ar03zn01Disposition = FilePatchConfig(
+        file_id="disposition_ar03zn01",
+        description="Field Script Main",
+        processing_type=FileProcessingType.DAC_U8,
+        file_group=[("DATA/files/Field/Ar03Zn01Dat.dac", "unused",
+                     "Field/Ar03/Zn01/Ar03Zn01Dp00.rlb"),
+                    ],
+        patch_patterns=disposition_patterns
+    )
+    configs.append(ar03zn01Disposition)
+
+    ar03zn02Disposition = FilePatchConfig(
+        file_id="disposition_ar03zn02",
+        description="Field Script Main",
+        processing_type=FileProcessingType.DAC_U8,
+        file_group=[("DATA/files/Field/Ar03Zn02Dat.dac", "unused",
+                     "Field/Ar03/Zn02/Ar03Zn02Dp00.rlb"),
+                    ],
+        patch_patterns=disposition_patterns
+    )
+    configs.append(ar03zn02Disposition)
+
+    ar04zn01Disposition = FilePatchConfig(
+        file_id="disposition_ar04zn01",
+        description="Field Script Main",
+        processing_type=FileProcessingType.DAC_U8,
+        file_group=[("DATA/files/Field/Ar04Zn01Dat.dac", "unused",
+                     "Field/Ar04/Zn01/Ar04Zn01Dp00.rlb"),
+                    ],
+        patch_patterns=disposition_patterns
+    )
+    configs.append(ar04zn01Disposition)
+
+    ar04zn02Disposition = FilePatchConfig(
+        file_id="disposition_ar04zn02",
+        description="Field Script Main",
+        processing_type=FileProcessingType.DAC_U8,
+        file_group=[("DATA/files/Field/Ar04Zn02Dat.dac", "unused",
+                     "Field/Ar04/Zn02/Ar04Zn02Dp00.rlb"),
+                    ],
+        patch_patterns=disposition_patterns
+    )
+    configs.append(ar04zn02Disposition)
+
+    ar05zn01Disposition = FilePatchConfig(
+        file_id="disposition_ar05zn01",
+        description="Field Script Main",
+        processing_type=FileProcessingType.DAC_U8,
+        file_group=[("DATA/files/Field/Ar05Zn01Dat.dac", "unused",
+                     "Field/Ar05/Zn01/Ar05Zn01Dp00.rlb"),
+                    ],
+        patch_patterns=disposition_patterns
+    )
+    configs.append(ar05zn01Disposition)
+
+    ar06zn01Disposition = FilePatchConfig(
+        file_id="disposition_ar06zn01",
+        description="Field Script Main",
+        processing_type=FileProcessingType.DAC_U8,
+        file_group=[("DATA/files/Field/Ar06Zn01Dat.dac", "unused",
+                     "Field/Ar06/Zn01/Ar06Zn01Dp00.rlb"),
+                    ],
+        patch_patterns=disposition_patterns
+    )
+    configs.append(ar06zn01Disposition)
+
+    ar06zn02Disposition = FilePatchConfig(
+        file_id="disposition_ar06zn02",
+        description="Field Script Main",
+        processing_type=FileProcessingType.DAC_U8,
+        file_group=[("DATA/files/Field/Ar06Zn02Dat.dac", "unused",
+                     "Field/Ar06/Zn02/Ar06Zn02Dp00.rlb"),
+                    ],
+        patch_patterns=disposition_patterns
+    )
+    configs.append(ar06zn02Disposition)
 
     field_Ar03Zn03_npc_script_config = FilePatchConfig(
         file_id="Ar03_Zn03",

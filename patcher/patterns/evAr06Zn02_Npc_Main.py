@@ -1,4 +1,5 @@
-from patcher.helper.patttern_handler import compute_bl_to_function_script, create_lstr_script, parse_pattern_bytes
+from patcher.helper.patttern_handler import compute_bl_to_function_script, create_jmp_instruction_script, \
+    create_lstr_script, parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
 
 string_section_start = PatchPattern(
@@ -491,23 +492,23 @@ furret_interaction = PatchPattern(
             instruction_readable="push_result"
         ),
         Instruction(
-            identifier=4, offset=0x21c, pattern=parse_pattern_bytes("00 01 00 10"),
+            identifier=4, offset=0x254, pattern=parse_pattern_bytes("00 01 00 10"),
             instruction_readable="push 0x1"
         ),
         Instruction(
-            identifier=5, offset=0x254, pattern=parse_pattern_bytes("?? ?? ?? 13"),
-            instruction_readable="push 0x1"
+            identifier=5, offset=0x258, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr f0101HideAndSeek"
         ),
         Instruction(
-            identifier=6, offset=0x258, pattern=parse_pattern_bytes("ff ff 00 0b"),
-            instruction_readable="load_arg -0x1"
+            identifier=6, offset=0x25c, pattern=parse_pattern_bytes("ff f9 00 0b"),
+            instruction_readable="load_arg -0x7"
         ),
         Instruction(
-            identifier=7, offset=0x25c, pattern=parse_pattern_bytes("00 00 00 10"),
+            identifier=7, offset=0x260, pattern=parse_pattern_bytes("00 00 00 10"),
             instruction_readable="push 0x0"
         ),
         Instruction(
-            identifier=8, offset=0x260, pattern=parse_pattern_bytes("00 15 04 01"),
+            identifier=8, offset=0x264, pattern=parse_pattern_bytes("00 15 04 01"),
             instruction_readable="SC4 0x0:0x15"
         ),
     ],
@@ -563,6 +564,96 @@ furret_interaction = PatchPattern(
     ]
 )
 
+special_spawn_conditions = PatchPattern(
+    name="special_spawn_conditions",
+    description="removing drifblim despawn",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 03 00 07"),
+            instruction_readable="grow_stack 0x3"
+        ),
+
+        Instruction(
+            identifier=2, offset=0xec, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr f0301FuwarideTaxiStop"
+        ),
+        Instruction(
+            identifier=3, offset=0xf0, pattern=parse_pattern_bytes("ff ff 00 0b"),
+            instruction_readable="load_arg -0x1"
+        ),
+
+        Instruction(
+            identifier=4, offset=0xf4, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=5, offset=0x108, pattern=parse_pattern_bytes("00 02 02 08"),
+            instruction_readable="jz"
+        ),
+        Instruction(
+            identifier=6, offset=0x114, pattern=parse_pattern_bytes("00 04 00 06"),
+            instruction_readable="ret -0x4"
+        ),
+    ],
+    patchMapJP=[
+
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
+                offset, 6, matches,
+                "jmp"
+            ),
+            new_instruction_readable="jmp"
+        ),
+
+    ]
+)
+
+special_spawn_conditions2 = PatchPattern(
+    name="special_spawn_conditions2",
+    description="removing drifblim despawn",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 03 00 07"),
+            instruction_readable="grow_stack 0x3"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x118, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr f0301FuwarideTaxiStop"
+        ),
+        Instruction(
+            identifier=3, offset=0x11c, pattern=parse_pattern_bytes("ff ff 00 0b"),
+            instruction_readable="load_arg -0x1"
+        ),
+
+        Instruction(
+            identifier=4, offset=0x120, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=5, offset=0x134, pattern=parse_pattern_bytes("00 02 02 08"),
+            instruction_readable="jz"
+        ),
+        Instruction(
+            identifier=6, offset=0x140, pattern=parse_pattern_bytes("00 04 00 06"),
+            instruction_readable="ret -0x4"
+        ),
+    ],
+    patchMapJP=[
+
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
+                offset, 6, matches,
+                "jmp"
+            ),
+            new_instruction_readable="jmp"
+        ),
+
+    ]
+)
+
 evAr06Zn02_Npc_Main_patterns = [
     set_chapter,
     get_friendship,
@@ -572,5 +663,7 @@ evAr06Zn02_Npc_Main_patterns = [
     return_at02,
     rayquaza_friendship_event,
     get_rayquaza_friendship_location_state,
+    special_spawn_conditions,
+    special_spawn_conditions2,
 
 ]

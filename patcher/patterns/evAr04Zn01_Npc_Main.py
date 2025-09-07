@@ -18,7 +18,7 @@ special_spawn_conditions = PatchPattern(
 
         Instruction(
             identifier=3, offset=0x340, pattern=parse_pattern_bytes("00 08 00 06"),
-            instruction_readable="push 0x3d"
+            instruction_readable="ret -0x8"
         ),
 
     ],
@@ -533,6 +533,7 @@ marowak_interaction = PatchPattern(
         ),
     ]
 )
+# TODO Dugtrio
 
 evAr04Zn01_Npc_Main_patterns = [
     special_spawn_conditions,
