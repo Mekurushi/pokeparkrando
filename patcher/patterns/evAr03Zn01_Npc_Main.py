@@ -1,4 +1,5 @@
-from patcher.helper.patttern_handler import parse_pattern_bytes, create_jmp_instruction_script, create_lstr_script, \
+from patcher.helper.patttern_handler import get_attraction_id_from_dict, parse_pattern_bytes, \
+    create_jmp_instruction_script, create_lstr_script, \
     compute_bl_to_function_script
 from patcher.models.models import Instruction, PatchPattern, Patch
 
@@ -770,11 +771,10 @@ pelipper_interaction = PatchPattern(
 
         Patch(
             identifier=9,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00060010).to_bytes(
-                4,
-                'big'
+            patch_function=lambda offset, data, plando_dict, matches: get_attraction_id_from_dict(
+                plando_dict, "Beach Zone Main Area - Pelipper's Circle Circuit Attraction"
             ),
-            new_instruction_readable="push 0x6"
+            new_instruction_readable="update attraction id"
         ),
 
         Patch(
@@ -1077,11 +1077,10 @@ gyarados_interaction = PatchPattern(
 
         Patch(
             identifier=9,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00050010).to_bytes(
-                4,
-                'big'
+            patch_function=lambda offset, data, plando_dict, matches: get_attraction_id_from_dict(
+                plando_dict, "Beach Zone Recycle Area - Gyarado's Aqua Dash Attraction"
             ),
-            new_instruction_readable="push 0x5"
+            new_instruction_readable="update attraction id"
         ),
 
         Patch(

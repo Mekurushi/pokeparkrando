@@ -1,5 +1,5 @@
 from patcher.helper.patttern_handler import compute_bl_to_function_script, create_jmp_instruction_script, \
-    create_lstr_script, parse_pattern_bytes
+    create_lstr_script, get_attraction_id_from_dict, parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
 
 string_section_start = PatchPattern(
@@ -161,6 +161,13 @@ rayquaza_interaction = PatchPattern(
                 'big'
             ),
             new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: get_attraction_id_from_dict(
+                plando_dict, "Flower Zone Main Area - Rayquaza's Balloon Panic Attraction"
+            ),
+            new_instruction_readable="update attraction id"
         ),
     ]
 )

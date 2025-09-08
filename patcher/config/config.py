@@ -53,6 +53,129 @@ from patcher.patterns.treehouse import treehouse_pattern
 plando_dict_ap = None
 
 
+def get_meadow_zone_patches() -> List[FilePatchConfig]:
+    configs = []
+    ar01zn01Disposition = FilePatchConfig(
+        file_id="disposition_ar01zn01",
+        description="Field Script Main",
+        processing_type=FileProcessingType.DAC_U8,
+        file_group=[("DATA/files/Field/Ar01Zn01Dat.dac", "unused",
+                     "Field/Ar01/Zn01/Ar01Zn01Dp00.rlb"),
+                    ],
+        patch_patterns=disposition_patterns
+    )
+    configs.append(ar01zn01Disposition)
+
+    field_Ar01Zn02_npc_script_config = FilePatchConfig(
+        file_id="Ar01_Zn02",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar01Zn02Dat.dac", "Temporary/Field/ParkAr01Zn02Dat.dan",
+                     "Script/evAr01Zn02_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar01Zn02Dat_Fr.dac", "Temporary/Field/ParkAr01Zn02Dat_Fr.dan",
+                        "Script/evAr01Zn02_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar01Zn02Dat_Ge.dac", "Temporary/Field/ParkAr01Zn02Dat_Ge.dan",
+                        "Script/evAr01Zn02_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar01Zn02Dat_It.dac", "Temporary/Field/ParkAr01Zn02Dat_It.dan",
+                        "Script/evAr01Zn02_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar01Zn02Dat_Sp.dac", "Temporary/Field/ParkAr01Zn02Dat_Sp.dan",
+                        "Script/evAr01Zn02_Npc_Main.fsb"),
+                    ],
+        patch_patterns=evAr01Zn02_Npc_Main_patterns
+    )
+    configs.append(field_Ar01Zn02_npc_script_config)
+
+    field_gimmic_shroomish_crate = FilePatchConfig(
+        file_id="shroomish_crate_gimmic",
+        description="Gimmic Shroomish Crate",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Field/Ar01Zn01Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/GkWoodBoxKino.fsb"),
+                    (
+                        "DATA/files/Field/Ar01Zn01Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkWoodBoxKino.fsb"), (
+                        "DATA/files/Field/Ar01Zn01Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkWoodBoxKino.fsb"),
+                    (
+                        "DATA/files/Field/Ar01Zn01Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkWoodBoxKino.fsb"),
+                    (
+                        "DATA/files/Field/Ar01Zn01Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkWoodBoxKino.fsb"),
+                    ],
+        patch_patterns=gkWoodBoxKinoPattern
+    )
+    configs.append(field_gimmic_shroomish_crate)
+
+    field_meadow_npc_script_config = FilePatchConfig(
+        file_id="meadow_zone_main_npc_script",
+        description="Field Script Main Randomization",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar01Zn01Dat.dac", "Temporary/Field/ParkAr01Zn01Dat.dan",
+                     "Script/evAr01Zn01_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar01Zn01Dat_Fr.dac", "Temporary/Field/ParkAr01Zn01Dat_Fr.dan",
+                        "Script/evAr01Zn01_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar01Zn01Dat_Ge.dac", "Temporary/Field/ParkAr01Zn01Dat_Ge.dan",
+                        "Script/evAr01Zn01_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar01Zn01Dat_It.dac", "Temporary/Field/ParkAr01Zn01Dat_It.dan",
+                        "Script/evAr01Zn01_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar01Zn01Dat_Sp.dac", "Temporary/Field/ParkAr01Zn01Dat_Sp.dan",
+                        "Script/evAr01Zn01_Npc_Main.fsb"),
+                    ],
+        patch_patterns=evAr01Zn01_Npc_Main_patch_pattern
+    )
+    configs.append(field_meadow_npc_script_config)
+
+    evAr01Zn01_Gimmic = FilePatchConfig(
+        file_id="ar01zn01_gimmic",
+        description="",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar01Zn01Dat.dac", "Temporary/Field/ParkAr01Zn01Dat.dan",
+                     "Script/evAr01Zn01_Gimmic.fsb"), (
+                        "DATA/files/Field/Ar01Zn01Dat_Fr.dac", "Temporary/Field/ParkAr01Zn01Dat_Fr.dan",
+                        "Script/evAr01Zn01_Gimmic.fsb"), (
+                        "DATA/files/Field/Ar01Zn01Dat_Ge.dac", "Temporary/Field/ParkAr01Zn01Dat_Ge.dan",
+                        "Script/evAr01Zn01_Gimmic.fsb"),
+                    (
+                        "DATA/files/Field/Ar01Zn01Dat_It.dac", "Temporary/Field/ParkAr01Zn01Dat_It.dan",
+                        "Script/evAr01Zn01_Gimmic.fsb"),
+                    (
+                        "DATA/files/Field/Ar01Zn01Dat_Sp.dac", "Temporary/Field/ParkAr01Zn01Dat_Sp.dan",
+                        "Script/evAr01Zn01_Gimmic.fsb"),
+                    ],
+        patch_patterns=evAr01Zn01_Gimmic_patch_pattern
+    )
+    configs.append(evAr01Zn01_Gimmic)
+
+    gk_gate101 = FilePatchConfig(
+        file_id="gk_gate101",
+        description="",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar01Zn01Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/Gk0101Gate.fsb"),
+                    (
+                        "DATA/files/Field/Ar01Zn01Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0101Gate.fsb"), (
+                        "DATA/files/Field/Ar01Zn01Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0101Gate.fsb"),
+                    (
+                        "DATA/files/Field/Ar01Zn01Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0101Gate.fsb"),
+                    (
+                        "DATA/files/Field/Ar01Zn01Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0101Gate.fsb"),
+                    ],
+        patch_patterns=[gate101_close]
+    )
+    configs.append(gk_gate101)
+    return configs
+
+
 def get_default_patch_configs() -> List[FilePatchConfig]:
     configs = []
     # TODO Add other attractions and lobbies

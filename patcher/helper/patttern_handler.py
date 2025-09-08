@@ -114,6 +114,33 @@ def get_num_battle_count_from_dict_as_instruction(plando_dict):
     return battle_count_instruction
 
 
+def get_attraction_id_from_dict(plando_dict, entrance: str):
+    exit_to_id: dict[str, int] = {
+        "Bulbasaur's Daring Dash Attraction": 0xf,
+        "Venusaur's Vine Swing Attraction": 0x2,
+        "Pelipper's Circle Circuit Attraction": 0x6,
+        "Gyarado's Aqua Dash Attraction": 0x5,
+        "Empoleon's Snow Slide Attraction": 0x8,
+        "Bastiodon's Panel Crush Attraction": 0x9,
+        "Rhyperior's Bumper Burn Attraction": 0xa,
+        "Blaziken's Boulder Bash Attraction": 0xb,
+        "Dusknoir's Speed Slam Attraction": 0x4,
+        "Tangrowth's Swing-Along Attraction": 0x3,
+        "Rotom's Spooky Shoot-'em-Up Attraction": 0xc,
+        "Absol's Hurdle Bounce Attraction": 0x0,
+        "Salamence's Sky Race Attraction": 0xe,
+        "Rayquaza's Balloon Panic Attraction": 0x1
+    }
+
+    exit: str = plando_dict["Entrances"][entrance]
+
+    id = exit_to_id[exit]
+    attractionid_as_bytes = id.to_bytes(2, byteorder="big")
+    attractionid_instruction = attractionid_as_bytes + b'\x00\x10'
+    print(f"writing attraction Id: {id}")
+    return attractionid_instruction
+
+
 def get_num_skygarden_prisma_count_from_dict_as_instruction(plando_dict):
     prisma_count: int = plando_dict["Options"]["num_required_prisma_count_skygarden"]
     if not (0x0000 <= prisma_count <= 0xe):

@@ -1,4 +1,5 @@
-from patcher.helper.patttern_handler import get_num_battle_count_from_dict_as_instruction, parse_pattern_bytes, \
+from patcher.helper.patttern_handler import get_attraction_id_from_dict, get_num_battle_count_from_dict_as_instruction, \
+    parse_pattern_bytes, \
     create_jmp_instruction_script
 from patcher.models.models import PatchPattern, Instruction, Patch
 
@@ -157,6 +158,13 @@ bastiodon_interaction = PatchPattern(
                 "jmp"
             ),
             new_instruction_readable="delay(0)"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: get_attraction_id_from_dict(
+                plando_dict, "Cavern Zone Main Area - Bastiodon's Panel Crush Attraction"
+            ),
+            new_instruction_readable="update attraction id"
         ),
 
     ]

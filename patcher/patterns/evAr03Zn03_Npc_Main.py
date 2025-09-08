@@ -1,4 +1,4 @@
-from patcher.helper.patttern_handler import parse_pattern_bytes
+from patcher.helper.patttern_handler import get_attraction_id_from_dict, parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
 
 get_chapter = PatchPattern(
@@ -183,7 +183,7 @@ empoleon_interaction = PatchPattern(
             instruction_readable="push 0xd1"
         ),
         Instruction(
-            identifier=3, offset=0x84, pattern=parse_pattern_bytes("00 08 00 10"),
+            identifier=3, offset=0x84, pattern=parse_pattern_bytes("00 08 00 10"),  # attraction id
             instruction_readable="push 0x8"
         ),
         Instruction(
@@ -209,6 +209,13 @@ empoleon_interaction = PatchPattern(
                 'big'
             ),
             new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: get_attraction_id_from_dict(
+                plando_dict, "Ice Zone Empoleon Area - Empoleon's Snow Slide Attraction"
+            ),
+            new_instruction_readable="update attraction id"
         ),
 
     ]

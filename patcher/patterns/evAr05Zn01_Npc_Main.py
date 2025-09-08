@@ -1,4 +1,5 @@
-from patcher.helper.patttern_handler import compute_bl_to_function_script, create_lstr_script, parse_pattern_bytes, \
+from patcher.helper.patttern_handler import compute_bl_to_function_script, create_lstr_script, \
+    get_attraction_id_from_dict, parse_pattern_bytes, \
     create_jmp_instruction_script
 from patcher.models.models import PatchPattern, Instruction, Patch
 
@@ -185,6 +186,13 @@ tangrowth_interaction = PatchPattern(
                 matches, "jmp"
             ),
             new_instruction_readable="jmp"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: get_attraction_id_from_dict(
+                plando_dict, "Haunted Zone Main Area - Tangrowth's Swing-Along Attraction"
+            ),
+            new_instruction_readable="update attraction id"
         ),
     ]
 )

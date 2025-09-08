@@ -1,5 +1,5 @@
 from patcher.helper.patttern_handler import compute_bl_to_function_script, create_lstr_script, \
-    get_num_battle_count_from_dict_as_instruction, parse_pattern_bytes
+    get_attraction_id_from_dict, get_num_battle_count_from_dict_as_instruction, parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
 
 string_section_start = PatchPattern(
@@ -149,6 +149,13 @@ dusknoir_interaction = PatchPattern(
                 'big'
             ),
             new_instruction_readable="push 0x1"  # always skipping init phase
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: get_attraction_id_from_dict(
+                plando_dict, "Haunted Zone Mansion Area - Dusknoir's Speed Slam Attraction"
+            ),
+            new_instruction_readable="update attraction id"
         ),
 
     ]
