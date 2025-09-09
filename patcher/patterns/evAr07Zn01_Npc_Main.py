@@ -106,9 +106,42 @@ mew_interaction = PatchPattern(
         ),
     ]
 )
+mew_power_competition_patternPALNA = [
+    Instruction(
+        identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 22 00 07"),
+        instruction_readable="grow_stack 0x22"
+    ),
+    Instruction(
+        identifier=2, offset=0xcc, pattern=parse_pattern_bytes("00 00 00 12"),  # first postgame check
+        instruction_readable="push_result"
+    ),
+
+    Instruction(
+        identifier=3, offset=0x1f6c, pattern=parse_pattern_bytes("00 00 00 12"),  # second postgame check
+        instruction_readable="push_result"
+    ),
+
+    Instruction(
+        identifier=4, offset=0x2034, pattern=parse_pattern_bytes("00 00 00 10"),
+        instruction_readable="push 0x0"
+    ),
+    Instruction(
+        identifier=5, offset=0x2084, pattern=parse_pattern_bytes("?? ?? ?? 19"),  # jmp target
+        instruction_readable="lea"
+    ),
+
+    Instruction(
+        identifier=6, offset=0x2118, pattern=parse_pattern_bytes("00 00 00 10"),
+        instruction_readable="push 0x0"
+    ),
+    Instruction(
+        identifier=7, offset=0x2168, pattern=parse_pattern_bytes("00 0a 00 10"),
+        instruction_readable="push 0xa"
+    ),
+]
 
 mew_power_competition = PatchPattern(
-    name="mew interaction",
+    name="mew power competition",
     description="modify mew Power Competition logic to suit ap implementation",
     patternJP=[
         Instruction(
@@ -143,6 +176,8 @@ mew_power_competition = PatchPattern(
             instruction_readable="push 0xa"
         ),
     ],
+    patternNA=mew_power_competition_patternPALNA,
+    patternPAL=mew_power_competition_patternPALNA,
 
     patchMapJP=[
         Patch(
