@@ -72,6 +72,9 @@ class BasePatcher(ABC):
                     old_bytes = mem_data.value
                     new_bytes = patch.patch_function(offset, file_data, self.plando_dict, match)
 
+                    if new_bytes is None:
+                        continue
+
                     if old_bytes != file_data[offset:offset + len(old_bytes)]:
                         print(
                             f"WARNING: Expected {old_bytes.hex()} at 0x{offset:08X}, but found {file_data[offset:offset + len(old_bytes)].hex()}"
@@ -93,7 +96,7 @@ class BasePatcher(ABC):
                 f.write(file_data)
 
             print(f"Patched file saved: {file_path}")
-            
+
             if backup_path and backup_path.exists():
                 backup_path.unlink()
                 print(f"Backup cleaned up: {backup_path}")

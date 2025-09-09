@@ -15,9 +15,8 @@ from PySide6.QtWidgets import (
 from pathlib import Path
 import os
 
-
 from gui.worker_thread import PatcherWorkerThread
-from patcher.config.config import get_default_patch_configs
+from patcher.config.config import get_all_patches
 from patcher.models.models import PatchRequest, PatchResult
 
 
@@ -31,7 +30,7 @@ class RandoGUI(QMainWindow):
         self.iso_path = ""
         self.appkprk_path = ""
         self.output_path = str(Path.cwd())
-        self.patch_configs = get_default_patch_configs()
+        self.patch_configs = get_all_patches()
         self.setup_ui()
 
     def setup_ui(self):
@@ -44,12 +43,14 @@ class RandoGUI(QMainWindow):
         # Title
         title_label = QLabel("PokéPark Randomizer Patcher")
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        title_label.setStyleSheet("""
-            font-size: 28px; 
-            font-weight: bold; 
-            margin: 20px;
-            color: #2c3e50;
-        """)
+        title_label.setStyleSheet(
+            """
+                        font-size: 28px; 
+                        font-weight: bold; 
+                        margin: 20px;
+                        color: #2c3e50;
+                    """
+            )
         main_layout.addWidget(title_label)
 
         # ISO Selection
@@ -61,17 +62,19 @@ class RandoGUI(QMainWindow):
 
         self.iso_line_edit = QLineEdit()
         self.iso_line_edit.setPlaceholderText("Select PokéPark ISO file...")
-        self.iso_line_edit.setStyleSheet("""
-            QLineEdit {
-                padding: 8px;
-                border: 2px solid #bdc3c7;
-                border-radius: 4px;
-                font-size: 12px;
-            }
-            QLineEdit:focus {
-                border-color: #3498db;
-            }
-        """)
+        self.iso_line_edit.setStyleSheet(
+            """
+                        QLineEdit {
+                            padding: 8px;
+                            border: 2px solid #bdc3c7;
+                            border-radius: 4px;
+                            font-size: 12px;
+                        }
+                        QLineEdit:focus {
+                            border-color: #3498db;
+                        }
+                    """
+            )
 
         iso_browse_btn = QPushButton("Browse")
         iso_browse_btn.setStyleSheet(self._get_button_style("#3498db"))
@@ -132,56 +135,62 @@ class RandoGUI(QMainWindow):
         self.progress_label = QLabel("")
         self.progress_label.setVisible(False)
         self.progress_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.progress_label.setStyleSheet("""
-            font-size: 14px;
-            color: #2c3e50;
-            margin: 5px;
-        """)
+        self.progress_label.setStyleSheet(
+            """
+                        font-size: 14px;
+                        color: #2c3e50;
+                        margin: 5px;
+                    """
+            )
         progress_layout.addWidget(self.progress_label)
 
         self.progress_bar = QProgressBar()
         self.progress_bar.setVisible(False)
-        self.progress_bar.setStyleSheet("""
-            QProgressBar {
-                border: 2px solid #bdc3c7;
-                border-radius: 8px;
-                text-align: center;
-                font-weight: bold;
-                height: 25px;
-            }
-            QProgressBar::chunk {
-                background-color: #27ae60;
-                border-radius: 6px;
-            }
-        """)
+        self.progress_bar.setStyleSheet(
+            """
+                        QProgressBar {
+                            border: 2px solid #bdc3c7;
+                            border-radius: 8px;
+                            text-align: center;
+                            font-weight: bold;
+                            height: 25px;
+                        }
+                        QProgressBar::chunk {
+                            background-color: #27ae60;
+                            border-radius: 6px;
+                        }
+                    """
+            )
         progress_layout.addWidget(self.progress_bar)
 
         main_layout.addWidget(progress_group)
 
         # Main button
         self.patching_btn = QPushButton("Start Patching")
-        self.patching_btn.setStyleSheet("""
-            QPushButton {
-                font-size: 18px;
-                font-weight: bold;
-                padding: 15px;
-                background-color: #27ae60;
-                color: white;
-                border: none;
-                border-radius: 8px;
-                margin: 10px;
-            }
-            QPushButton:hover {
-                background-color: #229954;
-            }
-            QPushButton:pressed {
-                background-color: #1e8449;
-            }
-            QPushButton:disabled {
-                background-color: #bdc3c7;
-                color: #7f8c8d;
-            }
-        """)
+        self.patching_btn.setStyleSheet(
+            """
+                        QPushButton {
+                            font-size: 18px;
+                            font-weight: bold;
+                            padding: 15px;
+                            background-color: #27ae60;
+                            color: white;
+                            border: none;
+                            border-radius: 8px;
+                            margin: 10px;
+                        }
+                        QPushButton:hover {
+                            background-color: #229954;
+                        }
+                        QPushButton:pressed {
+                            background-color: #1e8449;
+                        }
+                        QPushButton:disabled {
+                            background-color: #bdc3c7;
+                            color: #7f8c8d;
+                        }
+                    """
+            )
         self.patching_btn.clicked.connect(self.start_patching)
         main_layout.addWidget(self.patching_btn)
 
@@ -252,6 +261,7 @@ class RandoGUI(QMainWindow):
         if folder_path:
             self.output_path = folder_path
             self.output_line_edit.setText(folder_path)
+
     def browse_appokprk(self):
         file_path, _ = QFileDialog.getOpenFileName(
             self,
@@ -267,6 +277,7 @@ class RandoGUI(QMainWindow):
 
             self.appkprk_path = file_path
             self.appkprk_line_edit.setText(file_path)
+
     def start_patching(self):
         # Validation
         if not self._validate_inputs():

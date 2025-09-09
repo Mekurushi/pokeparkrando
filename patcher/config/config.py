@@ -50,21 +50,27 @@ from patcher.patterns.mnLobby import mnLobby_pattern
 from patcher.patterns.mnStartMenu import load_new_file_pattern
 from patcher.patterns.treehouse import treehouse_pattern
 
-plando_dict_ap = None
-
 
 def get_meadow_zone_patches() -> List[FilePatchConfig]:
-    configs = []
+    patches = []
     ar01zn01Disposition = FilePatchConfig(
         file_id="disposition_ar01zn01",
         description="Field Script Main",
         processing_type=FileProcessingType.DAC_U8,
         file_group=[("DATA/files/Field/Ar01Zn01Dat.dac", "unused",
                      "Field/Ar01/Zn01/Ar01Zn01Dp00.rlb"),
+                    ("DATA/files/Field/Ar01Zn01Dat_Fr.dac", "unused",
+                     "Field/Ar01/Zn01/Ar01Zn01Dp00.rlb"),
+                    ("DATA/files/Field/Ar01Zn01Dat_Ge.dac", "unused",
+                     "Field/Ar01/Zn01/Ar01Zn01Dp00.rlb"),
+                    ("DATA/files/Field/Ar01Zn01Dat_It.dac", "unused",
+                     "Field/Ar01/Zn01/Ar01Zn01Dp00.rlb"),
+                    ("DATA/files/Field/Ar01Zn01Dat_Sp.dac", "unused",
+                     "Field/Ar01/Zn01/Ar01Zn01Dp00.rlb"),
                     ],
         patch_patterns=disposition_patterns
     )
-    configs.append(ar01zn01Disposition)
+    patches.append(ar01zn01Disposition)
 
     field_Ar01Zn02_npc_script_config = FilePatchConfig(
         file_id="Ar01_Zn02",
@@ -85,7 +91,7 @@ def get_meadow_zone_patches() -> List[FilePatchConfig]:
                     ],
         patch_patterns=evAr01Zn02_Npc_Main_patterns
     )
-    configs.append(field_Ar01Zn02_npc_script_config)
+    patches.append(field_Ar01Zn02_npc_script_config)
 
     field_gimmic_shroomish_crate = FilePatchConfig(
         file_id="shroomish_crate_gimmic",
@@ -108,7 +114,7 @@ def get_meadow_zone_patches() -> List[FilePatchConfig]:
                     ],
         patch_patterns=gkWoodBoxKinoPattern
     )
-    configs.append(field_gimmic_shroomish_crate)
+    patches.append(field_gimmic_shroomish_crate)
 
     field_meadow_npc_script_config = FilePatchConfig(
         file_id="meadow_zone_main_npc_script",
@@ -129,7 +135,7 @@ def get_meadow_zone_patches() -> List[FilePatchConfig]:
                     ],
         patch_patterns=evAr01Zn01_Npc_Main_patch_pattern
     )
-    configs.append(field_meadow_npc_script_config)
+    patches.append(field_meadow_npc_script_config)
 
     evAr01Zn01_Gimmic = FilePatchConfig(
         file_id="ar01zn01_gimmic",
@@ -150,7 +156,7 @@ def get_meadow_zone_patches() -> List[FilePatchConfig]:
                     ],
         patch_patterns=evAr01Zn01_Gimmic_patch_pattern
     )
-    configs.append(evAr01Zn01_Gimmic)
+    patches.append(evAr01Zn01_Gimmic)
 
     gk_gate101 = FilePatchConfig(
         file_id="gk_gate101",
@@ -172,768 +178,146 @@ def get_meadow_zone_patches() -> List[FilePatchConfig]:
                     ],
         patch_patterns=[gate101_close]
     )
-    configs.append(gk_gate101)
-    return configs
+    patches.append(gk_gate101)
+
+    return patches
 
 
-def get_default_patch_configs() -> List[FilePatchConfig]:
-    configs = []
+def get_park_entrance_patches() -> List[FilePatchConfig]:
+    patches = []
+    field_Ar99Zn01_npc_script_config = FilePatchConfig(
+        file_id="Ar99_Zn01",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar99Zn01Dat.dac", "Temporary/Field/ParkAr99Zn01Dat.dan",
+                     "Script/evAr99Zn01_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar99Zn01Dat_Fr.dac", "Temporary/Field/ParkAr99Zn01Dat_Fr.dan",
+                        "Script/evAr99Zn01_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar99Zn01Dat_Ge.dac", "Temporary/Field/ParkAr99Zn01Dat_Ge.dan",
+                        "Script/evAr99Zn01_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar99Zn01Dat_It.dac", "Temporary/Field/ParkAr99Zn01Dat_It.dan",
+                        "Script/evAr99Zn01_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar99Zn01Dat_Sp.dac", "Temporary/Field/ParkAr99Zn01Dat_Sp.dan",
+                        "Script/evAr99Zn01_Npc_Main.fsb"),
+                    ],
+        patch_patterns=evAr99Zn01_Npc_Main_pattern
+    )
+    patches.append(field_Ar99Zn01_npc_script_config)
+    kabigon_wall = FilePatchConfig(
+        file_id="kabigon_wall_gimmic",
+        description="Gimmic KabigonWall",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Field/Ar99Zn01Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/GkKabigonWall.fsb"),
+                    (
+                        "DATA/files/Field/Ar99Zn01Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkKabigonWall.fsb"), (
+                        "DATA/files/Field/Ar99Zn01Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkKabigonWall.fsb"),
+                    (
+                        "DATA/files/Field/Ar99Zn01Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkKabigonWall.fsb"),
+                    (
+                        "DATA/files/Field/Ar99Zn01Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkKabigonWall.fsb"),
+                    ],
+        patch_patterns=gkKabigonWallPattern
+    )
+    patches.append(kabigon_wall)
+    return patches
+
+
+def get_attraction_patches() -> List[FilePatchConfig]:
+    patches = []
     # TODO Add other attractions and lobbies
 
-    ar01zn01Disposition = FilePatchConfig(
-        file_id="disposition_ar01zn01",
-        description="Field Script Main",
+    lobby16 = FilePatchConfig(
+        file_id="lobby16_bulbasaur",
+        description="Bulbasaur Attraction Lobby",
         processing_type=FileProcessingType.DAC_U8,
-        file_group=[("DATA/files/Field/Ar01Zn01Dat.dac", "unused",
-                     "Field/Ar01/Zn01/Ar01Zn01Dp00.rlb"),
-                    ],
-        patch_patterns=disposition_patterns
-    )
-    configs.append(ar01zn01Disposition)
 
-    ar03zn01Disposition = FilePatchConfig(
-        file_id="disposition_ar03zn01",
-        description="Field Script Main",
+        file_group=[("DATA/files/Archive/Lobby16Dat.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/Lobby16Dat_Fr.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/Lobby16Dat_Ge.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/Lobby16Dat_It.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/Lobby16Dat_Sp.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ],
+        patch_patterns=mnLobby_pattern
+    )
+    patches.append(lobby16)
+
+    lobby3 = FilePatchConfig(
+        file_id="lobby3_venusaur",
+        description="Venusaur Attraction Lobby",
         processing_type=FileProcessingType.DAC_U8,
-        file_group=[("DATA/files/Field/Ar03Zn01Dat.dac", "unused",
-                     "Field/Ar03/Zn01/Ar03Zn01Dp00.rlb"),
-                    ],
-        patch_patterns=disposition_patterns
-    )
-    configs.append(ar03zn01Disposition)
 
-    ar03zn02Disposition = FilePatchConfig(
-        file_id="disposition_ar03zn02",
-        description="Field Script Main",
-        processing_type=FileProcessingType.DAC_U8,
-        file_group=[("DATA/files/Field/Ar03Zn02Dat.dac", "unused",
-                     "Field/Ar03/Zn02/Ar03Zn02Dp00.rlb"),
+        file_group=[("DATA/files/Archive/lobby03Dat.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby03Dat_Fr.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby03Dat_Ge.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby03Dat_It.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby03Dat_Sp.dac", "unused",
+                     "Script/mnLobby.fsb"),
                     ],
-        patch_patterns=disposition_patterns
+        patch_patterns=mnLobby_pattern
     )
-    configs.append(ar03zn02Disposition)
+    patches.append(lobby3)
 
-    ar04zn01Disposition = FilePatchConfig(
-        file_id="disposition_ar04zn01",
-        description="Field Script Main",
-        processing_type=FileProcessingType.DAC_U8,
-        file_group=[("DATA/files/Field/Ar04Zn01Dat.dac", "unused",
-                     "Field/Ar04/Zn01/Ar04Zn01Dp00.rlb"),
-                    ],
-        patch_patterns=disposition_patterns
-    )
-    configs.append(ar04zn01Disposition)
-
-    ar04zn02Disposition = FilePatchConfig(
-        file_id="disposition_ar04zn02",
-        description="Field Script Main",
-        processing_type=FileProcessingType.DAC_U8,
-        file_group=[("DATA/files/Field/Ar04Zn02Dat.dac", "unused",
-                     "Field/Ar04/Zn02/Ar04Zn02Dp00.rlb"),
-                    ],
-        patch_patterns=disposition_patterns
-    )
-    configs.append(ar04zn02Disposition)
-
-    ar05zn01Disposition = FilePatchConfig(
-        file_id="disposition_ar05zn01",
-        description="Field Script Main",
-        processing_type=FileProcessingType.DAC_U8,
-        file_group=[("DATA/files/Field/Ar05Zn01Dat.dac", "unused",
-                     "Field/Ar05/Zn01/Ar05Zn01Dp00.rlb"),
-                    ],
-        patch_patterns=disposition_patterns
-    )
-    configs.append(ar05zn01Disposition)
-
-    ar06zn01Disposition = FilePatchConfig(
-        file_id="disposition_ar06zn01",
-        description="Field Script Main",
-        processing_type=FileProcessingType.DAC_U8,
-        file_group=[("DATA/files/Field/Ar06Zn01Dat.dac", "unused",
-                     "Field/Ar06/Zn01/Ar06Zn01Dp00.rlb"),
-                    ],
-        patch_patterns=disposition_patterns
-    )
-    configs.append(ar06zn01Disposition)
-
-    ar06zn02Disposition = FilePatchConfig(
-        file_id="disposition_ar06zn02",
-        description="Field Script Main",
-        processing_type=FileProcessingType.DAC_U8,
-        file_group=[("DATA/files/Field/Ar06Zn02Dat.dac", "unused",
-                     "Field/Ar06/Zn02/Ar06Zn02Dp00.rlb"),
-                    ],
-        patch_patterns=disposition_patterns
-    )
-    configs.append(ar06zn02Disposition)
-
-    field_Ar03Zn03_npc_script_config = FilePatchConfig(
-        file_id="Ar03_Zn03",
-        description="Field Script Main",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-        file_group=[("DATA/files/Field/Ar03Zn03Dat.dac", "Temporary/Field/ParkAr03Zn03Dat.dan",
-                     "Script/evAr03Zn03_Npc_Main.fsb"), (
-                        "DATA/files/Field/Ar03Zn03Dat_Fr.dac", "Temporary/Field/ParkAr03Zn03Dat_Fr.dan",
-                        "Script/evAr03Zn03_Npc_Main.fsb"), (
-                        "DATA/files/Field/Ar03Zn03Dat_Ge.dac", "Temporary/Field/ParkAr03Zn03Dat_Ge.dan",
-                        "Script/evAr03Zn03_Npc_Main.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn03Dat_It.dac", "Temporary/Field/ParkAr03Zn03Dat_It.dan",
-                        "Script/evAr03Zn03_Npc_Main.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn03Dat_Sp.dac", "Temporary/Field/ParkAr03Zn03Dat_Sp.dan",
-                        "Script/evAr03Zn03_Npc_Main.fsb"),
-                    ],
-        patch_patterns=evAr03Zn03_Npc_Main_patterns
-    )
-    configs.append(field_Ar03Zn03_npc_script_config)
-
-    gkmammoo = FilePatchConfig(
-        file_id="gkmammoo_gimmic",
-        description="frozen Piloswine",
+    attraction16 = FilePatchConfig(
+        file_id="attraction_info16_bulbasaur",
+        description="Bulbasaur Minigame Attraction",
         processing_type=FileProcessingType.NESTED_DAC_U8,
 
-        file_group=[("DATA/files/Field/Ar03Zn02Dat.dac", "Gimmick/GkDatArc.dan",
-                     "Gimmick/GkMammoo.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn02Dat_Fr.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkMammoo.fsb"), (
-                        "DATA/files/Field/Ar03Zn02Dat_Ge.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkMammoo.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn02Dat_It.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkMammoo.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn02Dat_Sp.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkMammoo.fsb"),
+        file_group=[("DATA/files/Attraction/At016Dat.dac", "Temporary/PreAtArc/PreAt016Dat.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At016Dat_Fr.dac", "Temporary/PreAtArc/PreAt016Dat_Fr.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At016Dat_Ge.dac", "Temporary/PreAtArc/PreAt016Dat_Ge.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At016Dat_It.dac", "Temporary/PreAtArc/PreAt016Dat_It.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At016Dat_Sp.dac", "Temporary/PreAtArc/PreAt016Dat_Sp.dan",
+                     "Script/mnAttractionInfo.fsb"),
                     ],
-        patch_patterns=gkMammoo_patterns
+        patch_patterns=mnAttractionInfo_pattern
     )
-    configs.append(gkmammoo)
+    patches.append(attraction16)
 
-    gk0302gate = FilePatchConfig(
-        file_id="gate0302_gimmic",
-        description="Empoleon Gate Magma Zone",
+    attraction3 = FilePatchConfig(
+        file_id="attraction_info3_venusaur",
+        description="Venusaur Minigame Attraction",
         processing_type=FileProcessingType.NESTED_DAC_U8,
 
-        file_group=[("DATA/files/Field/Ar03Zn02Dat.dac", "Gimmick/GkDatArc.dan",
-                     "Gimmick/Gk0302Gate.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn02Dat_Fr.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0302Gate.fsb"), (
-                        "DATA/files/Field/Ar03Zn02Dat_Ge.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0302Gate.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn02Dat_It.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0302Gate.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn02Dat_Sp.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0302Gate.fsb"),
+        file_group=[("DATA/files/Attraction/At003Dat.dac", "Temporary/PreAtArc/PreAt003Dat.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At003Dat_Fr.dac", "Temporary/PreAtArc/PreAt003Dat_Fr.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At003Dat_Ge.dac", "Temporary/PreAtArc/PreAt003Dat_Ge.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At003Dat_It.dac", "Temporary/PreAtArc/PreAt003Dat_It.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At003Dat_Sp.dac", "Temporary/PreAtArc/PreAt003Dat_Sp.dan",
+                     "Script/mnAttractionInfo.fsb"),
                     ],
-        patch_patterns=gk0302Gate_pattern
+        patch_patterns=mnAttractionInfo_pattern
     )
-    configs.append(gk0302gate)
+    patches.append(attraction3)
+    return patches
 
-    field_Ar03Zn02_npc_script_config = FilePatchConfig(
-        file_id="Ar03_Zn02",
-        description="Field Script Main",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-        file_group=[("DATA/files/Field/Ar03Zn02Dat.dac", "Temporary/Field/ParkAr03Zn02Dat.dan",
-                     "Script/evAr03Zn02_Npc_Main.fsb"), (
-                        "DATA/files/Field/Ar03Zn02Dat_Fr.dac", "Temporary/Field/ParkAr03Zn02Dat_Fr.dan",
-                        "Script/evAr03Zn02_Npc_Main.fsb"), (
-                        "DATA/files/Field/Ar03Zn02Dat_Ge.dac", "Temporary/Field/ParkAr03Zn02Dat_Ge.dan",
-                        "Script/evAr03Zn02_Npc_Main.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn02Dat_It.dac", "Temporary/Field/ParkAr03Zn02Dat_It.dan",
-                        "Script/evAr03Zn02_Npc_Main.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn02Dat_Sp.dac", "Temporary/Field/ParkAr03Zn02Dat_Sp.dan",
-                        "Script/evAr03Zn02_Npc_Main.fsb"),
-                    ],
-        patch_patterns=evAr03Zn02_Npc_Main_patterns
-    )
-    configs.append(field_Ar03Zn02_npc_script_config)
 
-    gk0601DoorB = FilePatchConfig(
-        file_id="gk0601_doorb_gimmic",
-        description="Granite Zone Flygon DoorB",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-
-        file_group=[("DATA/files/Field/Ar06Zn01Dat.dac", "Gimmick/GkDatArc.dan",
-                     "Gimmick/Gk0601DoorB.fsb"),
-                    (
-                        "DATA/files/Field/Ar06Zn01Dat_Fr.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0601DoorB.fsb"), (
-                        "DATA/files/Field/Ar06Zn01Dat_Ge.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0601DoorB.fsb"),
-                    (
-                        "DATA/files/Field/Ar06Zn01Dat_It.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0601DoorB.fsb"),
-                    (
-                        "DATA/files/Field/Ar06Zn01Dat_Sp.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0601DoorB.fsb"),
-                    ],
-        patch_patterns=gk0601DoorB_pattern
-    )
-    configs.append(gk0601DoorB)
-
-    gkBookShelf = FilePatchConfig(
-        file_id="gk0502_doorb_gimmic",
-        description="Haunted Zone Mansion DoorB",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-
-        file_group=[("DATA/files/Field/Ar05Zn02Dat.dac", "Gimmick/GkDatArc.dan",
-                     "Gimmick/GkBookShelf.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn02Dat_Fr.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkBookShelf.fsb"), (
-                        "DATA/files/Field/Ar05Zn02Dat_Ge.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkBookShelf.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn02Dat_It.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkBookShelf.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn02Dat_Sp.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkBookShelf.fsb"),
-                    ],
-        patch_patterns=gkBookShelf_pattern
-    )
-    configs.append(gkBookShelf)
-
-    gk0502DoorB = FilePatchConfig(
-        file_id="gk0502_doorb_gimmic",
-        description="Haunted Zone Mansion DoorB",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-
-        file_group=[("DATA/files/Field/Ar05Zn02Dat.dac", "Gimmick/GkDatArc.dan",
-                     "Gimmick/Gk0502DoorB.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn02Dat_Fr.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0502DoorB.fsb"), (
-                        "DATA/files/Field/Ar05Zn02Dat_Ge.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0502DoorB.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn02Dat_It.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0502DoorB.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn02Dat_Sp.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0502DoorB.fsb"),
-                    ],
-        patch_patterns=gk0502DoorB_pattern
-    )
-    configs.append(gk0502DoorB)
-
-    gk0502DoorC = FilePatchConfig(
-        file_id="gk0502_doorc_gimmic",
-        description="Haunted Zone Mansion DoorC",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-
-        file_group=[("DATA/files/Field/Ar05Zn02Dat.dac", "Gimmick/GkDatArc.dan",
-                     "Gimmick/Gk0502DoorC.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn02Dat_Fr.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0502DoorC.fsb"), (
-                        "DATA/files/Field/Ar05Zn02Dat_Ge.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0502DoorC.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn02Dat_It.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0502DoorC.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn02Dat_Sp.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0502DoorC.fsb"),
-                    ],
-        patch_patterns=gk0502DoorC_pattern
-    )
-    configs.append(gk0502DoorC)
-
-    gk0502DoorD = FilePatchConfig(
-        file_id="gk0502_doord_gimmic",
-        description="Haunted Zone Mansion DoorD",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-
-        file_group=[("DATA/files/Field/Ar05Zn02Dat.dac", "Gimmick/GkDatArc.dan",
-                     "Gimmick/Gk0502DoorD.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn02Dat_Fr.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0502DoorD.fsb"), (
-                        "DATA/files/Field/Ar05Zn02Dat_Ge.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0502DoorD.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn02Dat_It.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0502DoorD.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn02Dat_Sp.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0502DoorD.fsb"),
-                    ],
-        patch_patterns=gk0502DoorD_pattern
-    )
-    configs.append(gk0502DoorD)
-
-    gk0502DoorE = FilePatchConfig(
-        file_id="gk0502_doore_gimmic",
-        description="Haunted Zone Mansion DoorE",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-
-        file_group=[("DATA/files/Field/Ar05Zn02Dat.dac", "Gimmick/GkDatArc.dan",
-                     "Gimmick/Gk0502DoorE.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn02Dat_Fr.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0502DoorE.fsb"), (
-                        "DATA/files/Field/Ar05Zn02Dat_Ge.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0502DoorE.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn02Dat_It.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0502DoorE.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn02Dat_Sp.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0502DoorE.fsb"),
-                    ],
-        patch_patterns=gk0502DoorE_pattern
-    )
-    configs.append(gk0502DoorE)
-
-    gk0501gate = FilePatchConfig(
-        file_id="gate0501_gimmic",
-        description="Haunted Zone Gate A",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-
-        file_group=[("DATA/files/Field/Ar05Zn01Dat.dac", "Gimmick/GkDatArc.dan",
-                     "Gimmick/Gk0501GateA.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn01Dat_Fr.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0501GateA.fsb"), (
-                        "DATA/files/Field/Ar05Zn01Dat_Ge.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0501GateA.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn01Dat_It.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0501GateA.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn01Dat_Sp.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0501GateA.fsb"),
-                    ],
-        patch_patterns=gk0501Gate_pattern
-    )
-    configs.append(gk0501gate)
-
-    field_Ar05Zn03_npc_script_config = FilePatchConfig(
-        file_id="Ar05_Zn03",
-        description="Field Script Main",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-        file_group=[("DATA/files/Field/Ar05Zn03Dat.dac", "Temporary/Field/ParkAr05Zn03Dat.dan",
-                     "Script/evAr05Zn03_Npc_Main.fsb"), (
-                        "DATA/files/Field/Ar05Zn03Dat_Fr.dac", "Temporary/Field/ParkAr05Zn03Dat_Fr.dan",
-                        "Script/evAr05Zn03_Npc_Main.fsb"), (
-                        "DATA/files/Field/Ar05Zn03Dat_Ge.dac", "Temporary/Field/ParkAr05Zn03Dat_Ge.dan",
-                        "Script/evAr05Zn03_Npc_Main.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn03Dat_It.dac", "Temporary/Field/ParkAr05Zn03Dat_It.dan",
-                        "Script/evAr05Zn03_Npc_Main.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn03Dat_Sp.dac", "Temporary/Field/ParkAr05Zn03Dat_Sp.dan",
-                        "Script/evAr05Zn03_Npc_Main.fsb"),
-                    ],
-        patch_patterns=evAr05Zn03_Npc_Main_patterns
-    )
-    configs.append(field_Ar05Zn03_npc_script_config)
-
-    field_Ar05Zn02_npc_script_config = FilePatchConfig(
-        file_id="Ar05_Zn02",
-        description="Field Script Main",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-        file_group=[("DATA/files/Field/Ar05Zn02Dat.dac", "Temporary/Field/ParkAr05Zn02Dat.dan",
-                     "Script/evAr05Zn02_Npc_Main.fsb"), (
-                        "DATA/files/Field/Ar05Zn02Dat_Fr.dac", "Temporary/Field/ParkAr05Zn02Dat_Fr.dan",
-                        "Script/evAr05Zn02_Npc_Main.fsb"), (
-                        "DATA/files/Field/Ar05Zn02Dat_Ge.dac", "Temporary/Field/ParkAr05Zn02Dat_Ge.dan",
-                        "Script/evAr05Zn02_Npc_Main.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn02Dat_It.dac", "Temporary/Field/ParkAr05Zn02Dat_It.dan",
-                        "Script/evAr05Zn02_Npc_Main.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn02Dat_Sp.dac", "Temporary/Field/ParkAr05Zn02Dat_Sp.dan",
-                        "Script/evAr05Zn02_Npc_Main.fsb"),
-                    ],
-        patch_patterns=evAr05Zn02_Npc_Main_patterns
-    )
-    configs.append(field_Ar05Zn02_npc_script_config)
-
-    evAr06Zn01_Gimmic = FilePatchConfig(
-        file_id="ar06zn01_gimmic",
-        description="",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-        file_group=[("DATA/files/Field/Ar06Zn01Dat.dac", "Temporary/Field/ParkAr06Zn01Dat.dan",
-                     "Script/evAr06Zn01_Gimmic.fsb"), (
-                        "DATA/files/Field/Ar06Zn01Dat_Fr.dac", "Temporary/Field/ParkAr06Zn01Dat_Fr.dan",
-                        "Script/evAr06Zn01_Gimmic.fsb"), (
-                        "DATA/files/Field/Ar06Zn01Dat_Ge.dac", "Temporary/Field/ParkAr06Zn01Dat_Ge.dan",
-                        "Script/evAr06Zn01_Gimmic.fsb"),
-                    (
-                        "DATA/files/Field/Ar06Zn01Dat_It.dac", "Temporary/Field/ParkAr06Zn01Dat_It.dan",
-                        "Script/evAr06Zn01_Gimmic.fsb"),
-                    (
-                        "DATA/files/Field/Ar06Zn01Dat_Sp.dac", "Temporary/Field/ParkAr06Zn01Dat_Sp.dan",
-                        "Script/evAr06Zn01_Gimmic.fsb"),
-                    ],
-        patch_patterns=evAr06Zn01_Gimmic_patterns
-    )
-    configs.append(evAr06Zn01_Gimmic)
-
-    field_Ar06Zn02_npc_script_config = FilePatchConfig(
-        file_id="Ar06_Zn02",
-        description="Field Script Main",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-        file_group=[("DATA/files/Field/Ar06Zn02Dat.dac", "Temporary/Field/ParkAr06Zn02Dat.dan",
-                     "Script/evAr06Zn02_Npc_Main.fsb"), (
-                        "DATA/files/Field/Ar06Zn02Dat_Fr.dac", "Temporary/Field/ParkAr06Zn02Dat_Fr.dan",
-                        "Script/evAr06Zn02_Npc_Main.fsb"), (
-                        "DATA/files/Field/Ar06Zn02Dat_Ge.dac", "Temporary/Field/ParkAr06Zn02Dat_Ge.dan",
-                        "Script/evAr06Zn02_Npc_Main.fsb"),
-                    (
-                        "DATA/files/Field/Ar06Zn02Dat_It.dac", "Temporary/Field/ParkAr06Zn02Dat_It.dan",
-                        "Script/evAr06Zn02_Npc_Main.fsb"),
-                    (
-                        "DATA/files/Field/Ar06Zn02Dat_Sp.dac", "Temporary/Field/ParkAr06Zn02Dat_Sp.dan",
-                        "Script/evAr06Zn02_Npc_Main.fsb"),
-                    ],
-        patch_patterns=evAr06Zn02_Npc_Main_patterns
-    )
-    configs.append(field_Ar06Zn02_npc_script_config)
-
-    field_Ar06Zn01_npc_script_config = FilePatchConfig(
-        file_id="Ar06_Zn01",
-        description="Field Script Main",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-        file_group=[("DATA/files/Field/Ar06Zn01Dat.dac", "Temporary/Field/ParkAr06Zn01Dat.dan",
-                     "Script/evAr06Zn01_Npc_Main.fsb"), (
-                        "DATA/files/Field/Ar06Zn01Dat_Fr.dac", "Temporary/Field/ParkAr06Zn01Dat_Fr.dan",
-                        "Script/evAr06Zn01_Npc_Main.fsb"), (
-                        "DATA/files/Field/Ar06Zn01Dat_Ge.dac", "Temporary/Field/ParkAr06Zn01Dat_Ge.dan",
-                        "Script/evAr06Zn01_Npc_Main.fsb"),
-                    (
-                        "DATA/files/Field/Ar06Zn01Dat_It.dac", "Temporary/Field/ParkAr06Zn01Dat_It.dan",
-                        "Script/evAr06Zn01_Npc_Main.fsb"),
-                    (
-                        "DATA/files/Field/Ar06Zn01Dat_Sp.dac", "Temporary/Field/ParkAr06Zn01Dat_Sp.dan",
-                        "Script/evAr06Zn01_Npc_Main.fsb"),
-                    ],
-        patch_patterns=evAr06Zn01_Npc_Main_patterns
-    )
-    configs.append(field_Ar06Zn01_npc_script_config)
-
-    field_Ar05Zn01_npc_script_config = FilePatchConfig(
-        file_id="Ar05_Zn01",
-        description="Field Script Main",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-        file_group=[("DATA/files/Field/Ar05Zn01Dat.dac", "Temporary/Field/ParkAr05Zn01Dat.dan",
-                     "Script/evAr05Zn01_Npc_Main.fsb"), (
-                        "DATA/files/Field/Ar05Zn01Dat_Fr.dac", "Temporary/Field/ParkAr05Zn01Dat_Fr.dan",
-                        "Script/evAr05Zn01_Npc_Main.fsb"), (
-                        "DATA/files/Field/Ar05Zn01Dat_Ge.dac", "Temporary/Field/ParkAr05Zn01Dat_Ge.dan",
-                        "Script/evAr05Zn01_Npc_Main.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn01Dat_It.dac", "Temporary/Field/ParkAr05Zn01Dat_It.dan",
-                        "Script/evAr05Zn01_Npc_Main.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn01Dat_Sp.dac", "Temporary/Field/ParkAr05Zn01Dat_Sp.dan",
-                        "Script/evAr05Zn01_Npc_Main.fsb"),
-                    ],
-        patch_patterns=evAr05Zn01_Npc_Main_patterns
-    )
-    configs.append(field_Ar05Zn01_npc_script_config)
-
-    evAr05Zn02_Gimmic = FilePatchConfig(
-        file_id="ar05zn02_gimmic",
-        description="",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-        file_group=[("DATA/files/Field/Ar05Zn02Dat.dac", "Temporary/Field/ParkAr05Zn02Dat.dan",
-                     "Script/evAr05Zn02_Gimmic.fsb"), (
-                        "DATA/files/Field/Ar05Zn02Dat_Fr.dac", "Temporary/Field/ParkAr05Zn02Dat_Fr.dan",
-                        "Script/evAr05Zn02_Gimmic.fsb"), (
-                        "DATA/files/Field/Ar05Zn02Dat_Ge.dac", "Temporary/Field/ParkAr05Zn02Dat_Ge.dan",
-                        "Script/evAr05Zn02_Gimmic.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn02Dat_It.dac", "Temporary/Field/ParkAr05Zn02Dat_It.dan",
-                        "Script/evAr05Zn02_Gimmic.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn02Dat_Sp.dac", "Temporary/Field/ParkAr05Zn02Dat_Sp.dan",
-                        "Script/evAr05Zn02_Gimmic.fsb"),
-                    ],
-        patch_patterns=evAr05Zn02_Gimmic_patterns
-    )
-    configs.append(evAr05Zn02_Gimmic)
-
-    evAr05Zn01_Gimmic = FilePatchConfig(
-        file_id="ar05zn01_gimmic",
-        description="",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-        file_group=[("DATA/files/Field/Ar05Zn01Dat.dac", "Temporary/Field/ParkAr05Zn01Dat.dan",
-                     "Script/evAr05Zn01_Gimmic.fsb"), (
-                        "DATA/files/Field/Ar05Zn01Dat_Fr.dac", "Temporary/Field/ParkAr05Zn01Dat_Fr.dan",
-                        "Script/evAr05Zn01_Gimmic.fsb"), (
-                        "DATA/files/Field/Ar05Zn01Dat_Ge.dac", "Temporary/Field/ParkAr05Zn01Dat_Ge.dan",
-                        "Script/evAr05Zn01_Gimmic.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn01Dat_It.dac", "Temporary/Field/ParkAr05Zn01Dat_It.dan",
-                        "Script/evAr05Zn01_Gimmic.fsb"),
-                    (
-                        "DATA/files/Field/Ar05Zn01Dat_Sp.dac", "Temporary/Field/ParkAr05Zn01Dat_Sp.dan",
-                        "Script/evAr05Zn01_Gimmic.fsb"),
-                    ],
-        patch_patterns=evAr05Zn01_Gimmic_patterns
-    )
-    configs.append(evAr05Zn01_Gimmic)
-
-    field_Ar04Zn02_npc_script_config = FilePatchConfig(
-        file_id="Ar04_Zn02",
-        description="Field Script Main",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-        file_group=[("DATA/files/Field/Ar04Zn02Dat.dac", "Temporary/Field/ParkAr04Zn02Dat.dan",
-                     "Script/evAr04Zn02_Npc_Main.fsb"), (
-                        "DATA/files/Field/Ar04Zn02Dat_Fr.dac", "Temporary/Field/ParkAr04Zn02Dat_Fr.dan",
-                        "Script/evAr04Zn02_Npc_Main.fsb"), (
-                        "DATA/files/Field/Ar04Zn02Dat_Ge.dac", "Temporary/Field/ParkAr04Zn02Dat_Ge.dan",
-                        "Script/evAr04Zn02_Npc_Main.fsb"),
-                    (
-                        "DATA/files/Field/Ar04Zn02Dat_It.dac", "Temporary/Field/ParkAr04Zn02Dat_It.dan",
-                        "Script/evAr04Zn02_Npc_Main.fsb"),
-                    (
-                        "DATA/files/Field/Ar04Zn02Dat_Sp.dac", "Temporary/Field/ParkAr04Zn02Dat_Sp.dan",
-                        "Script/evAr04Zn02_Npc_Main.fsb"),
-                    ],
-        patch_patterns=evAr04Zn02_Npc_Main_patterns
-    )
-    configs.append(field_Ar04Zn02_npc_script_config)
-
-    gk0402gate = FilePatchConfig(
-        file_id="gate0402_gimmic",
-        description="Blaziken Gate Magma Zone",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-
-        file_group=[("DATA/files/Field/Ar04Zn02Dat.dac", "Gimmick/GkDatArc.dan",
-                     "Gimmick/Gk0402Gate.fsb"),
-                    (
-                        "DATA/files/Field/Ar04Zn02Dat_Fr.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0402Gate.fsb"), (
-                        "DATA/files/Field/Ar04Zn02Dat_Ge.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0402Gate.fsb"),
-                    (
-                        "DATA/files/Field/Ar04Zn02Dat_It.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0402Gate.fsb"),
-                    (
-                        "DATA/files/Field/Ar04Zn02Dat_Sp.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0402Gate.fsb"),
-                    ],
-        patch_patterns=gk0402Gate_pattern
-    )
-    configs.append(gk0402gate)
-
-    gk0402bridge = FilePatchConfig(
-        file_id="bridge0402_gimmic",
-        description="Blaziken Bridge Magma Zone",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-
-        file_group=[("DATA/files/Field/Ar04Zn02Dat.dac", "Gimmick/GkDatArc.dan",
-                     "Gimmick/Gk0402Bridge.fsb"),
-                    (
-                        "DATA/files/Field/Ar04Zn02Dat_Fr.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0402Bridge.fsb"), (
-                        "DATA/files/Field/Ar04Zn02Dat_Ge.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0402Bridge.fsb"),
-                    (
-                        "DATA/files/Field/Ar04Zn02Dat_It.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0402Bridge.fsb"),
-                    (
-                        "DATA/files/Field/Ar04Zn02Dat_Sp.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0402Bridge.fsb"),
-                    ],
-        patch_patterns=gk0402Bridge_pattern
-    )
-    configs.append(gk0402bridge)
-
-    gk0402switch = FilePatchConfig(
-        file_id="switch0402_gimmic",
-        description="Blaziken Bridge Switch",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-
-        file_group=[("DATA/files/Field/Ar04Zn02Dat.dac", "Gimmick/GkDatArc.dan",
-                     "Gimmick/Gk0402Switch.fsb"),
-                    (
-                        "DATA/files/Field/Ar04Zn02Dat_Fr.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0402Switch.fsb"), (
-                        "DATA/files/Field/Ar04Zn02Dat_Ge.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0402Switch.fsb"),
-                    (
-                        "DATA/files/Field/Ar04Zn02Dat_It.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0402Switch.fsb"),
-                    (
-                        "DATA/files/Field/Ar04Zn02Dat_Sp.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0402Switch.fsb"),
-                    ],
-        patch_patterns=gk0402Switch_pattern
-    )
-    configs.append(gk0402switch)
-
-    firewall_b = FilePatchConfig(
-        file_id="firewallB_gimmic",
-        description="Fire Wall Magma Zone",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-
-        file_group=[("DATA/files/Field/Ar04Zn02Dat.dac", "Gimmick/GkDatArc.dan",
-                     "Gimmick/GkFireWallB.fsb"),
-                    (
-                        "DATA/files/Field/Ar04Zn02Dat_Fr.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkFireWallB.fsb"), (
-                        "DATA/files/Field/Ar04Zn02Dat_Ge.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkFireWallB.fsb"),
-                    (
-                        "DATA/files/Field/Ar04Zn02Dat_It.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkFireWallB.fsb"),
-                    (
-                        "DATA/files/Field/Ar04Zn02Dat_Sp.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkFireWallB.fsb"),
-                    ],
-        patch_patterns=gkFireWall_pattern
-    )
-    configs.append(firewall_b)
-
-    rockB = FilePatchConfig(
-        file_id="rockB_gimmic",
-        description="Gimmic Rock blocking lapras",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-
-        file_group=[("DATA/files/Field/Ar03Zn01Dat.dac", "Gimmick/GkDatArc.dan",
-                     "Gimmick/GkRockB.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn01Dat_Fr.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkRockB.fsb"), (
-                        "DATA/files/Field/Ar03Zn01Dat_Ge.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkRockB.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn01Dat_It.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkRockB.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn01Dat_Sp.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkRockB.fsb"),
-                    ],
-        patch_patterns=gkRockB
-    )
-    configs.append(rockB)
-
-    recycleSanbasiA = FilePatchConfig(
-        file_id="recycleSanbasiA_gimmic",
-        description="Gimmic Bridge1 for beach zone",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-
-        file_group=[("DATA/files/Field/Ar03Zn01Dat.dac", "Gimmick/GkDatArc.dan",
-                     "Gimmick/GkRecycleSanbasiA.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn01Dat_Fr.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkRecycleSanbasiA.fsb"), (
-                        "DATA/files/Field/Ar03Zn01Dat_Ge.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkRecycleSanbasiA.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn01Dat_It.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkRecycleSanbasiA.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn01Dat_Sp.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkRecycleSanbasiA.fsb"),
-                    ],
-        patch_patterns=gkRecycleSanbasiA_pattern
-    )
-    configs.append(recycleSanbasiA)
-
-    recycleSanbasiB = FilePatchConfig(
-        file_id="recycleSanbasiB_gimmic",
-        description="Gimmic Bridge2 for beach zone",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-
-        file_group=[("DATA/files/Field/Ar03Zn01Dat.dac", "Gimmick/GkDatArc.dan",
-                     "Gimmick/GkRecycleSanbasiB.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn01Dat_Fr.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkRecycleSanbasiB.fsb"), (
-                        "DATA/files/Field/Ar03Zn01Dat_Ge.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkRecycleSanbasiB.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn01Dat_It.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkRecycleSanbasiB.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn01Dat_Sp.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkRecycleSanbasiB.fsb"),
-                    ],
-        patch_patterns=gkRecycleSanbasiB_pattern
-    )
-    configs.append(recycleSanbasiB)
-
-    recycleSanbasiC = FilePatchConfig(
-        file_id="recycleSanbasiC_gimmic",
-        description="Gimmic Bridge2 for beach zone",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-
-        file_group=[("DATA/files/Field/Ar03Zn01Dat.dac", "Gimmick/GkDatArc.dan",
-                     "Gimmick/GkRecycleSanbasiC.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn01Dat_Fr.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkRecycleSanbasiC.fsb"), (
-                        "DATA/files/Field/Ar03Zn01Dat_Ge.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkRecycleSanbasiC.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn01Dat_It.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkRecycleSanbasiC.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn01Dat_Sp.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkRecycleSanbasiC.fsb"),
-                    ],
-        patch_patterns=gkRecycleSanbasiC_pattern
-    )
-    configs.append(recycleSanbasiC)
-
-    recycleSanbasiD = FilePatchConfig(
-        file_id="recycleSanbasiD_gimmic",
-        description="Gimmic Bridge2 for beach zone",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-
-        file_group=[("DATA/files/Field/Ar03Zn01Dat.dac", "Gimmick/GkDatArc.dan",
-                     "Gimmick/GkRecycleSanbasiD.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn01Dat_Fr.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkRecycleSanbasiD.fsb"), (
-                        "DATA/files/Field/Ar03Zn01Dat_Ge.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkRecycleSanbasiD.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn01Dat_It.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkRecycleSanbasiD.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn01Dat_Sp.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkRecycleSanbasiD.fsb"),
-                    ],
-        patch_patterns=gkRecycleSanbasiD_pattern
-    )
-    configs.append(recycleSanbasiD)
-
-    start_menu_config = FilePatchConfig(
-        file_id="mnStartMenu",
-        description="",
-        processing_type=FileProcessingType.DAC_U8,
-        file_group=[("DATA/files/Archive/StartMenuDat.dac", "unused",
-                     "Script/mnStartMenu.fsb"),
-                    ("DATA/files/Archive/StartMenuDat_Fr.dac", "unused",
-                     "Script/mnStartMenu.fsb"),
-                    ("DATA/files/Archive/StartMenuDat_Ge.dac", "unused",
-                     "Script/mnStartMenu.fsb"),
-                    ("DATA/files/Archive/StartMenuDat_It.dac", "unused",
-                     "Script/mnStartMenu.fsb"),
-                    ("DATA/files/Archive/StartMenuDat_Sp.dac", "unused",
-                     "Script/mnStartMenu.fsb"),
-                    ],
-        patch_patterns=[
-            load_new_file_pattern
-        ]
-    )
-    configs.append(start_menu_config)
-
+def get_treehouse_patches() -> List[FilePatchConfig]:
+    patches = []
     field_Ar02Zn01_npc_script_config = FilePatchConfig(
         file_id="Ar02_Zn01",
         description="Field Script Main",
@@ -953,28 +337,7 @@ def get_default_patch_configs() -> List[FilePatchConfig]:
                     ],
         patch_patterns=evAr02Zn01_Npc_Main_pattern
     )
-    configs.append(field_Ar02Zn01_npc_script_config)
-
-    field_Ar03Zn01_npc_script_config = FilePatchConfig(
-        file_id="Ar03_Zn01",
-        description="Field Script Main",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-        file_group=[("DATA/files/Field/Ar03Zn01Dat.dac", "Temporary/Field/ParkAr03Zn01Dat.dan",
-                     "Script/evAr03Zn01_Npc_Main.fsb"), (
-                        "DATA/files/Field/Ar03Zn01Dat_Fr.dac", "Temporary/Field/ParkAr03Zn01Dat_Fr.dan",
-                        "Script/evAr03Zn01_Npc_Main.fsb"), (
-                        "DATA/files/Field/Ar03Zn01Dat_Ge.dac", "Temporary/Field/ParkAr03Zn01Dat_Ge.dan",
-                        "Script/evAr03Zn01_Npc_Main.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn01Dat_It.dac", "Temporary/Field/ParkAr03Zn01Dat_It.dan",
-                        "Script/evAr03Zn01_Npc_Main.fsb"),
-                    (
-                        "DATA/files/Field/Ar03Zn01Dat_Sp.dac", "Temporary/Field/ParkAr03Zn01Dat_Sp.dan",
-                        "Script/evAr03Zn01_Npc_Main.fsb"),
-                    ],
-        patch_patterns=evAr03Zn01_Npc_Main_pattern
-    )
-    configs.append(field_Ar03Zn01_npc_script_config)
+    patches.append(field_Ar02Zn01_npc_script_config)
 
     treehouse = FilePatchConfig(
         file_id="treehouse_gimmic",
@@ -997,69 +360,302 @@ def get_default_patch_configs() -> List[FilePatchConfig]:
                     ],
         patch_patterns=treehouse_pattern
     )
-    configs.append(treehouse)
+    patches.append(treehouse)
+    return patches
 
-    field_Ar99Zn01_npc_script_config = FilePatchConfig(
-        file_id="Ar99_Zn01",
-        description="Field Script Main",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-        file_group=[("DATA/files/Field/Ar99Zn01Dat.dac", "Temporary/Field/ParkAr99Zn01Dat.dan",
-                     "Script/evAr99Zn01_Npc_Main.fsb"), (
-                        "DATA/files/Field/Ar99Zn01Dat_Fr.dac", "Temporary/Field/ParkAr99Zn01Dat_Fr.dan",
-                        "Script/evAr99Zn01_Npc_Main.fsb"), (
-                        "DATA/files/Field/Ar99Zn01Dat_Ge.dac", "Temporary/Field/ParkAr99Zn01Dat_Ge.dan",
-                        "Script/evAr99Zn01_Npc_Main.fsb"),
-                    (
-                        "DATA/files/Field/Ar99Zn01Dat_It.dac", "Temporary/Field/ParkAr99Zn01Dat_It.dan",
-                        "Script/evAr99Zn01_Npc_Main.fsb"),
-                    (
-                        "DATA/files/Field/Ar99Zn01Dat_Sp.dac", "Temporary/Field/ParkAr99Zn01Dat_Sp.dan",
-                        "Script/evAr99Zn01_Npc_Main.fsb"),
-                    ],
-        patch_patterns=evAr99Zn01_Npc_Main_pattern
-    )
-    configs.append(field_Ar99Zn01_npc_script_config)
-    field_Ar01Zn02_npc_script_config = FilePatchConfig(
-        file_id="Ar01_Zn02",
-        description="Field Script Main",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-        file_group=[("DATA/files/Field/Ar01Zn02Dat.dac", "Temporary/Field/ParkAr01Zn02Dat.dan",
-                     "Script/evAr01Zn02_Npc_Main.fsb"), (
-                        "DATA/files/Field/Ar01Zn02Dat_Fr.dac", "Temporary/Field/ParkAr01Zn02Dat_Fr.dan",
-                        "Script/evAr01Zn02_Npc_Main.fsb"), (
-                        "DATA/files/Field/Ar01Zn02Dat_Ge.dac", "Temporary/Field/ParkAr01Zn02Dat_Ge.dan",
-                        "Script/evAr01Zn02_Npc_Main.fsb"),
-                    (
-                        "DATA/files/Field/Ar01Zn02Dat_It.dac", "Temporary/Field/ParkAr01Zn02Dat_It.dan",
-                        "Script/evAr01Zn02_Npc_Main.fsb"),
-                    (
-                        "DATA/files/Field/Ar01Zn02Dat_Sp.dac", "Temporary/Field/ParkAr01Zn02Dat_Sp.dan",
-                        "Script/evAr01Zn02_Npc_Main.fsb"),
-                    ],
-        patch_patterns=evAr01Zn02_Npc_Main_patterns
-    )
-    configs.append(field_Ar01Zn02_npc_script_config)
 
-    field_Ar04Zn02_gimmic_config = FilePatchConfig(
-        file_id="Ar04_Zn02_gimmic",
+def get_beach_zone_patches() -> List[FilePatchConfig]:
+    patches = []
+    ar03zn01Disposition = FilePatchConfig(
+        file_id="disposition_ar03zn01",
+        description="Field Script Main",
+        processing_type=FileProcessingType.DAC_U8,
+        file_group=[("DATA/files/Field/Ar03Zn01Dat.dac", "unused",
+                     "Field/Ar03/Zn01/Ar03Zn01Dp00.rlb"),
+                    ("DATA/files/Field/Ar03Zn01Dat_Fr.dac", "unused",
+                     "Field/Ar03/Zn01/Ar03Zn01Dp00.rlb"),
+                    ("DATA/files/Field/Ar03Zn01Dat_Ge.dac", "unused",
+                     "Field/Ar03/Zn01/Ar03Zn01Dp00.rlb"),
+                    ("DATA/files/Field/Ar03Zn01Dat_It.dac", "unused",
+                     "Field/Ar03/Zn01/Ar03Zn01Dp00.rlb"),
+                    ("DATA/files/Field/Ar03Zn01Dat_Sp.dac", "unused",
+                     "Field/Ar03/Zn01/Ar03Zn01Dp00.rlb"),
+                    ],
+        patch_patterns=disposition_patterns
+    )
+    patches.append(ar03zn01Disposition)
+
+    rockB = FilePatchConfig(
+        file_id="rockB_gimmic",
+        description="Gimmic Rock blocking lapras",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Field/Ar03Zn01Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/GkRockB.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn01Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkRockB.fsb"), (
+                        "DATA/files/Field/Ar03Zn01Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkRockB.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn01Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkRockB.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn01Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkRockB.fsb"),
+                    ],
+        patch_patterns=gkRockB
+    )
+    patches.append(rockB)
+
+    recycleSanbasiA = FilePatchConfig(
+        file_id="recycleSanbasiA_gimmic",
+        description="Gimmic Bridge1 for beach zone",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Field/Ar03Zn01Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/GkRecycleSanbasiA.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn01Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkRecycleSanbasiA.fsb"), (
+                        "DATA/files/Field/Ar03Zn01Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkRecycleSanbasiA.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn01Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkRecycleSanbasiA.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn01Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkRecycleSanbasiA.fsb"),
+                    ],
+        patch_patterns=gkRecycleSanbasiA_pattern
+    )
+    patches.append(recycleSanbasiA)
+
+    recycleSanbasiB = FilePatchConfig(
+        file_id="recycleSanbasiB_gimmic",
+        description="Gimmic Bridge2 for beach zone",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Field/Ar03Zn01Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/GkRecycleSanbasiB.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn01Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkRecycleSanbasiB.fsb"), (
+                        "DATA/files/Field/Ar03Zn01Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkRecycleSanbasiB.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn01Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkRecycleSanbasiB.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn01Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkRecycleSanbasiB.fsb"),
+                    ],
+        patch_patterns=gkRecycleSanbasiB_pattern
+    )
+    patches.append(recycleSanbasiB)
+
+    recycleSanbasiC = FilePatchConfig(
+        file_id="recycleSanbasiC_gimmic",
+        description="Gimmic Bridge2 for beach zone",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Field/Ar03Zn01Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/GkRecycleSanbasiC.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn01Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkRecycleSanbasiC.fsb"), (
+                        "DATA/files/Field/Ar03Zn01Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkRecycleSanbasiC.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn01Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkRecycleSanbasiC.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn01Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkRecycleSanbasiC.fsb"),
+                    ],
+        patch_patterns=gkRecycleSanbasiC_pattern
+    )
+    patches.append(recycleSanbasiC)
+
+    recycleSanbasiD = FilePatchConfig(
+        file_id="recycleSanbasiD_gimmic",
+        description="Gimmic Bridge2 for beach zone",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Field/Ar03Zn01Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/GkRecycleSanbasiD.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn01Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkRecycleSanbasiD.fsb"), (
+                        "DATA/files/Field/Ar03Zn01Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkRecycleSanbasiD.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn01Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkRecycleSanbasiD.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn01Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkRecycleSanbasiD.fsb"),
+                    ],
+        patch_patterns=gkRecycleSanbasiD_pattern
+    )
+    patches.append(recycleSanbasiD)
+
+    field_Ar03Zn01_npc_script_config = FilePatchConfig(
+        file_id="Ar03_Zn01",
         description="Field Script Main",
         processing_type=FileProcessingType.NESTED_DAC_U8,
-        file_group=[("DATA/files/Field/Ar04Zn02Dat.dac", "Temporary/Field/ParkAr04Zn02Dat.dan",
-                     "Script/evAr04Zn02_Gimmic.fsb"), (
-                        "DATA/files/Field/Ar04Zn02Dat_Fr.dac", "Temporary/Field/ParkAr04Zn02Dat_Fr.dan",
-                        "Script/evAr04Zn02_Gimmic.fsb"), (
-                        "DATA/files/Field/Ar04Zn02Dat_Ge.dac", "Temporary/Field/ParkAr04Zn02Dat_Ge.dan",
-                        "Script/evAr04Zn02_Gimmic.fsb"),
+        file_group=[("DATA/files/Field/Ar03Zn01Dat.dac", "Temporary/Field/ParkAr03Zn01Dat.dan",
+                     "Script/evAr03Zn01_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar03Zn01Dat_Fr.dac", "Temporary/Field/ParkAr03Zn01Dat_Fr.dan",
+                        "Script/evAr03Zn01_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar03Zn01Dat_Ge.dac", "Temporary/Field/ParkAr03Zn01Dat_Ge.dan",
+                        "Script/evAr03Zn01_Npc_Main.fsb"),
                     (
-                        "DATA/files/Field/Ar04Zn02Dat_It.dac", "Temporary/Field/ParkAr04Zn02Dat_It.dan",
-                        "Script/evAr04Zn02_Gimmic.fsb"),
+                        "DATA/files/Field/Ar03Zn01Dat_It.dac", "Temporary/Field/ParkAr03Zn01Dat_It.dan",
+                        "Script/evAr03Zn01_Npc_Main.fsb"),
                     (
-                        "DATA/files/Field/Ar04Zn02Dat_Sp.dac", "Temporary/Field/ParkAr04Zn02Dat_Sp.dan",
-                        "Script/evAr04Zn02_Gimmic.fsb"),
+                        "DATA/files/Field/Ar03Zn01Dat_Sp.dac", "Temporary/Field/ParkAr03Zn01Dat_Sp.dan",
+                        "Script/evAr03Zn01_Npc_Main.fsb"),
                     ],
-        patch_patterns=evAr04Zn02_Gimmic_patterns
+        patch_patterns=evAr03Zn01_Npc_Main_pattern
     )
-    configs.append(field_Ar04Zn02_gimmic_config)
+    patches.append(field_Ar03Zn01_npc_script_config)
+
+    return patches
+
+
+def get_ice_zone_patches() -> List[FilePatchConfig]:
+    patches = []
+
+    ar03zn02Disposition = FilePatchConfig(
+        file_id="disposition_ar03zn02",
+        description="Field Script Main",
+        processing_type=FileProcessingType.DAC_U8,
+        file_group=[("DATA/files/Field/Ar03Zn02Dat.dac", "unused",
+                     "Field/Ar03/Zn02/Ar03Zn02Dp00.rlb"),
+                    ("DATA/files/Field/Ar03Zn02Dat_Fr.dac", "unused",
+                     "Field/Ar03/Zn02/Ar03Zn02Dp00.rlb"),
+                    ("DATA/files/Field/Ar03Zn02Dat_Ge.dac", "unused",
+                     "Field/Ar03/Zn02/Ar03Zn02Dp00.rlb"),
+                    ("DATA/files/Field/Ar03Zn02Dat_It.dac", "unused",
+                     "Field/Ar03/Zn02/Ar03Zn02Dp00.rlb"),
+                    ("DATA/files/Field/Ar03Zn02Dat_Sp.dac", "unused",
+                     "Field/Ar03/Zn02/Ar03Zn02Dp00.rlb"),
+                    ],
+        patch_patterns=disposition_patterns
+    )
+    patches.append(ar03zn02Disposition)
+
+    field_Ar03Zn03_npc_script_config = FilePatchConfig(
+        file_id="Ar03_Zn03",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar03Zn03Dat.dac", "Temporary/Field/ParkAr03Zn03Dat.dan",
+                     "Script/evAr03Zn03_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar03Zn03Dat_Fr.dac", "Temporary/Field/ParkAr03Zn03Dat_Fr.dan",
+                        "Script/evAr03Zn03_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar03Zn03Dat_Ge.dac", "Temporary/Field/ParkAr03Zn03Dat_Ge.dan",
+                        "Script/evAr03Zn03_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn03Dat_It.dac", "Temporary/Field/ParkAr03Zn03Dat_It.dan",
+                        "Script/evAr03Zn03_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn03Dat_Sp.dac", "Temporary/Field/ParkAr03Zn03Dat_Sp.dan",
+                        "Script/evAr03Zn03_Npc_Main.fsb"),
+                    ],
+        patch_patterns=evAr03Zn03_Npc_Main_patterns
+    )
+    patches.append(field_Ar03Zn03_npc_script_config)
+
+    gkmammoo = FilePatchConfig(
+        file_id="gkmammoo_gimmic",
+        description="frozen Piloswine",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Field/Ar03Zn02Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/GkMammoo.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn02Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkMammoo.fsb"), (
+                        "DATA/files/Field/Ar03Zn02Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkMammoo.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn02Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkMammoo.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn02Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkMammoo.fsb"),
+                    ],
+        patch_patterns=gkMammoo_patterns
+    )
+    patches.append(gkmammoo)
+
+    gk0302gate = FilePatchConfig(
+        file_id="gate0302_gimmic",
+        description="Empoleon Gate Ice Zone",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Field/Ar03Zn02Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/Gk0302Gate.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn02Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0302Gate.fsb"), (
+                        "DATA/files/Field/Ar03Zn02Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0302Gate.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn02Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0302Gate.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn02Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0302Gate.fsb"),
+                    ],
+        patch_patterns=gk0302Gate_pattern
+    )
+    patches.append(gk0302gate)
+
+    field_Ar03Zn02_npc_script_config = FilePatchConfig(
+        file_id="Ar03_Zn02",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar03Zn02Dat.dac", "Temporary/Field/ParkAr03Zn02Dat.dan",
+                     "Script/evAr03Zn02_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar03Zn02Dat_Fr.dac", "Temporary/Field/ParkAr03Zn02Dat_Fr.dan",
+                        "Script/evAr03Zn02_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar03Zn02Dat_Ge.dac", "Temporary/Field/ParkAr03Zn02Dat_Ge.dan",
+                        "Script/evAr03Zn02_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn02Dat_It.dac", "Temporary/Field/ParkAr03Zn02Dat_It.dan",
+                        "Script/evAr03Zn02_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn02Dat_Sp.dac", "Temporary/Field/ParkAr03Zn02Dat_Sp.dan",
+                        "Script/evAr03Zn02_Npc_Main.fsb"),
+                    ],
+        patch_patterns=evAr03Zn02_Npc_Main_patterns
+    )
+    patches.append(field_Ar03Zn02_npc_script_config)
+    return patches
+
+
+def get_cavern_zone_patches() -> List[FilePatchConfig]:
+    patches = []
+    ar04zn01Disposition = FilePatchConfig(
+        file_id="disposition_ar04zn01",
+        description="Field Script Main",
+        processing_type=FileProcessingType.DAC_U8,
+        file_group=[("DATA/files/Field/Ar04Zn01Dat.dac", "unused",
+                     "Field/Ar04/Zn01/Ar04Zn01Dp00.rlb"),
+                    ("DATA/files/Field/Ar04Zn01Dat_Fr.dac", "unused",
+                     "Field/Ar04/Zn01/Ar04Zn01Dp00.rlb"),
+                    ("DATA/files/Field/Ar04Zn01Dat_Ge.dac", "unused",
+                     "Field/Ar04/Zn01/Ar04Zn01Dp00.rlb"),
+                    ("DATA/files/Field/Ar04Zn01Dat_It.dac", "unused",
+                     "Field/Ar04/Zn01/Ar04Zn01Dp00.rlb"),
+                    ("DATA/files/Field/Ar04Zn01Dat_Sp.dac", "unused",
+                     "Field/Ar04/Zn01/Ar04Zn01Dp00.rlb"),
+                    ],
+        patch_patterns=disposition_patterns
+    )
+    patches.append(ar04zn01Disposition)
 
     field_Ar04Zn01_gimmic_config = FilePatchConfig(
         file_id="Ar04_Zn01_gimmic",
@@ -1080,7 +676,7 @@ def get_default_patch_configs() -> List[FilePatchConfig]:
                     ],
         patch_patterns=evAr04Zn01_Gimmic_patterns
     )
-    configs.append(field_Ar04Zn01_gimmic_config)
+    patches.append(field_Ar04Zn01_gimmic_config)
 
     field_Ar04Zn01_npc_script_config = FilePatchConfig(
         file_id="Ar04_Zn01",
@@ -1101,154 +697,587 @@ def get_default_patch_configs() -> List[FilePatchConfig]:
                     ],
         patch_patterns=evAr04Zn01_Npc_Main_patterns
     )
-    configs.append(field_Ar04Zn01_npc_script_config)
+    patches.append(field_Ar04Zn01_npc_script_config)
+    return patches
 
-    field_gimmic_shroomish_crate = FilePatchConfig(
-        file_id="shroomish_crate_gimmic",
-        description="Gimmic Shroomish Crate",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
 
-        file_group=[("DATA/files/Field/Ar01Zn01Dat.dac", "Gimmick/GkDatArc.dan",
-                     "Gimmick/GkWoodBoxKino.fsb"),
-                    (
-                        "DATA/files/Field/Ar01Zn01Dat_Fr.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkWoodBoxKino.fsb"), (
-                        "DATA/files/Field/Ar01Zn01Dat_Ge.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkWoodBoxKino.fsb"),
-                    (
-                        "DATA/files/Field/Ar01Zn01Dat_It.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkWoodBoxKino.fsb"),
-                    (
-                        "DATA/files/Field/Ar01Zn01Dat_Sp.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkWoodBoxKino.fsb"),
-                    ],
-        patch_patterns=gkWoodBoxKinoPattern
-    )
-    configs.append(field_gimmic_shroomish_crate)
-
-    kabigon_wall = FilePatchConfig(
-        file_id="kabigon_wall_gimmic",
-        description="Gimmic KabigonWall",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-
-        file_group=[("DATA/files/Field/Ar99Zn01Dat.dac", "Gimmick/GkDatArc.dan",
-                     "Gimmick/GkKabigonWall.fsb"),
-                    (
-                        "DATA/files/Field/Ar99Zn01Dat_Fr.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkKabigonWall.fsb"), (
-                        "DATA/files/Field/Ar99Zn01Dat_Ge.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkKabigonWall.fsb"),
-                    (
-                        "DATA/files/Field/Ar99Zn01Dat_It.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkKabigonWall.fsb"),
-                    (
-                        "DATA/files/Field/Ar99Zn01Dat_Sp.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/GkKabigonWall.fsb"),
-                    ],
-        patch_patterns=gkKabigonWallPattern
-    )
-    configs.append(kabigon_wall)
-
-    lobby16 = FilePatchConfig(
-        file_id="lobby16_bulbasaur",
-        description="Bulbasaur Minigame Lobby",
+def get_magma_zone_patches() -> List[FilePatchConfig]:
+    patches = []
+    ar04zn02Disposition = FilePatchConfig(
+        file_id="disposition_ar04zn02",
+        description="Field Script Main",
         processing_type=FileProcessingType.DAC_U8,
-
-        file_group=[("DATA/files/Archive/Lobby16Dat.dac", "unused",
-                     "Script/mnLobby.fsb"),
-                    ("DATA/files/Archive/Lobby16Dat_Fr.dac", "unused",
-                     "Script/mnLobby.fsb"),
-                    ("DATA/files/Archive/Lobby16Dat_Ge.dac", "unused",
-                     "Script/mnLobby.fsb"),
-                    ("DATA/files/Archive/Lobby16Dat_It.dac", "unused",
-                     "Script/mnLobby.fsb"),
-                    ("DATA/files/Archive/Lobby16Dat_Sp.dac", "unused",
-                     "Script/mnLobby.fsb"),
+        file_group=[("DATA/files/Field/Ar04Zn02Dat.dac", "unused",
+                     "Field/Ar04/Zn02/Ar04Zn02Dp00.rlb"),
+                    ("DATA/files/Field/Ar04Zn02Dat_Fr.dac", "unused",
+                     "Field/Ar04/Zn02/Ar04Zn02Dp00.rlb"),
+                    ("DATA/files/Field/Ar04Zn02Dat_Ge.dac", "unused",
+                     "Field/Ar04/Zn02/Ar04Zn02Dp00.rlb"),
+                    ("DATA/files/Field/Ar04Zn02Dat_It.dac", "unused",
+                     "Field/Ar04/Zn02/Ar04Zn02Dp00.rlb"),
+                    ("DATA/files/Field/Ar04Zn02Dat_Sp.dac", "unused",
+                     "Field/Ar04/Zn02/Ar04Zn02Dp00.rlb"),
                     ],
-        patch_patterns=mnLobby_pattern
+        patch_patterns=disposition_patterns
     )
-    configs.append(lobby16)
+    patches.append(ar04zn02Disposition)
 
-    lobby3 = FilePatchConfig(
-        file_id="lobby3_venusaur",
-        description="Venusaur Minigame Lobby",
+    field_Ar04Zn02_npc_script_config = FilePatchConfig(
+        file_id="Ar04_Zn02",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar04Zn02Dat.dac", "Temporary/Field/ParkAr04Zn02Dat.dan",
+                     "Script/evAr04Zn02_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar04Zn02Dat_Fr.dac", "Temporary/Field/ParkAr04Zn02Dat_Fr.dan",
+                        "Script/evAr04Zn02_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar04Zn02Dat_Ge.dac", "Temporary/Field/ParkAr04Zn02Dat_Ge.dan",
+                        "Script/evAr04Zn02_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_It.dac", "Temporary/Field/ParkAr04Zn02Dat_It.dan",
+                        "Script/evAr04Zn02_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_Sp.dac", "Temporary/Field/ParkAr04Zn02Dat_Sp.dan",
+                        "Script/evAr04Zn02_Npc_Main.fsb"),
+                    ],
+        patch_patterns=evAr04Zn02_Npc_Main_patterns
+    )
+    patches.append(field_Ar04Zn02_npc_script_config)
+
+    gk0402gate = FilePatchConfig(
+        file_id="gate0402_gimmic",
+        description="Blaziken Gate Magma Zone",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Field/Ar04Zn02Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/Gk0402Gate.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0402Gate.fsb"), (
+                        "DATA/files/Field/Ar04Zn02Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0402Gate.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0402Gate.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0402Gate.fsb"),
+                    ],
+        patch_patterns=gk0402Gate_pattern
+    )
+    patches.append(gk0402gate)
+
+    gk0402bridge = FilePatchConfig(
+        file_id="bridge0402_gimmic",
+        description="Blaziken Bridge Magma Zone",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Field/Ar04Zn02Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/Gk0402Bridge.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0402Bridge.fsb"), (
+                        "DATA/files/Field/Ar04Zn02Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0402Bridge.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0402Bridge.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0402Bridge.fsb"),
+                    ],
+        patch_patterns=gk0402Bridge_pattern
+    )
+    patches.append(gk0402bridge)
+
+    gk0402switch = FilePatchConfig(
+        file_id="switch0402_gimmic",
+        description="Blaziken Bridge Switch",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Field/Ar04Zn02Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/Gk0402Switch.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0402Switch.fsb"), (
+                        "DATA/files/Field/Ar04Zn02Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0402Switch.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0402Switch.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0402Switch.fsb"),
+                    ],
+        patch_patterns=gk0402Switch_pattern
+    )
+    patches.append(gk0402switch)
+
+    firewall_b = FilePatchConfig(
+        file_id="firewallB_gimmic",
+        description="Fire Wall Magma Zone",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Field/Ar04Zn02Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/GkFireWallB.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkFireWallB.fsb"), (
+                        "DATA/files/Field/Ar04Zn02Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkFireWallB.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkFireWallB.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkFireWallB.fsb"),
+                    ],
+        patch_patterns=gkFireWall_pattern
+    )
+    patches.append(firewall_b)
+
+    field_Ar04Zn02_gimmic_config = FilePatchConfig(
+        file_id="Ar04_Zn02_gimmic",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar04Zn02Dat.dac", "Temporary/Field/ParkAr04Zn02Dat.dan",
+                     "Script/evAr04Zn02_Gimmic.fsb"), (
+                        "DATA/files/Field/Ar04Zn02Dat_Fr.dac", "Temporary/Field/ParkAr04Zn02Dat_Fr.dan",
+                        "Script/evAr04Zn02_Gimmic.fsb"), (
+                        "DATA/files/Field/Ar04Zn02Dat_Ge.dac", "Temporary/Field/ParkAr04Zn02Dat_Ge.dan",
+                        "Script/evAr04Zn02_Gimmic.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_It.dac", "Temporary/Field/ParkAr04Zn02Dat_It.dan",
+                        "Script/evAr04Zn02_Gimmic.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_Sp.dac", "Temporary/Field/ParkAr04Zn02Dat_Sp.dan",
+                        "Script/evAr04Zn02_Gimmic.fsb"),
+                    ],
+        patch_patterns=evAr04Zn02_Gimmic_patterns
+    )
+    patches.append(field_Ar04Zn02_gimmic_config)
+    return patches
+
+
+def get_haunted_zone_patches() -> List[FilePatchConfig]:
+    patches = []
+    ar05zn01Disposition = FilePatchConfig(
+        file_id="disposition_ar05zn01",
+        description="Field Script Main",
         processing_type=FileProcessingType.DAC_U8,
-
-        file_group=[("DATA/files/Archive/lobby03Dat.dac", "unused",
-                     "Script/mnLobby.fsb"),
-                    ("DATA/files/Archive/lobby03Dat_Fr.dac", "unused",
-                     "Script/mnLobby.fsb"),
-                    ("DATA/files/Archive/lobby03Dat_Ge.dac", "unused",
-                     "Script/mnLobby.fsb"),
-                    ("DATA/files/Archive/lobby03Dat_It.dac", "unused",
-                     "Script/mnLobby.fsb"),
-                    ("DATA/files/Archive/lobby03Dat_Sp.dac", "unused",
-                     "Script/mnLobby.fsb"),
+        file_group=[("DATA/files/Field/Ar05Zn01Dat.dac", "unused",
+                     "Field/Ar05/Zn01/Ar05Zn01Dp00.rlb"),
+                    ("DATA/files/Field/Ar05Zn01Dat_Fr.dac", "unused",
+                     "Field/Ar05/Zn01/Ar05Zn01Dp00.rlb"),
+                    ("DATA/files/Field/Ar05Zn01Dat_Ge.dac", "unused",
+                     "Field/Ar05/Zn01/Ar05Zn01Dp00.rlb"),
+                    ("DATA/files/Field/Ar05Zn01Dat_It.dac", "unused",
+                     "Field/Ar05/Zn01/Ar05Zn01Dp00.rlb"),
+                    ("DATA/files/Field/Ar05Zn01Dat_Sp.dac", "unused",
+                     "Field/Ar05/Zn01/Ar05Zn01Dp00.rlb"),
                     ],
-        patch_patterns=mnLobby_pattern
+        patch_patterns=disposition_patterns
     )
-    configs.append(lobby3)
+    patches.append(ar05zn01Disposition)
 
-    attraction16 = FilePatchConfig(
-        file_id="attraction_info16_bulbasaur",
-        description="Bulbasaur Minigame Attraction",
+    gkBookShelf = FilePatchConfig(
+        file_id="gk0502_bookshelf_gimmic",
+        description="Haunted Zone Mansion DoorB",
         processing_type=FileProcessingType.NESTED_DAC_U8,
 
-        file_group=[("DATA/files/Attraction/At016Dat.dac", "Temporary/PreAtArc/PreAt016Dat.dan",
-                     "Script/mnAttractionInfo.fsb"),
-                    ("DATA/files/Attraction/At016Dat_Fr.dac", "Temporary/PreAtArc/PreAt016Dat_Fr.dan",
-                     "Script/mnAttractionInfo.fsb"),
-                    ("DATA/files/Attraction/At016Dat_Ge.dac", "Temporary/PreAtArc/PreAt016Dat_Ge.dan",
-                     "Script/mnAttractionInfo.fsb"),
-                    ("DATA/files/Attraction/At016Dat_It.dac", "Temporary/PreAtArc/PreAt016Dat_It.dan",
-                     "Script/mnAttractionInfo.fsb"),
-                    ("DATA/files/Attraction/At016Dat_Sp.dac", "Temporary/PreAtArc/PreAt016Dat_Sp.dan",
-                     "Script/mnAttractionInfo.fsb"),
-                    ],
-        patch_patterns=mnAttractionInfo_pattern
-    )
-    configs.append(attraction16)
-
-    attraction3 = FilePatchConfig(
-        file_id="attraction_info3_venusaur",
-        description="Venusaur Minigame Attraction",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-
-        file_group=[("DATA/files/Attraction/At003Dat.dac", "Temporary/PreAtArc/PreAt003Dat.dan",
-                     "Script/mnAttractionInfo.fsb"),
-                    ("DATA/files/Attraction/At003Dat_Fr.dac", "Temporary/PreAtArc/PreAt003Dat_Fr.dan",
-                     "Script/mnAttractionInfo.fsb"),
-                    ("DATA/files/Attraction/At003Dat_Ge.dac", "Temporary/PreAtArc/PreAt003Dat_Ge.dan",
-                     "Script/mnAttractionInfo.fsb"),
-                    ("DATA/files/Attraction/At003Dat_It.dac", "Temporary/PreAtArc/PreAt003Dat_It.dan",
-                     "Script/mnAttractionInfo.fsb"),
-                    ("DATA/files/Attraction/At003Dat_Sp.dac", "Temporary/PreAtArc/PreAt003Dat_Sp.dan",
-                     "Script/mnAttractionInfo.fsb"),
-                    ],
-        patch_patterns=mnAttractionInfo_pattern
-    )
-    configs.append(attraction3)
-
-    field_meadow_npc_script_config = FilePatchConfig(
-        file_id="meadow_zone_main_npc_script",
-        description="Field Script Main Randomization",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-        file_group=[("DATA/files/Field/Ar01Zn01Dat.dac", "Temporary/Field/ParkAr01Zn01Dat.dan",
-                     "Script/evAr01Zn01_Npc_Main.fsb"), (
-                        "DATA/files/Field/Ar01Zn01Dat_Fr.dac", "Temporary/Field/ParkAr01Zn01Dat_Fr.dan",
-                        "Script/evAr01Zn01_Npc_Main.fsb"), (
-                        "DATA/files/Field/Ar01Zn01Dat_Ge.dac", "Temporary/Field/ParkAr01Zn01Dat_Ge.dan",
-                        "Script/evAr01Zn01_Npc_Main.fsb"),
+        file_group=[("DATA/files/Field/Ar05Zn02Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/GkBookShelf.fsb"),
                     (
-                        "DATA/files/Field/Ar01Zn01Dat_It.dac", "Temporary/Field/ParkAr01Zn01Dat_It.dan",
-                        "Script/evAr01Zn01_Npc_Main.fsb"),
+                        "DATA/files/Field/Ar05Zn02Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkBookShelf.fsb"), (
+                        "DATA/files/Field/Ar05Zn02Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkBookShelf.fsb"),
                     (
-                        "DATA/files/Field/Ar01Zn01Dat_Sp.dac", "Temporary/Field/ParkAr01Zn01Dat_Sp.dan",
-                        "Script/evAr01Zn01_Npc_Main.fsb"),
+                        "DATA/files/Field/Ar05Zn02Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkBookShelf.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn02Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkBookShelf.fsb"),
                     ],
-        patch_patterns=evAr01Zn01_Npc_Main_patch_pattern
+        patch_patterns=gkBookShelf_pattern
     )
-    configs.append(field_meadow_npc_script_config)
+    patches.append(gkBookShelf)
+
+    gk0502DoorB = FilePatchConfig(
+        file_id="gk0502_doorb_gimmic",
+        description="Haunted Zone Mansion DoorB",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Field/Ar05Zn02Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/Gk0502DoorB.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn02Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0502DoorB.fsb"), (
+                        "DATA/files/Field/Ar05Zn02Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0502DoorB.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn02Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0502DoorB.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn02Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0502DoorB.fsb"),
+                    ],
+        patch_patterns=gk0502DoorB_pattern
+    )
+    patches.append(gk0502DoorB)
+
+    gk0502DoorC = FilePatchConfig(
+        file_id="gk0502_doorc_gimmic",
+        description="Haunted Zone Mansion DoorC",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Field/Ar05Zn02Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/Gk0502DoorC.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn02Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0502DoorC.fsb"), (
+                        "DATA/files/Field/Ar05Zn02Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0502DoorC.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn02Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0502DoorC.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn02Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0502DoorC.fsb"),
+                    ],
+        patch_patterns=gk0502DoorC_pattern
+    )
+    patches.append(gk0502DoorC)
+
+    gk0502DoorD = FilePatchConfig(
+        file_id="gk0502_doord_gimmic",
+        description="Haunted Zone Mansion DoorD",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Field/Ar05Zn02Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/Gk0502DoorD.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn02Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0502DoorD.fsb"), (
+                        "DATA/files/Field/Ar05Zn02Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0502DoorD.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn02Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0502DoorD.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn02Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0502DoorD.fsb"),
+                    ],
+        patch_patterns=gk0502DoorD_pattern
+    )
+    patches.append(gk0502DoorD)
+
+    gk0502DoorE = FilePatchConfig(
+        file_id="gk0502_doore_gimmic",
+        description="Haunted Zone Mansion DoorE",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Field/Ar05Zn02Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/Gk0502DoorE.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn02Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0502DoorE.fsb"), (
+                        "DATA/files/Field/Ar05Zn02Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0502DoorE.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn02Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0502DoorE.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn02Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0502DoorE.fsb"),
+                    ],
+        patch_patterns=gk0502DoorE_pattern
+    )
+    patches.append(gk0502DoorE)
+
+    gk0501gate = FilePatchConfig(
+        file_id="gate0501_gimmic",
+        description="Haunted Zone Gate A",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Field/Ar05Zn01Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/Gk0501GateA.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn01Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0501GateA.fsb"), (
+                        "DATA/files/Field/Ar05Zn01Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0501GateA.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn01Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0501GateA.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn01Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0501GateA.fsb"),
+                    ],
+        patch_patterns=gk0501Gate_pattern
+    )
+    patches.append(gk0501gate)
+
+    field_Ar05Zn03_npc_script_config = FilePatchConfig(
+        file_id="Ar05_Zn03",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar05Zn03Dat.dac", "Temporary/Field/ParkAr05Zn03Dat.dan",
+                     "Script/evAr05Zn03_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar05Zn03Dat_Fr.dac", "Temporary/Field/ParkAr05Zn03Dat_Fr.dan",
+                        "Script/evAr05Zn03_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar05Zn03Dat_Ge.dac", "Temporary/Field/ParkAr05Zn03Dat_Ge.dan",
+                        "Script/evAr05Zn03_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn03Dat_It.dac", "Temporary/Field/ParkAr05Zn03Dat_It.dan",
+                        "Script/evAr05Zn03_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn03Dat_Sp.dac", "Temporary/Field/ParkAr05Zn03Dat_Sp.dan",
+                        "Script/evAr05Zn03_Npc_Main.fsb"),
+                    ],
+        patch_patterns=evAr05Zn03_Npc_Main_patterns
+    )
+    patches.append(field_Ar05Zn03_npc_script_config)
+
+    field_Ar05Zn02_npc_script_config = FilePatchConfig(
+        file_id="Ar05_Zn02",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar05Zn02Dat.dac", "Temporary/Field/ParkAr05Zn02Dat.dan",
+                     "Script/evAr05Zn02_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar05Zn02Dat_Fr.dac", "Temporary/Field/ParkAr05Zn02Dat_Fr.dan",
+                        "Script/evAr05Zn02_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar05Zn02Dat_Ge.dac", "Temporary/Field/ParkAr05Zn02Dat_Ge.dan",
+                        "Script/evAr05Zn02_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn02Dat_It.dac", "Temporary/Field/ParkAr05Zn02Dat_It.dan",
+                        "Script/evAr05Zn02_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn02Dat_Sp.dac", "Temporary/Field/ParkAr05Zn02Dat_Sp.dan",
+                        "Script/evAr05Zn02_Npc_Main.fsb"),
+                    ],
+        patch_patterns=evAr05Zn02_Npc_Main_patterns
+    )
+    patches.append(field_Ar05Zn02_npc_script_config)
+
+    field_Ar05Zn01_npc_script_config = FilePatchConfig(
+        file_id="Ar05_Zn01",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar05Zn01Dat.dac", "Temporary/Field/ParkAr05Zn01Dat.dan",
+                     "Script/evAr05Zn01_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar05Zn01Dat_Fr.dac", "Temporary/Field/ParkAr05Zn01Dat_Fr.dan",
+                        "Script/evAr05Zn01_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar05Zn01Dat_Ge.dac", "Temporary/Field/ParkAr05Zn01Dat_Ge.dan",
+                        "Script/evAr05Zn01_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn01Dat_It.dac", "Temporary/Field/ParkAr05Zn01Dat_It.dan",
+                        "Script/evAr05Zn01_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn01Dat_Sp.dac", "Temporary/Field/ParkAr05Zn01Dat_Sp.dan",
+                        "Script/evAr05Zn01_Npc_Main.fsb"),
+                    ],
+        patch_patterns=evAr05Zn01_Npc_Main_patterns
+    )
+    patches.append(field_Ar05Zn01_npc_script_config)
+
+    evAr05Zn02_Gimmic = FilePatchConfig(
+        file_id="ar05zn02_gimmic",
+        description="",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar05Zn02Dat.dac", "Temporary/Field/ParkAr05Zn02Dat.dan",
+                     "Script/evAr05Zn02_Gimmic.fsb"), (
+                        "DATA/files/Field/Ar05Zn02Dat_Fr.dac", "Temporary/Field/ParkAr05Zn02Dat_Fr.dan",
+                        "Script/evAr05Zn02_Gimmic.fsb"), (
+                        "DATA/files/Field/Ar05Zn02Dat_Ge.dac", "Temporary/Field/ParkAr05Zn02Dat_Ge.dan",
+                        "Script/evAr05Zn02_Gimmic.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn02Dat_It.dac", "Temporary/Field/ParkAr05Zn02Dat_It.dan",
+                        "Script/evAr05Zn02_Gimmic.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn02Dat_Sp.dac", "Temporary/Field/ParkAr05Zn02Dat_Sp.dan",
+                        "Script/evAr05Zn02_Gimmic.fsb"),
+                    ],
+        patch_patterns=evAr05Zn02_Gimmic_patterns
+    )
+    patches.append(evAr05Zn02_Gimmic)
+
+    evAr05Zn01_Gimmic = FilePatchConfig(
+        file_id="ar05zn01_gimmic",
+        description="",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar05Zn01Dat.dac", "Temporary/Field/ParkAr05Zn01Dat.dan",
+                     "Script/evAr05Zn01_Gimmic.fsb"), (
+                        "DATA/files/Field/Ar05Zn01Dat_Fr.dac", "Temporary/Field/ParkAr05Zn01Dat_Fr.dan",
+                        "Script/evAr05Zn01_Gimmic.fsb"), (
+                        "DATA/files/Field/Ar05Zn01Dat_Ge.dac", "Temporary/Field/ParkAr05Zn01Dat_Ge.dan",
+                        "Script/evAr05Zn01_Gimmic.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn01Dat_It.dac", "Temporary/Field/ParkAr05Zn01Dat_It.dan",
+                        "Script/evAr05Zn01_Gimmic.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn01Dat_Sp.dac", "Temporary/Field/ParkAr05Zn01Dat_Sp.dan",
+                        "Script/evAr05Zn01_Gimmic.fsb"),
+                    ],
+        patch_patterns=evAr05Zn01_Gimmic_patterns
+    )
+    patches.append(evAr05Zn01_Gimmic)
+
+    return patches
+
+
+def get_granite_zone_patches() -> List[FilePatchConfig]:
+    patches = []
+    ar06zn01Disposition = FilePatchConfig(
+        file_id="disposition_ar06zn01",
+        description="Field Script Main",
+        processing_type=FileProcessingType.DAC_U8,
+        file_group=[("DATA/files/Field/Ar06Zn01Dat.dac", "unused",
+                     "Field/Ar06/Zn01/Ar06Zn01Dp00.rlb"),
+                    ("DATA/files/Field/Ar06Zn01Dat_Fr.dac", "unused",
+                     "Field/Ar06/Zn01/Ar06Zn01Dp00.rlb"),
+                    ("DATA/files/Field/Ar06Zn01Dat_Ge.dac", "unused",
+                     "Field/Ar06/Zn01/Ar06Zn01Dp00.rlb"),
+                    ("DATA/files/Field/Ar06Zn01Dat_It.dac", "unused",
+                     "Field/Ar06/Zn01/Ar06Zn01Dp00.rlb"),
+                    ("DATA/files/Field/Ar06Zn01Dat_Sp.dac", "unused",
+                     "Field/Ar06/Zn01/Ar06Zn01Dp00.rlb"),
+                    ],
+        patch_patterns=disposition_patterns
+    )
+    patches.append(ar06zn01Disposition)
+    gk0601DoorB = FilePatchConfig(
+        file_id="gk0601_doorb_gimmic",
+        description="Granite Zone Flygon DoorB",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Field/Ar06Zn01Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/Gk0601DoorB.fsb"),
+                    (
+                        "DATA/files/Field/Ar06Zn01Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0601DoorB.fsb"), (
+                        "DATA/files/Field/Ar06Zn01Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0601DoorB.fsb"),
+                    (
+                        "DATA/files/Field/Ar06Zn01Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0601DoorB.fsb"),
+                    (
+                        "DATA/files/Field/Ar06Zn01Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0601DoorB.fsb"),
+                    ],
+        patch_patterns=gk0601DoorB_pattern
+    )
+    patches.append(gk0601DoorB)
+
+    evAr06Zn01_Gimmic = FilePatchConfig(
+        file_id="ar06zn01_gimmic",
+        description="",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar06Zn01Dat.dac", "Temporary/Field/ParkAr06Zn01Dat.dan",
+                     "Script/evAr06Zn01_Gimmic.fsb"), (
+                        "DATA/files/Field/Ar06Zn01Dat_Fr.dac", "Temporary/Field/ParkAr06Zn01Dat_Fr.dan",
+                        "Script/evAr06Zn01_Gimmic.fsb"), (
+                        "DATA/files/Field/Ar06Zn01Dat_Ge.dac", "Temporary/Field/ParkAr06Zn01Dat_Ge.dan",
+                        "Script/evAr06Zn01_Gimmic.fsb"),
+                    (
+                        "DATA/files/Field/Ar06Zn01Dat_It.dac", "Temporary/Field/ParkAr06Zn01Dat_It.dan",
+                        "Script/evAr06Zn01_Gimmic.fsb"),
+                    (
+                        "DATA/files/Field/Ar06Zn01Dat_Sp.dac", "Temporary/Field/ParkAr06Zn01Dat_Sp.dan",
+                        "Script/evAr06Zn01_Gimmic.fsb"),
+                    ],
+        patch_patterns=evAr06Zn01_Gimmic_patterns
+    )
+    patches.append(evAr06Zn01_Gimmic)
+
+    field_Ar06Zn01_npc_script_config = FilePatchConfig(
+        file_id="Ar06_Zn01",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar06Zn01Dat.dac", "Temporary/Field/ParkAr06Zn01Dat.dan",
+                     "Script/evAr06Zn01_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar06Zn01Dat_Fr.dac", "Temporary/Field/ParkAr06Zn01Dat_Fr.dan",
+                        "Script/evAr06Zn01_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar06Zn01Dat_Ge.dac", "Temporary/Field/ParkAr06Zn01Dat_Ge.dan",
+                        "Script/evAr06Zn01_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar06Zn01Dat_It.dac", "Temporary/Field/ParkAr06Zn01Dat_It.dan",
+                        "Script/evAr06Zn01_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar06Zn01Dat_Sp.dac", "Temporary/Field/ParkAr06Zn01Dat_Sp.dan",
+                        "Script/evAr06Zn01_Npc_Main.fsb"),
+                    ],
+        patch_patterns=evAr06Zn01_Npc_Main_patterns
+    )
+    patches.append(field_Ar06Zn01_npc_script_config)
+    return patches
+
+
+def get_flower_zone_patches() -> List[FilePatchConfig]:
+    patches = []
+    ar06zn02Disposition = FilePatchConfig(
+        file_id="disposition_ar06zn02",
+        description="Field Script Main",
+        processing_type=FileProcessingType.DAC_U8,
+        file_group=[("DATA/files/Field/Ar06Zn02Dat.dac", "unused",
+                     "Field/Ar06/Zn02/Ar06Zn02Dp00.rlb"),
+                    ("DATA/files/Field/Ar06Zn02Dat_Fr.dac", "unused",
+                     "Field/Ar06/Zn02/Ar06Zn02Dp00.rlb"),
+                    ("DATA/files/Field/Ar06Zn02Dat_Ge.dac", "unused",
+                     "Field/Ar06/Zn02/Ar06Zn02Dp00.rlb"),
+                    ("DATA/files/Field/Ar06Zn02Dat_It.dac", "unused",
+                     "Field/Ar06/Zn02/Ar06Zn02Dp00.rlb"),
+                    ("DATA/files/Field/Ar06Zn02Dat_Sp.dac", "unused",
+                     "Field/Ar06/Zn02/Ar06Zn02Dp00.rlb"),
+                    ],
+        patch_patterns=disposition_patterns
+    )
+    patches.append(ar06zn02Disposition)
+
+    field_Ar06Zn02_npc_script_config = FilePatchConfig(
+        file_id="Ar06_Zn02",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar06Zn02Dat.dac", "Temporary/Field/ParkAr06Zn02Dat.dan",
+                     "Script/evAr06Zn02_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar06Zn02Dat_Fr.dac", "Temporary/Field/ParkAr06Zn02Dat_Fr.dan",
+                        "Script/evAr06Zn02_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar06Zn02Dat_Ge.dac", "Temporary/Field/ParkAr06Zn02Dat_Ge.dan",
+                        "Script/evAr06Zn02_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar06Zn02Dat_It.dac", "Temporary/Field/ParkAr06Zn02Dat_It.dan",
+                        "Script/evAr06Zn02_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar06Zn02Dat_Sp.dac", "Temporary/Field/ParkAr06Zn02Dat_Sp.dan",
+                        "Script/evAr06Zn02_Npc_Main.fsb"),
+                    ],
+        patch_patterns=evAr06Zn02_Npc_Main_patterns
+    )
+    patches.append(field_Ar06Zn02_npc_script_config)
+    return patches
+
+
+def get_misc_patches() -> List[FilePatchConfig]:
+    patches = []
+    start_menu_config = FilePatchConfig(
+        file_id="mnStartMenu",
+        description="",
+        processing_type=FileProcessingType.DAC_U8,
+        file_group=[("DATA/files/Archive/StartMenuDat.dac", "unused",
+                     "Script/mnStartMenu.fsb"),
+                    ("DATA/files/Archive/StartMenuDat_Fr.dac", "unused",
+                     "Script/mnStartMenu.fsb"),
+                    ("DATA/files/Archive/StartMenuDat_Ge.dac", "unused",
+                     "Script/mnStartMenu.fsb"),
+                    ("DATA/files/Archive/StartMenuDat_It.dac", "unused",
+                     "Script/mnStartMenu.fsb"),
+                    ("DATA/files/Archive/StartMenuDat_Sp.dac", "unused",
+                     "Script/mnStartMenu.fsb"),
+                    ],
+        patch_patterns=[
+            load_new_file_pattern
+        ]
+    )
+    patches.append(start_menu_config)
 
     main_dol = FilePatchConfig(
         file_id="main_dol",
@@ -1258,48 +1287,23 @@ def get_default_patch_configs() -> List[FilePatchConfig]:
         patch_patterns=main_dol_pattern
     )
 
-    configs.append(main_dol)
+    patches.append(main_dol)
+    return patches
 
-    evAr01Zn01_Gimmic = FilePatchConfig(
-        file_id="ar01zn01_gimmic",
-        description="",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-        file_group=[("DATA/files/Field/Ar01Zn01Dat.dac", "Temporary/Field/ParkAr01Zn01Dat.dan",
-                     "Script/evAr01Zn01_Gimmic.fsb"), (
-                        "DATA/files/Field/Ar01Zn01Dat_Fr.dac", "Temporary/Field/ParkAr01Zn01Dat_Fr.dan",
-                        "Script/evAr01Zn01_Gimmic.fsb"), (
-                        "DATA/files/Field/Ar01Zn01Dat_Ge.dac", "Temporary/Field/ParkAr01Zn01Dat_Ge.dan",
-                        "Script/evAr01Zn01_Gimmic.fsb"),
-                    (
-                        "DATA/files/Field/Ar01Zn01Dat_It.dac", "Temporary/Field/ParkAr01Zn01Dat_It.dan",
-                        "Script/evAr01Zn01_Gimmic.fsb"),
-                    (
-                        "DATA/files/Field/Ar01Zn01Dat_Sp.dac", "Temporary/Field/ParkAr01Zn01Dat_Sp.dan",
-                        "Script/evAr01Zn01_Gimmic.fsb"),
-                    ],
-        patch_patterns=evAr01Zn01_Gimmic_patch_pattern
-    )
-    configs.append(evAr01Zn01_Gimmic)
 
-    gk_gate101 = FilePatchConfig(
-        file_id="gk_gate101",
-        description="",
-        processing_type=FileProcessingType.NESTED_DAC_U8,
-        file_group=[("DATA/files/Field/Ar01Zn01Dat.dac", "Gimmick/GkDatArc.dan",
-                     "Gimmick/Gk0101Gate.fsb"),
-                    (
-                        "DATA/files/Field/Ar01Zn01Dat_Fr.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0101Gate.fsb"), (
-                        "DATA/files/Field/Ar01Zn01Dat_Ge.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0101Gate.fsb"),
-                    (
-                        "DATA/files/Field/Ar01Zn01Dat_It.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0101Gate.fsb"),
-                    (
-                        "DATA/files/Field/Ar01Zn01Dat_Sp.dac", "Gimmick/GkDatArc.dan",
-                        "Gimmick/Gk0101Gate.fsb"),
-                    ],
-        patch_patterns=[gate101_close]
-    )
-    configs.append(gk_gate101)
-    return configs
+def get_all_patches() -> List[FilePatchConfig]:
+    patches = []
+    patches.extend(get_attraction_patches())
+    patches.extend(get_meadow_zone_patches())
+    patches.extend(get_park_entrance_patches())
+    patches.extend(get_treehouse_patches())
+    patches.extend(get_beach_zone_patches())
+    patches.extend(get_ice_zone_patches())
+    patches.extend(get_cavern_zone_patches())
+    patches.extend(get_magma_zone_patches())
+    patches.extend(get_haunted_zone_patches())
+    patches.extend(get_granite_zone_patches())
+    patches.extend(get_flower_zone_patches())
+    patches.extend(get_misc_patches())
+
+    return patches
