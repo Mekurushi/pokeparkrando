@@ -3551,7 +3551,7 @@ custom_prisma_amount_function = PatchPattern(
 
     ]
 )
-
+# TODO: Bibarel spawn conditition
 evAr02Zn01_Npc_Main_pattern = [
     gate_open_logic,
     treehouse_additional_pokemon_spawn_conditions,

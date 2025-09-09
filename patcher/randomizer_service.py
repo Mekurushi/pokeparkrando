@@ -8,11 +8,14 @@ from typing import List
 
 import disc_riider_py
 from ruamel.yaml import YAML
+
 yaml = YAML(typ="safe")
-from ruamel.yaml.error import YAMLError
-yaml_dumper = YAML(typ="rt") # Use RoundTripDumper for pretty-formatted dumps.
+
+yaml_dumper = YAML(typ="rt")  # Use RoundTripDumper for pretty-formatted dumps.
 from patcher.logic.patchers import PatcherFactory
 from patcher.models.models import PatchRequest, ProgressCallback, PatchResult, FilePatchConfig
+
+VERSION = (0, 0, 0)
 
 
 class PatcherService:
@@ -28,15 +31,21 @@ class PatcherService:
             self._canceled = False
             self._setup_working_directories()
 
+            if self._canceled:
+                return PatchResult(success=False, error_message="Canceled by user")
+
+            plando_dict = self._extract_appkprk(request.appkprk_path, progress_callback)
+
+            if self._canceled:
+                return PatchResult(success=False, error_message="Canceled by user")
+
+            self._check_version(plando_dict)
+
             # Step 1: Extract ISO (0-20%)
             if self._canceled:
                 return PatchResult(success=False, error_message="Canceled by user")
 
             self._extract_iso(request.iso_path, progress_callback)
-            if self._canceled:
-                return PatchResult(success=False, error_message="Canceled by user")
-
-            plando_dict = self._extract_appkprk(request.appkprk_path, progress_callback)
 
             # Step 2: Apply all configured patches (20-80%)
             if self._canceled:
@@ -99,6 +108,26 @@ class PatcherService:
         except Exception as e:
             raise Exception(f"Failed to setup working directories: {e}")
 
+    def _check_version(self, plando_dict):
+        """Check if plando version is compatible with current randomizer Patcher version."""
+        if "Version" not in plando_dict:
+            raise Exception("Missing 'Version' key in .appkprk")
+
+        plando_version = plando_dict["Version"]
+
+        major = plando_version[0]
+        minor = plando_version[1]
+        patch = plando_version[2] if len(plando_version) > 2 else 0
+
+        patcher_major, patcher_minor, _ = VERSION
+
+        if major != patcher_major:
+            raise Exception(
+                f"Incompatible major version: randomizer v{patcher_major}.x.x, apworld v{major}.{minor}.{patch}"
+            )
+
+        return major, minor, patch
+
     def _extract_iso(self, iso_path: str, progress_callback: ProgressCallback):
         try:
             progress_callback("Initializing ISO extraction...", 5)
@@ -127,7 +156,7 @@ class PatcherService:
     def _extract_appkprk(self, appokprk_path: str, progress_callback: ProgressCallback):
         if not os.access(appokprk_path, os.R_OK):
             raise Exception(
-                """The APTWW file could not be opened.<br><br>
+                """The pkprk file could not be opened.<br><br>
                 Please ensure that the program has read permissions for the file and try again."""
             )
 
@@ -141,14 +170,14 @@ class PatcherService:
                     plando_dict = yaml.load(f)
             except:
                 raise Exception(
-                    """There was an error trying to read the APTWW file.<br><br>
+                    """There was an error trying to read the pkprk file.<br><br>
                     Please ensure that the file has not been modified or corrupted and try again."""
                 )
         else:
             return plando_dict
 
-
-    def _apply_all_patches(self, patch_configs: List[FilePatchConfig], progress_callback: ProgressCallback, plando_dict) -> int:
+    def _apply_all_patches(self, patch_configs: List[FilePatchConfig], progress_callback: ProgressCallback,
+                           plando_dict) -> int:
         try:
             total_configs = len(patch_configs)
             if total_configs == 0:
@@ -246,7 +275,6 @@ class PatcherService:
                 f.seek(0x20)
                 f.write("Pokepark Archipelago".encode('ascii'))
 
-
             file_path = self.extract_dir / "DATA/disc/header.bin"
             with open(file_path, "r+b") as f:
                 f.seek(4)
@@ -260,7 +288,6 @@ class PatcherService:
                 f.write(0x0099.to_bytes(2))
                 f.seek(0x00000198)
                 f.write(0x3939.to_bytes(2))
-
 
             file_path = self.extract_dir / "DATA/ticket.bin"
             with open(file_path, "r+b") as f:

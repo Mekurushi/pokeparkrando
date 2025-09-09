@@ -18,13 +18,14 @@ import os
 from gui.worker_thread import PatcherWorkerThread
 from patcher.config.config import get_all_patches
 from patcher.models.models import PatchRequest, PatchResult
+from patcher.randomizer_service import VERSION
 
 
 class RandoGUI(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("PokéPark Randomizer Patcher")
+        self.setWindowTitle(f"PokéPark Randomizer Patcher v{VERSION[0]}.{VERSION[1]}.{VERSION[2]}")
         self.setFixedSize(700, 450)
         self.patcher_thread = None
         self.iso_path = ""
@@ -50,7 +51,7 @@ class RandoGUI(QMainWindow):
                         margin: 20px;
                         color: #2c3e50;
                     """
-            )
+        )
         main_layout.addWidget(title_label)
 
         # ISO Selection
@@ -74,7 +75,7 @@ class RandoGUI(QMainWindow):
                             border-color: #3498db;
                         }
                     """
-            )
+        )
 
         iso_browse_btn = QPushButton("Browse")
         iso_browse_btn.setStyleSheet(self._get_button_style("#3498db"))
@@ -141,7 +142,7 @@ class RandoGUI(QMainWindow):
                         color: #2c3e50;
                         margin: 5px;
                     """
-            )
+        )
         progress_layout.addWidget(self.progress_label)
 
         self.progress_bar = QProgressBar()
@@ -160,7 +161,7 @@ class RandoGUI(QMainWindow):
                             border-radius: 6px;
                         }
                     """
-            )
+        )
         progress_layout.addWidget(self.progress_bar)
 
         main_layout.addWidget(progress_group)
@@ -190,7 +191,7 @@ class RandoGUI(QMainWindow):
                             color: #7f8c8d;
                         }
                     """
-            )
+        )
         self.patching_btn.clicked.connect(self.start_patching)
         main_layout.addWidget(self.patching_btn)
 
@@ -376,12 +377,15 @@ class RandoGUI(QMainWindow):
             self.patching_btn.setText("Start Patching")
             self.progress_bar.setVisible(False)
             self.progress_label.setVisible(False)
-            self.setWindowTitle("PokéPark Randomizer Patcher")
+            self.setWindowTitle(f"PokéPark Randomizer Patcher v{VERSION[0]}.{VERSION[1]}.{VERSION[2]}")
 
     def update_progress(self, message: str, progress: int):
         self.progress_label.setText(message)
         self.progress_bar.setValue(progress)
-        self.setWindowTitle(f"PokéPark Randomizer Patcher - {progress}% Complete")
+        self.setWindowTitle(
+            f"PokéPark Randomizer Patcher v{VERSION[0]}.{VERSION[1]}.{VERSION[2]} - {progress}% "
+            f"Complete"
+        )
 
     def on_patching_complete(self, result: PatchResult):
         self._set_ui_patching_state(False)

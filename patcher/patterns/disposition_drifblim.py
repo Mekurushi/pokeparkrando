@@ -1,8 +1,8 @@
 from patcher.helper.patttern_handler import parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
 
-disposition_pattern = PatchPattern(
-    name="Disposition",
+disposition_drifblim_pattern = PatchPattern(
+    name="Disposition Drifblim",
     description="always spawning Drifblim",
     patternJP=[
         Instruction(
@@ -24,6 +24,6 @@ disposition_pattern = PatchPattern(
     ],
 )
 
-disposition_patterns = [
-    disposition_pattern
+disposition_drifblim_patterns = [
+    disposition_drifblim_pattern
 ]

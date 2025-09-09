@@ -1,7 +1,7 @@
 from typing import List
 
 from patcher.models.models import FilePatchConfig, FileProcessingType
-from patcher.patterns.disposition import disposition_patterns
+from patcher.patterns.disposition_drifblim import disposition_drifblim_patterns
 from patcher.patterns.evAr01Zn01_Gimmic import evAr01Zn01_Gimmic_patch_pattern
 from patcher.patterns.evAr01Zn01_Npc_Main import \
     evAr01Zn01_Npc_Main_patch_pattern
@@ -22,6 +22,7 @@ from patcher.patterns.evAr05Zn03_Npc_Main import evAr05Zn03_Npc_Main_patterns
 from patcher.patterns.evAr06Zn01_Gimmic import evAr06Zn01_Gimmic_patterns
 from patcher.patterns.evAr06Zn01_Npc_Main import evAr06Zn01_Npc_Main_patterns
 from patcher.patterns.evAr06Zn02_Npc_Main import evAr06Zn02_Npc_Main_patterns
+from patcher.patterns.evAr07Zn01_Npc_Main import evAr07Zn01_Npc_Main_patterns
 from patcher.patterns.evAr99Zn01_Npc_Main import evAr99Zn01_Npc_Main_pattern
 from patcher.patterns.gk0101Gate import gate101_close
 from patcher.patterns.gk0302Gate import gk0302Gate_pattern
@@ -68,7 +69,7 @@ def get_meadow_zone_patches() -> List[FilePatchConfig]:
                     ("DATA/files/Field/Ar01Zn01Dat_Sp.dac", "unused",
                      "Field/Ar01/Zn01/Ar01Zn01Dp00.rlb"),
                     ],
-        patch_patterns=disposition_patterns
+        patch_patterns=disposition_drifblim_patterns
     )
     patches.append(ar01zn01Disposition)
 
@@ -232,27 +233,46 @@ def get_park_entrance_patches() -> List[FilePatchConfig]:
 
 def get_attraction_patches() -> List[FilePatchConfig]:
     patches = []
-    # TODO Add other attractions and lobbies
 
-    lobby16 = FilePatchConfig(
-        file_id="lobby16_bulbasaur",
-        description="Bulbasaur Attraction Lobby",
+    lobby1 = FilePatchConfig(
+        file_id="lobby1",
+        description="Attraction Lobby 1",
         processing_type=FileProcessingType.DAC_U8,
 
-        file_group=[("DATA/files/Archive/Lobby16Dat.dac", "unused",
+        file_group=[("DATA/files/Archive/lobby01Dat.dac", "unused",
                      "Script/mnLobby.fsb"),
-                    ("DATA/files/Archive/Lobby16Dat_Fr.dac", "unused",
+                    ("DATA/files/Archive/lobby01Dat_Fr.dac", "unused",
                      "Script/mnLobby.fsb"),
-                    ("DATA/files/Archive/Lobby16Dat_Ge.dac", "unused",
+                    ("DATA/files/Archive/lobby01Dat_Ge.dac", "unused",
                      "Script/mnLobby.fsb"),
-                    ("DATA/files/Archive/Lobby16Dat_It.dac", "unused",
+                    ("DATA/files/Archive/lobby01Dat_It.dac", "unused",
                      "Script/mnLobby.fsb"),
-                    ("DATA/files/Archive/Lobby16Dat_Sp.dac", "unused",
+                    ("DATA/files/Archive/lobby01Dat_Sp.dac", "unused",
                      "Script/mnLobby.fsb"),
                     ],
         patch_patterns=mnLobby_pattern
     )
-    patches.append(lobby16)
+    patches.append(lobby1)
+
+    lobby2 = FilePatchConfig(
+        file_id="lobby2",
+        description="Attraction Lobby 2",
+        processing_type=FileProcessingType.DAC_U8,
+
+        file_group=[("DATA/files/Archive/lobby02Dat.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby02Dat_Fr.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby02Dat_Ge.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby02Dat_It.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby02Dat_Sp.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ],
+        patch_patterns=mnLobby_pattern
+    )
+    patches.append(lobby2)
 
     lobby3 = FilePatchConfig(
         file_id="lobby3_venusaur",
@@ -274,25 +294,265 @@ def get_attraction_patches() -> List[FilePatchConfig]:
     )
     patches.append(lobby3)
 
-    attraction16 = FilePatchConfig(
-        file_id="attraction_info16_bulbasaur",
-        description="Bulbasaur Minigame Attraction",
+    lobby4 = FilePatchConfig(
+        file_id="lobby4",
+        description="Attraction Lobby 4",
+        processing_type=FileProcessingType.DAC_U8,
+
+        file_group=[("DATA/files/Archive/lobby04Dat.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby04Dat_Fr.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby04Dat_Ge.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby04Dat_It.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby04Dat_Sp.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ],
+        patch_patterns=mnLobby_pattern
+    )
+    patches.append(lobby4)
+
+    lobby5 = FilePatchConfig(
+        file_id="lobby5",
+        description="Attraction Lobby 5",
+        processing_type=FileProcessingType.DAC_U8,
+
+        file_group=[("DATA/files/Archive/lobby05Dat.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby05Dat_Fr.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby05Dat_Ge.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby05Dat_It.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby05Dat_Sp.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ],
+        patch_patterns=mnLobby_pattern
+    )
+    patches.append(lobby5)
+
+    lobby6 = FilePatchConfig(
+        file_id="lobby6",
+        description="Attraction Lobby 6",
+        processing_type=FileProcessingType.DAC_U8,
+
+        file_group=[("DATA/files/Archive/lobby06Dat.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby06Dat_Fr.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby06Dat_Ge.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby06Dat_It.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby06Dat_Sp.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ],
+        patch_patterns=mnLobby_pattern
+    )
+    patches.append(lobby6)
+
+    lobby7 = FilePatchConfig(
+        file_id="lobby7",
+        description="Attraction Lobby 7",
+        processing_type=FileProcessingType.DAC_U8,
+
+        file_group=[("DATA/files/Archive/lobby07Dat.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby07Dat_Fr.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby07Dat_Ge.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby07Dat_It.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby07Dat_Sp.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ],
+        patch_patterns=mnLobby_pattern
+    )
+    patches.append(lobby7)
+
+    lobby9 = FilePatchConfig(
+        file_id="lobby9",
+        description="Attraction Lobby 9",
+        processing_type=FileProcessingType.DAC_U8,
+
+        file_group=[("DATA/files/Archive/lobby09Dat.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby09Dat_Fr.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby09Dat_Ge.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby09Dat_It.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby09Dat_Sp.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ],
+        patch_patterns=mnLobby_pattern
+    )
+    patches.append(lobby9)
+
+    lobby10 = FilePatchConfig(
+        file_id="lobby10",
+        description="Attraction Lobby 10",
+        processing_type=FileProcessingType.DAC_U8,
+
+        file_group=[("DATA/files/Archive/lobby10Dat.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby10Dat_Fr.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby10Dat_Ge.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby10Dat_It.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby10Dat_Sp.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ],
+        patch_patterns=mnLobby_pattern
+    )
+    patches.append(lobby10)
+
+    lobby11 = FilePatchConfig(
+        file_id="lobby11",
+        description="Attraction Lobby 11",
+        processing_type=FileProcessingType.DAC_U8,
+
+        file_group=[("DATA/files/Archive/lobby11Dat.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby11Dat_Fr.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby11Dat_Ge.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby11Dat_It.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby11Dat_Sp.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ],
+        patch_patterns=mnLobby_pattern
+    )
+    patches.append(lobby11)
+
+    lobby12 = FilePatchConfig(
+        file_id="lobby12",
+        description="Attraction Lobby 12",
+        processing_type=FileProcessingType.DAC_U8,
+
+        file_group=[("DATA/files/Archive/lobby12Dat.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby12Dat_Fr.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby12Dat_Ge.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby12Dat_It.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby12Dat_Sp.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ],
+        patch_patterns=mnLobby_pattern
+    )
+    patches.append(lobby12)
+
+    lobby13 = FilePatchConfig(
+        file_id="lobby13",
+        description="Attraction Lobby 13",
+        processing_type=FileProcessingType.DAC_U8,
+
+        file_group=[("DATA/files/Archive/lobby13Dat.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby13Dat_Fr.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby13Dat_Ge.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby13Dat_It.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby13Dat_Sp.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ],
+        patch_patterns=mnLobby_pattern
+    )
+    patches.append(lobby13)
+
+    lobby15 = FilePatchConfig(
+        file_id="lobby15",
+        description="Attraction Lobby 15",
+        processing_type=FileProcessingType.DAC_U8,
+
+        file_group=[("DATA/files/Archive/lobby15Dat.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby15Dat_Fr.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby15Dat_Ge.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby15Dat_It.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/lobby15Dat_Sp.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ],
+        patch_patterns=mnLobby_pattern
+    )
+    patches.append(lobby15)
+
+    lobby16 = FilePatchConfig(
+        file_id="lobby16_bulbasaur",
+        description="Bulbasaur Attraction Lobby",
+        processing_type=FileProcessingType.DAC_U8,
+
+        file_group=[("DATA/files/Archive/Lobby16Dat.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/Lobby16Dat_Fr.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/Lobby16Dat_Ge.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/Lobby16Dat_It.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ("DATA/files/Archive/Lobby16Dat_Sp.dac", "unused",
+                     "Script/mnLobby.fsb"),
+                    ],
+        patch_patterns=mnLobby_pattern
+    )
+    patches.append(lobby16)
+
+    attraction1 = FilePatchConfig(
+        file_id="attraction_info1",
+        description="Attraction 1",
         processing_type=FileProcessingType.NESTED_DAC_U8,
 
-        file_group=[("DATA/files/Attraction/At016Dat.dac", "Temporary/PreAtArc/PreAt016Dat.dan",
+        file_group=[("DATA/files/Attraction/At001Dat.dac", "Temporary/PreAtArc/PreAt001Dat.dan",
                      "Script/mnAttractionInfo.fsb"),
-                    ("DATA/files/Attraction/At016Dat_Fr.dac", "Temporary/PreAtArc/PreAt016Dat_Fr.dan",
+                    ("DATA/files/Attraction/At001Dat_Fr.dac", "Temporary/PreAtArc/PreAt001Dat_Fr.dan",
                      "Script/mnAttractionInfo.fsb"),
-                    ("DATA/files/Attraction/At016Dat_Ge.dac", "Temporary/PreAtArc/PreAt016Dat_Ge.dan",
+                    ("DATA/files/Attraction/At001Dat_Ge.dac", "Temporary/PreAtArc/PreAt001Dat_Ge.dan",
                      "Script/mnAttractionInfo.fsb"),
-                    ("DATA/files/Attraction/At016Dat_It.dac", "Temporary/PreAtArc/PreAt016Dat_It.dan",
+                    ("DATA/files/Attraction/At001Dat_It.dac", "Temporary/PreAtArc/PreAt001Dat_It.dan",
                      "Script/mnAttractionInfo.fsb"),
-                    ("DATA/files/Attraction/At016Dat_Sp.dac", "Temporary/PreAtArc/PreAt016Dat_Sp.dan",
+                    ("DATA/files/Attraction/At001Dat_Sp.dac", "Temporary/PreAtArc/PreAt001Dat_Sp.dan",
                      "Script/mnAttractionInfo.fsb"),
                     ],
         patch_patterns=mnAttractionInfo_pattern
     )
-    patches.append(attraction16)
+    patches.append(attraction1)
+
+    attraction2 = FilePatchConfig(
+        file_id="attraction_info2",
+        description="Attraction 2",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Attraction/At002Dat.dac", "Temporary/PreAtArc/PreAt002Dat.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At002Dat_Fr.dac", "Temporary/PreAtArc/PreAt002Dat_Fr.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At002Dat_Ge.dac", "Temporary/PreAtArc/PreAt002Dat_Ge.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At002Dat_It.dac", "Temporary/PreAtArc/PreAt002Dat_It.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At002Dat_Sp.dac", "Temporary/PreAtArc/PreAt002Dat_Sp.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ],
+        patch_patterns=mnAttractionInfo_pattern
+    )
+    patches.append(attraction2)
 
     attraction3 = FilePatchConfig(
         file_id="attraction_info3_venusaur",
@@ -313,6 +573,227 @@ def get_attraction_patches() -> List[FilePatchConfig]:
         patch_patterns=mnAttractionInfo_pattern
     )
     patches.append(attraction3)
+
+    attraction4 = FilePatchConfig(
+        file_id="attraction_info4",
+        description="Attraction 4",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Attraction/At004Dat.dac", "Temporary/PreAtArc/PreAt004Dat.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At004Dat_Fr.dac", "Temporary/PreAtArc/PreAt004Dat_Fr.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At004Dat_Ge.dac", "Temporary/PreAtArc/PreAt004Dat_Ge.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At004Dat_It.dac", "Temporary/PreAtArc/PreAt004Dat_It.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At004Dat_Sp.dac", "Temporary/PreAtArc/PreAt004Dat_Sp.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ],
+        patch_patterns=mnAttractionInfo_pattern
+    )
+    patches.append(attraction4)
+
+    attraction5 = FilePatchConfig(
+        file_id="attraction_info5",
+        description="Attraction 5",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Attraction/At005Dat.dac", "Temporary/PreAtArc/PreAt005Dat.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At005Dat_Fr.dac", "Temporary/PreAtArc/PreAt005Dat_Fr.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At005Dat_Ge.dac", "Temporary/PreAtArc/PreAt005Dat_Ge.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At005Dat_It.dac", "Temporary/PreAtArc/PreAt005Dat_It.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At005Dat_Sp.dac", "Temporary/PreAtArc/PreAt005Dat_Sp.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ],
+        patch_patterns=mnAttractionInfo_pattern
+    )
+    patches.append(attraction5)
+
+    attraction6 = FilePatchConfig(
+        file_id="attraction_info6",
+        description="Attraction 6",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Attraction/At006Dat.dac", "Temporary/PreAtArc/PreAt006Dat.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At006Dat_Fr.dac", "Temporary/PreAtArc/PreAt006Dat_Fr.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At006Dat_Ge.dac", "Temporary/PreAtArc/PreAt006Dat_Ge.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At006Dat_It.dac", "Temporary/PreAtArc/PreAt006Dat_It.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At006Dat_Sp.dac", "Temporary/PreAtArc/PreAt006Dat_Sp.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ],
+        patch_patterns=mnAttractionInfo_pattern
+    )
+    patches.append(attraction6)
+
+    attraction7 = FilePatchConfig(
+        file_id="attraction_info7",
+        description="Attraction 7",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Attraction/At007Dat.dac", "Temporary/PreAtArc/PreAt007Dat.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At007Dat_Fr.dac", "Temporary/PreAtArc/PreAt007Dat_Fr.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At007Dat_Ge.dac", "Temporary/PreAtArc/PreAt007Dat_Ge.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At007Dat_It.dac", "Temporary/PreAtArc/PreAt007Dat_It.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At007Dat_Sp.dac", "Temporary/PreAtArc/PreAt007Dat_Sp.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ],
+        patch_patterns=mnAttractionInfo_pattern
+    )
+    patches.append(attraction7)
+
+    attraction9 = FilePatchConfig(
+        file_id="attraction_info9",
+        description="Attraction 9",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Attraction/At009Dat.dac", "Temporary/PreAtArc/PreAt009Dat.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At009Dat_Fr.dac", "Temporary/PreAtArc/PreAt009Dat_Fr.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At009Dat_Ge.dac", "Temporary/PreAtArc/PreAt009Dat_Ge.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At009Dat_It.dac", "Temporary/PreAtArc/PreAt009Dat_It.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At009Dat_Sp.dac", "Temporary/PreAtArc/PreAt009Dat_Sp.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ],
+        patch_patterns=mnAttractionInfo_pattern
+    )
+    patches.append(attraction9)
+
+    attraction10 = FilePatchConfig(
+        file_id="attraction_info10",
+        description="Attraction 10",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Attraction/At010Dat.dac", "Temporary/PreAtArc/PreAt010Dat.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At010Dat_Fr.dac", "Temporary/PreAtArc/PreAt010Dat_Fr.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At010Dat_Ge.dac", "Temporary/PreAtArc/PreAt010Dat_Ge.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At010Dat_It.dac", "Temporary/PreAtArc/PreAt010Dat_It.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At010Dat_Sp.dac", "Temporary/PreAtArc/PreAt010Dat_Sp.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ],
+        patch_patterns=mnAttractionInfo_pattern
+    )
+    patches.append(attraction10)
+
+    attraction11 = FilePatchConfig(
+        file_id="attraction_info11",
+        description="Attraction 11",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Attraction/At011Dat.dac", "Temporary/PreAtArc/PreAt011Dat.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At011Dat_Fr.dac", "Temporary/PreAtArc/PreAt011Dat_Fr.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At011Dat_Ge.dac", "Temporary/PreAtArc/PreAt011Dat_Ge.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At011Dat_It.dac", "Temporary/PreAtArc/PreAt011Dat_It.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At011Dat_Sp.dac", "Temporary/PreAtArc/PreAt011Dat_Sp.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ],
+        patch_patterns=mnAttractionInfo_pattern
+    )
+    patches.append(attraction11)
+
+    attraction12 = FilePatchConfig(
+        file_id="attraction_info12",
+        description="Attraction 12",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Attraction/At012Dat.dac", "Temporary/PreAtArc/PreAt012Dat.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At012Dat_Fr.dac", "Temporary/PreAtArc/PreAt012Dat_Fr.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At012Dat_Ge.dac", "Temporary/PreAtArc/PreAt012Dat_Ge.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At012Dat_It.dac", "Temporary/PreAtArc/PreAt012Dat_It.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At012Dat_Sp.dac", "Temporary/PreAtArc/PreAt012Dat_Sp.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ],
+        patch_patterns=mnAttractionInfo_pattern
+    )
+    patches.append(attraction12)
+
+    attraction13 = FilePatchConfig(
+        file_id="attraction_info13",
+        description="Attraction 13",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Attraction/At013Dat.dac", "Temporary/PreAtArc/PreAt013Dat.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At013Dat_Fr.dac", "Temporary/PreAtArc/PreAt013Dat_Fr.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At013Dat_Ge.dac", "Temporary/PreAtArc/PreAt013Dat_Ge.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At013Dat_It.dac", "Temporary/PreAtArc/PreAt013Dat_It.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At013Dat_Sp.dac", "Temporary/PreAtArc/PreAt013Dat_Sp.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ],
+        patch_patterns=mnAttractionInfo_pattern
+    )
+    patches.append(attraction13)
+
+    attraction15 = FilePatchConfig(
+        file_id="attraction_info15",
+        description="Attraction 15",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Attraction/At015Dat.dac", "Temporary/PreAtArc/PreAt015Dat.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At015Dat_Fr.dac", "Temporary/PreAtArc/PreAt015Dat_Fr.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At015Dat_Ge.dac", "Temporary/PreAtArc/PreAt015Dat_Ge.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At015Dat_It.dac", "Temporary/PreAtArc/PreAt015Dat_It.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At015Dat_Sp.dac", "Temporary/PreAtArc/PreAt015Dat_Sp.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ],
+        patch_patterns=mnAttractionInfo_pattern
+    )
+    patches.append(attraction15)
+
+    attraction16 = FilePatchConfig(
+        file_id="attraction_info16_bulbasaur",
+        description="Bulbasaur Minigame Attraction",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Attraction/At016Dat.dac", "Temporary/PreAtArc/PreAt016Dat.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At016Dat_Fr.dac", "Temporary/PreAtArc/PreAt016Dat_Fr.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At016Dat_Ge.dac", "Temporary/PreAtArc/PreAt016Dat_Ge.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At016Dat_It.dac", "Temporary/PreAtArc/PreAt016Dat_It.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ("DATA/files/Attraction/At016Dat_Sp.dac", "Temporary/PreAtArc/PreAt016Dat_Sp.dan",
+                     "Script/mnAttractionInfo.fsb"),
+                    ],
+        patch_patterns=mnAttractionInfo_pattern
+    )
+    patches.append(attraction16)
+
     return patches
 
 
@@ -381,7 +862,7 @@ def get_beach_zone_patches() -> List[FilePatchConfig]:
                     ("DATA/files/Field/Ar03Zn01Dat_Sp.dac", "unused",
                      "Field/Ar03/Zn01/Ar03Zn01Dp00.rlb"),
                     ],
-        patch_patterns=disposition_patterns
+        patch_patterns=disposition_drifblim_patterns
     )
     patches.append(ar03zn01Disposition)
 
@@ -542,7 +1023,7 @@ def get_ice_zone_patches() -> List[FilePatchConfig]:
                     ("DATA/files/Field/Ar03Zn02Dat_Sp.dac", "unused",
                      "Field/Ar03/Zn02/Ar03Zn02Dp00.rlb"),
                     ],
-        patch_patterns=disposition_patterns
+        patch_patterns=disposition_drifblim_patterns
     )
     patches.append(ar03zn02Disposition)
 
@@ -653,7 +1134,7 @@ def get_cavern_zone_patches() -> List[FilePatchConfig]:
                     ("DATA/files/Field/Ar04Zn01Dat_Sp.dac", "unused",
                      "Field/Ar04/Zn01/Ar04Zn01Dp00.rlb"),
                     ],
-        patch_patterns=disposition_patterns
+        patch_patterns=disposition_drifblim_patterns
     )
     patches.append(ar04zn01Disposition)
 
@@ -718,7 +1199,7 @@ def get_magma_zone_patches() -> List[FilePatchConfig]:
                     ("DATA/files/Field/Ar04Zn02Dat_Sp.dac", "unused",
                      "Field/Ar04/Zn02/Ar04Zn02Dp00.rlb"),
                     ],
-        patch_patterns=disposition_patterns
+        patch_patterns=disposition_drifblim_patterns
     )
     patches.append(ar04zn02Disposition)
 
@@ -875,7 +1356,7 @@ def get_haunted_zone_patches() -> List[FilePatchConfig]:
                     ("DATA/files/Field/Ar05Zn01Dat_Sp.dac", "unused",
                      "Field/Ar05/Zn01/Ar05Zn01Dp00.rlb"),
                     ],
-        patch_patterns=disposition_patterns
+        patch_patterns=disposition_drifblim_patterns
     )
     patches.append(ar05zn01Disposition)
 
@@ -1142,7 +1623,7 @@ def get_granite_zone_patches() -> List[FilePatchConfig]:
                     ("DATA/files/Field/Ar06Zn01Dat_Sp.dac", "unused",
                      "Field/Ar06/Zn01/Ar06Zn01Dp00.rlb"),
                     ],
-        patch_patterns=disposition_patterns
+        patch_patterns=disposition_drifblim_patterns
     )
     patches.append(ar06zn01Disposition)
     gk0601DoorB = FilePatchConfig(
@@ -1229,7 +1710,7 @@ def get_flower_zone_patches() -> List[FilePatchConfig]:
                     ("DATA/files/Field/Ar06Zn02Dat_Sp.dac", "unused",
                      "Field/Ar06/Zn02/Ar06Zn02Dp00.rlb"),
                     ],
-        patch_patterns=disposition_patterns
+        patch_patterns=disposition_drifblim_patterns
     )
     patches.append(ar06zn02Disposition)
 
@@ -1291,6 +1772,31 @@ def get_misc_patches() -> List[FilePatchConfig]:
     return patches
 
 
+def get_skygarden_patches() -> List[FilePatchConfig]:
+    patches = []
+    field_Ar07Zn01_npc_script_config = FilePatchConfig(
+        file_id="Ar07_Zn01",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar07Zn01Dat.dac", "Temporary/Field/ParkAr07Zn01Dat.dan",
+                     "Script/evAr07Zn01_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar07Zn01Dat_Fr.dac", "Temporary/Field/ParkAr07Zn01Dat_Fr.dan",
+                        "Script/evAr07Zn01_Npc_Main.fsb"), (
+                        "DATA/files/Field/Ar07Zn01Dat_Ge.dac", "Temporary/Field/ParkAr07Zn01Dat_Ge.dan",
+                        "Script/evAr07Zn01_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar07Zn01Dat_It.dac", "Temporary/Field/ParkAr07Zn01Dat_It.dan",
+                        "Script/evAr07Zn01_Npc_Main.fsb"),
+                    (
+                        "DATA/files/Field/Ar07Zn01Dat_Sp.dac", "Temporary/Field/ParkAr07Zn01Dat_Sp.dan",
+                        "Script/evAr07Zn01_Npc_Main.fsb"),
+                    ],
+        patch_patterns=evAr07Zn01_Npc_Main_patterns
+    )
+    patches.append(field_Ar07Zn01_npc_script_config)
+    return patches
+
+
 def get_all_patches() -> List[FilePatchConfig]:
     patches = []
     patches.extend(get_attraction_patches())
@@ -1305,5 +1811,6 @@ def get_all_patches() -> List[FilePatchConfig]:
     patches.extend(get_granite_zone_patches())
     patches.extend(get_flower_zone_patches())
     patches.extend(get_misc_patches())
+    patches.extend(get_skygarden_patches())
 
     return patches
