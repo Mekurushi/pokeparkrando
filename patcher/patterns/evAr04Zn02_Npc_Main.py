@@ -882,6 +882,7 @@ special_spawn_conditions = PatchPattern(
 
     ]
 )
+# TODO farfetch'd
 
 evAr04Zn02_Npc_Main_patterns = [
     trap_events,

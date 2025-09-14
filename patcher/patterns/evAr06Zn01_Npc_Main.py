@@ -851,7 +851,3 @@ evAr06Zn01_Npc_Main_patterns = [
     get_salamence_friendship_location_state,
     special_spawn_conditions
 ]
-
-# TODO:
-# Bellosom
-# Mareep

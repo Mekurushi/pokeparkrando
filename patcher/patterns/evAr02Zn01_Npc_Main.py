@@ -562,9 +562,19 @@ treehouse_additional_pokemon_spawn_conditions = PatchPattern(
             instruction_readable="push 0x6"
         ),
 
+        # Bibarel spawn condition
+        Instruction(
+            identifier=9, offset=0x1dc, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr fBippasWoodLevel"
+        ),
+        Instruction(
+            identifier=10, offset=0x1e4, pattern=parse_pattern_bytes("00 01 00 10"),  # opcode
+            instruction_readable="push 0x1"
+        ),
+
         # end of function
         Instruction(
-            identifier=9, offset=0x204, pattern=parse_pattern_bytes("00 03 00 06"),
+            identifier=11, offset=0x204, pattern=parse_pattern_bytes("00 03 00 06"),
             instruction_readable="ret -0x3"
         ),
 
@@ -614,6 +624,16 @@ treehouse_additional_pokemon_spawn_conditions = PatchPattern(
             new_instruction_readable="jmp"  # skip all chapter based logic
         ),
 
+        Patch(
+            identifier=9,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00020010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x2"  # venusaur prisma id
+        ),
+        Patch(
+            identifier=10,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00510010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x51"  # opcode prisma request
+        ),
     ],
 )
 
@@ -657,13 +677,23 @@ treehouse_additional_pokemon_spawn_conditions2 = PatchPattern(
             instruction_readable="push 0x6"
         ),
 
+        # Bibarel spawn condition
+        Instruction(
+            identifier=9, offset=0x1dc, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr fBippasWoodLevel"
+        ),
+        Instruction(
+            identifier=10, offset=0x1e4, pattern=parse_pattern_bytes("00 01 00 10"),  # opcode
+            instruction_readable="push 0x1"
+        ),
+
         # end of function
         Instruction(
-            identifier=9, offset=0x204, pattern=parse_pattern_bytes("00 03 00 06"),
+            identifier=11, offset=0x204, pattern=parse_pattern_bytes("00 03 00 06"),
             instruction_readable="ret -0x3"
         ),
 
-        # for differenting the two identically functions
+        # for differentiating the two identically functions
         Instruction(
             identifier=99, offset=0x208, pattern=parse_pattern_bytes("00 01 00 07"),
             instruction_readable="grow_stack 0x1"
@@ -706,6 +736,16 @@ treehouse_additional_pokemon_spawn_conditions2 = PatchPattern(
             identifier=7,
             patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(offset, 8, matches),
             new_instruction_readable="jmp"  # skip all chapter based logic
+        ),
+        Patch(
+            identifier=9,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00020010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x2"  # venusaur prisma id
+        ),
+        Patch(
+            identifier=10,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00510010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x51"  # opcode prisma request
         ),
 
     ],
@@ -3551,7 +3591,6 @@ custom_prisma_amount_function = PatchPattern(
 
     ]
 )
-# TODO: Bibarel spawn conditition
 evAr02Zn01_Npc_Main_pattern = [
     gate_open_logic,
     treehouse_additional_pokemon_spawn_conditions,

@@ -579,7 +579,10 @@ special_spawn_conditions = PatchPattern(
             identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 03 00 07"),
             instruction_readable="grow_stack 0x3"
         ),
-
+        Instruction(
+            identifier=99, offset=0x4, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr"
+        ),
         Instruction(
             identifier=2, offset=0xec, pattern=parse_pattern_bytes("?? ?? ?? 13"),
             instruction_readable="lstr f0301FuwarideTaxiStop"
@@ -612,7 +615,14 @@ special_spawn_conditions = PatchPattern(
             ),
             new_instruction_readable="jmp"
         ),
-
+        Patch(
+            identifier=99,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00040006).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="ret -0x4"
+        ),
     ]
 )
 
@@ -624,7 +634,10 @@ special_spawn_conditions2 = PatchPattern(
             identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 03 00 07"),
             instruction_readable="grow_stack 0x3"
         ),
-
+        Instruction(
+            identifier=99, offset=0x4, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr"
+        ),
         Instruction(
             identifier=2, offset=0x118, pattern=parse_pattern_bytes("?? ?? ?? 13"),
             instruction_readable="lstr f0301FuwarideTaxiStop"
@@ -657,6 +670,177 @@ special_spawn_conditions2 = PatchPattern(
             ),
             new_instruction_readable="jmp"
         ),
+        Patch(
+            identifier=99,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00040006).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="ret -0x4"
+        ),
+    ]
+)
+
+bellosom_interaction = PatchPattern(
+    name="bellosom interaction",
+    description="removing chapter condition",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 08 00 07"),
+            instruction_readable="grow_stack 0x8"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x3c, pattern=parse_pattern_bytes("01 d5 00 10"),
+            instruction_readable="push 0x1d5"
+        ),
+        Instruction(
+            identifier=3, offset=0x7c, pattern=parse_pattern_bytes("ff fe 00 0b"),
+            instruction_readable="load_arg -0x2"
+        ),
+
+        Instruction(
+            identifier=4, offset=0x280, pattern=parse_pattern_bytes("00 00 00 11 3f 80 00 00"),
+            instruction_readable="push_imm 0x3f800000"
+        ),
+        Instruction(
+            identifier=5, offset=0x2f4, pattern=parse_pattern_bytes("00 3d 00 10"),
+            instruction_readable="push 0x3d"  # request friendship opcode
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
+                offset, 4, matches,
+                "jmp"
+            ),
+            new_instruction_readable="jmp"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0x004b0010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+
+    ]
+)
+
+set_items = PatchPattern(
+    name="set items flower zone",
+    description="used for call in init",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 05 00 07"),
+            instruction_readable="grow_stack 0x5"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x14, pattern=parse_pattern_bytes("2a fd 00 10"),
+            instruction_readable="push 0x2afd"
+        ),
+        Instruction(
+            identifier=3, offset=0xb4, pattern=parse_pattern_bytes("00 06 00 06"),
+            instruction_readable="ret -0x6"
+        ),
+
+    ],
+    patchMapJP=[
+    ]
+)
+
+ar06zn02_init_patternPALNA = [
+    Instruction(
+        identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 02 00 07"),
+        instruction_readable="grow_stack 0x2"
+    ),
+
+    Instruction(
+        identifier=2, offset=0x44, pattern=parse_pattern_bytes("4e 20 00 10"),
+        instruction_readable="push 0x4e20"
+    ),
+    Instruction(
+        identifier=3, offset=0x50, pattern=parse_pattern_bytes("00 00 00 0b"),
+        instruction_readable="load_arg 0x0"
+    ),
+    Instruction(
+        identifier=4, offset=0x54, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+        instruction_readable="call fun_??????"
+    ),
+]
+
+ar06zn02_init = PatchPattern(
+    name="ar06zn02_init",
+    description="adding set_items call",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 02 00 07"),
+            instruction_readable="grow_stack 0x2"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x3c, pattern=parse_pattern_bytes("4e 20 00 10"),
+            instruction_readable="push 0x4e20"
+        ),
+        Instruction(
+            identifier=3, offset=0x48, pattern=parse_pattern_bytes("00 00 00 0b"),
+            instruction_readable="load_arg 0x0"
+        ),
+        Instruction(
+            identifier=4, offset=0x4c, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call fun_??????"
+        ),
+    ],
+    patternPAL=ar06zn02_init_patternPALNA,
+    patternNA=ar06zn02_init_patternPALNA,
+    patchMapJP=[
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+                offset, data, set_items
+            ),
+            new_instruction_readable="call set_items"
+        ),
+    ]
+)
+
+mareep_interaction = PatchPattern(
+    name="mareep interaction",
+    description="removing chapter condition",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 09 00 07"),
+            instruction_readable="grow_stack 0x9"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x18, pattern=parse_pattern_bytes("01 d6 00 10"),
+            instruction_readable="push 0x1d6"
+        ),
+        Instruction(
+            identifier=3, offset=0x64, pattern=parse_pattern_bytes("ff fd 00 0b"),
+            instruction_readable="load_arg -0x3"
+        ),
+
+        Instruction(
+            identifier=4, offset=0x104, pattern=parse_pattern_bytes("ff fb 00 0b"),  # jmp target
+            instruction_readable="load_arg -0x5"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
+                offset, 4, matches,
+                "jmp"
+            ),
+            new_instruction_readable="jmp"
+        ),
 
     ]
 )
@@ -664,6 +848,7 @@ special_spawn_conditions2 = PatchPattern(
 evAr06Zn02_Npc_Main_patterns = [
     set_chapter,
     get_friendship,
+    mareep_interaction,
 
     rayquaza_interaction,
     furret_interaction,
@@ -672,5 +857,6 @@ evAr06Zn02_Npc_Main_patterns = [
     get_rayquaza_friendship_location_state,
     special_spawn_conditions,
     special_spawn_conditions2,
-
+    bellosom_interaction,
+    ar06zn02_init
 ]
