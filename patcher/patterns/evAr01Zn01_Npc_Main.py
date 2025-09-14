@@ -3,6 +3,7 @@ from patcher.helper.patttern_handler import get_attraction_id_from_dict, parse_p
     get_num_battle_count_from_dict_as_instruction, create_lstr_script, \
     create_jmp_instruction_script
 from patcher.models.models import PatchPattern, Instruction, Patch
+from patcher.patterns.general import get_friendship, set_chapter
 
 string_section_start = PatchPattern(
     name="string section start",
@@ -12632,6 +12633,8 @@ thunderbolt_hit_magikarp_event = PatchPattern(
 )
 
 evAr01Zn01_Npc_Main_patch_pattern = [
+    set_chapter,
+    get_friendship,
     overworld_pokemon_spawning_Ar01Zn01,
     unlock_function,
     turtwig_friendship_pattern,

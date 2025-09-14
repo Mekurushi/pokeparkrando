@@ -2,6 +2,7 @@ from patcher.helper.patttern_handler import get_attraction_id_from_dict, get_num
     parse_pattern_bytes, \
     create_jmp_instruction_script
 from patcher.models.models import PatchPattern, Instruction, Patch
+from patcher.patterns.general import get_friendship, set_chapter
 
 trapEventsPatternJP = [
     # TRAPEVENT1
@@ -885,6 +886,8 @@ special_spawn_conditions = PatchPattern(
 # TODO farfetch'd
 
 evAr04Zn02_Npc_Main_patterns = [
+    set_chapter,
+    get_friendship,
     trap_events,
     rhyperior_interaction,
     return_at11,

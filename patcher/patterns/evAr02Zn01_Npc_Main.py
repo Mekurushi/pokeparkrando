@@ -2,6 +2,7 @@ from patcher.helper.patttern_handler import get_num_skygarden_prisma_count_from_
     parse_pattern_bytes, compute_bl_to_function_script, create_lstr_script, \
     create_jmp_instruction_script
 from patcher.models.models import PatchPattern, Instruction, Patch
+from patcher.patterns.general import get_friendship, set_chapter
 
 string_section_start = PatchPattern(
     name="string section start",
@@ -91,30 +92,6 @@ run_interaction_dialog = PatchPattern(
             instruction_readable="ret -0x6"
         ),
 
-    ]
-)
-
-is_friend_function = PatchPattern(
-    name="is_friend_function",
-    description="patching is_friend function checks for location (bestfriend flag)",
-    patternJP=[
-        Instruction(
-            identifier=1, offset=0x0,
-            pattern=parse_pattern_bytes("00 04 00 07"),
-            instruction_readable="grow_stack 0x4"
-        ),
-        Instruction(
-            identifier=2, offset=0x4c,
-            pattern=parse_pattern_bytes("00 3d 00 10"),
-            instruction_readable="push 0x3d"
-        ),
-    ],
-    patchMapJP=[
-        Patch(
-            identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (0x004b0010).to_bytes(4, 'big'),
-            new_instruction_readable="push 0x4b"
-        ),
     ]
 )
 
@@ -3592,6 +3569,8 @@ custom_prisma_amount_function = PatchPattern(
     ]
 )
 evAr02Zn01_Npc_Main_pattern = [
+    set_chapter,
+    get_friendship,
     gate_open_logic,
     treehouse_additional_pokemon_spawn_conditions,
     treehouse_additional_pokemon_spawn_conditions2,
@@ -3600,7 +3579,6 @@ evAr02Zn01_Npc_Main_pattern = [
     powerup_bibarel_interaction,
     powerup_primeape_interaction,
     drifblim_interaction,
-    is_friend_function,
     mime_jr_interaction,
     abra_interaction,
     burmy_interaction,

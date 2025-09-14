@@ -1,5 +1,6 @@
 from patcher.helper.patttern_handler import get_attraction_id_from_dict, parse_pattern_bytes
 from patcher.models.models import PatchPattern, Instruction, Patch
+from patcher.patterns.general import get_friendship, set_chapter
 
 NPC_Venusaur = PatchPattern(
     name="Venusaur Interaction Logic",
@@ -141,5 +142,7 @@ NPC_Venusaur = PatchPattern(
 )
 
 evAr01Zn02_Npc_Main_patterns = [
+    set_chapter,
+    get_friendship,
     NPC_Venusaur
 ]

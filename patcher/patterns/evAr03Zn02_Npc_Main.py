@@ -1,6 +1,7 @@
 from patcher.helper.patttern_handler import create_lstr_script, get_num_battle_count_from_dict_as_instruction, \
     parse_pattern_bytes, create_jmp_instruction_script
 from patcher.models.models import PatchPattern, Instruction, Patch
+from patcher.patterns.general import get_friendship, set_chapter
 
 string_section_start = PatchPattern(
     name="string section start",
@@ -602,6 +603,8 @@ special_spawn_conditions2 = PatchPattern(
 )
 
 evAr03Zn02_Npc_Main_patterns = [
+    set_chapter,
+    get_friendship,
     lift_top,
     tree_talk_trap_event,
     mamoswine_unlock_event_entry,

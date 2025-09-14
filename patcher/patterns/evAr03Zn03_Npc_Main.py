@@ -1,5 +1,6 @@
 from patcher.helper.patttern_handler import get_attraction_id_from_dict, parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
+from patcher.patterns.general import get_friendship, set_chapter
 
 get_chapter = PatchPattern(
     name="get Chapter function in empoleon area",
@@ -222,6 +223,8 @@ empoleon_interaction = PatchPattern(
 )
 
 evAr03Zn03_Npc_Main_patterns = [
+    set_chapter,
+    get_friendship,
     get_chapter,
     return_at9,
     emopleon_friendship_event,

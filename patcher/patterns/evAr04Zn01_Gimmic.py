@@ -1,5 +1,6 @@
 from patcher.helper.patttern_handler import compute_bl_to_function_script, create_lstr_script, parse_pattern_bytes
 from patcher.models.models import PatchPattern, Instruction, Patch
+from patcher.patterns.general import get_friendship, set_chapter
 
 string_section_start = PatchPattern(
     name="string section start",
@@ -837,6 +838,8 @@ set_magnemite3_location_function = PatchPattern(
 )
 
 evAr04Zn01_Gimmic_patterns = [
+    set_chapter,
+    get_friendship,
     box_digda,
     box_coil1,
     box_coil2,

@@ -2,6 +2,7 @@ from patcher.helper.patttern_handler import get_attraction_id_from_dict, parse_p
     create_jmp_instruction_script, create_lstr_script, \
     compute_bl_to_function_script
 from patcher.models.models import Instruction, PatchPattern, Patch
+from patcher.patterns.general import get_friendship, set_chapter
 
 string_section_start = PatchPattern(
     name="string section start",
@@ -1342,6 +1343,8 @@ special_spawn_conditions = PatchPattern(
 )
 
 evAr03Zn01_Npc_Main_pattern = [
+    set_chapter,
+    get_friendship,
     # bidoof_quest_condition,
     # eEvent02090,
     # custom_prisma_check_function
