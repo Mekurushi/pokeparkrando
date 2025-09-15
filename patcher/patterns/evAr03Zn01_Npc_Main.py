@@ -1342,6 +1342,41 @@ special_spawn_conditions = PatchPattern(
     ]
 )
 
+wailord_interaction = PatchPattern(
+    name="wailord interaction",
+    description="making wailord quest doable",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 06 00 07"),
+            instruction_readable="grow_stack 0x6"
+        ),
+
+        # model id
+        Instruction(
+            identifier=2, offset=0x30, pattern=parse_pattern_bytes("00 7d 00 10"),
+            instruction_readable="push 0x7d"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x104, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_result"
+        ),
+
+        Instruction(
+            identifier=4, offset=0x108, pattern=parse_pattern_bytes("00 03 00 10"),
+            instruction_readable="push 0x3"
+        ),
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00030010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x3"
+        ),
+
+    ]
+)
+
 evAr03Zn01_Npc_Main_pattern = [
     set_chapter,
     get_friendship,
@@ -1352,6 +1387,7 @@ evAr03Zn01_Npc_Main_pattern = [
     psyduck_interaction,
     mudkip_interaction,
     feraligatr_interaction,
+    wailord_interaction,
 
     return_at7,
     return_at6,
