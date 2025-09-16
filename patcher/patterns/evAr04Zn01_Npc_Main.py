@@ -427,7 +427,10 @@ mawile_interaction = PatchPattern(
             identifier=4, offset=0x4c, pattern=parse_pattern_bytes("00 00 00 12"),
             instruction_readable="push_result"
         ),
-
+        Instruction(
+            identifier=5, offset=0x57c, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="push 0x1"
+        ),
     ],
     patchMapJP=[
         Patch(
@@ -439,6 +442,11 @@ mawile_interaction = PatchPattern(
             identifier=4,
             patch_function=lambda offset, data, plando_dict, matches: (0x0ffb0010).to_bytes(4, 'big'),
             new_instruction_readable="push 0xffb"  # always entering power comp
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x0"  # friendship cmp
         ),
     ]
 )
@@ -743,6 +751,280 @@ diglett_interaction = PatchPattern(
         ),
     ]
 )
+
+unknown_interaction = PatchPattern(  # TODO: find pokemon
+    name="unkown interaction",
+    description="removing hide and seek flag",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 09 00 07"),
+            instruction_readable="grow_stack 0x9"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x30, pattern=parse_pattern_bytes("00 d6 00 10"),
+            instruction_readable="push 0xd6"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x158, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_result"
+        ),
+        Instruction(
+            identifier=4, offset=0x234, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=5, offset=0x238, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=6, offset=0x23c, pattern=parse_pattern_bytes("ff fd 00 0b"),
+            instruction_readable="load_arg -0x3"
+        ),
+        Instruction(
+            identifier=7, offset=0x240, pattern=parse_pattern_bytes("00 00 00 10"),
+            instruction_readable="push 0x0"
+        ),
+        Instruction(
+            identifier=8, offset=0x244, pattern=parse_pattern_bytes("00 15 04 01"),
+            instruction_readable="SC4 0x0:0x15"
+        ),
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x1"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+    ]
+)
+
+unknown_interaction2 = PatchPattern(  # TODO: find pokemon
+    name="unkown interaction2",
+    description="removing hide and seek flag",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 09 00 07"),
+            instruction_readable="grow_stack 0x9"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x30, pattern=parse_pattern_bytes("00 d8 00 10"),
+            instruction_readable="push 0xd8"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x158, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_result"
+        ),
+        Instruction(
+            identifier=4, offset=0x234, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=5, offset=0x238, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=6, offset=0x23c, pattern=parse_pattern_bytes("ff fd 00 0b"),
+            instruction_readable="load_arg -0x3"
+        ),
+        Instruction(
+            identifier=7, offset=0x240, pattern=parse_pattern_bytes("00 00 00 10"),
+            instruction_readable="push 0x0"
+        ),
+        Instruction(
+            identifier=8, offset=0x244, pattern=parse_pattern_bytes("00 15 04 01"),
+            instruction_readable="SC4 0x0:0x15"
+        ),
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x1"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+    ]
+)
+
+unknown_interaction3 = PatchPattern(  # TODO: find pokemon
+    name="unkown interaction3",
+    description="removing hide and seek flag",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 09 00 07"),
+            instruction_readable="grow_stack 0x9"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x30, pattern=parse_pattern_bytes("00 eb 00 10"),
+            instruction_readable="push 0xeb"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x158, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_result"
+        ),
+        Instruction(
+            identifier=4, offset=0x264, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=5, offset=0x268, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=6, offset=0x26c, pattern=parse_pattern_bytes("ff fd 00 0b"),
+            instruction_readable="load_arg -0x3"
+        ),
+        Instruction(
+            identifier=7, offset=0x270, pattern=parse_pattern_bytes("00 00 00 10"),
+            instruction_readable="push 0x0"
+        ),
+        Instruction(
+            identifier=8, offset=0x274, pattern=parse_pattern_bytes("00 15 04 01"),
+            instruction_readable="SC4 0x0:0x15"
+        ),
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x1"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        ),
+    ]
+)
+
 evAr04Zn01_Npc_Main_patterns = [
     set_chapter,
     get_friendship,
@@ -758,8 +1040,9 @@ evAr04Zn01_Npc_Main_patterns = [
     marowak_interaction,
     dugtrio_interaction,
     diglett_interaction,
+    unknown_interaction,
+    unknown_interaction2,
+    unknown_interaction3,
 
     bastiodon_prisma_check_function
 ]
-
-# TODO: Mawile

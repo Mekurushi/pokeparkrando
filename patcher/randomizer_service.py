@@ -119,7 +119,7 @@ class PatcherService:
         minor = plando_version[1]
         patch = plando_version[2] if len(plando_version) > 2 else 0
 
-        patcher_major, patcher_minor, _ = VERSION
+        patcher_major, patcher_minor, patcher_patch = VERSION
 
         if major != patcher_major:
             raise Exception(
