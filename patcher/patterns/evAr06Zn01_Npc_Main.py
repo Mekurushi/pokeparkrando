@@ -734,38 +734,93 @@ special_spawn_conditions = PatchPattern(
         ),
 
         Instruction(
-            identifier=2, offset=0x1a0, pattern=parse_pattern_bytes("?? ?? ?? 13"),
-            instruction_readable="lstr f0301FuwarideTaxiStop"
+            identifier=2, offset=0x34, pattern=parse_pattern_bytes("ff fe 00 0b"),
+            instruction_readable="push 0x1b1"
         ),
         Instruction(
-            identifier=3, offset=0x1a4, pattern=parse_pattern_bytes("ff ff 00 0b"),
-            instruction_readable="load_arg -0x1"
+            identifier=3, offset=0x38, pattern=parse_pattern_bytes("1f 4a 00 10"),
+            instruction_readable="call fun_??????"
         ),
 
         Instruction(
-            identifier=4, offset=0x1a8, pattern=parse_pattern_bytes("00 01 00 10"),
-            instruction_readable="push 0x1"
+            identifier=4, offset=0x3c, pattern=parse_pattern_bytes("00 0b 00 16"),
+            instruction_readable="push 0x1b1"
         ),
         Instruction(
-            identifier=5, offset=0x1bc, pattern=parse_pattern_bytes("00 02 02 08"),
-            instruction_readable="jz"
+            identifier=5, offset=0x40, pattern=parse_pattern_bytes("00 14 02 08"),
+            instruction_readable="call fun_??????"
         ),
         Instruction(
-            identifier=6, offset=0x1c8, pattern=parse_pattern_bytes("00 04 00 06"),
-            instruction_readable="ret -0x4"
+            identifier=6, offset=0x44, pattern=parse_pattern_bytes("01 b1 00 10"),
+            instruction_readable="push_result"
+        ),
+        Instruction(
+            identifier=7, offset=0x48, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="store_arg -0x3"
+        ),
+        Instruction(
+            identifier=8, offset=0x4c, pattern=parse_pattern_bytes("01 b1 00 10"),
+            instruction_readable="push 0xfe4a"
         ),
     ],
     patchMapJP=[
 
         Patch(
-            identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
-                offset, 6, matches,
-                "jmp"
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00050010).to_bytes(
+                4,
+                'big'
             ),
-            new_instruction_readable="jmp"
+            new_instruction_readable="push 0x5"
         ),
-
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x1"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00060010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x6"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="load_arg -0x1"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: (0x002d0010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x2d"
+        ),
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00150501).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="SC5 0x0:0x15"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00040006).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="ret -0x4"
+        ),
     ]
 )
 
@@ -781,5 +836,5 @@ evAr06Zn01_Npc_Main_patterns = [
     return_at15,
     get_absol_friendship_location_state,
     get_salamence_friendship_location_state,
-    special_spawn_conditions
+    special_spawn_conditions,
 ]
