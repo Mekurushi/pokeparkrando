@@ -1,4 +1,5 @@
-from patcher.helper.patttern_handler import compute_bl_to_function_script, create_lstr_script, \
+from patcher.helper.patttern_handler import compute_bl_to_function_script, create_jmp_instruction_script, \
+    create_lstr_script, \
     get_attraction_id_from_dict, get_num_battle_count_from_dict_as_instruction, parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
 from patcher.patterns.general import get_friendship, set_chapter
@@ -14,6 +15,19 @@ string_section_start = PatchPattern(
         ),
 
     ],
+)
+
+f0502DoorA = PatchPattern(
+    name="ds f0502DoorA",
+    description="using f0502DoorA for lstr instructions",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0,
+            pattern=parse_pattern_bytes("66 30 35 30 32 44 6f 6f 72 41 00"),
+            instruction_readable="ds f0502DoorA"
+        ),
+
+    ]
 )
 
 globalManager = PatchPattern(
@@ -577,6 +591,246 @@ unknown_interaction2 = PatchPattern(
     ]
 )
 
+are_doors_unlocked = PatchPattern(
+    name="unused code space",
+    description="ap logic are doors unlocked state",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 3e 00 10"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=2, offset=0x4, pattern=parse_pattern_bytes("ff f7 00 0c"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=3, offset=0x8, pattern=parse_pattern_bytes("00 02 00 08"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=4, offset=0xc, pattern=parse_pattern_bytes("00 63 00 10"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=5, offset=0x10, pattern=parse_pattern_bytes("ff f7 00 0c"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=6, offset=0x14, pattern=parse_pattern_bytes("ff f7 00 0b"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=7, offset=0x18, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=8, offset=0x1c, pattern=parse_pattern_bytes("ff fd 00 0b"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=9, offset=0x20, pattern=parse_pattern_bytes("00 00 00 10"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=10, offset=0x24, pattern=parse_pattern_bytes("00 15 04 01"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=11, offset=0x28, pattern=parse_pattern_bytes("00 0a 00 06"),
+            instruction_readable="---"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=1,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010007).to_bytes(4, 'big'),
+            new_instruction_readable="grow_stack 0x1"
+        ),
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+                data, string_section_start,
+                globalManager
+            ),
+            new_instruction_readable="lstr GlobalManager"
+        ),
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+                offset, data,
+                get_module
+            ),
+            new_instruction_readable="call get_module()"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(4, 'big'),
+            new_instruction_readable="push_result"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0xffff000c).to_bytes(4, 'big'),
+            new_instruction_readable="store_arg -0x1"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+                data, string_section_start, f0502DoorA
+            ),
+            new_instruction_readable="lstr f0502DoorA"
+        ),
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(4, 'big'),
+            new_instruction_readable="load_arg -0x1"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x1"
+        ),
+        Patch(
+            identifier=9,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00150301).to_bytes(4, 'big'),
+            new_instruction_readable="SC3 0x0:0x15"
+        ),
+        Patch(
+            identifier=10,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(4, 'big'),
+            new_instruction_readable="push_result"
+        ),
+        Patch(
+            identifier=11,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00020106).to_bytes(4, 'big'),
+            new_instruction_readable="retv -0x2"
+        ),
+
+    ],
+)
+
+prepare_chase_ai = PatchPattern(
+    name="fix_chase_ai_haunted_zone",
+    description="updating wincounter with options",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 05 00 07"),
+            instruction_readable="grow_stack 0x5"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x4, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr Globalmanager"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x14, pattern=parse_pattern_bytes("00 00 00 10"),
+            instruction_readable="push 0x0"
+        ),
+        Instruction(
+            identifier=4, offset=0x18, pattern=parse_pattern_bytes("ff fe 00 0c"),
+            instruction_readable="store_arg -0x2"
+        ),
+        Instruction(
+            identifier=5, offset=0x1c, pattern=parse_pattern_bytes("00 00 00 10"),
+            instruction_readable="push 0x0"
+        ),
+        Instruction(
+            identifier=6, offset=0x20, pattern=parse_pattern_bytes("ff fd 00 0c"),
+            instruction_readable="store_arg -0x3"
+        ),
+        Instruction(
+            identifier=7, offset=0x24, pattern=parse_pattern_bytes("00 00 00 10"),
+            instruction_readable="push 0x0"
+        ),
+        Instruction(
+            identifier=8, offset=0x28, pattern=parse_pattern_bytes("ff fc 00 0c"),
+            instruction_readable="store_arg -0x4"
+        ),
+        Instruction(
+            identifier=9, offset=0x2c, pattern=parse_pattern_bytes("?? ?? ?? 19"),
+            instruction_readable="lea"
+        ),
+        Instruction(
+            identifier=10, offset=0x30, pattern=parse_pattern_bytes("?? ?? ?? 1a"),
+            instruction_readable="lw"
+        ),
+        Instruction(
+            identifier=11, offset=0x34, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=12, offset=0x38, pattern=parse_pattern_bytes("00 0b 00 16"),
+            instruction_readable="eq"
+        ),
+        Instruction(
+            identifier=13, offset=0x3c, pattern=parse_pattern_bytes("00 00 02 08"),
+            instruction_readable="jz"
+        ),
+        Instruction(
+            identifier=14, offset=0x40, pattern=parse_pattern_bytes("00 06 00 06"),
+            instruction_readable="ret -0x6"
+        ),
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+                offset, data, are_doors_unlocked
+            ),
+            new_instruction_readable="call are_doors_unlocked"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(4, 'big'),
+            new_instruction_readable="push_result"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
+                offset, 12, matches,
+                "jz"
+            ),
+            new_instruction_readable="jz"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00050010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x5"
+        ),
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00020010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x2"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00050010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x5"
+        ),
+        Patch(
+            identifier=9,
+            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(4, 'big'),
+            new_instruction_readable="load_arg -0x1"
+        ),
+        Patch(
+            identifier=10,
+            patch_function=lambda offset, data, plando_dict, matches: (0x002d0010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x2d"
+        ),
+        Patch(
+            identifier=11,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00150501).to_bytes(4, 'big'),
+            new_instruction_readable="SC5 0x0:0x15"
+        ),
+        Patch(
+            identifier=12,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00060006).to_bytes(4, 'big'),
+            new_instruction_readable="ret -0x6"
+        ),
+    ]
+)
+
 evAr05Zn02_Npc_Main_patterns = [
     set_chapter,
     get_friendship,
@@ -586,5 +840,8 @@ evAr05Zn02_Npc_Main_patterns = [
     get_dusknoir_friendship_location_state,
     spinarak_interaction,
     unknown_interaction,
-    unknown_interaction2
+    unknown_interaction2,
+    prepare_chase_ai,
+    are_doors_unlocked,
+
 ]
