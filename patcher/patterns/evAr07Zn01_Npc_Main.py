@@ -49,7 +49,7 @@ mew_power_competition_patternPALNA = [
     ),
 
     Instruction(
-        identifier=3, offset=0x1f6c, pattern=parse_pattern_bytes("00 00 00 12"),  # second postgame check
+        identifier=3, offset=0x1fc8, pattern=parse_pattern_bytes("00 00 00 12"),  # second postgame check
         instruction_readable="push_result"
     ),
 
