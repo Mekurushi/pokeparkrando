@@ -830,6 +830,7 @@ prepare_chase_ai = PatchPattern(
         ),
     ]
 )
+# TODO: Misdreavus
 
 evAr05Zn02_Npc_Main_patterns = [
     set_chapter,

@@ -1,4 +1,5 @@
-from patcher.helper.patttern_handler import compute_bl_to_function_script, create_lstr_script, parse_pattern_bytes
+from patcher.helper.patttern_handler import compute_bl_to_function_script, create_jmp_instruction_script, \
+    create_lstr_script, parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
 from patcher.patterns.general import get_friendship, set_chapter
 
@@ -472,7 +473,44 @@ box_yajilon_patternPALNA = [
         identifier=4, offset=0x6c, pattern=parse_pattern_bytes("?? ?? ?? 03"),
         instruction_readable="cal pokemon_unlock"
     ),
+    Instruction(
+        identifier=5, offset=0x34c, pattern=parse_pattern_bytes("ff fc 00 0b"),
+        instruction_readable="load_arg -0x4"
+    ),
+    Instruction(
+        identifier=6, offset=0x3f8, pattern=parse_pattern_bytes("?? ?? ?? 19"),
+        instruction_readable="lea"
+    ),
+]
 
+box_yajilon_patchMapPALNA = [
+    Patch(
+        identifier=2,
+        patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+            data, string_section_start, f0101FuwarideTaxiStop
+        ),
+        new_instruction_readable="lstr f0402ClearDosidon"
+    ),
+    Patch(
+        identifier=3,
+        patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+        new_instruction_readable="push 0x1"  # flag request opcode
+    ),
+
+    Patch(
+        identifier=4,
+        patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            offset, data, set_baltoy_location_function
+        ),
+        new_instruction_readable="call set_baltoy_location_function"
+    ),
+    Patch(
+        identifier=5,
+        patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
+            offset, 6, matches, "jmp"
+        ),
+        new_instruction_readable="jmp"
+    ),
 ]
 
 box_yajilon = PatchPattern(
@@ -521,7 +559,9 @@ box_yajilon = PatchPattern(
             ),
             new_instruction_readable="call set_baltoy_location_function"
         ),
-    ]
+    ],
+    patchMapPAL=box_yajilon_patchMapPALNA,
+    patchMapNA=box_yajilon_patchMapPALNA
 )
 
 evAr04Zn02_Gimmic_patterns = [
