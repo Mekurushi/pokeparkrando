@@ -289,20 +289,23 @@ piloswine_talk_event = PatchPattern(
             identifier=2, offset=0x4, pattern=parse_pattern_bytes("?? ?? ?? 13"),
             instruction_readable="lstr EventScript"
         ),
-
         Instruction(
-            identifier=3, offset=0x2a0, pattern=parse_pattern_bytes("00 10 00 06"),
+            identifier=3, offset=0x284, pattern=parse_pattern_bytes("?? ?? ?? 19"),
+            instruction_readable="lea"
+        ),
+        Instruction(
+            identifier=4, offset=0x2a0, pattern=parse_pattern_bytes("00 10 00 06"),
             instruction_readable="ret -0x10"
         ),
     ],
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00100006).to_bytes(
-                4,
-                'big'
+            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
+                offset, 3, matches,
+                "jmp"
             ),
-            new_instruction_readable="delay0"
+            new_instruction_readable="jmp"
         ),
 
     ]
