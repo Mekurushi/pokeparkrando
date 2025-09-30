@@ -1632,11 +1632,59 @@ global_manager_v_table = PatchPattern(
     ]
 )
 
+ai_difficulty_logic = PatchPattern(
+    name="ai difficulty",
+    description="modifying ai difficulty based on option",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("94 21 ff e0"),
+            instruction_readable="stwu r1,local_20(r1)"
+        ),
+        Instruction(
+            identifier=2, offset=0x4, pattern=parse_pattern_bytes("7c 08 02 a6"),
+            instruction_readable="mfspr r0,LR"
+        ),
+        Instruction(
+            identifier=3, offset=0x8, pattern=parse_pattern_bytes("90 01 00 24"),
+            instruction_readable="stw r0,local_res4(r1)"
+        ),
+        Instruction(
+            identifier=4, offset=0xc, pattern=parse_pattern_bytes("93 e1 00 1c"),
+            instruction_readable="stw r31,local_4(r1)"
+        ),
+        Instruction(
+            identifier=5, offset=0x10, pattern=parse_pattern_bytes("93 c1 00 18"),
+            instruction_readable="stw r30,local_8(r1)"
+        ),
+        Instruction(
+            identifier=6, offset=0x14, pattern=parse_pattern_bytes("7c 9e 23 78"),
+            instruction_readable="or r30,r4,r4"
+        ),
+        Instruction(
+            identifier=7, offset=0x4c, pattern=parse_pattern_bytes("48 ?? ?? ??"),
+            instruction_readable="bl get_friendship"
+        ),
+        Instruction(
+            identifier=8, offset=0xa4, pattern=parse_pattern_bytes("4e 80 00 20"),
+            instruction_readable="blr"
+        ),
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: (0x38600000).to_bytes(4, 'big'),
+            new_instruction_readable="li r3, 0"
+        )
+
+    ],
+)
+
 main_dol_pattern = [
     custom_give_item_function_call_pattern,
     custom_give_item_function_pattern,
     stage_setup_new_file_pattern,
     setup_new_file_pattern,
+    ai_difficulty_logic,
 
     global_manager_v_table,
     custom_global_manager_syscall_handler_wrapper
