@@ -1002,6 +1002,18 @@ def get_beach_zone_patches() -> List[FilePatchConfig]:
     )
     patches.append(field_Ar03Zn01_npc_script_config)
 
+    attraction_ranking = FilePatchConfig(
+        file_id="attraction_prep",
+        description="unlock unused attraction records",
+        processing_type=FileProcessingType.DacCopyFilePatcher,
+        file_group=[("DATA/files/Archive/PrepareSceneDat.dac", "Global/Attraction/AttractionRanking16.rlb",
+                     "Global/Attraction/AttractionRanking08.rlb"),
+                    ("DATA/files/Archive/PrepareSceneDat.dac", "Global/Attraction/AttractionRanking16.rlb",
+                     "Global/Attraction/AttractionRanking14.rlb"),
+                    ],
+    )
+    patches.append(attraction_ranking)
+
     return patches
 
 

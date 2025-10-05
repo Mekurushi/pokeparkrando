@@ -233,6 +233,19 @@ def get_global_manager_syscall_handler_wrapper(data: bytearray):
     return address.to_bytes(4, 'big')
 
 
+def get_enemy_ai_option(plando_dict):
+    enemy_ai_option: str = plando_dict["Options"]["harder_enemy_ai"]
+    if enemy_ai_option == 0:
+        return (0x38600000).to_bytes(4, 'big')
+        # li r3, 0
+    if enemy_ai_option == 1:
+        return (0x38600001).to_bytes(4, 'big')
+        # li r3, 1
+    raise ValueError(
+        f"unknown option value for harder_enemy_ai value: {enemy_ai_option}"
+    )
+
+
 stage_setup_new_file_pattern = PatchPattern(
     name="Stage Setup new File",
     description="changing start zone to 02010005 (Treehouse Drifblim)",
@@ -1672,8 +1685,64 @@ ai_difficulty_logic = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: (0x38600000).to_bytes(4, 'big'),
-            new_instruction_readable="li r3, 0"
+            patch_function=lambda offset, data, plando_dict, matches: get_enemy_ai_option(plando_dict),
+            new_instruction_readable="li r3, 0|1"
+        )
+
+    ],
+)
+
+attraction_record_unlock = PatchPattern(
+    name="attraction record unlock",
+    description="removing skip for removed attractions",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("94 21 ff 60"),
+            instruction_readable="stwu r1,local_a0(r1)"
+        ),
+        Instruction(
+            identifier=2, offset=0x4, pattern=parse_pattern_bytes("7c 08 02 a6"),
+            instruction_readable="mfspr r0,LR"
+        ),
+        Instruction(
+            identifier=3, offset=0x8, pattern=parse_pattern_bytes("90 01 00 a4"),
+            instruction_readable="stw r0,local_res4(r1)"
+        ),
+        Instruction(
+            identifier=4, offset=0xc, pattern=parse_pattern_bytes("93 e1 00 9c"),
+            instruction_readable="stw r31,local_4(r1)"
+        ),
+        Instruction(
+            identifier=5, offset=0x10, pattern=parse_pattern_bytes("7c 7f 1b 78"),
+            instruction_readable="mr r31, r3"
+        ),
+        Instruction(
+            identifier=6, offset=0x14, pattern=parse_pattern_bytes("93 c1 00 98"),
+            instruction_readable="stw r30,local_8(r1)"
+        ),
+        Instruction(
+            identifier=7, offset=0x144, pattern=parse_pattern_bytes("2c 1e 00 07"),
+            instruction_readable="cmpwi r30,0x7"
+        ),
+        Instruction(
+            identifier=8, offset=0x14c, pattern=parse_pattern_bytes("2c 1e 00 0d"),
+            instruction_readable="cmpwi r30,0xd"
+        ),
+        Instruction(
+            identifier=9, offset=0x1dc, pattern=parse_pattern_bytes("4e 80 00 20"),
+            instruction_readable="blr"
+        ),
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: (0x2c1e00ff).to_bytes(4, 'big'),
+            new_instruction_readable="cmpwi r30,0xff"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: (0x2c1e00ff).to_bytes(4, 'big'),
+            new_instruction_readable="cmpwi r30,0xff"
         )
 
     ],
@@ -1685,6 +1754,7 @@ main_dol_pattern = [
     stage_setup_new_file_pattern,
     setup_new_file_pattern,
     ai_difficulty_logic,
+    attraction_record_unlock,
 
     global_manager_v_table,
     custom_global_manager_syscall_handler_wrapper

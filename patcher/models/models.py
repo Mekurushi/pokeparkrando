@@ -18,16 +18,18 @@ class Patch:
     patch_function: Callable[[[Any], [Any], [Any], [Any]], bytes]
     new_instruction_readable: str
 
+
 @dataclass
 class MemoryData:
     address: int
     value: bytes
 
+
 @dataclass
 class PatternMatch:
     """Represents a single pattern match"""
     base_address: int
-    matched_instructions: dict[int,MemoryData]
+    matched_instructions: dict[int, MemoryData]
 
 
 @dataclass
@@ -76,7 +78,8 @@ class PatchPattern:
         # Ensure anchor pattern contains only integers (no None wildcards)
         if any(byte is None for byte in anchor_pattern.pattern):
             raise ValueError(
-                f"Anchor pattern (instruction '{anchor_pattern.identifier}') must contain only integers, no wildcards (None)")
+                f"Anchor pattern (instruction '{anchor_pattern.identifier}') must contain only integers, no wildcards (None)"
+            )
 
     def get_patchmap(self):
         if self.matchesPAL:
@@ -98,7 +101,7 @@ class PatchPattern:
         else:
             raise ValueError(
                 f"No valid matches available for pattern '{self.name}' - search_all_pattern() may not have been called"
-                )
+            )
 
     def get_matched_region(self) -> str:
         """Get the name of the region that has matches"""
@@ -120,11 +123,13 @@ class PatchPattern:
         else:
             return regions_with_matches[0]
 
+
 class FileProcessingType(Enum):
     """Defines different types of file processing needed"""
     NESTED_DAC_U8 = "nested_dac_u8"
     MAIN_DOL = "main_dol"
     DAC_U8 = "dac_u8"
+    DacCopyFilePatcher = "dac_copy_file"
 
 
 @dataclass
@@ -137,8 +142,6 @@ class PatchOperation:
     description: str = ""
 
 
-
-
 class ProgressCallback(Protocol):
     def __call__(self, message: str, progress: int) -> None: ...
 
@@ -149,13 +152,15 @@ class FilePatchConfig:
     description: str
     processing_type: FileProcessingType
 
-    patch_patterns:List[PatchPattern] = None
+    patch_patterns: List[PatchPattern] = None
     file_group: List[Tuple[str, str, str]] = None
+
     def __post_init__(self):
         if self.patch_patterns is None:
             self.patch_operations = []
         if self.file_group is None:
             self.file_group = []
+
 
 @dataclass
 class PatchRequest:

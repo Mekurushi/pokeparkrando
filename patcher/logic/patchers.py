@@ -36,20 +36,11 @@ class BasePatcher(ABC):
 
         return None
 
-    def _create_backup(self, file_path: Path) -> Path:
-        """Create a backup of the file"""
-        backup_path = file_path.with_suffix(file_path.suffix + '.backup')
-        shutil.copy2(file_path, backup_path)
-        self.backup_files.append(backup_path)
-        return backup_path
-
     def _apply_patch_operations(self, file_path: Path) -> bool:
         """Apply pattern-based binary patches directly to the file"""
         if not self.config.patch_patterns:
             print(f"Warning: No patch patterns defined for {self.config.file_id}")
             return True
-
-        backup_path = self._create_backup(file_path)
 
         try:
             with open(file_path, "rb") as f:
@@ -96,10 +87,6 @@ class BasePatcher(ABC):
                 f.write(file_data)
 
             print(f"Patched file saved: {file_path}")
-
-            if backup_path and backup_path.exists():
-                backup_path.unlink()
-                print(f"Backup cleaned up: {backup_path}")
             return True
 
         except Exception as e:
@@ -187,9 +174,6 @@ class NestedDacU8Patcher(BasePatcher):
                 # Step 7: Recompress and write back to DAC
                 progress_callback(f"Recompressing DAC file", 95)
 
-                # Create backup of original DAC
-                self._create_backup(dac_file_path)
-
                 compressed_data = nlzss11.compress(main_packed_data)
 
                 with open(dac_file_path, 'wb') as f:
@@ -264,9 +248,6 @@ class DacU8Patcher(BasePatcher):
                 # Step 7: Recompress and write back to DAC
                 progress_callback(f"Recompressing DAC file", 95)
 
-                # Create backup of original DAC
-                self._create_backup(dac_file_path)
-
                 compressed_data = nlzss11.compress(main_packed_data)
 
                 with open(dac_file_path, 'wb') as f:
@@ -320,6 +301,97 @@ class MainDolPatcher(BasePatcher):
                 shutil.rmtree(temp_dir, ignore_errors=True)
 
 
+class DacCopyFilePatcher(BasePatcher):
+
+    def process_file(self, extract_dir: Path, progress_callback: ProgressCallback) -> bool:
+        progress_callback(f"Processing nested DAC/U8: {self.config.description}", 0)
+        for index, (primary_file_path, source_file_path, target_file_path) in enumerate(self.config.file_group):
+
+            dac_file_path = self._find_file(extract_dir, primary_file_path)
+
+            if not dac_file_path:
+                print(f"DAC file not found for {self.config.file_id}: {primary_file_path}")
+                return index == 1
+            filename = primary_file_path.split("/")[-1].split(".")[0]
+            temp_dir = self.work_dir / f"temp_{self.config.file_id}_{filename}"
+            u8_main_dir = temp_dir / "u8_main"
+            temp_dir.mkdir(parents=True, exist_ok=True)
+            try:
+                # Step 1: Decompress DAC file
+                progress_callback(f"Decompressing {dac_file_path.name}", 10)
+
+                with open(dac_file_path, 'rb') as f:
+                    dac_data = f.read()
+
+                decompressed_data = nlzss11.decompress(dac_data)
+                decompressed_bin = temp_dir / "decompressed.bin"
+
+                with open(decompressed_bin, 'wb') as f:
+                    f.write(decompressed_data)
+
+                # Step 2: Extract main U8 archive
+                progress_callback(f"Extracting main U8 archive", 25)
+
+                if not decompressed_data.startswith(b'U\xaa8-'):
+                    raise Exception("Decompressed data is not a valid U8 archive")
+
+                libWiiPy.archive.extract_u8(decompressed_data, str(u8_main_dir))
+
+                # Step 4: copy file to target path
+                progress_callback(f"Applying patches", 55)
+
+                source_file_path = u8_main_dir / source_file_path
+                target_file_path = u8_main_dir / target_file_path
+
+                if not self.copy_file(source_file_path, target_file_path):
+                    return False
+
+                # Step 6: Repack main archive
+                progress_callback(f"Repacking main archive", 85)
+
+                main_packed_data = libWiiPy.archive.pack_u8(str(u8_main_dir))
+
+                # Step 7: Recompress and write back to DAC
+                progress_callback(f"Recompressing DAC file", 95)
+
+                compressed_data = nlzss11.compress(main_packed_data)
+
+                with open(dac_file_path, 'wb') as f:
+                    f.write(compressed_data)
+
+                progress_callback(f"Completed {self.config.description}", 100)
+
+            except Exception as e:
+                print(f"Nested DAC/U8 processing failed for {self.config.file_id}: {e}")
+                print(f"Error in patcher: {self.__class__.__name__}")
+                print("Full stack trace:")
+                print(traceback.format_exc())
+                return False
+            finally:
+                # Cleanup temp directory
+                if temp_dir.exists():
+                    shutil.rmtree(temp_dir, ignore_errors=True)
+        return True
+
+    def copy_file(self, source: Path, target: Path):
+        try:
+
+            if not source.exists():
+                raise FileNotFoundError(f"Source file not found: {source}")
+
+            if not source.is_file():
+                raise IsADirectoryError(f"Source path is not a file: {target}")
+
+            shutil.copy2(source, target)
+            return True
+        except Exception as e:
+            print(f"Copy operation failed for {self.config.file_id}: {e}")
+            print(f"Error in patcher: {self.__class__.__name__}")
+            print("Full stack trace:")
+            print(traceback.format_exc())
+            return False
+
+
 class PatcherFactory:
     @staticmethod
     def create_patcher(config: FilePatchConfig, work_dir: Path, plando_dict) -> BasePatcher:
@@ -329,5 +401,7 @@ class PatcherFactory:
             return MainDolPatcher(config, work_dir, plando_dict)
         elif config.processing_type == FileProcessingType.DAC_U8:
             return DacU8Patcher(config, work_dir, plando_dict)
+        elif config.processing_type == FileProcessingType.DacCopyFilePatcher:
+            return DacCopyFilePatcher(config, work_dir, plando_dict)
         else:
             raise ValueError(f"Unknown processing type: {config.processing_type}")
