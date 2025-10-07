@@ -2,7 +2,7 @@ from patcher.helper.patttern_handler import compute_bl_to_function_script, creat
     create_lstr_script, \
     get_attraction_id_from_dict, get_num_battle_count_from_dict_as_instruction, parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
-from patcher.patterns.general import get_friendship, set_chapter
+from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
 
 string_section_start = PatchPattern(
     name="string section start",
@@ -15,40 +15,6 @@ string_section_start = PatchPattern(
         ),
 
     ],
-)
-
-globalManager = PatchPattern(
-    name="ds GlobalManager",
-    description="using GlobalManager for lstr instructions",
-    patternJP=[
-        Instruction(
-            identifier=1, offset=0x0,
-            pattern=parse_pattern_bytes("47 6c 6f 62 61 6c 4d 61 6e 61 67 65 72 00"),
-            instruction_readable="ds GlobalManager"
-        ),
-
-    ]
-)
-get_module = PatchPattern(
-    name="get module",
-    description="using get module for calls",
-    patternJP=[
-        Instruction(
-            identifier=1, offset=0x0,
-            pattern=parse_pattern_bytes("00 01 00 07"),
-            instruction_readable="grow_stack 0x1"
-        ),
-        Instruction(
-            identifier=2, offset=0x4,
-            pattern=parse_pattern_bytes("00 00 00 0b"),
-            instruction_readable="load_arg 0x0"
-        ),
-        Instruction(
-            identifier=3, offset=0x8,
-            pattern=parse_pattern_bytes("00 10 01 01"),
-            instruction_readable="SC1 0x0:0x10"
-        ),
-    ]
 )
 
 absol_interaction = PatchPattern(
