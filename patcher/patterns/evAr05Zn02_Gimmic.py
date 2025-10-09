@@ -1,4 +1,4 @@
-from patcher.helper.patttern_handler import compute_bl_to_function_script, create_lstr_script, parse_pattern_bytes
+from patcher.helper.patttern_handler import compute_call_to_function_script, create_lstr_script, parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
 
@@ -104,7 +104,7 @@ set_voltorb_location_function = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, get_module
             ),
             new_instruction_readable="call get_module"
@@ -237,7 +237,7 @@ JAR_BIRIRI = PatchPattern(
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, set_voltorb_location_function
             ),
             new_instruction_readable="call set_voltorb_location_function"

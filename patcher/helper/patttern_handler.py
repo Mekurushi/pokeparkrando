@@ -84,7 +84,7 @@ def search_all_pattern(data: bytearray, patch_def: PatchPattern):
     print(f"Pattern {patch_def.name} matched in region: {patch_def.get_matched_region()}")
 
 
-def compute_bl_to_function_script(offset: int, data: bytearray, target_function_pattern: PatchPattern):
+def compute_call_to_function_script(offset: int, data: bytearray, target_function_pattern: PatchPattern):
     target_function_match = search_pattern(data, target_function_pattern.patternJP)
     new_function_address = target_function_match[0].base_address
     branch_offset = new_function_address - (offset + 0x4)

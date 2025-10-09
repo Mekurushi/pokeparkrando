@@ -1,4 +1,4 @@
-from patcher.helper.patttern_handler import compute_bl_to_function_script, create_jmp_instruction_script, \
+from patcher.helper.patttern_handler import compute_call_to_function_script, create_jmp_instruction_script, \
     create_lstr_script, \
     get_attraction_id_from_dict, get_num_battle_count_from_dict_as_instruction, parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
@@ -78,55 +78,55 @@ get_dusknoir_friendship_location_state = PatchPattern(
     description="get bestfriend for dusknoir",
     patternJP=[
         Instruction(
-            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 01 00 10"),
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 09 00 07"),
             instruction_readable="---"
         ),
         Instruction(
-            identifier=2, offset=0x4, pattern=parse_pattern_bytes("ff fe 00 0b"),
+            identifier=2, offset=0x4, pattern=parse_pattern_bytes("?? ?? ?? 13"),
             instruction_readable="---"
         ),
         Instruction(
-            identifier=3, offset=0x8, pattern=parse_pattern_bytes("00 03 00 10"),
+            identifier=3, offset=0x8, pattern=parse_pattern_bytes("?? ?? ?? 03"),
             instruction_readable="---"
         ),
         Instruction(
-            identifier=4, offset=0xc, pattern=parse_pattern_bytes("00 15 03 01"),
+            identifier=4, offset=0xc, pattern=parse_pattern_bytes("00 00 00 12"),
             instruction_readable="---"
         ),
         Instruction(
-            identifier=5, offset=0x10, pattern=parse_pattern_bytes("00 00 00 10"),
+            identifier=5, offset=0x10, pattern=parse_pattern_bytes("ff ff 00 0c"),
             instruction_readable="---"
         ),
         Instruction(
-            identifier=6, offset=0x14, pattern=parse_pattern_bytes("ff ff 00 0b"),
+            identifier=6, offset=0x14, pattern=parse_pattern_bytes("?? ?? ?? 13"),
             instruction_readable="---"
         ),
         Instruction(
-            identifier=7, offset=0x18, pattern=parse_pattern_bytes("00 00 00 10"),
+            identifier=7, offset=0x18, pattern=parse_pattern_bytes("?? ?? ?? 03"),
             instruction_readable="---"
         ),
         Instruction(
-            identifier=8, offset=0x1c, pattern=parse_pattern_bytes("00 15 03 01"),
+            identifier=8, offset=0x1c, pattern=parse_pattern_bytes("00 00 00 12"),
             instruction_readable="---"
         ),
         Instruction(
-            identifier=9, offset=0x20, pattern=parse_pattern_bytes("00 01 00 10"),
+            identifier=9, offset=0x20, pattern=parse_pattern_bytes("ff fe 00 0c"),
             instruction_readable="---"
         ),
         Instruction(
-            identifier=10, offset=0x24, pattern=parse_pattern_bytes("ff ff 00 0b"),
+            identifier=10, offset=0x24, pattern=parse_pattern_bytes("00 00 00 10"),
             instruction_readable="---"
         ),
         Instruction(
-            identifier=11, offset=0x28, pattern=parse_pattern_bytes("00 05 00 10"),
+            identifier=11, offset=0x28, pattern=parse_pattern_bytes("ff ff 00 0b"),
             instruction_readable="---"
         ),
         Instruction(
-            identifier=12, offset=0x2c, pattern=parse_pattern_bytes("00 15 03 01"),
+            identifier=12, offset=0x2c, pattern=parse_pattern_bytes("00 28 00 10"),
             instruction_readable="---"
         ),
         Instruction(
-            identifier=13, offset=0x30, pattern=parse_pattern_bytes("00 02 00 06"),
+            identifier=13, offset=0x30, pattern=parse_pattern_bytes("00 15 03 01"),
             instruction_readable="---"
         ),
 
@@ -134,11 +134,11 @@ get_dusknoir_friendship_location_state = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00020007).to_bytes(
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010007).to_bytes(
                 4,
                 'big'
             ),
-            new_instruction_readable="grow_stack 0x2"
+            new_instruction_readable="grow_stack 0x1"
         ),
         Patch(
             identifier=2,
@@ -149,7 +149,7 @@ get_dusknoir_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, get_module
             ),
             new_instruction_readable="call get_module"
@@ -246,13 +246,16 @@ return_at05_patternPALNA = [
         identifier=2, offset=0x84, pattern=parse_pattern_bytes("01 81 00 10"),
         instruction_readable="push 0x181"
     ),
-
     Instruction(
-        identifier=3, offset=0xe8, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+        identifier=3, offset=0xe4, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+        instruction_readable="call FUN_??????"
+    ),
+    Instruction(
+        identifier=4, offset=0xe8, pattern=parse_pattern_bytes("?? ?? ?? 03"),
         instruction_readable="call get_chapter"
     ),
     Instruction(
-        identifier=4, offset=0x13c, pattern=parse_pattern_bytes("1b b2 00 10"),
+        identifier=5, offset=0x13c, pattern=parse_pattern_bytes("1b b2 00 10"),
         instruction_readable="push 0x1bb2"
     ),
 
@@ -266,17 +269,23 @@ return_at05 = PatchPattern(
             identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 07 00 07"),
             instruction_readable="grow_stack 0x7"
         ),
+
         Instruction(
             identifier=2, offset=0x7c, pattern=parse_pattern_bytes("01 81 00 10"),
             instruction_readable="push 0x181"
         ),
 
         Instruction(
-            identifier=3, offset=0xe0, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            identifier=3, offset=0xdc, pattern=parse_pattern_bytes("?? ?? ?? 03"),
             instruction_readable="call get_chapter"
         ),
         Instruction(
-            identifier=4, offset=0x134, pattern=parse_pattern_bytes("1b b2 00 10"),
+            identifier=4, offset=0xe0, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call get_chapter"
+        ),
+
+        Instruction(
+            identifier=5, offset=0x134, pattern=parse_pattern_bytes("1b b2 00 10"),
             instruction_readable="push 0x1bb2"
         ),
 
@@ -284,15 +293,24 @@ return_at05 = PatchPattern(
     patternPAL=return_at05_patternPALNA,
     patternNA=return_at05_patternPALNA,
     patchMapJP=[
+
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
-                offset, data, get_dusknoir_friendship_location_state
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(
+                4,
+                'big'
             ),
-            new_instruction_readable="call get_dusknoir_friendship_location_state"
+            new_instruction_readable="push 0x0"  # this somehow fixes the dusknoir crash
         ),
         Patch(
             identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, get_dusknoir_friendship_location_state
+            ),
+            new_instruction_readable="call get_dusknoir_friendship"
+        ),
+        Patch(
+            identifier=5,
             patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(
                 4,
                 'big'
@@ -623,7 +641,7 @@ are_doors_unlocked = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 get_module
             ),
@@ -741,7 +759,7 @@ prepare_chase_ai = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, are_doors_unlocked
             ),
             new_instruction_readable="call are_doors_unlocked"

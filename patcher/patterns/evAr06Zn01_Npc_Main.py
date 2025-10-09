@@ -1,4 +1,4 @@
-from patcher.helper.patttern_handler import compute_bl_to_function_script, create_jmp_instruction_script, \
+from patcher.helper.patttern_handler import compute_call_to_function_script, create_jmp_instruction_script, \
     create_lstr_script, \
     get_attraction_id_from_dict, get_num_battle_count_from_dict_as_instruction, parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
@@ -123,7 +123,7 @@ get_salamence_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, get_module
             ),
             new_instruction_readable="call get_module"
@@ -287,7 +287,7 @@ get_absol_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, get_module
             ),
             new_instruction_readable="call get_module"
@@ -424,7 +424,7 @@ return_at01 = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, get_absol_friendship_location_state
             ),
             new_instruction_readable="call get_absol_friendship_location_state"
@@ -540,7 +540,7 @@ return_at15 = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, get_salamence_friendship_location_state
             ),
             new_instruction_readable="call get_salamence_friendship_location_state"

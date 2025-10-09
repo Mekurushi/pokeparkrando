@@ -1,4 +1,4 @@
-from patcher.helper.patttern_handler import compute_bl_to_function_script, create_lstr_script, \
+from patcher.helper.patttern_handler import compute_call_to_function_script, create_lstr_script, \
     get_attraction_id_from_dict, parse_pattern_bytes, \
     create_jmp_instruction_script
 from patcher.models.models import PatchPattern, Instruction, Patch
@@ -205,7 +205,7 @@ get_tangrowth_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, get_module
             ),
             new_instruction_readable="call get_module"
@@ -342,7 +342,7 @@ return_at04 = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, get_tangrowth_friendship_location_state
             ),
             new_instruction_readable="call get_tangrowth_friendship_location"

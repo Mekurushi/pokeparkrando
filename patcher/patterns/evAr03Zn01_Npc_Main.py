@@ -1,6 +1,6 @@
 from patcher.helper.patttern_handler import get_attraction_id_from_dict, parse_pattern_bytes, \
     create_jmp_instruction_script, create_lstr_script, \
-    compute_bl_to_function_script
+    compute_call_to_function_script
 from patcher.models.models import Instruction, PatchPattern, Patch
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
 
@@ -117,7 +117,7 @@ custom_prisma_check_function = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 get_module
             ),
@@ -356,7 +356,7 @@ bidoof_quest_condition = PatchPattern(
         ),
         Patch(
             identifier=17,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, eEvent02090
             ),
             new_instruction_readable="call event"
@@ -422,7 +422,7 @@ piplup_interaction = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, set_bestfriend
             ),
             new_instruction_readable="call set_bestfriend"
@@ -1413,7 +1413,7 @@ set_attraction_record = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 get_module
             ),
@@ -1525,7 +1525,7 @@ starly_interaction = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, set_attraction_record
             ) if
             plando_dict["Options"]["each_zone"] else None,
@@ -1598,7 +1598,7 @@ starly2_interaction = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, set_attraction_record
             ) if
             plando_dict["Options"]["each_zone"] else None,
@@ -1671,7 +1671,7 @@ starly3_interaction = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, set_attraction_record
             ) if
             plando_dict["Options"]["each_zone"] else None,

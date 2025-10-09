@@ -1,4 +1,4 @@
-from patcher.helper.patttern_handler import compute_bl_to_function_script, create_jmp_instruction_script, \
+from patcher.helper.patttern_handler import compute_call_to_function_script, create_jmp_instruction_script, \
     create_lstr_script, parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
@@ -157,7 +157,7 @@ set_golem_location_function = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, get_module
             ),
             new_instruction_readable="call get_module"
@@ -295,7 +295,7 @@ set_baltoy_location_function = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, get_module
             ),
             new_instruction_readable="call get_module"
@@ -414,7 +414,7 @@ yokoro = PatchPattern(
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, set_golem_location_function
             ),
             new_instruction_readable="call set_golem_location"
@@ -466,7 +466,7 @@ box_yajilon_patchMapPALNA = [
 
     Patch(
         identifier=4,
-        patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+        patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
             offset, data, set_baltoy_location_function
         ),
         new_instruction_readable="call set_baltoy_location_function"
@@ -521,7 +521,7 @@ box_yajilon = PatchPattern(
 
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, set_baltoy_location_function
             ),
             new_instruction_readable="call set_baltoy_location_function"

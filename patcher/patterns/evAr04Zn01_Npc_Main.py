@@ -1,4 +1,4 @@
-from patcher.helper.patttern_handler import compute_bl_to_function_script, create_lstr_script, \
+from patcher.helper.patttern_handler import compute_call_to_function_script, create_lstr_script, \
     get_attraction_id_from_dict, \
     get_num_battle_count_from_dict_as_instruction, \
     parse_pattern_bytes, \
@@ -563,7 +563,7 @@ bastiodon_prisma_check_function = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 get_module
             ),
@@ -643,7 +643,7 @@ dugtrio_interaction = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, bastiodon_prisma_check_function
             ),
             new_instruction_readable="call get_bastiodon_prisma"
@@ -695,7 +695,7 @@ diglett_interaction = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, bastiodon_prisma_check_function
             ),
             new_instruction_readable="call get_bastiodon_prisma"

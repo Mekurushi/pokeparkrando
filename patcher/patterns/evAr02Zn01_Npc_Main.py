@@ -1,5 +1,5 @@
 from patcher.helper.patttern_handler import get_num_skygarden_prisma_count_from_dict_as_instruction, \
-    parse_pattern_bytes, compute_bl_to_function_script, create_lstr_script, \
+    parse_pattern_bytes, compute_call_to_function_script, create_lstr_script, \
     create_jmp_instruction_script
 from patcher.models.models import PatchPattern, Instruction, Patch
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
@@ -253,7 +253,7 @@ gate_open_logic = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 custom_prisma_check_function
             ),
@@ -274,7 +274,7 @@ gate_open_logic = PatchPattern(
         ),
         Patch(
             identifier=11,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 custom_prisma_check_function
             ),
@@ -294,7 +294,7 @@ gate_open_logic = PatchPattern(
         ),
         Patch(
             identifier=18,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 custom_prisma_check_function
             ),
@@ -315,7 +315,7 @@ gate_open_logic = PatchPattern(
         ),
         Patch(
             identifier=25,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 custom_prisma_check_function
             ),
@@ -414,7 +414,7 @@ custom_prisma_check_function = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 get_module
             ),
@@ -542,7 +542,7 @@ treehouse_additional_pokemon_spawn_conditions = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 custom_prisma_check_function
             ),
@@ -657,7 +657,7 @@ treehouse_additional_pokemon_spawn_conditions2 = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 custom_prisma_check_function
             ),
@@ -2086,7 +2086,7 @@ abra_interaction = PatchPattern(
 
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, set_best_friend_function
             ),
             new_instruction_readable="call set_best_friend"
@@ -2405,7 +2405,7 @@ piplup_interaction = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, custom_prisma_amount_function
             ),
             new_instruction_readable="call get_prisma_amount"
@@ -2447,7 +2447,7 @@ piplup_interaction = PatchPattern(
         ),
         Patch(
             identifier=9,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, run_interaction_dialog
             ),
             new_instruction_readable="call run_interaction_dialog"
@@ -2474,7 +2474,7 @@ piplup_interaction = PatchPattern(
         ),
         Patch(
             identifier=13,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, run_interaction_dialog
             ),
             new_instruction_readable="call run_interaction_dialog"
@@ -2490,7 +2490,7 @@ piplup_interaction = PatchPattern(
 
         Patch(
             identifier=56,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, custom_prisma_amount_function
             ),
             new_instruction_readable="call get_prisma_amount"
@@ -3067,7 +3067,7 @@ custom_prisma_amount_function = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, custom_prisma_check_function
             ),
             new_instruction_readable="call prisma_check"  # prisma check function
@@ -3101,7 +3101,7 @@ custom_prisma_amount_function = PatchPattern(
         ),
         Patch(
             identifier=12,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, custom_prisma_check_function
             ),
             new_instruction_readable="call prisma_check"  # prisma check function
@@ -3135,7 +3135,7 @@ custom_prisma_amount_function = PatchPattern(
         ),
         Patch(
             identifier=18,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, custom_prisma_check_function
             ),
             new_instruction_readable="call prisma_check"  # prisma check function
@@ -3168,7 +3168,7 @@ custom_prisma_amount_function = PatchPattern(
         ),
         Patch(
             identifier=24,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, custom_prisma_check_function
             ),
             new_instruction_readable="call prisma_check"  # prisma check function
@@ -3201,7 +3201,7 @@ custom_prisma_amount_function = PatchPattern(
         ),
         Patch(
             identifier=30,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, custom_prisma_check_function
             ),
             new_instruction_readable="call prisma_check"  # prisma check function
@@ -3234,7 +3234,7 @@ custom_prisma_amount_function = PatchPattern(
         ),
         Patch(
             identifier=36,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, custom_prisma_check_function
             ),
             new_instruction_readable="call prisma_check"  # prisma check function
@@ -3267,7 +3267,7 @@ custom_prisma_amount_function = PatchPattern(
         ),
         Patch(
             identifier=42,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, custom_prisma_check_function
             ),
             new_instruction_readable="call prisma_check"  # prisma check function
@@ -3300,7 +3300,7 @@ custom_prisma_amount_function = PatchPattern(
         ),
         Patch(
             identifier=48,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, custom_prisma_check_function
             ),
             new_instruction_readable="call prisma_check"  # prisma check function
@@ -3333,7 +3333,7 @@ custom_prisma_amount_function = PatchPattern(
         ),
         Patch(
             identifier=54,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, custom_prisma_check_function
             ),
             new_instruction_readable="call prisma_check"  # prisma check function
@@ -3366,7 +3366,7 @@ custom_prisma_amount_function = PatchPattern(
         ),
         Patch(
             identifier=60,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, custom_prisma_check_function
             ),
             new_instruction_readable="call prisma_check"  # prisma check function
@@ -3399,7 +3399,7 @@ custom_prisma_amount_function = PatchPattern(
         ),
         Patch(
             identifier=66,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, custom_prisma_check_function
             ),
             new_instruction_readable="call prisma_check"  # prisma check function
@@ -3432,7 +3432,7 @@ custom_prisma_amount_function = PatchPattern(
         ),
         Patch(
             identifier=72,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, custom_prisma_check_function
             ),
             new_instruction_readable="call prisma_check"  # prisma check function
@@ -3465,7 +3465,7 @@ custom_prisma_amount_function = PatchPattern(
         ),
         Patch(
             identifier=78,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, custom_prisma_check_function
             ),
             new_instruction_readable="call prisma_check"  # prisma check function
@@ -3498,7 +3498,7 @@ custom_prisma_amount_function = PatchPattern(
         ),
         Patch(
             identifier=84,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, custom_prisma_check_function
             ),
             new_instruction_readable="call prisma_check"  # prisma check function

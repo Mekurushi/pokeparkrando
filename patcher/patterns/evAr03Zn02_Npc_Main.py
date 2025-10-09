@@ -1,4 +1,4 @@
-from patcher.helper.patttern_handler import compute_bl_to_function_script, create_lstr_script, \
+from patcher.helper.patttern_handler import compute_call_to_function_script, create_lstr_script, \
     get_num_battle_count_from_dict_as_instruction, \
     parse_pattern_bytes, create_jmp_instruction_script
 from patcher.models.models import PatchPattern, Instruction, Patch
@@ -677,7 +677,7 @@ set_attraction_record = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 get_module
             ),
@@ -785,7 +785,7 @@ starly2_interaction = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, set_attraction_record
             ) if
             plando_dict["Options"]["each_zone"] else None,
@@ -848,7 +848,7 @@ starly_interaction = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, set_attraction_record
             ) if
             plando_dict["Options"]["each_zone"] else None,
@@ -911,7 +911,7 @@ krabby_interaction = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, set_attraction_record
             ) if
             plando_dict["Options"]["each_zone"] else None,
@@ -974,7 +974,7 @@ krabby2_interaction = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, set_attraction_record
             ) if
             plando_dict["Options"]["each_zone"] else None,
@@ -1037,7 +1037,7 @@ krabby3_interaction = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, set_attraction_record
             ) if
             plando_dict["Options"]["each_zone"] else None,
@@ -1100,7 +1100,7 @@ corphish_interaction = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, set_attraction_record
             ) if
             plando_dict["Options"]["each_zone"] else None,
@@ -1163,7 +1163,7 @@ corphish2_interaction = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, set_attraction_record
             ) if
             plando_dict["Options"]["each_zone"] else None,
@@ -1226,7 +1226,7 @@ corphish3_interaction = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, set_attraction_record
             ) if
             plando_dict["Options"]["each_zone"] else None,

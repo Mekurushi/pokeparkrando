@@ -1,4 +1,4 @@
-from patcher.helper.patttern_handler import compute_bl_to_function_script, create_jmp_instruction_script, \
+from patcher.helper.patttern_handler import compute_call_to_function_script, create_jmp_instruction_script, \
     create_lstr_script, get_attraction_id_from_dict, parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
@@ -146,7 +146,7 @@ get_rayquaza_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, get_module
             ),
             new_instruction_readable="call get_module"
@@ -283,7 +283,7 @@ return_at02 = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, get_rayquaza_friendship_location_state
             ),
             new_instruction_readable="call get_rayquaza_friendship_location_state"
@@ -698,7 +698,7 @@ ar06zn02_init = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, set_items
             ),
             new_instruction_readable="call set_items"

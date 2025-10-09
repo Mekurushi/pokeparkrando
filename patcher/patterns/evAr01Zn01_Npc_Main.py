@@ -1,5 +1,5 @@
 from patcher.helper.patttern_handler import get_attraction_id_from_dict, parse_pattern_bytes, \
-    compute_bl_to_function_script, \
+    compute_call_to_function_script, \
     get_num_battle_count_from_dict_as_instruction, create_lstr_script, \
     create_jmp_instruction_script
 from patcher.models.models import PatchPattern, Instruction, Patch
@@ -1351,7 +1351,7 @@ munchlax_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=22,  # removing the pokemon unlock
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -1508,7 +1508,7 @@ munchlax2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=22,  # removing the pokemon unlock
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -1762,7 +1762,7 @@ treecko_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -2044,7 +2044,7 @@ chimchar_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -2326,7 +2326,7 @@ magikarp_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -2608,7 +2608,7 @@ lotad1_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -2970,7 +2970,7 @@ caterpie_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -3284,7 +3284,7 @@ weedle_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -3783,7 +3783,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=36,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -4155,7 +4155,7 @@ oddish_friendship_pattern = PatchPattern(
 
         Patch(
             identifier=29,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -4382,7 +4382,7 @@ shroomish_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -4782,7 +4782,7 @@ bonsly_friendship_pattern = PatchPattern(
 
         Patch(
             identifier=29,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -5046,7 +5046,7 @@ shinx_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -5398,7 +5398,7 @@ aipom_tree_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -5696,7 +5696,7 @@ spearow_overworld_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -5978,7 +5978,7 @@ torterra_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -6260,7 +6260,7 @@ starly_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -6542,7 +6542,7 @@ butterfree_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -6764,7 +6764,7 @@ tropius_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=22,  # set bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -7009,7 +7009,7 @@ bibarel_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -7291,7 +7291,7 @@ ambipom_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -7924,7 +7924,7 @@ sudowoodo_interaction_patchMapJP = [
 
     Patch(
         identifier=29,  # replace friendship flag with bestfriend flag
-        patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+        patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
             offset, data,
             set_bestfriend_function_pattern
         ),
@@ -8140,7 +8140,7 @@ sudowoodo_interaction_patchMapPAL = [
 
     Patch(
         identifier=29,  # replace friendship flag with bestfriend flag
-        patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+        patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
             offset, data,
             set_bestfriend_function_pattern
         ),
@@ -8447,7 +8447,7 @@ scyther_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=20,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -8758,7 +8758,7 @@ leafeon_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=22,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -9224,7 +9224,7 @@ croagunk_interaction_patchMapJP = [
     ),
     Patch(
         identifier=19,  # replace friendship flag with bestfriend flag
-        patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+        patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
             offset, data,
             set_bestfriend_function_pattern
         ),
@@ -9374,7 +9374,7 @@ croagunk_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=19,  # replace friendship flag with bestfriend flag
-        patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+        patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
             offset, data,
             set_bestfriend_function_pattern
         ),
@@ -10013,7 +10013,7 @@ starly2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -10295,7 +10295,7 @@ starly3_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -10646,7 +10646,7 @@ aipom_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -12273,7 +12273,7 @@ eventTE03_logic = PatchPattern(
 
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 set_bestfriend_function_pattern
             ),
@@ -12408,7 +12408,7 @@ unlock_beach_bidoof_interaction = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, custom_check_f0301BippaFlag_funtion
             ),
             new_instruction_readable="call get f0301BippaFlag"
@@ -12496,7 +12496,7 @@ custom_check_f0301BippaFlag_funtion = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_script(
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data,
                 get_module
             ),
