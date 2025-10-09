@@ -384,8 +384,8 @@ piloswine_interaction = PatchPattern(
     ]
 )
 
-unknown_interaction = PatchPattern(  # TODO: find pokemon
-    name="unkown interaction",
+mudkip_interaction = PatchPattern(
+    name="mudkip interaction",
     description="removing hide and seek flag",
     patternJP=[
         Instruction(
@@ -422,6 +422,24 @@ unknown_interaction = PatchPattern(  # TODO: find pokemon
             identifier=8, offset=0x2bc, pattern=parse_pattern_bytes("00 15 04 01"),
             instruction_readable="SC4 0x0:0x15"
         ),
+
+        # each zone option
+        Instruction(
+            identifier=10, offset=0x270, pattern=parse_pattern_bytes("ff f7 00 0b"),
+            instruction_readable="load_arg -0x9"
+        ),
+        Instruction(
+            identifier=11, offset=0x2a0, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call friendship_banner"
+        ),
+        Instruction(
+            identifier=12, offset=0x2a4, pattern=parse_pattern_bytes("ff fc 00 0b"),
+            instruction_readable="load_arg -0x4"
+        ),
+        Instruction(
+            identifier=13, offset=0x2a8, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call set_friendship"
+        )
     ],
     patchMapJP=[
         Patch(
@@ -472,6 +490,34 @@ unknown_interaction = PatchPattern(  # TODO: find pokemon
             ),
             new_instruction_readable="delay0"
         ),
+
+        # each zone option
+        Patch(
+            identifier=10,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0x0"
+        ),
+        Patch(
+            identifier=11,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00040010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0x4"
+        ),
+        Patch(
+            identifier=12,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00070010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0x7"
+        ),
+        Patch(
+            identifier=13,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, set_attraction_record
+            ) if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="call set_attraction_record"
+        )
     ]
 )
 
@@ -1245,7 +1291,7 @@ evAr03Zn02_Npc_Main_patterns = [
     piloswine_talk_event,
     froslass_interaction,
     piloswine_interaction,
-    unknown_interaction,
+    mudkip_interaction,
     primeape_interaction,
     starly_interaction,
     starly2_interaction,
