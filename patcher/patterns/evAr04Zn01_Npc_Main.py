@@ -1285,7 +1285,68 @@ chimchar_interaction = PatchPattern(
         )
     ]
 )
+sudoowoodo_interaction = PatchPattern(
+    name="sudoowoodo interaction",
+    description="adding each zone option support",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 09 00 07"),
+            instruction_readable="grow_stack 0x9"
+        ),
+        Instruction(
+            identifier=2, offset=0x30, pattern=parse_pattern_bytes("00 eb 00 10"),
+            instruction_readable="push 0xeb"
+        ),
+        # each zone option
+        Instruction(
+            identifier=3, offset=0x280, pattern=parse_pattern_bytes("ff f8 00 0b"),
+            instruction_readable="load_arg -0x8"
+        ),
+        Instruction(
+            identifier=4, offset=0x2b8, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call set_friendship"
+        ),
+        Instruction(
+            identifier=5, offset=0x2bc, pattern=parse_pattern_bytes("ff fc 00 0b"),
+            instruction_readable="load_arg -0x4"
+        ),
+        Instruction(
+            identifier=6, offset=0x2c0, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call set_bestfriendship"
+        )
 
+    ],
+    patchMapJP=[
+
+        # each zone
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0x0"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x000b0010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0xb"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00070010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0x7"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, set_attraction_record
+            ) if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="call set_attraction_record"
+        )
+    ]
+)
 evAr04Zn01_Npc_Main_patterns = [
     set_chapter,
     get_friendship,
