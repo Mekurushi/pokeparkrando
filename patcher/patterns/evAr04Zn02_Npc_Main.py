@@ -4,7 +4,7 @@ from patcher.helper.patttern_handler import compute_call_to_function_script, cre
     parse_pattern_bytes, \
     create_jmp_instruction_script
 from patcher.models.models import PatchPattern, Instruction, Patch
-from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
+from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter, set_friendship
 
 string_section_start = PatchPattern(
     name="string section start",
@@ -1540,6 +1540,47 @@ baltoy_interaction = PatchPattern(
     ]
 )
 
+meditite_quiz = PatchPattern(
+    name="meditite quiz",
+    description="adding each zone support",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0c 00 07"),
+            instruction_readable="grow_stack 0xc"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x79c, pattern=parse_pattern_bytes("ff fc 00 0b"),
+            instruction_readable="load_arg -0x4"
+        ),
+        Instruction(
+            identifier=3, offset=0x7a0, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call get_friendship"
+        ),
+        Instruction(
+            identifier=4, offset=0x7a4, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_result"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data,
+                set_friendship
+            ),
+            new_instruction_readable="call set_friendship"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x1"
+        ),
+
+    ]
+)
+
 evAr04Zn02_Npc_Main_patterns = [
     set_chapter,
     get_friendship,
@@ -1556,6 +1597,7 @@ evAr04Zn02_Npc_Main_patterns = [
     aron_interaction,
     torchic_interaction,
     baltoy_interaction,
+    meditite_quiz,
 
     special_spawn_conditions,
     set_attraction_record

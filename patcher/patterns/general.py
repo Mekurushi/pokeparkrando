@@ -104,3 +104,38 @@ get_module = PatchPattern(
         ),
     ]
 )
+
+set_friendship = PatchPattern(
+    name="set_friendship",
+    description="set_friendship function for custom calls",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 03 00 07"),
+            instruction_readable="grow_stack 0x3"
+        ),
+        Instruction(
+            identifier=2, offset=0x2c, pattern=parse_pattern_bytes("00 0e 00 10"),
+            instruction_readable="push 0xe"
+        ),
+        Instruction(
+            identifier=3, offset=0x44, pattern=parse_pattern_bytes("00 3c 00 10"),
+            instruction_readable="push 0x3c"
+        ),
+        Instruction(
+            identifier=4, offset=0x48, pattern=parse_pattern_bytes("00 15 03 01"),
+            instruction_readable="SC3 0x0:0x15"
+        ),
+        Instruction(
+            identifier=5, offset=0x64, pattern=parse_pattern_bytes("00 4a 00 10"),
+            instruction_readable="push 0x4a"
+        ),
+        Instruction(
+            identifier=6, offset=0x68, pattern=parse_pattern_bytes("00 15 03 01"),
+            instruction_readable="SC3 0x0:0x15"
+        ),
+        Instruction(
+            identifier=7, offset=0x6c, pattern=parse_pattern_bytes("00 04 00 06"),
+            instruction_readable="ret -0x4"
+        ),
+    ]
+)
