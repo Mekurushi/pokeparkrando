@@ -1190,6 +1190,155 @@ chimchar_interaction = PatchPattern(
     ]
 )
 
+aron_interaction = PatchPattern(
+    name="aron interaction",
+    description="adding each zone support",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 09 00 07"),
+            instruction_readable="grow_stack 0x9"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x20, pattern=parse_pattern_bytes("01 0f 00 10"),
+            instruction_readable="push 0x10f"
+        ),
+
+        # each zone option
+        Instruction(
+            identifier=3, offset=0x108, pattern=parse_pattern_bytes("ff f9 00 0b"),
+            instruction_readable="load_arg -0x7"
+        ),
+        Instruction(
+            identifier=4, offset=0x11c, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call set_friendship"
+        ),
+        Instruction(
+            identifier=5, offset=0x120, pattern=parse_pattern_bytes("ff fd 00 0b"),
+            instruction_readable="load_arg -0x3"
+        ),
+        Instruction(
+            identifier=6, offset=0x124, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call set_bestfriend"
+        ),
+
+        Instruction(
+            identifier=7, offset=0x190, pattern=parse_pattern_bytes("ff f8 00 0b"),
+            instruction_readable="load_arg -0x8"
+        ),
+        Instruction(
+            identifier=8, offset=0x1a4, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call set_friendship"
+        ),
+        Instruction(
+            identifier=9, offset=0x1a8, pattern=parse_pattern_bytes("ff fd 00 0b"),
+            instruction_readable="load_arg -0x3"
+        ),
+        Instruction(
+            identifier=10, offset=0x1ac, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call set_bestfriend"
+        ),
+
+        Instruction(
+            identifier=11, offset=0x218, pattern=parse_pattern_bytes("ff f7 00 0b"),
+            instruction_readable="load_arg -0x9"
+        ),
+        Instruction(
+            identifier=12, offset=0x22c, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call set_friendship"
+        ),
+        Instruction(
+            identifier=13, offset=0x230, pattern=parse_pattern_bytes("ff fd 00 0b"),
+            instruction_readable="load_arg -0x3"
+        ),
+        Instruction(
+            identifier=14, offset=0x234, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call set_bestfriend"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x0"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x000e0010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0xe"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00070010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0x7"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, set_attraction_record
+            ) if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="call set_attraction_record"
+        ),
+
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x0"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: (0x000e0010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0xe"
+        ),
+        Patch(
+            identifier=9,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00070010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0x7"
+        ),
+        Patch(
+            identifier=10,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, set_attraction_record
+            ) if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="call set_attraction_record"
+        ),
+
+        Patch(
+            identifier=11,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x0"
+        ),
+        Patch(
+            identifier=12,
+            patch_function=lambda offset, data, plando_dict, matches: (0x000e0010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0xe"
+        ),
+        Patch(
+            identifier=13,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00070010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0x7"
+        ),
+        Patch(
+            identifier=14,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, set_attraction_record
+            ) if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="call set_attraction_record"
+        ),
+
+    ]
+)
+
 evAr04Zn02_Npc_Main_patterns = [
     set_chapter,
     get_friendship,
@@ -1203,6 +1352,7 @@ evAr04Zn02_Npc_Main_patterns = [
     hitmontop_interaction,
     farfetchd_interaction,
     chimchar_interaction,
+    aron_interaction,
 
     special_spawn_conditions,
     set_attraction_record
