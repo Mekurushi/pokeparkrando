@@ -601,12 +601,78 @@ raichu_interaction = PatchPattern(
     ]
 )
 
+meowth_quiz = PatchPattern(
+    name="meowth quiz",
+    description="adding each zone support",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0d 00 07"),
+            instruction_readable="grow_stack 0xd"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x760, pattern=parse_pattern_bytes("ff ff 00 0b"),
+            instruction_readable="load_arg -0x1"
+        ),
+        Instruction(
+            identifier=3, offset=0x764, pattern=parse_pattern_bytes("00 3d 00 10"),
+            instruction_readable="push 0x3d"
+        ),
+        Instruction(
+            identifier=4, offset=0x768, pattern=parse_pattern_bytes("00 15 03 01"),
+            instruction_readable="SC3 0x0:0x15"
+        ),
+        Instruction(
+            identifier=5, offset=0x76c, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_result"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0x0"
+        ),
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00130010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0x13"
+        ),
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00070010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0x7"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, set_attraction_record
+            ) if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="call set_attraction_record"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else (0x00000010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x1 | push 0x0"
+        ),
+
+    ]
+)
+
 evAr05Zn01_Npc_Main_patterns = [
     set_chapter,
     get_friendship,
     trap_gate,
     tangrowth_interaction,
     raichu_interaction,
+    meowth_quiz,
+    
     return_at04,
     get_tangrowth_friendship_location_state,
 
