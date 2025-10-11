@@ -1163,6 +1163,66 @@ unknown_interaction3 = PatchPattern(  # TODO: find pokemon
     ]
 )
 
+teddiursa_quiz = PatchPattern(
+    name="teddiursa quiz",
+    description="removing hide and seek flag",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0b 00 07"),
+            instruction_readable="grow_stack 0xb"
+        ),
+
+        # each zone option
+        Instruction(
+            identifier=2, offset=0x760, pattern=parse_pattern_bytes("ff f6 00 0b"),
+            instruction_readable="load_arg -0xa"
+        ),
+        Instruction(
+            identifier=3, offset=0x7e4, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call friendship_banner"
+        ),
+        Instruction(
+            identifier=4, offset=0x7e8, pattern=parse_pattern_bytes("ff fd 00 0b"),
+            instruction_readable="load_arg -0x3"
+        ),
+        Instruction(
+            identifier=5, offset=0x7ec, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call set_friendship"
+        )
+
+    ],
+    patchMapJP=[
+
+        # each zone
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0x0"
+        ),
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00090010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0x9"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00070010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0x7"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, set_attraction_record
+            ) if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="call set_attraction_record"
+        )
+    ]
+)
+
 evAr04Zn01_Npc_Main_patterns = [
     set_chapter,
     get_friendship,
@@ -1181,6 +1241,7 @@ evAr04Zn01_Npc_Main_patterns = [
     bonsly_interaction,
     unknown_interaction2,
     unknown_interaction3,
+    teddiursa_quiz,
 
     bastiodon_prisma_check_function,
     set_attraction_record
