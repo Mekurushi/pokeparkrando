@@ -1596,6 +1596,36 @@ wingull3_interaction = PatchPattern(
     ]
 )
 
+prinplup_interaction = PatchPattern(
+    name="prinplup interaction",
+    description="removing unwanted behavior",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 22 00 07"),
+            instruction_readable="grow_stack 0x22"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x40, pattern=parse_pattern_bytes("00 b8 00 10"),
+            instruction_readable="push 0xb8"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x24c, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_result"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00030010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x3"  # removed quest condition
+        ),
+
+    ]
+)
+
 evAr03Zn02_Npc_Main_patterns = [
     set_chapter,
     get_friendship,
@@ -1621,6 +1651,7 @@ evAr03Zn02_Npc_Main_patterns = [
     wingull_interaction,
     wingull2_interaction,
     wingull3_interaction,
+    prinplup_interaction,
 
     special_spawn_conditions,
     special_spawn_conditions2,
