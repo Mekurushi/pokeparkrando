@@ -1467,6 +1467,79 @@ torchic_interaction = PatchPattern(
     ]
 )
 
+baltoy_interaction = PatchPattern(
+    name="baltoy interaction",
+    description="adding each zone support",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 09 00 07"),
+            instruction_readable="grow_stack 0x9"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x20, pattern=parse_pattern_bytes("01 08 00 10"),
+            instruction_readable="push 0x108"
+        ),
+
+        # each zone option
+        Instruction(
+            identifier=3, offset=0x240, pattern=parse_pattern_bytes("ff f7 00 0b"),
+            instruction_readable="load_arg -0x9"
+        ),
+        Instruction(
+            identifier=4, offset=0x25c, pattern=parse_pattern_bytes("00 a3 00 10"),
+            instruction_readable="push 0xa3"
+        ),
+        Instruction(
+            identifier=5, offset=0x260, pattern=parse_pattern_bytes("ff f9 00 0b"),
+            instruction_readable="load_arg -0x7"
+        ),
+        Instruction(
+            identifier=6, offset=0x264, pattern=parse_pattern_bytes("00 3c 00 10"),
+            instruction_readable="push 0x3c"
+        ),
+        Instruction(
+            identifier=7, offset=0x268, pattern=parse_pattern_bytes("00 15 03 01"),
+            instruction_readable="SC3 0x0:0x15"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0x0"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00110010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0x11"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00070010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0x7"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, set_attraction_record
+            ) if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="call set_attraction_record"
+        ),
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="delay0"
+        ),
+    ]
+)
+
 evAr04Zn02_Npc_Main_patterns = [
     set_chapter,
     get_friendship,
@@ -1482,6 +1555,7 @@ evAr04Zn02_Npc_Main_patterns = [
     chimchar_interaction,
     aron_interaction,
     torchic_interaction,
+    baltoy_interaction,
 
     special_spawn_conditions,
     set_attraction_record
