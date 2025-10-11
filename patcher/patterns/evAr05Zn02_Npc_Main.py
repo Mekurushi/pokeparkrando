@@ -1004,13 +1004,45 @@ abra_interaction = PatchPattern(
     ]
 )
 
-# TODO: Misdreavus
+misdreavus_interaction = PatchPattern(
+    name="misdreavus interaction",
+    description="removing unwanted behavior",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 23 00 07"),
+            instruction_readable="grow_stack 0x23"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x30, pattern=parse_pattern_bytes("01 6f 00 10"),
+            instruction_readable="push 0x16f"
+        ),
+
+        Instruction(
+            identifier=3, offset=0xac, pattern=parse_pattern_bytes("ff fa 00 0b"),
+            instruction_readable="load_arg -0x6"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x1bf80010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x1bf8"
+        ),
+
+    ]
+)
 
 evAr05Zn02_Npc_Main_patterns = [
     set_chapter,
     get_friendship,
     dusknoir_interaction,
     abra_interaction,
+    misdreavus_interaction,
     return_at05,
     dusknoir_friendship_event,
     get_dusknoir_friendship_location_state,
