@@ -546,6 +546,29 @@ furret_interaction = PatchPattern(
             identifier=9, offset=0x278, pattern=parse_pattern_bytes("00 3d 00 10"),
             instruction_readable="push 0x3d"  # request friendship opcode
         ),
+
+        # each zone
+        # each zone option
+        Instruction(
+            identifier=10, offset=0x288, pattern=parse_pattern_bytes("ff f7 00 0b"),
+            instruction_readable="load_arg -0x9"
+        ),
+        Instruction(
+            identifier=11, offset=0x2a4, pattern=parse_pattern_bytes("ff fd 00 0b"),
+            instruction_readable="load_arg -0x3"
+        ),
+        Instruction(
+            identifier=12, offset=0x2a8, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call set_friendship"
+        ),
+        Instruction(
+            identifier=13, offset=0x2ac, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr 62_00270"
+        ),
+        Instruction(
+            identifier=14, offset=0x2b0, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call friendship_banner"
+        ),
     ],
     patchMapJP=[
         Patch(
@@ -603,6 +626,40 @@ furret_interaction = PatchPattern(
                 'big'
             ),
             new_instruction_readable="push 0x4b"  # best friend opcode
+        ),
+
+        # each zone option
+        Patch(
+            identifier=10,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0x0"
+        ),
+        Patch(
+            identifier=11,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00020010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0x2"
+        ),
+        Patch(
+            identifier=12,
+            patch_function=lambda offset, data, plando_dict, matches: (0x000d0010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0xd"
+        ),
+        Patch(
+            identifier=13,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, set_attraction_record
+            ) if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="call set_attraction_record"
+        ),
+        Patch(
+            identifier=14,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="delay0"
         ),
     ]
 )
