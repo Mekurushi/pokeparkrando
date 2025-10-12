@@ -1179,6 +1179,93 @@ marowak_interaction = PatchPattern(
     ]
 )
 
+baltoy_interaction = PatchPattern(
+    name="baltoy interaction",
+    description="adding each zone option support",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 08 00 07"),
+            instruction_readable="grow_stack 0x8"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x28, pattern=parse_pattern_bytes("01 a7 00 10"),
+            instruction_readable="push 0x1a7"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x254, pattern=parse_pattern_bytes("00 3d 00 10"),
+            instruction_readable="push 0x3d"
+        ),
+        # each zone option
+
+        Instruction(
+            identifier=4, offset=0x264, pattern=parse_pattern_bytes("ff f8 00 0b"),
+            instruction_readable="load_arg -0x8"
+        ),
+        Instruction(
+            identifier=5, offset=0x280, pattern=parse_pattern_bytes("00 a3 00 10"),
+            instruction_readable="push 0xa3"
+        ),
+        Instruction(
+            identifier=6, offset=0x284, pattern=parse_pattern_bytes("ff ff 00 0b"),
+            instruction_readable="load_arg -0x1"
+        ),
+        Instruction(
+            identifier=7, offset=0x288, pattern=parse_pattern_bytes("00 3c 00 10"),
+            instruction_readable="push 0x3c"
+        ),
+        Instruction(
+            identifier=8, offset=0x28c, pattern=parse_pattern_bytes("00 15 03 01"),
+            instruction_readable="SC3 0x0:0x15"
+        ),
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x004b0010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x4b"  # get bestfriend opcode
+        ),
+
+        # each zone option
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0x0"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0x0"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: (0x000d0010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0xd"
+        ),
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, set_attraction_record
+            ) if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="call set_attraction_record"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="delay0"
+        ),
+    ]
+)
+
 evAr06Zn01_Npc_Main_patterns = [
     set_chapter,
     get_friendship,
@@ -1189,6 +1276,7 @@ evAr06Zn01_Npc_Main_patterns = [
     drifloon_interaction,
     taillow_interaction,
     marowak_interaction,
+    baltoy_interaction,
 
     return_at01,
     return_at15,
