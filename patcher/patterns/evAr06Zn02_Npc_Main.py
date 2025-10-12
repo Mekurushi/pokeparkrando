@@ -1025,6 +1025,72 @@ teddiursa_interaction = PatchPattern(
     ]
 )
 
+meditite_quiz = PatchPattern(
+    name="meditite quiz",
+    description="adding each zone option support",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0c 00 07"),
+            instruction_readable="grow_stack 0xc"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x14, pattern=parse_pattern_bytes("01 e1 00 10"),
+            instruction_readable="push 0x1e1"
+        ),
+
+        # each zone option
+
+        Instruction(
+            identifier=3, offset=0x760, pattern=parse_pattern_bytes("ff f5 00 0b"),
+            instruction_readable="load_arg -0xb"
+        ),
+        Instruction(
+            identifier=4, offset=0x788, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr 62_00340"
+        ),
+        Instruction(
+            identifier=5, offset=0x78c, pattern=parse_pattern_bytes("ff fe 00 0b"),
+            instruction_readable="load_arg -0x2"
+        ),
+        Instruction(
+            identifier=6, offset=0x790, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call set_friendship+dialog"
+        ),
+
+    ],
+    patchMapJP=[
+
+        # each zone option
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0x0"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00030010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0x3"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0x000d0010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0xd"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, set_attraction_record
+            ) if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="call set_attraction_record"
+        )
+    ]
+)
+
 evAr06Zn02_Npc_Main_patterns = [
     set_chapter,
     get_friendship,
@@ -1032,6 +1098,7 @@ evAr06Zn02_Npc_Main_patterns = [
     teddiursa_interaction,
     rayquaza_interaction,
     furret_interaction,
+    meditite_quiz,
 
     return_at02,
     rayquaza_friendship_event,
