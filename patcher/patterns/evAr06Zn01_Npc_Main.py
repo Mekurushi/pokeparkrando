@@ -4,6 +4,131 @@ from patcher.helper.patttern_handler import compute_call_to_function_script, cre
 from patcher.models.models import Instruction, Patch, PatchPattern
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
 
+set_attraction_record = PatchPattern(
+    name="set_attraction_record",
+    description="set attraction record for each zone option locations",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 05 00 08"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=2, offset=0x4, pattern=parse_pattern_bytes("00 3e 00 10"),
+            instruction_readable="---"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x8, pattern=parse_pattern_bytes("ff f7 00 0c"),
+            instruction_readable="---"
+        ),
+
+        Instruction(
+            identifier=4, offset=0xc, pattern=parse_pattern_bytes("00 02 00 08"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=5, offset=0x10, pattern=parse_pattern_bytes("00 63 00 10"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=6, offset=0x14, pattern=parse_pattern_bytes("ff f7 00 0c"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=7, offset=0x18, pattern=parse_pattern_bytes("ff f7 00 0b"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=8, offset=0x1c, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=9, offset=0x20, pattern=parse_pattern_bytes("ff fd 00 0b"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=10, offset=0x24, pattern=parse_pattern_bytes("00 00 00 10"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=11, offset=0x28, pattern=parse_pattern_bytes("00 15 04 01"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=12, offset=0x2c, pattern=parse_pattern_bytes("00 0a 00 06"),
+            instruction_readable="---"
+        ),
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=1,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010007).to_bytes(4, 'big'),
+            new_instruction_readable="grow_stack 0x1"
+        ),
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+                data, string_section_start,
+                globalManager
+            ),
+            new_instruction_readable="lstr GlobalManager"
+        ),
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data,
+                get_module
+            ),
+            new_instruction_readable="call get_module()"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(4, 'big'),
+            new_instruction_readable="push_result"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0xffff000c).to_bytes(4, 'big'),
+            new_instruction_readable="store_arg -0x1"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x1"
+        ),
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: (0x0001000b).to_bytes(4, 'big'),
+            new_instruction_readable="load_arg 0x1"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: (0x0000000b).to_bytes(4, 'big'),
+            new_instruction_readable="load_arg 0x0"
+        ),
+        Patch(
+            identifier=9,
+            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(4, 'big'),
+            new_instruction_readable="load_arg -0x1"
+        ),
+        Patch(
+            identifier=10,
+            patch_function=lambda offset, data, plando_dict, matches: (0x006d0010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x6d"
+        ),
+        Patch(
+            identifier=11,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00150501).to_bytes(4, 'big'),
+            new_instruction_readable="SC5 0x0:0x15"
+        ),
+        Patch(
+            identifier=12,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00020006).to_bytes(4, 'big'),
+            new_instruction_readable="ret -0x2"
+        ),
+    ]
+)
+
 string_section_start = PatchPattern(
     name="string section start",
     description="string section start for lstr instruction computation",
@@ -790,6 +915,83 @@ special_spawn_conditions = PatchPattern(
     ]
 )
 
+drifloon_interaction = PatchPattern(
+    name="drifloon interaction",
+    description="adding each zone option support",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 06 00 07"),
+            instruction_readable="grow_stack 0x6"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x28, pattern=parse_pattern_bytes("01 ae 00 10"),
+            instruction_readable="push 0x1ae"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x64, pattern=parse_pattern_bytes("00 3d 00 10"),
+            instruction_readable="push 0x3d"
+        ),
+        # each zone option
+
+        Instruction(
+            identifier=4, offset=0x74, pattern=parse_pattern_bytes("ff fa 00 0b"),
+            instruction_readable="load_arg -0x6"
+        ),
+        Instruction(
+            identifier=5, offset=0xb8, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call set_friendship"
+        ),
+        Instruction(
+            identifier=6, offset=0xbc, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr 61_00380"
+        ),
+        Instruction(
+            identifier=7, offset=0xc0, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call friendship_banner"
+        ),
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x004b0010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x4b"  # get bestfriend opcode
+        ),
+
+        # each zone option
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0x0"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00170010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0x17"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00070010).to_bytes(4, 'big') if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="push 0x7"
+        ),
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, set_attraction_record
+            ) if
+            plando_dict["Options"]["each_zone"] else None,
+            new_instruction_readable="call set_attraction_record"
+        )
+    ]
+)
+
 evAr06Zn01_Npc_Main_patterns = [
     set_chapter,
     get_friendship,
@@ -797,10 +999,12 @@ evAr06Zn01_Npc_Main_patterns = [
     salamence_interaction,
     furret_interaction,
     arcanine_interaction,
+    drifloon_interaction,
 
     return_at01,
     return_at15,
     get_absol_friendship_location_state,
     get_salamence_friendship_location_state,
     special_spawn_conditions,
+    set_attraction_record
 ]
