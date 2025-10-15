@@ -1163,6 +1163,32 @@ unknown_interaction3 = PatchPattern(  # TODO: find pokemon
     ]
 )
 
+teddiursa_quizPALNA = [
+    Instruction(
+        identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0a 00 07"),
+        instruction_readable="grow_stack 0xa"
+    ),
+
+    # each zone option
+    Instruction(
+        identifier=2, offset=0x760, pattern=parse_pattern_bytes("ff f6 00 0b"),
+        instruction_readable="load_arg -0xa"
+    ),
+    Instruction(
+        identifier=3, offset=0x7e4, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+        instruction_readable="call friendship_banner"
+    ),
+    Instruction(
+        identifier=4, offset=0x7e8, pattern=parse_pattern_bytes("ff fd 00 0b"),
+        instruction_readable="load_arg -0x3"
+    ),
+    Instruction(
+        identifier=5, offset=0x7ec, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+        instruction_readable="call set_friendship"
+    )
+
+]
+
 teddiursa_quiz = PatchPattern(
     name="teddiursa quiz",
     description="removing hide and seek flag",
@@ -1191,6 +1217,8 @@ teddiursa_quiz = PatchPattern(
         )
 
     ],
+    patternPAL=teddiursa_quizPALNA,
+    patternNA=teddiursa_quizPALNA,
     patchMapJP=[
 
         # each zone

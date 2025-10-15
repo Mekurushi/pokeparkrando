@@ -601,6 +601,31 @@ raichu_interaction = PatchPattern(
     ]
 )
 
+meowth_quizPALNA = [
+    Instruction(
+        identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0c 00 07"),
+        instruction_readable="grow_stack 0xc"
+    ),
+
+    Instruction(
+        identifier=2, offset=0x760, pattern=parse_pattern_bytes("ff ff 00 0b"),
+        instruction_readable="load_arg -0x1"
+    ),
+    Instruction(
+        identifier=3, offset=0x764, pattern=parse_pattern_bytes("00 3d 00 10"),
+        instruction_readable="push 0x3d"
+    ),
+    Instruction(
+        identifier=4, offset=0x768, pattern=parse_pattern_bytes("00 15 03 01"),
+        instruction_readable="SC3 0x0:0x15"
+    ),
+    Instruction(
+        identifier=5, offset=0x76c, pattern=parse_pattern_bytes("00 00 00 12"),
+        instruction_readable="push_result"
+    ),
+
+]
+
 meowth_quiz = PatchPattern(
     name="meowth quiz",
     description="adding each zone support",
@@ -628,6 +653,8 @@ meowth_quiz = PatchPattern(
         ),
 
     ],
+    patternPAL=meowth_quizPALNA,
+    patternNA=meowth_quizPALNA,
     patchMapJP=[
         Patch(
             identifier=3,

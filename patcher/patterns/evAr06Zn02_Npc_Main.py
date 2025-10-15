@@ -1025,6 +1025,38 @@ teddiursa_interaction = PatchPattern(
     ]
 )
 
+meditite_quizPALNA = [
+    Instruction(
+        identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0b 00 07"),
+        instruction_readable="grow_stack 0xb"
+    ),
+
+    Instruction(
+        identifier=2, offset=0x14, pattern=parse_pattern_bytes("01 e1 00 10"),
+        instruction_readable="push 0x1e1"
+    ),
+
+    # each zone option
+
+    Instruction(
+        identifier=3, offset=0x760, pattern=parse_pattern_bytes("ff f5 00 0b"),
+        instruction_readable="load_arg -0xb"
+    ),
+    Instruction(
+        identifier=4, offset=0x788, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+        instruction_readable="lstr 62_00340"
+    ),
+    Instruction(
+        identifier=5, offset=0x78c, pattern=parse_pattern_bytes("ff fe 00 0b"),
+        instruction_readable="load_arg -0x2"
+    ),
+    Instruction(
+        identifier=6, offset=0x790, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+        instruction_readable="call set_friendship+dialog"
+    ),
+
+]
+
 meditite_quiz = PatchPattern(
     name="meditite quiz",
     description="adding each zone option support",
@@ -1059,6 +1091,8 @@ meditite_quiz = PatchPattern(
         ),
 
     ],
+    patternNA=meditite_quizPALNA,
+    patternPAL=meditite_quizPALNA,
     patchMapJP=[
 
         # each zone option

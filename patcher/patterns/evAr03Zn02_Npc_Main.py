@@ -1596,6 +1596,24 @@ wingull3_interaction = PatchPattern(
     ]
 )
 
+prinplup_interactionPALNA = [
+    Instruction(
+        identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 22 00 07"),
+        instruction_readable="grow_stack 0x22"
+    ),
+
+    Instruction(
+        identifier=2, offset=0x30, pattern=parse_pattern_bytes("00 b8 00 10"),
+        instruction_readable="push 0xb8"
+    ),
+
+    Instruction(
+        identifier=3, offset=0x1f4, pattern=parse_pattern_bytes("00 00 00 12"),
+        instruction_readable="push_result"
+    ),
+
+]
+
 prinplup_interaction = PatchPattern(
     name="prinplup interaction",
     description="removing unwanted behavior",
@@ -1616,6 +1634,8 @@ prinplup_interaction = PatchPattern(
         ),
 
     ],
+    patternNA=prinplup_interactionPALNA,
+    patternPAL=prinplup_interactionPALNA,
     patchMapJP=[
         Patch(
             identifier=3,

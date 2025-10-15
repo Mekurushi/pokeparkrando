@@ -1540,6 +1540,27 @@ baltoy_interaction = PatchPattern(
     ]
 )
 
+meditite_quizPALNA = [
+    Instruction(
+        identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0b 00 07"),
+        instruction_readable="grow_stack 0xb"
+    ),
+
+    Instruction(
+        identifier=2, offset=0x79c, pattern=parse_pattern_bytes("ff fc 00 0b"),
+        instruction_readable="load_arg -0x4"
+    ),
+    Instruction(
+        identifier=3, offset=0x7a0, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+        instruction_readable="call get_friendship"
+    ),
+    Instruction(
+        identifier=4, offset=0x7a4, pattern=parse_pattern_bytes("00 00 00 12"),
+        instruction_readable="push_result"
+    ),
+
+]
+
 meditite_quiz = PatchPattern(
     name="meditite quiz",
     description="adding each zone support",
@@ -1563,6 +1584,8 @@ meditite_quiz = PatchPattern(
         ),
 
     ],
+    patternNA=meditite_quizPALNA,
+    patternPAL=meditite_quizPALNA,
     patchMapJP=[
         Patch(
             identifier=3,
