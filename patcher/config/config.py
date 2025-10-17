@@ -7,7 +7,9 @@ from patcher.patterns.evAr01Zn01_Npc_Main import \
     evAr01Zn01_Npc_Main_patch_pattern
 from patcher.patterns.evAr01Zn02_Npc_Main import evAr01Zn02_Npc_Main_patterns
 from patcher.patterns.evAr02Zn01_Npc_Main import evAr02Zn01_Npc_Main_pattern
+from patcher.patterns.evAr03Zn01_Gimmic import evAr03Zn01_Gimmic_patch_pattern
 from patcher.patterns.evAr03Zn01_Npc_Main import evAr03Zn01_Npc_Main_pattern
+from patcher.patterns.evAr03Zn02_Gimmic import evAr03Zn02_Gimmic_patch_pattern
 from patcher.patterns.evAr03Zn02_Npc_Main import evAr03Zn02_Npc_Main_patterns
 from patcher.patterns.evAr03Zn03_Npc_Main import evAr03Zn03_Npc_Main_patterns
 from patcher.patterns.evAr04Zn01_Gimmic import evAr04Zn01_Gimmic_patterns
@@ -21,6 +23,7 @@ from patcher.patterns.evAr05Zn02_Npc_Main import evAr05Zn02_Npc_Main_patterns
 from patcher.patterns.evAr05Zn03_Npc_Main import evAr05Zn03_Npc_Main_patterns
 from patcher.patterns.evAr06Zn01_Gimmic import evAr06Zn01_Gimmic_patterns
 from patcher.patterns.evAr06Zn01_Npc_Main import evAr06Zn01_Npc_Main_patterns
+from patcher.patterns.evAr06Zn02_Gimmic import evAr06Zn02_Gimmic_patch_pattern
 from patcher.patterns.evAr06Zn02_Npc_Main import evAr06Zn02_Npc_Main_patterns
 from patcher.patterns.evAr07Zn01_Npc_Main import evAr07Zn01_Npc_Main_patterns
 from patcher.patterns.evAr99Zn01_Npc_Main import evAr99Zn01_Npc_Main_pattern
@@ -866,6 +869,27 @@ def get_beach_zone_patches() -> List[FilePatchConfig]:
     )
     patches.append(ar03zn01Disposition)
 
+    evAr03Zn01_Gimmic = FilePatchConfig(
+        file_id="ar03zn01_gimmic",
+        description="",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar03Zn01Dat.dac", "Temporary/Field/ParkAr03Zn01Dat.dan",
+                     "Script/evAr03Zn01_Gimmic.fsb"), (
+                        "DATA/files/Field/Ar03Zn01Dat_Fr.dac", "Temporary/Field/ParkAr03Zn01Dat_Fr.dan",
+                        "Script/evAr03Zn01_Gimmic.fsb"), (
+                        "DATA/files/Field/Ar03Zn01Dat_Ge.dac", "Temporary/Field/ParkAr03Zn01Dat_Ge.dan",
+                        "Script/evAr03Zn01_Gimmic.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn01Dat_It.dac", "Temporary/Field/ParkAr03Zn01Dat_It.dan",
+                        "Script/evAr03Zn01_Gimmic.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn01Dat_Sp.dac", "Temporary/Field/ParkAr03Zn01Dat_Sp.dan",
+                        "Script/evAr03Zn01_Gimmic.fsb"),
+                    ],
+        patch_patterns=evAr03Zn01_Gimmic_patch_pattern
+    )
+    patches.append(evAr03Zn01_Gimmic)
+
     rockB = FilePatchConfig(
         file_id="rockB_gimmic",
         description="Gimmic Rock blocking lapras",
@@ -1038,6 +1062,27 @@ def get_ice_zone_patches() -> List[FilePatchConfig]:
         patch_patterns=disposition_drifblim_patterns
     )
     patches.append(ar03zn02Disposition)
+
+    evAr03Zn02_Gimmic = FilePatchConfig(
+        file_id="ar03zn02_gimmic",
+        description="",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar03Zn02Dat.dac", "Temporary/Field/ParkAr03Zn02Dat.dan",
+                     "Script/evAr03Zn02_Gimmic.fsb"), (
+                        "DATA/files/Field/Ar03Zn02Dat_Fr.dac", "Temporary/Field/ParkAr03Zn02Dat_Fr.dan",
+                        "Script/evAr03Zn02_Gimmic.fsb"), (
+                        "DATA/files/Field/Ar03Zn02Dat_Ge.dac", "Temporary/Field/ParkAr03Zn02Dat_Ge.dan",
+                        "Script/evAr03Zn02_Gimmic.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn02Dat_It.dac", "Temporary/Field/ParkAr03Zn02Dat_It.dan",
+                        "Script/evAr03Zn02_Gimmic.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn02Dat_Sp.dac", "Temporary/Field/ParkAr03Zn02Dat_Sp.dan",
+                        "Script/evAr03Zn02_Gimmic.fsb"),
+                    ],
+        patch_patterns=evAr03Zn02_Gimmic_patch_pattern
+    )
+    patches.append(evAr03Zn02_Gimmic)
 
     field_Ar03Zn03_npc_script_config = FilePatchConfig(
         file_id="Ar03_Zn03",
@@ -1725,6 +1770,27 @@ def get_flower_zone_patches() -> List[FilePatchConfig]:
         patch_patterns=disposition_drifblim_patterns
     )
     patches.append(ar06zn02Disposition)
+
+    evAr06Zn02_Gimmic = FilePatchConfig(
+        file_id="ar06zn02_gimmic",
+        description="",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar06Zn02Dat.dac", "Temporary/Field/ParkAr06Zn02Dat.dan",
+                     "Script/evAr06Zn02_Gimmic.fsb"), (
+                        "DATA/files/Field/Ar06Zn02Dat_Fr.dac", "Temporary/Field/ParkAr06Zn02Dat_Fr.dan",
+                        "Script/evAr06Zn02_Gimmic.fsb"), (
+                        "DATA/files/Field/Ar06Zn02Dat_Ge.dac", "Temporary/Field/ParkAr06Zn02Dat_Ge.dan",
+                        "Script/evAr06Zn02_Gimmic.fsb"),
+                    (
+                        "DATA/files/Field/Ar06Zn02Dat_It.dac", "Temporary/Field/ParkAr06Zn02Dat_It.dan",
+                        "Script/evAr06Zn02_Gimmic.fsb"),
+                    (
+                        "DATA/files/Field/Ar06Zn02Dat_Sp.dac", "Temporary/Field/ParkAr06Zn02Dat_Sp.dan",
+                        "Script/evAr06Zn02_Gimmic.fsb"),
+                    ],
+        patch_patterns=evAr06Zn02_Gimmic_patch_pattern
+    )
+    patches.append(evAr06Zn02_Gimmic)
 
     field_Ar06Zn02_npc_script_config = FilePatchConfig(
         file_id="Ar06_Zn02",

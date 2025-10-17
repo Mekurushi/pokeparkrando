@@ -804,6 +804,45 @@ set_magnemite3_location_function = PatchPattern(
     ]
 )
 
+taxi_stop = PatchPattern(
+    name="cavern zone taxi stop",
+    description="removing zone drifblim unlock",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 1c 00 07"),
+            instruction_readable="grow_stack 0x1c"
+        ),
+        Instruction(
+            identifier=2, offset=0x4, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr GlobalManager"
+        ),
+        Instruction(
+            identifier=3, offset=0x18, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=4, offset=0x1c, pattern=parse_pattern_bytes("4e 2e 00 10"),
+            instruction_readable="push 0x4e2e"
+        ),
+        Instruction(
+            identifier=5, offset=0x40, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_result"
+        ),
+        Instruction(
+            identifier=6, offset=0x458, pattern=parse_pattern_bytes("00 1d 00 06"),
+            instruction_readable="ret -0x1d"
+        ),
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x1"
+        ),
+
+    ],
+)
+
 evAr04Zn01_Gimmic_patterns = [
     set_chapter,
     get_friendship,
@@ -811,6 +850,7 @@ evAr04Zn01_Gimmic_patterns = [
     box_coil1,
     box_coil2,
     box_coil3,
+    taxi_stop,
 
     set_magnemite_location_function,
     set_magnemite2_location_function,
