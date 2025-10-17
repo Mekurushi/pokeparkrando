@@ -1613,36 +1613,34 @@ prinplup_interactionPALNA = [
     ),
 
 ]
-
 prinplup_interaction = PatchPattern(
-    name="prinplup interaction",
+    name="prinplup2 interaction",
     description="removing unwanted behavior",
     patternJP=[
         Instruction(
-            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 22 00 07"),
-            instruction_readable="grow_stack 0x22"
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 23 00 07"),
+            instruction_readable="grow_stack 0x23"
         ),
 
         Instruction(
-            identifier=2, offset=0x40, pattern=parse_pattern_bytes("00 b8 00 10"),
+            identifier=2, offset=0x30, pattern=parse_pattern_bytes("00 b8 00 10"),
             instruction_readable="push 0xb8"
         ),
 
         Instruction(
-            identifier=3, offset=0x24c, pattern=parse_pattern_bytes("00 00 00 12"),
+            identifier=3, offset=0x1f4, pattern=parse_pattern_bytes("00 00 00 12"),
             instruction_readable="push_result"
         ),
 
     ],
-    patternNA=prinplup_interactionPALNA,
     patternPAL=prinplup_interactionPALNA,
+    patternNA=prinplup_interactionPALNA,
     patchMapJP=[
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, matches: (0x00030010).to_bytes(4, 'big'),
             new_instruction_readable="push 0x3"  # removed quest condition
         ),
-
     ]
 )
 
