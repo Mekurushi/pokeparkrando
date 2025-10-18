@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import List
 
 import disc_riider_py
+from libWiiPy.archive import IMETHeader
 from ruamel.yaml import YAML
 
 yaml = YAML(typ="safe")
@@ -66,7 +67,7 @@ class PatcherService:
             # Step 5: Rebuild ISO (80-95%)
             if self._canceled:
                 return PatchResult(success=False, error_message="Canceled by user")
-            filename = request.appkprk_path.split("/")[-1]
+            filename = f"Pokepark {request.appkprk_path.split('/')[-1]}"
             final_output = self._rebuild_iso(request.output_path + "/" + filename, progress_callback)
 
             # Step 6: Cleanup (95-100%)
@@ -296,6 +297,23 @@ class PatcherService:
 
         except Exception as e:
             raise Exception(f"Updating Maker Code failed: {e}")
+
+    def _update_banner_title(self):
+        try:
+            file_path = self.extract_dir / "DATA/files/opening.bnr"
+            with open(file_path, "r+b") as f:
+                header = IMETHeader()
+                data = f.read()
+                header.load(data)
+
+                num_channels = 10
+                channel_names = [(header.LocalizedTitles(i), "Pokepark Archipelago") for i in range(num_channels)]
+                header.set_channel_names(channel_names)
+
+                f.seek(0)
+                f.write(header.dump())
+        except Exception as e:
+            raise Exception(f"Updating Banner Titles failed: {e}")
 
     def _remove_unneeded_files(self):
         files_to_remove = [

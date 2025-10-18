@@ -7,7 +7,7 @@ from typing import Optional
 import libWiiPy
 import nlzss11
 
-from patcher.helper.patttern_handler import search_pattern, search_all_pattern
+from patcher.helper.patttern_handler import search_all_pattern
 from patcher.models.models import FilePatchConfig, ProgressCallback, FileProcessingType
 
 
@@ -336,7 +336,6 @@ class DacCopyFilePatcher(BasePatcher):
                     raise Exception("Decompressed data is not a valid U8 archive")
 
                 libWiiPy.archive.extract_u8(decompressed_data, str(u8_main_dir))
-
                 # Step 4: copy file to target path
                 progress_callback(f"Applying patches", 55)
 
