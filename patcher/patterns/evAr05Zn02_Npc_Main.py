@@ -566,8 +566,8 @@ spinarak_interaction = PatchPattern(
     ]
 )
 
-unknown_interaction = PatchPattern(  # TODO: find pokemon
-    name="unkown interaction",
+elekid_interaction = PatchPattern(
+    name="elekid interaction",
     description="removing hide and seek flag",
     patternJP=[
         Instruction(
@@ -657,8 +657,8 @@ unknown_interaction = PatchPattern(  # TODO: find pokemon
     ]
 )
 
-unknown_interaction2 = PatchPattern(
-    name="unknown interaction",
+luxray_interaction = PatchPattern(
+    name="luxray interaction",
     description="updating wincounter with options",
     patternJP=[
         Instruction(
@@ -1047,8 +1047,8 @@ evAr05Zn02_Npc_Main_patterns = [
     dusknoir_friendship_event,
     get_dusknoir_friendship_location_state,
     spinarak_interaction,
-    unknown_interaction,
-    unknown_interaction2,
+    elekid_interaction,
+    luxray_interaction,
     prepare_chase_ai,
     are_doors_unlocked,
     set_attraction_record
