@@ -59,18 +59,23 @@ class PatcherService:
                 return PatchResult(success=False, error_message="Canceled by user")
             self._update_maker_code()
 
-            # Step 4: remove unnecessary files
+            # Step 4: Update Banner Titles
+            if self._canceled:
+                return PatchResult(success=False, error_message="Canceled by user")
+            self._update_banner_title()
+
+            # Step 5: remove unnecessary files
             if self._canceled:
                 return PatchResult(success=False, error_message="Canceled by user")
             self._remove_unneeded_files()
 
-            # Step 5: Rebuild ISO (80-95%)
+            # Step 6: Rebuild ISO (80-95%)
             if self._canceled:
                 return PatchResult(success=False, error_message="Canceled by user")
             filename = f"Pokepark {request.appkprk_path.split('/')[-1]}"
             final_output = self._rebuild_iso(request.output_path + "/" + filename, progress_callback)
 
-            # Step 6: Cleanup (95-100%)
+            # Step 7: Cleanup (95-100%)
             self._cleanup_working_directories()
 
             if not self._canceled:
