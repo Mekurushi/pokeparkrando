@@ -570,12 +570,45 @@ taxi_stop = PatchPattern(
     ],
 )
 
+FIRESWITCHA = PatchPattern(
+    name="FIRESWITCHA",
+    description="removing unlocking firewall through lever",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 08 00 07"),
+            instruction_readable="grow_stack 0x8"
+        ),
+        Instruction(
+            identifier=2, offset=0x18, pattern=parse_pattern_bytes("4e 32 00 10"),
+            instruction_readable="push 0x4e32"
+        ),
+        Instruction(
+            identifier=3, offset=0x70, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_result"
+        ),
+        Instruction(
+            identifier=4, offset=0x74, pattern=parse_pattern_bytes("00 00 00 10"),
+            instruction_readable="push 0x0"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x1"
+        ),
+
+    ],
+)
+
 evAr04Zn02_Gimmic_patterns = [
     set_chapter,
     get_friendship,
     drill_switch,
     yokoro,
     taxi_stop,
+    FIRESWITCHA,
     box_yajilon,
     set_golem_location_function,
     set_baltoy_location_function,

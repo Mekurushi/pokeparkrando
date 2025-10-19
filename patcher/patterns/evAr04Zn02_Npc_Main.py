@@ -1647,6 +1647,7 @@ evAr04Zn02_Npc_Main_patterns = [
     torchic_interaction,
     baltoy_interaction,
     meditite_quiz,
+    camerupt_interaction,
 
     special_spawn_conditions,
     set_attraction_record
