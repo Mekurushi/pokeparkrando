@@ -1068,7 +1068,7 @@ gyarados_interaction = PatchPattern(
         Patch(
             identifier=9,
             patch_function=lambda offset, data, plando_dict, matches: get_attraction_id_from_dict(
-                plando_dict, "Beach Zone Recycle Area - Gyarado's Aqua Dash Attraction"
+                plando_dict, "Beach Zone Recycle Area - Gyarados' Aqua Dash Attraction"
             ),
             new_instruction_readable="update attraction id"
         ),

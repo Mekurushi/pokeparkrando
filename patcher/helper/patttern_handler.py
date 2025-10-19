@@ -119,7 +119,7 @@ def get_attraction_id_from_dict(plando_dict, entrance: str):
         "Bulbasaur's Daring Dash Attraction": 0xf,
         "Venusaur's Vine Swing Attraction": 0x2,
         "Pelipper's Circle Circuit Attraction": 0x6,
-        "Gyarado's Aqua Dash Attraction": 0x5,
+        "Gyarados' Aqua Dash Attraction": 0x5,
         "Empoleon's Snow Slide Attraction": 0x8,
         "Bastiodon's Panel Crush Attraction": 0x9,
         "Rhyperior's Bumper Burn Attraction": 0xa,
