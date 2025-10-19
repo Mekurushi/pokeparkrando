@@ -138,20 +138,20 @@ class PatcherService:
         # Major version must match exactly (breaking changes)
         if major != patcher_major:
             raise Exception(
-                f"Incompatible major version: Randomizer  v{patcher_major}.{patcher_minor}.{patcher_patch} "
+                f"Incompatible major version: Randomizer Patcher v{patcher_major}.{patcher_minor}.{patcher_patch} "
                 f"vs APWorld v{major}.{minor}.{patch}"
             )
 
         # Check for minor version mismatch (breaking feature changes)
         if minor > patcher_minor:
             raise Exception(
-                f"Incompatible minor version: Randomizer v{patcher_major}.{patcher_minor}.{patcher_patch} "
+                f"Incompatible minor version: Randomizer Patcher v{patcher_major}.{patcher_minor}.{patcher_patch} "
                 f"vs APWorld v{major}.{minor}.{patch}"
             )
 
         if patch != patcher_patch:
             print(
-                f"Warning: Patch version differs: Randomizer v{patcher_major}.{patcher_minor}.{patcher_patch} "
+                f"Warning: Patch version differs: Randomizer Patcher v{patcher_major}.{patcher_minor}.{patcher_patch} "
                 f"vs APWorld v{major}.{minor}.{patch} (safe to continue)"
             )
 
