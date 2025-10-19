@@ -16,7 +16,7 @@ yaml_dumper = YAML(typ="rt")  # Use RoundTripDumper for pretty-formatted dumps.
 from patcher.logic.patchers import PatcherFactory
 from patcher.models.models import PatchRequest, ProgressCallback, PatchResult, FilePatchConfig
 
-VERSION = (0, 0, 1)
+VERSION = (1, 0, 0)
 
 
 class PatcherService:
@@ -115,21 +115,44 @@ class PatcherService:
             raise Exception(f"Failed to setup working directories: {e}")
 
     def _check_version(self, plando_dict):
-        """Check if plando version is compatible with current randomizer Patcher version."""
+        """
+        Check if plando version is compatible with current randomizer Patcher version.
+
+        Versioning follows SemVer principles:
+            - Major version (X.y.z): breaking changes to core features
+            - Minor version (x.Y.z): backward-incompatible changes or new features
+            - Patch version (x.y.Z): bug fixes, safe for all clients
+        """
         if "Version" not in plando_dict:
             raise Exception("Missing 'Version' key in .appkprk")
 
         plando_version = plando_dict["Version"]
+        if not (isinstance(plando_version, (list, tuple)) and all(isinstance(x, int) for x in plando_version)):
+            raise Exception("Version must be a list or tuple of integers")
 
-        major = plando_version[0]
-        minor = plando_version[1]
+        major, minor = plando_version[0], plando_version[1]
         patch = plando_version[2] if len(plando_version) > 2 else 0
 
         patcher_major, patcher_minor, patcher_patch = VERSION
 
+        # Major version must match exactly (breaking changes)
         if major != patcher_major:
             raise Exception(
-                f"Incompatible major version: randomizer v{patcher_major}.x.x, apworld v{major}.{minor}.{patch}"
+                f"Incompatible major version: Randomizer  v{patcher_major}.{patcher_minor}.{patcher_patch} "
+                f"vs APWorld v{major}.{minor}.{patch}"
+            )
+
+        # Check for minor version mismatch (breaking feature changes)
+        if minor > patcher_minor:
+            raise Exception(
+                f"Incompatible minor version: Randomizer v{patcher_major}.{patcher_minor}.{patcher_patch} "
+                f"vs APWorld v{major}.{minor}.{patch}"
+            )
+
+        if patch != patcher_patch:
+            print(
+                f"Warning: Patch version differs: Randomizer v{patcher_major}.{patcher_minor}.{patcher_patch} "
+                f"vs APWorld v{major}.{minor}.{patch} (safe to continue)"
             )
 
         return major, minor, patch
