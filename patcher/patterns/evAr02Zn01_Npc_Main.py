@@ -513,10 +513,14 @@ treehouse_additional_pokemon_spawn_conditions = PatchPattern(
             identifier=10, offset=0x1e4, pattern=parse_pattern_bytes("00 01 00 10"),  # opcode
             instruction_readable="push 0x1"
         ),
+        Instruction(
+            identifier=11, offset=0x1f0, pattern=parse_pattern_bytes("00 03 00 10"),
+            instruction_readable="push 0x3"
+        ),
 
         # end of function
         Instruction(
-            identifier=11, offset=0x204, pattern=parse_pattern_bytes("00 03 00 06"),
+            identifier=12, offset=0x204, pattern=parse_pattern_bytes("00 03 00 06"),
             instruction_readable="ret -0x3"
         ),
 
@@ -576,6 +580,11 @@ treehouse_additional_pokemon_spawn_conditions = PatchPattern(
             patch_function=lambda offset, data, plando_dict, matches: (0x00510010).to_bytes(4, 'big'),
             new_instruction_readable="push 0x51"  # opcode prisma request
         ),
+        Patch(
+            identifier=11,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x1"
+        ),
     ],
 )
 
@@ -628,10 +637,13 @@ treehouse_additional_pokemon_spawn_conditions2 = PatchPattern(
             identifier=10, offset=0x1e4, pattern=parse_pattern_bytes("00 01 00 10"),  # opcode
             instruction_readable="push 0x1"
         ),
-
+        Instruction(
+            identifier=11, offset=0x1f0, pattern=parse_pattern_bytes("00 03 00 10"),
+            instruction_readable="push 0x3"
+        ),
         # end of function
         Instruction(
-            identifier=11, offset=0x204, pattern=parse_pattern_bytes("00 03 00 06"),
+            identifier=12, offset=0x204, pattern=parse_pattern_bytes("00 03 00 06"),
             instruction_readable="ret -0x3"
         ),
 
@@ -689,7 +701,11 @@ treehouse_additional_pokemon_spawn_conditions2 = PatchPattern(
             patch_function=lambda offset, data, plando_dict, matches: (0x00510010).to_bytes(4, 'big'),
             new_instruction_readable="push 0x51"  # opcode prisma request
         ),
-
+        Patch(
+            identifier=11,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x1"
+        ),
     ],
 )
 
