@@ -1644,6 +1644,54 @@ prinplup_interaction = PatchPattern(
     ]
 )
 
+glalie_interaction = PatchPattern(
+    name="glalie interaction ice zone",
+    description="removing unwanted behavior",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 1e 00 07"),
+            instruction_readable="grow_stack 0x1e"
+        ),
+
+        # model id
+        Instruction(
+            identifier=2, offset=0x50, pattern=parse_pattern_bytes("00 b2 00 10"),
+            instruction_readable="push 0xb2"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x1c8, pattern=parse_pattern_bytes("00 03 00 10"),
+            instruction_readable="push 0x3"
+        ),
+
+        Instruction(
+            identifier=4, offset=0x598, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call get_chapter"
+        ),
+        Instruction(
+            identifier=5, offset=0x628, pattern=parse_pattern_bytes("ff fa 00 0b"),
+            instruction_readable="load_arg -0x6"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big') if
+            plando_dict["Options"]["remove_errand_power_comp_locations"] else None,
+            new_instruction_readable="push 0x0"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
+                offset, 5, matches,
+                "jmp"
+            ),
+            new_instruction_readable="jmp"
+        ),
+    ]
+)
+
 evAr03Zn02_Npc_Main_patterns = [
     set_chapter,
     get_friendship,
@@ -1670,6 +1718,7 @@ evAr03Zn02_Npc_Main_patterns = [
     wingull2_interaction,
     wingull3_interaction,
     prinplup_interaction,
+    glalie_interaction,
 
     special_spawn_conditions,
     special_spawn_conditions2,
