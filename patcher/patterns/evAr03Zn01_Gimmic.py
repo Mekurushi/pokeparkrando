@@ -40,6 +40,31 @@ taxi_stop = PatchPattern(
     ],
 )
 
+recycle = PatchPattern(
+    name="Recycle",
+    description="increeasing after errand berry gain",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0a 00 07"),
+            instruction_readable="grow_stack 0xa"
+        ),
+        Instruction(
+            identifier=2, offset=0x52c, pattern=parse_pattern_bytes("00 0a 00 10"),
+            instruction_readable="push 0xa"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00640010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x64"
+        ),
+
+    ],
+)
+
 evAr03Zn01_Gimmic_patch_pattern = [
-    taxi_stop
+    taxi_stop,
+    recycle
 ]
