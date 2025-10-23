@@ -3537,6 +3537,11 @@ event_bidoof_friendship_pattern = PatchPattern(
             instruction_readable="call FUN_??????"
         ),
 
+        Instruction(  # replacing with separeate friendship function
+            identifier=99, offset=0xbc,
+            pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call get_friendship"
+        ),
     ],
     patchMapJP=[
         # removing unneeded code
@@ -3788,6 +3793,16 @@ event_bidoof_friendship_pattern = PatchPattern(
                 set_bestfriend_function_pattern
             ),
             new_instruction_readable="call set_bestfriend(0xe)"
+        ),
+
+        # replacing getfriendship function
+        Patch(
+            identifier=99,  # replace friendship flag with bestfriend flag
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data,
+                get_mankey_friendship_function
+            ),
+            new_instruction_readable="call getMankeyFriendship"
         ),
     ]
 )
@@ -12597,6 +12612,122 @@ thunderbolt_hit_magikarp_event = PatchPattern(
     patchMapNA=thunderbolt_hit_magikarp_event_patchMapPAL,
 )
 
+get_mankey_friendship_function = PatchPattern(
+    name="unused code space",
+    description="get mankey friendship function",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 04 02 08"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=2, offset=0x4, pattern=parse_pattern_bytes("00 00 00 10"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=3, offset=0x8, pattern=parse_pattern_bytes("ff ff 00 0b"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=4, offset=0xc, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=5, offset=0x10, pattern=parse_pattern_bytes("00 15 03 01"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=6, offset=0x14, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=7, offset=0x18, pattern=parse_pattern_bytes("ff f2 00 0c"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=8, offset=0x1c, pattern=parse_pattern_bytes("00 00 00 10"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=9, offset=0x20, pattern=parse_pattern_bytes("00 00 03 02"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=10, offset=0x24, pattern=parse_pattern_bytes("ff ce 00 08"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=11, offset=0x28, pattern=parse_pattern_bytes("00 13 00 06"),
+            instruction_readable="---"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=1,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010007).to_bytes(4, 'big'),
+            new_instruction_readable="grow_stack 0x1"
+        ),
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+                data, string_section_start,
+                globalManager
+            ),
+            new_instruction_readable="lstr GlobalManager"
+        ),
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data,
+                get_module
+            ),
+            new_instruction_readable="call get_module()"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(4, 'big'),
+            new_instruction_readable="push_result"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0xffff000c).to_bytes(4, 'big'),
+            new_instruction_readable="store_arg -0x1"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00210010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x21"
+        ),
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(4, 'big'),
+            new_instruction_readable="load_arg -0x1"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: (0x003d0010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x3d"
+        ),
+        Patch(
+            identifier=9,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00150301).to_bytes(4, 'big'),
+            new_instruction_readable="SC3 0x0:0x15"
+        ),
+        Patch(
+            identifier=10,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(4, 'big'),
+            new_instruction_readable="push_result"
+        ),
+        Patch(
+            identifier=11,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00020106).to_bytes(4, 'big'),
+            new_instruction_readable="retv -0x2"
+        ),
+
+    ],
+)
+
 evAr01Zn01_Npc_Main_patch_pattern = [
     set_chapter,
     get_friendship,
@@ -12656,5 +12787,6 @@ evAr01Zn01_Npc_Main_patch_pattern = [
     custom_check_f0301BippaFlag_funtion,
 
     # magikarp logic
-    thunderbolt_hit_magikarp_event
+    thunderbolt_hit_magikarp_event,
+    get_mankey_friendship_function
 ]
