@@ -49,7 +49,11 @@ recycle = PatchPattern(
             instruction_readable="grow_stack 0xa"
         ),
         Instruction(
-            identifier=2, offset=0x52c, pattern=parse_pattern_bytes("00 0a 00 10"),
+            identifier=2, offset=0xa8, pattern=parse_pattern_bytes("00 06 00 10"),
+            instruction_readable="push 0x6"
+        ),
+        Instruction(
+            identifier=3, offset=0x52c, pattern=parse_pattern_bytes("00 0a 00 10"),
             instruction_readable="push 0xa"
         ),
 
@@ -57,6 +61,12 @@ recycle = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big') if
+            plando_dict["Options"]["remove_errand_power_comp_locations"] else None,
+            new_instruction_readable="push 0x0"
+        ),
+        Patch(
+            identifier=3,
             patch_function=lambda offset, data, plando_dict, matches: (0x00640010).to_bytes(4, 'big'),
             new_instruction_readable="push 0x64"
         ),
