@@ -838,6 +838,62 @@ ambipom_interaction = PatchPattern(
     ]
 )
 
+kakuna_interaction = PatchPattern(
+    name="kakuna interaction",
+    description="removing unwanted behavior",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 06 00 07"),
+            instruction_readable="grow_stack 0x6"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x30, pattern=parse_pattern_bytes("01 45 00 10"),
+            instruction_readable="push 0x145"
+        ),
+        Instruction(
+            identifier=3, offset=0xdc, pattern=parse_pattern_bytes("00 3d 00 10"),
+            instruction_readable="push 0x3d"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x004b0010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x4b"
+        ),
+    ]
+)
+
+metapod_interaction = PatchPattern(
+    name="metapod interaction",
+    description="removing unwanted behavior",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 06 00 07"),
+            instruction_readable="grow_stack 0x6"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x30, pattern=parse_pattern_bytes("01 46 00 10"),
+            instruction_readable="push 0x146"
+        ),
+        Instruction(
+            identifier=3, offset=0xdc, pattern=parse_pattern_bytes("00 3d 00 10"),
+            instruction_readable="push 0x3d"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x004b0010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x4b"
+        ),
+    ]
+)
+
 evAr05Zn01_Npc_Main_patterns = [
     set_chapter,
     get_friendship,
@@ -847,6 +903,8 @@ evAr05Zn01_Npc_Main_patterns = [
     meowth_quiz,
     aipom_interaction,
     ambipom_interaction,
+    kakuna_interaction,
+    metapod_interaction,
 
     return_at04,
     get_tangrowth_friendship_location_state,
