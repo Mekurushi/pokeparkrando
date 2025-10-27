@@ -103,86 +103,142 @@ overworld_pokemon_spawning_Ar01Zn01 = PatchPattern(
     ],
 )
 
-unlock_function = PatchPattern(
-    name="unlock function",
-    description="replacing the unlock function to set the flag for Magikarp Archipelago location",
+set_magikarp_location_function = PatchPattern(
+    name="set_magikarp_location",
+    description="using unused code for set location function",
     patternJP=[
         Instruction(
-            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 03 00 07"),
-            instruction_readable="grow_stack 0x3"
-        ),
-
-        Instruction(
-            identifier=2, offset=0x24, pattern=parse_pattern_bytes("00 00 00 0b"),
-            instruction_readable="load_arg 0x0"
-        ),
-        Instruction(
-            identifier=3, offset=0x28, pattern=parse_pattern_bytes("ff ff 00 0b"),
-            instruction_readable="load_arg -0x1"
-        ),
-        Instruction(
-            identifier=4, offset=0x2c, pattern=parse_pattern_bytes("00 04 00 10"),
-            instruction_readable="push 0x4"
-        ),
-        Instruction(
-            identifier=5, offset=0x30, pattern=parse_pattern_bytes("00 15 03 01"),
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 15 03 01"),
             instruction_readable="SC3 0x0:0x15"
         ),
         Instruction(
-            identifier=6, offset=0x34, pattern=parse_pattern_bytes("00 00 00 12"),
-            instruction_readable="push_result"
+            identifier=2, offset=0x4, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_res"
         ),
         Instruction(
-            identifier=7, offset=0x38, pattern=parse_pattern_bytes("ff fd 00 0c"),
-            instruction_readable="store_arg -0x3"
+            identifier=3, offset=0x8, pattern=parse_pattern_bytes("00 00 00 14"),
+            instruction_readable="---"
         ),
         Instruction(
-            identifier=8, offset=0x3c, pattern=parse_pattern_bytes("ff fd 00 0b"),
-            instruction_readable="load_arg -0x3"
+            identifier=4, offset=0xc, pattern=parse_pattern_bytes("ff fe 00 0c"),
+            instruction_readable="store_arg -0x2"
+        ),
+        Instruction(
+            identifier=5, offset=0x10, pattern=parse_pattern_bytes("ff fe 00 0b"),
+            instruction_readable="load_arg -0x2"
+        ),
+        Instruction(
+            identifier=6, offset=0x14, pattern=parse_pattern_bytes("00 39 00 10"),
+            instruction_readable="push 0x39"
+        ),
+        Instruction(
+            identifier=7, offset=0x18, pattern=parse_pattern_bytes("ff ff 00 0b"),
+            instruction_readable="load_arg -0x1"
+        ),
+        Instruction(
+            identifier=8, offset=0x1c, pattern=parse_pattern_bytes("00 3d 00 10"),
+            instruction_readable="push 0x3d"
+        ),
+        Instruction(
+            identifier=9, offset=0x20, pattern=parse_pattern_bytes("00 15 03 01"),
+            instruction_readable="SC3 0x0:0x15"
+        ),
+        Instruction(
+            identifier=10, offset=0x24, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_res"
+        ),
+        Instruction(
+            identifier=11, offset=0x28, pattern=parse_pattern_bytes("00 00 00 14"),
+            instruction_readable="---"
         ),
     ],
     patchMapJP=[
-
+        Patch(
+            identifier=1,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010007).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="grow_stack -0x1"
+        ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
-            new_instruction_readable="push 0x1"
+            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+                data, string_section_start, globalManager
+            ),
+            new_instruction_readable="lstr GlobalManager"
         ),
         Patch(
             identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, get_module
+            ),
+            new_instruction_readable="call get_module"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push_result"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0xffff000c).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="store_arg -0x1"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x1"
+        ),
+        Patch(
+            identifier=7,
             patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
-                data, string_section_start,
-                f0101TalkOnisuzume
+                data, string_section_start, f0101TalkOnisuzume
             ),
             new_instruction_readable="lstr f0101TalkOnisuzume"
         ),
         Patch(
-            identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(4, 'big'),
-            new_instruction_readable="load_arg -0x2"
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="load_arg -0x1"
         ),
         Patch(
-            identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big'),
+            identifier=9,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(
+                4,
+                'big'
+            ),
             new_instruction_readable="push 0x0"
         ),
         Patch(
-            identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00150401).to_bytes(4, 'big'),
+            identifier=10,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00150401).to_bytes(
+                4,
+                'big'
+            ),
             new_instruction_readable="SC4 0x0:0x15"
         ),
         Patch(
-            identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
-            new_instruction_readable="push 0x1"
+            identifier=11,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00020006).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="ret -0x2"
         ),
-        Patch(
-            identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00040106).to_bytes(4, 'big'),
-            new_instruction_readable="retv -0x4"
-        ),
-
-    ],
+    ]
 )
 
 set_bestfriend_function_pattern = PatchPattern(
@@ -12572,9 +12628,21 @@ thunderbolt_hit_magikarp_event_patternJP = [
         identifier=2, offset=0x348, pattern=parse_pattern_bytes("00 19 00 06"),
         instruction_readable="ret -0x19"
     ),
+    Instruction(
+        identifier=5, offset=0x11c, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+        instruction_readable="call unlock_pokemon"
+    ),
 ]
 
-thunderbolt_hit_magikarp_event_patchMapJP = []
+thunderbolt_hit_magikarp_event_patchMapJP = [
+    Patch(
+        identifier=5,
+        patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+            offset, data, set_magikarp_location_function
+        ),
+        new_instruction_readable="call set_magikarp_function"
+    ),
+]
 
 thunderbolt_hit_magikarp_event_patternPAL = [
     Instruction(
@@ -12591,6 +12659,10 @@ thunderbolt_hit_magikarp_event_patternPAL = [
         identifier=3, offset=0x3b8, pattern=parse_pattern_bytes("00 1e 00 10"),
         instruction_readable="push 0x1e"
     ),
+    Instruction(
+        identifier=5, offset=0x11c, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+        instruction_readable="call unlock_pokemon"
+    ),
 ]
 thunderbolt_hit_magikarp_event_patchMapPAL = [
     Patch(
@@ -12598,7 +12670,13 @@ thunderbolt_hit_magikarp_event_patchMapPAL = [
         patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(offset, 3, matches),
         new_instruction_readable="jmp"
     ),
-
+    Patch(
+        identifier=5,
+        patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+            offset, data, set_magikarp_location_function
+        ),
+        new_instruction_readable="call set_magikarp_function"
+    ),
 ]
 
 thunderbolt_hit_magikarp_event = PatchPattern(
@@ -12732,7 +12810,6 @@ evAr01Zn01_Npc_Main_patch_pattern = [
     set_chapter,
     get_friendship,
     overworld_pokemon_spawning_Ar01Zn01,
-    unlock_function,
     turtwig_friendship_pattern,
     turtwig_dialog_options_pattern,
     buneary_friendship_pattern,
@@ -12788,5 +12865,6 @@ evAr01Zn01_Npc_Main_patch_pattern = [
 
     # magikarp logic
     thunderbolt_hit_magikarp_event,
+    set_magikarp_location_function,
     get_mankey_friendship_function
 ]
