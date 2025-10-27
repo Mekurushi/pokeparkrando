@@ -1037,6 +1037,38 @@ misdreavus_interaction = PatchPattern(
     ]
 )
 
+sableye_interaction = PatchPattern(
+    name="sableye interaction",
+    description="removing unwanted behavior",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0f 00 07"),
+            instruction_readable="grow_stack 0xf"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x30, pattern=parse_pattern_bytes("01 80 00 10"),
+            instruction_readable="push 0x180"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x168, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_result"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x1"
+        ),
+    ]
+)
+
 evAr05Zn02_Npc_Main_patterns = [
     set_chapter,
     get_friendship,
@@ -1049,6 +1081,7 @@ evAr05Zn02_Npc_Main_patterns = [
     spinarak_interaction,
     elekid_interaction,
     luxray_interaction,
+    sableye_interaction,
     prepare_chase_ai,
     are_doors_unlocked,
     set_attraction_record
