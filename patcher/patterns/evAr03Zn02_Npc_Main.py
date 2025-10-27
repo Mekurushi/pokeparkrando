@@ -2,7 +2,7 @@ from patcher.helper.patttern_handler import compute_call_to_function_script, cre
     get_num_battle_count_from_dict_as_instruction, \
     parse_pattern_bytes, create_jmp_instruction_script
 from patcher.models.models import PatchPattern, Instruction, Patch
-from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
+from patcher.patterns.general import disposManager, get_friendship, get_module, globalManager, set_chapter
 
 string_section_start = PatchPattern(
     name="string section start",
@@ -1692,6 +1692,466 @@ glalie_interaction = PatchPattern(
     ]
 )
 
+delibird_interaction = PatchPattern(
+    name="delibird interaction ice zone",
+    description="removing unwanted behavior",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0e 00 07"),
+            instruction_readable="grow_stack 0xe"
+        ),
+
+        # model id
+        Instruction(
+            identifier=2, offset=0x40, pattern=parse_pattern_bytes("00 a5 00 10"),
+            instruction_readable="push 0xa5"
+        ),
+
+        Instruction(
+            identifier=3, offset=0xf8, pattern=parse_pattern_bytes("00 a3 00 10"),
+            instruction_readable="push 0xa3"
+        ),
+        Instruction(
+            identifier=4, offset=0xfc, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call get_friendship"
+        ),
+        Instruction(
+            identifier=5, offset=0x110, pattern=parse_pattern_bytes("00 be 00 10"),
+            instruction_readable="push 0xbe"
+        ),
+        Instruction(
+            identifier=6, offset=0x114, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call get_friendship"
+        ),
+        Instruction(
+            identifier=7, offset=0x128, pattern=parse_pattern_bytes("00 a9 00 10"),
+            instruction_readable="push 0xa9"
+        ),
+        Instruction(
+            identifier=8, offset=0x12c, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call get_friendship"
+        ),
+        Instruction(
+            identifier=9, offset=0x140, pattern=parse_pattern_bytes("00 a8 00 10"),
+            instruction_readable="push 0xa8"
+        ),
+        Instruction(
+            identifier=10, offset=0x144, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call get_friendship"
+        ),
+        Instruction(
+            identifier=11, offset=0x430, pattern=parse_pattern_bytes("ff f5 00 0b"),  # quiz condition
+            instruction_readable="load_arg -0xb"
+        ),
+        Instruction(
+            identifier=12, offset=0x744, pattern=parse_pattern_bytes("00 a3 00 10"),
+            instruction_readable="push 0xa3"
+        ),
+        Instruction(
+            identifier=13, offset=0x748, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call get_friendship"
+        ),
+        Instruction(
+            identifier=14, offset=0x7f4, pattern=parse_pattern_bytes("00 be 00 10"),
+            instruction_readable="push 0xbe"
+        ),
+        Instruction(
+            identifier=15, offset=0x7f8, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call get_friendship"
+        ),
+        Instruction(
+            identifier=16, offset=0x8a4, pattern=parse_pattern_bytes("00 a9 00 10"),
+            instruction_readable="push 0xa9"
+        ),
+        Instruction(
+            identifier=17, offset=0x8a8, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call get_friendship"
+        ),
+        Instruction(
+            identifier=18, offset=0x954, pattern=parse_pattern_bytes("00 a8 00 10"),
+            instruction_readable="push 0xa8"
+        ),
+        Instruction(
+            identifier=19, offset=0x958, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call get_friendship"
+        ),
+
+        Instruction(
+            identifier=20, offset=0xad0, pattern=parse_pattern_bytes("00 a3 00 10"),
+            instruction_readable="push 0xa3"
+        ),
+        Instruction(
+            identifier=21, offset=0xad4, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call get_friendship"
+        ),
+        Instruction(
+            identifier=22, offset=0xb20, pattern=parse_pattern_bytes("00 be 00 10"),
+            instruction_readable="push 0xbe"
+        ),
+        Instruction(
+            identifier=23, offset=0xb24, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call get_friendship"
+        ),
+        Instruction(
+            identifier=24, offset=0xb70, pattern=parse_pattern_bytes("00 a9 00 10"),
+            instruction_readable="push 0xa9"
+        ),
+        Instruction(
+            identifier=25, offset=0xb74, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call get_friendship"
+        ),
+        Instruction(
+            identifier=26, offset=0xbc0, pattern=parse_pattern_bytes("00 a8 00 10"),
+            instruction_readable="push 0xa8"
+        ),
+        Instruction(
+            identifier=27, offset=0xbc4, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call get_friendship"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, get_friendship_function
+            ),
+            new_instruction_readable="call get_friendship"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, get_friendship_function
+            ),
+            new_instruction_readable="call get_friendship"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, get_friendship_function
+            ),
+            new_instruction_readable="call get_friendship"
+        ),
+        Patch(
+            identifier=10,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, get_friendship_function
+            ),
+            new_instruction_readable="call get_friendship"
+        ),
+        Patch(
+            identifier=11,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00040010).to_bytes(4, 'big') if
+            plando_dict["Options"]["remove_errand_power_comp_locations"] else None,
+            new_instruction_readable="push 0x4"  # allow direct entering quiz when errand locations are removed
+        ),
+        Patch(
+            identifier=13,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, get_friendship_function
+            ),
+            new_instruction_readable="call get_friendship"
+        ),
+        Patch(
+            identifier=15,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, get_friendship_function
+            ),
+            new_instruction_readable="call get_friendship"
+        ),
+        Patch(
+            identifier=17,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, get_friendship_function
+            ),
+            new_instruction_readable="call get_friendship"
+        ),
+        Patch(
+            identifier=19,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, get_friendship_function
+            ),
+            new_instruction_readable="call get_friendship"
+        ),
+        Patch(
+            identifier=21,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, get_friendship_function
+            ),
+            new_instruction_readable="call get_friendship"
+        ),
+        Patch(
+            identifier=23,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, get_friendship_function
+            ),
+            new_instruction_readable="call get_friendship"
+        ),
+        Patch(
+            identifier=25,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, get_friendship_function
+            ),
+            new_instruction_readable="call get_friendship"
+        ),
+        Patch(
+            identifier=27,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, get_friendship_function
+            ),
+            new_instruction_readable="call get_friendship"
+        ),
+    ]
+)
+
+get_friendship_function = PatchPattern(
+    name="unused code space",
+    description="get friendship function",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=2, offset=0x4, pattern=parse_pattern_bytes("00 15 03 01"),
+            instruction_readable="SC3 0x0:0x15"
+        ),
+        Instruction(
+            identifier=3, offset=0x8, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=4, offset=0xc, pattern=parse_pattern_bytes("ff f1 00 0c"),
+            instruction_readable="store_arg -0xf"
+        ),
+        Instruction(
+            identifier=5, offset=0x10, pattern=parse_pattern_bytes("ff f2 00 0b"),
+            instruction_readable="load_arg -0xe"
+        ),
+        Instruction(
+            identifier=6, offset=0x14, pattern=parse_pattern_bytes("00 3c 00 10"),
+            instruction_readable="push 0x3c"
+        ),
+        Instruction(
+            identifier=7, offset=0x18, pattern=parse_pattern_bytes("00 0f 00 16"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=8, offset=0x1c, pattern=parse_pattern_bytes("00 0d 02 08"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=9, offset=0x20, pattern=parse_pattern_bytes("ff ff 00 0b"),
+            instruction_readable="load_arg -0x1"
+        ),
+        Instruction(
+            identifier=10, offset=0x24, pattern=parse_pattern_bytes("00 30 00 10"),
+            instruction_readable="push 0x30"
+        ),
+        Instruction(
+            identifier=11, offset=0x28, pattern=parse_pattern_bytes("00 15 02 01"),
+            instruction_readable="SC3 0x0:0x15"
+        ),
+        Instruction(
+            identifier=12, offset=0x2c, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_res"
+        ),
+        Instruction(
+            identifier=13, offset=0x30, pattern=parse_pattern_bytes("00 00 00 10"),
+            instruction_readable="push 0x0"
+        ),
+        Instruction(
+            identifier=14, offset=0x34, pattern=parse_pattern_bytes("00 0c 00 16"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=15, offset=0x38, pattern=parse_pattern_bytes("00 04 02 08"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=16, offset=0x3c, pattern=parse_pattern_bytes("00 00 00 10"),
+            instruction_readable="push 0x0"
+        ),
+        Instruction(
+            identifier=17, offset=0x40, pattern=parse_pattern_bytes("ff ff 00 0b"),
+            instruction_readable="load_arg -0x1"
+        ),
+        Instruction(
+            identifier=18, offset=0x44, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=19, offset=0x48, pattern=parse_pattern_bytes("00 15 03 01"),
+            instruction_readable="SC3 0x0:0x15"
+        ),
+        Instruction(
+            identifier=20, offset=0x4c, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=21, offset=0x50, pattern=parse_pattern_bytes("ff f1 00 0c"),
+            instruction_readable="store_arg -0xf"
+        ),
+        Instruction(
+            identifier=22, offset=0x54, pattern=parse_pattern_bytes("00 00 00 10"),
+            instruction_readable="push 0x0"
+        ),
+        Instruction(
+            identifier=23, offset=0x58, pattern=parse_pattern_bytes("00 00 03 02"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=24, offset=0x5c, pattern=parse_pattern_bytes("ff ce 00 08"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=25, offset=0x60, pattern=parse_pattern_bytes("00 12 00 06"),
+            instruction_readable="retv -0x12"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=1,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00040007).to_bytes(4, 'big'),
+            new_instruction_readable="grow_stack 0x4"
+        ),
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+                data, string_section_start,
+                globalManager
+            ),
+            new_instruction_readable="lstr GlobalManager"
+        ),
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data,
+                get_module
+            ),
+            new_instruction_readable="call get_module()"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(4, 'big'),
+            new_instruction_readable="push_res"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0xffff000c).to_bytes(4, 'big'),
+            new_instruction_readable="store_arg -0x1"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+                data, string_section_start,
+                disposManager
+            ),
+            new_instruction_readable="lstr DisposManager"
+        ),
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data,
+                get_module
+            ),
+            new_instruction_readable="call get_module()"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(4, 'big'),
+            new_instruction_readable="push_res"
+        ),
+        Patch(
+            identifier=9,
+            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000c).to_bytes(4, 'big'),
+            new_instruction_readable="store_arg -0x2"
+        ),
+        Patch(
+            identifier=10,
+            patch_function=lambda offset, data, plando_dict, matches: (0x0000000b).to_bytes(4, 'big'),
+            new_instruction_readable="load_arg 0x0"
+        ),
+        Patch(
+            identifier=11,
+            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(4, 'big'),
+            new_instruction_readable="load_arg -0x2"
+        ),
+        Patch(
+            identifier=12,
+            patch_function=lambda offset, data, plando_dict, matches: (0x000e0010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0xe"
+        ),
+        Patch(
+            identifier=13,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00150301).to_bytes(4, 'big'),
+            new_instruction_readable="SC3 0x0:0x15"
+        ),
+        Patch(
+            identifier=14,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(4, 'big'),
+            new_instruction_readable="push_res"
+        ),
+        Patch(
+            identifier=15,
+            patch_function=lambda offset, data, plando_dict, matches: (0xfffd000c).to_bytes(4, 'big'),
+            new_instruction_readable="store_arg -0x3"
+        ),
+        Patch(
+            identifier=16,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x0"
+        ),
+        Patch(
+            identifier=17,
+            patch_function=lambda offset, data, plando_dict, matches: (0xfffc000c).to_bytes(4, 'big'),
+            new_instruction_readable="store_arg -0x4"
+        ),
+        Patch(
+            identifier=18,
+            patch_function=lambda offset, data, plando_dict, matches: (0xfffd000b).to_bytes(4, 'big'),
+            new_instruction_readable="load_arg -0x3"
+        ),
+        Patch(
+            identifier=19,
+            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(4, 'big'),
+            new_instruction_readable="load_arg -0x1"
+        ),
+        Patch(
+            identifier=20,
+            patch_function=lambda offset, data, plando_dict, matches: (0x003d0010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x3d"
+        ),
+        Patch(
+            identifier=21,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00150301).to_bytes(4, 'big'),
+            new_instruction_readable="SC3 0x0:0x15"
+        ),
+        Patch(
+            identifier=22,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(4, 'big'),
+            new_instruction_readable="push_res"
+        ),
+        Patch(
+            identifier=23,
+            patch_function=lambda offset, data, plando_dict, matches: (0xfffc000c).to_bytes(4, 'big'),
+            new_instruction_readable="store_arg -0x4"
+        ),
+        Patch(
+            identifier=24,
+            patch_function=lambda offset, data, plando_dict, matches: (0xfffc000b).to_bytes(4, 'big'),
+            new_instruction_readable="load_arg -0x4"
+        ),
+        Patch(
+            identifier=25,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00050106).to_bytes(4, 'big'),
+            new_instruction_readable="retv -0x5"
+        ),
+
+    ],
+)
+
 evAr03Zn02_Npc_Main_patterns = [
     set_chapter,
     get_friendship,
@@ -1719,8 +2179,10 @@ evAr03Zn02_Npc_Main_patterns = [
     wingull3_interaction,
     prinplup_interaction,
     glalie_interaction,
+    delibird_interaction,
 
     special_spawn_conditions,
     special_spawn_conditions2,
-    set_attraction_record
+    set_attraction_record,
+    get_friendship_function
 ]

@@ -83,6 +83,19 @@ globalManager = PatchPattern(
     ]
 )
 
+disposManager = PatchPattern(
+    name="ds disposManager",
+    description="using disposManager for lstr instructions",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0,
+            pattern=parse_pattern_bytes("44 69 73 70 6f 73 4d 61 6e 61 67 65 72 00"),
+            instruction_readable="ds disposManager"
+        ),
+
+    ]
+)
+
 get_module = PatchPattern(
     name="get module",
     description="using get module for calls",
