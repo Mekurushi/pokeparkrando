@@ -1353,6 +1353,39 @@ claydol_interaction = PatchPattern(
     ]
 )
 
+togekiss_interaction = PatchPattern(
+    name="togekiss interaction",
+    description="removing unwanted behavior",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 15 00 07"),
+            instruction_readable="grow_stack 0x15"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x34, pattern=parse_pattern_bytes("01 ab 00 10"),
+            instruction_readable="push 0x1a4"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x210, pattern=parse_pattern_bytes("ff fd 00 0b"),
+            instruction_readable="load_arg -0x3"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x1f9a0010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x1f9a"
+        ),
+
+    ]
+)
+
 evAr06Zn01_Npc_Main_patterns = [
     set_chapter,
     get_friendship,
@@ -1365,6 +1398,7 @@ evAr06Zn01_Npc_Main_patterns = [
     marowak_interaction,
     baltoy_interaction,
     claydol_interaction,
+    togekiss_interaction,
 
     return_at01,
     return_at15,
