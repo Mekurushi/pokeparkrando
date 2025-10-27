@@ -24,6 +24,10 @@ mew_interaction = PatchPattern(
             identifier=4, offset=0x10c, pattern=parse_pattern_bytes("00 00 00 10"),  # jmp target
             instruction_readable="push 0x0"
         ),
+        Instruction(
+            identifier=5, offset=0x16c, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_result"
+        ),
 
     ],
 
@@ -35,6 +39,15 @@ mew_interaction = PatchPattern(
                 "jmp"
             ),
             new_instruction_readable="jmp"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00040010).to_bytes(
+                4,
+                'big'
+            ) if plando_dict["Options"]["goal"] != 1 else None,
+            new_instruction_readable="push 0x4"
+            # make postgame location only accessible when postgame goal option is used
         ),
     ]
 )
