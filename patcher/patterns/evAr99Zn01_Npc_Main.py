@@ -27,123 +27,88 @@ f9901TalkCelebi = PatchPattern(
 
     ],
 )
-a99_z01_init_patternJP = [
-    Instruction(
-        identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 05 00 07"),
-        instruction_readable="grow_stack 0x5"
-    ),
-    # checks if snorlax invisible wall should be removed
-    Instruction(
-        identifier=2, offset=0x40, pattern=parse_pattern_bytes("00 01 02 08"),
-        instruction_readable="jz"
-    ),
-    Instruction(
-        identifier=3, offset=0x48, pattern=parse_pattern_bytes("ff fd 00 0b"),  # jump target
-        instruction_readable="load_arg -0x3"
-    ),
-    # checks if snorlax should spawn
-    Instruction(
-        identifier=4, offset=0x54, pattern=parse_pattern_bytes("00 05 02 08"),
-        instruction_readable="jz"
-    ),
-    Instruction(
-        identifier=5, offset=0x6c, pattern=parse_pattern_bytes("00 01 00 10"),  # jump target
-        instruction_readable="push 0x1"
-    ),
-    # checks if event chatot should spawn
-    Instruction(
-        identifier=6, offset=0xb4, pattern=parse_pattern_bytes("00 16 02 08"),
-        instruction_readable="jz"
-    ),
-    Instruction(
-        identifier=7, offset=0x110, pattern=parse_pattern_bytes("00 00 00 0b"),  # jump target
-        instruction_readable="load_arg 0x0"
-    ),
-
-]
 
 a99_z01_init_patternPAL = [
     Instruction(
         identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 05 00 07"),
         instruction_readable="grow_stack 0x5"
     ),
-    # checks if snorlax invisible wall should be removed
     Instruction(
-        identifier=2, offset=0x48, pattern=parse_pattern_bytes("00 01 02 08"),
-        instruction_readable="jz"
+        identifier=2, offset=0x20, pattern=parse_pattern_bytes("4e 21 00 10"),
+        instruction_readable="push 0x4e21"
     ),
     Instruction(
-        identifier=3, offset=0x50, pattern=parse_pattern_bytes("ff fd 00 0b"),  # jump target
+        identifier=3, offset=0x3c, pattern=parse_pattern_bytes("ff fd 00 0b"),
         instruction_readable="load_arg -0x3"
     ),
-    # checks if snorlax should spawn
     Instruction(
-        identifier=4, offset=0x5c, pattern=parse_pattern_bytes("00 05 02 08"),
-        instruction_readable="jz"
-    ),
-    Instruction(
-        identifier=5, offset=0x74, pattern=parse_pattern_bytes("00 01 00 10"),  # jump target
-        instruction_readable="push 0x1"
-    ),
-    # checks if event chatot should spawn
-    Instruction(
-        identifier=6, offset=0xbc, pattern=parse_pattern_bytes("00 16 02 08"),
-        instruction_readable="jz"
+        identifier=4, offset=0x50, pattern=parse_pattern_bytes("ff fd 00 0b"),
+        instruction_readable="load_arg -0x3"
     ),
     Instruction(
-        identifier=7, offset=0x118, pattern=parse_pattern_bytes("00 00 00 0b"),  # jump target
-        instruction_readable="load_arg 0x0"
+        identifier=5, offset=0xac, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+        instruction_readable="call spawn_condition"
     ),
-
-]
-
-a99_z01_init_patchMapJP = [
-
-    Patch(
-        identifier=2,
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
-        new_instruction_readable="delay(0)"  # always removing invisible snorlax wall
-    ),
-    Patch(
-        identifier=4,
-        patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(offset, 5, matches),
-        new_instruction_readable="jmp"  # always spawning snorlax
-    ),
-    Patch(
-        identifier=6,
-        patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(offset, 7, matches),
-        new_instruction_readable="jmp"  # never spawning event chatot
-    ),
-]
-
-a99_z01_init_patchMapPAL = [
-
-    Patch(
-        identifier=2,
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
-        new_instruction_readable="delay(0)"  # always removing invisible snorlax wall
-    ),
-    Patch(
-        identifier=4,
-        patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(offset, 5, matches),
-        new_instruction_readable="jmp"  # always spawning snorlax
-    ),
-    Patch(
-        identifier=6,
-        patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(offset, 7, matches),
-        new_instruction_readable="jmp"  # never spawning event chatot
+    Instruction(
+        identifier=6, offset=0xb0, pattern=parse_pattern_bytes("ff fd 00 0b"),
+        instruction_readable="load_arg -0x3"
     ),
 ]
 
 a99_z01_init = PatchPattern(
     name="a99_z01_init remove spawn conditions",
     description="remove event stuff",
-    patternJP=a99_z01_init_patternJP,
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 05 00 07"),
+            instruction_readable="grow_stack 0x5"
+        ),
+        Instruction(
+            identifier=2, offset=0x20, pattern=parse_pattern_bytes("4e 21 00 10"),
+            instruction_readable="push 0x4e21"
+        ),
+        Instruction(
+            identifier=3, offset=0x34, pattern=parse_pattern_bytes("ff fd 00 0b"),
+            instruction_readable="load_arg -0x3"
+        ),
+        Instruction(
+            identifier=4, offset=0x48, pattern=parse_pattern_bytes("ff fd 00 0b"),
+            instruction_readable="load_arg -0x3"
+        ),
+        Instruction(
+            identifier=5, offset=0xa4, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call spawn_condition"
+        ),
+        Instruction(
+            identifier=6, offset=0xa8, pattern=parse_pattern_bytes("ff fd 00 0b"),
+            instruction_readable="load_arg -0x3"
+        ),
+    ],
     patternPAL=a99_z01_init_patternPAL,
     patternNA=a99_z01_init_patternPAL,
-    patchMapJP=a99_z01_init_patchMapJP,
-    patchMapPAL=a99_z01_init_patchMapPAL,
-    patchMapNA=a99_z01_init_patchMapPAL,
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x003c0010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x3c"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x0fa10010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0xfa1"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            new_instruction_readable="delay0"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x0"
+        ),
+
+    ],
 
 )
 
@@ -733,6 +698,34 @@ celebi_interaction = PatchPattern(
     ]
 )
 
+remove_snorlax = PatchPattern(
+    name="snorlax_spawn_conditions",
+    description="skip event and init zone correct",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 02 00 07"),
+            instruction_readable="grow_stack 0x2"
+        ),
+        Instruction(
+            identifier=2, offset=0x24, pattern=parse_pattern_bytes("00 00 00 0b"),
+            instruction_readable="load_arg -0x0"
+        ),
+        Instruction(
+            identifier=3, offset=0x34, pattern=parse_pattern_bytes("4e 24 00 10"),
+            instruction_readable="push 0x4e24"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x0"
+        )
+
+    ],
+)
+
 evAr99Zn01_Npc_Main_pattern = [
     set_chapter,
     get_friendship,
@@ -745,7 +738,9 @@ evAr99Zn01_Npc_Main_pattern = [
     area06,
     area07,
     chapter_event_logic,
+
     # spawn condition
+    remove_snorlax,
     a99_z01_init,
     celebi_interaction
 ]

@@ -1,6 +1,7 @@
 from typing import List
 
 from patcher.models.models import FilePatchConfig, FileProcessingType
+from patcher.patterns.ScriptList_Ar99Zn01 import ScriptList_Ar99Zn01_patterns
 from patcher.patterns.disposition_drifblim import disposition_drifblim_patterns
 from patcher.patterns.evAr01Zn01_Gimmic import evAr01Zn01_Gimmic_patch_pattern
 from patcher.patterns.evAr01Zn01_Npc_Main import \
@@ -1438,6 +1439,27 @@ def get_haunted_zone_patches() -> List[FilePatchConfig]:
         patch_patterns=disposition_drifblim_patterns
     )
     patches.append(ar05zn01Disposition)
+
+    scriptList_Ar99Zn01 = FilePatchConfig(
+        file_id="scriptList_Ar99Zn01",
+        description="ScriptList fro Ar99Zn01",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar99Zn01Dat.dac", "Temporary/Field/ParkAr99Zn01Dat.dan",
+                     "Event/ScriptList/ScriptList_Ar99Zn01.rlb"), (
+                        "DATA/files/Field/Ar99Zn01Dat_Fr.dac", "Temporary/Field/ParkAr99Zn01Dat_Fr.dan",
+                        "Event/ScriptList/ScriptList_Ar99Zn01.rlb"), (
+                        "DATA/files/Field/Ar99Zn01Dat_Ge.dac", "Temporary/Field/ParkAr99Zn01Dat_Ge.dan",
+                        "Event/ScriptList/ScriptList_Ar99Zn01.rlb"),
+                    (
+                        "DATA/files/Field/Ar99Zn01Dat_It.dac", "Temporary/Field/ParkAr99Zn01Dat_It.dan",
+                        "Event/ScriptList/ScriptList_Ar99Zn01.rlb"),
+                    (
+                        "DATA/files/Field/Ar99Zn01Dat_Sp.dac", "Temporary/Field/ParkAr99Zn01Dat_Sp.dan",
+                        "Event/ScriptList/ScriptList_Ar99Zn01.rlb"),
+                    ],
+        patch_patterns=ScriptList_Ar99Zn01_patterns
+    )
+    patches.append(scriptList_Ar99Zn01)
 
     gkBookShelf = FilePatchConfig(
         file_id="gk0502_bookshelf_gimmic",
