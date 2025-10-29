@@ -1089,7 +1089,7 @@ darkrai_interaction = PatchPattern(
         ),
         Instruction(
             identifier=4, offset=0x1d4, pattern=parse_pattern_bytes("ff fb 00 0b"),
-            instruction_readable="push_result"
+            instruction_readable="load_arg -0x3"
         ),
         Instruction(
             identifier=5, offset=0x1f0, pattern=parse_pattern_bytes("?? ?? ?? 08"),

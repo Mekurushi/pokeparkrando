@@ -1386,6 +1386,84 @@ togekiss_interaction = PatchPattern(
     ]
 )
 
+jirachi_interaction = PatchPattern(
+    name="jirachi interaction",
+    description="modified behavior for jirachi location",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 09 00 07"),
+            instruction_readable="grow_stack 0x9"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x28, pattern=parse_pattern_bytes("01 bb 00 10"),
+            instruction_readable="push 0x1bb"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x88, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_result"
+        ),
+        Instruction(
+            identifier=4, offset=0x1dc, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_result"
+        ),
+        Instruction(
+            identifier=5, offset=0x200, pattern=parse_pattern_bytes("?? ?? ?? 08"),
+            instruction_readable="jmp"
+        ),
+        Instruction(
+            identifier=6, offset=0x204, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr 61_12590"
+        ),
+        Instruction(
+            identifier=7, offset=0x208, pattern=parse_pattern_bytes("00 00 00 0b"),
+            instruction_readable="load_arg 0x0"
+        ),
+        Instruction(
+            identifier=8, offset=0x20c, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call dialog"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x1"  # skip postgame check
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x0"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            new_instruction_readable="delay0"
+        ),
+
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00070010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x7"
+        ),
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: (0x000d0010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0xd"
+        ),
+
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, set_attraction_record
+            ),
+            new_instruction_readable="call set_attraction_record"
+        ),
+    ]
+)
+
 evAr06Zn01_Npc_Main_patterns = [
     set_chapter,
     get_friendship,
@@ -1399,6 +1477,7 @@ evAr06Zn01_Npc_Main_patterns = [
     baltoy_interaction,
     claydol_interaction,
     togekiss_interaction,
+    jirachi_interaction,
 
     return_at01,
     return_at15,
