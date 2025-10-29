@@ -1630,6 +1630,84 @@ meditite_quiz = PatchPattern(
     ]
 )
 
+groudon_interaction = PatchPattern(
+    name="groudon interaction",
+    description="modified behavior for groudon location",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 09 00 07"),
+            instruction_readable="grow_stack 0x9"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x28, pattern=parse_pattern_bytes("01 20 00 10"),
+            instruction_readable="push 0x120"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x88, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_result"
+        ),
+        Instruction(
+            identifier=4, offset=0x1d4, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_result"
+        ),
+        Instruction(
+            identifier=5, offset=0x1f8, pattern=parse_pattern_bytes("?? ?? ?? 08"),
+            instruction_readable="jmp"
+        ),
+        Instruction(
+            identifier=6, offset=0x1fc, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr 42_12380"
+        ),
+        Instruction(
+            identifier=7, offset=0x200, pattern=parse_pattern_bytes("00 00 00 0b"),
+            instruction_readable="load_arg 0x0"
+        ),
+        Instruction(
+            identifier=8, offset=0x204, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call dialog"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x1"  # skip postgame check
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x0"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            new_instruction_readable="delay0"
+        ),
+
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00050010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x5"
+        ),
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: (0x000d0010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0xd"
+        ),
+
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, set_attraction_record
+            ),
+            new_instruction_readable="call set_attraction_record"
+        ),
+    ]
+)
+
 evAr04Zn02_Npc_Main_patterns = [
     set_chapter,
     get_friendship,
@@ -1648,6 +1726,7 @@ evAr04Zn02_Npc_Main_patterns = [
     baltoy_interaction,
     meditite_quiz,
     camerupt_interaction,
+    groudon_interaction,
 
     special_spawn_conditions,
     set_attraction_record
