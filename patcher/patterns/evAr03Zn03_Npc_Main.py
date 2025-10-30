@@ -184,12 +184,12 @@ empoleon_interaction = PatchPattern(
             instruction_readable="push 0xd1"
         ),
         Instruction(
-            identifier=3, offset=0x84, pattern=parse_pattern_bytes("00 08 00 10"),  # attraction id
-            instruction_readable="push 0x8"
+            identifier=3, offset=0x88, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call set_prisma_init"
         ),
         Instruction(
-            identifier=4, offset=0x88, pattern=parse_pattern_bytes("?? ?? ?? 03"),
-            instruction_readable="call set_prisma_menu"
+            identifier=4, offset=0x22c, pattern=parse_pattern_bytes("00 08 00 10"),  # attraction id
+            instruction_readable="push 0x8"
         ),
 
     ],
@@ -205,14 +205,6 @@ empoleon_interaction = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay0"
-        ),
-        Patch(
-            identifier=3,
             patch_function=lambda offset, data, plando_dict, matches: get_attraction_id_from_dict(
                 plando_dict, "Ice Zone Empoleon Area - Empoleon's Snow Slide Attraction"
             ),
