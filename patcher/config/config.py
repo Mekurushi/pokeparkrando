@@ -1,6 +1,7 @@
 from typing import List
 
 from patcher.models.models import FilePatchConfig, FileProcessingType
+from patcher.patterns.ScriptList_Ar06Zn01 import ScriptList_Ar06Zn01_patterns
 from patcher.patterns.ScriptList_Ar99Zn01 import ScriptList_Ar99Zn01_patterns
 from patcher.patterns.disposition_drifblim import disposition_drifblim_patterns
 from patcher.patterns.evAr01Zn01_Gimmic import evAr01Zn01_Gimmic_patch_pattern
@@ -23,6 +24,7 @@ from patcher.patterns.evAr05Zn01_Npc_Main import evAr05Zn01_Npc_Main_patterns
 from patcher.patterns.evAr05Zn02_Gimmic import evAr05Zn02_Gimmic_patterns
 from patcher.patterns.evAr05Zn02_Npc_Main import evAr05Zn02_Npc_Main_patterns
 from patcher.patterns.evAr05Zn03_Npc_Main import evAr05Zn03_Npc_Main_patterns
+from patcher.patterns.evAr06Zn01_DemoEvent import evAr06Zn01_DemoEvent_patterns
 from patcher.patterns.evAr06Zn01_Gimmic import evAr06Zn01_Gimmic_patterns
 from patcher.patterns.evAr06Zn01_Npc_Main import evAr06Zn01_Npc_Main_patterns
 from patcher.patterns.evAr06Zn02_Gimmic import evAr06Zn02_Gimmic_patch_pattern
@@ -40,8 +42,10 @@ from patcher.patterns.gk0502DoorC import gk0502DoorC_pattern
 from patcher.patterns.gk0502DoorD import gk0502DoorD_pattern
 from patcher.patterns.gk0502DoorE import gk0502DoorE_pattern
 from patcher.patterns.gk0601DoorB import gk0601DoorB_pattern
+from patcher.patterns.gk0601SwitchB import gk0601SwitchB_pattern
 from patcher.patterns.gkBookShelf import gkBookShelf_pattern
 from patcher.patterns.gkFireWallB import gkFireWall_pattern
+from patcher.patterns.gkFireWallC import gkFireWallC_pattern
 from patcher.patterns.gkKabigonWall import gkKabigonWallPattern
 from patcher.patterns.gkMammoo import gkMammoo_patterns
 from patcher.patterns.gkRecycleSanbasiA import gkRecycleSanbasiA_pattern
@@ -1461,6 +1465,27 @@ def get_haunted_zone_patches() -> List[FilePatchConfig]:
     )
     patches.append(scriptList_Ar99Zn01)
 
+    scriptList_Ar06Zn01 = FilePatchConfig(
+        file_id="scriptList_Ar06Zn01",
+        description="ScriptList from Ar06Zn01",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar06Zn01Dat.dac", "Temporary/Field/ParkAr06Zn01Dat.dan",
+                     "Event/ScriptList/ScriptList_Ar06Zn01.rlb"), (
+                        "DATA/files/Field/Ar06Zn01Dat_Fr.dac", "Temporary/Field/ParkAr06Zn01Dat_Fr.dan",
+                        "Event/ScriptList/ScriptList_Ar06Zn01.rlb"), (
+                        "DATA/files/Field/Ar06Zn01Dat_Ge.dac", "Temporary/Field/ParkAr06Zn01Dat_Ge.dan",
+                        "Event/ScriptList/ScriptList_Ar06Zn01.rlb"),
+                    (
+                        "DATA/files/Field/Ar06Zn01Dat_It.dac", "Temporary/Field/ParkAr06Zn01Dat_It.dan",
+                        "Event/ScriptList/ScriptList_Ar06Zn01.rlb"),
+                    (
+                        "DATA/files/Field/Ar06Zn01Dat_Sp.dac", "Temporary/Field/ParkAr06Zn01Dat_Sp.dan",
+                        "Event/ScriptList/ScriptList_Ar06Zn01.rlb"),
+                    ],
+        patch_patterns=ScriptList_Ar06Zn01_patterns
+    )
+    patches.append(scriptList_Ar06Zn01)
+
     gkBookShelf = FilePatchConfig(
         file_id="gk0502_bookshelf_gimmic",
         description="Haunted Zone Mansion DoorB",
@@ -1727,6 +1752,53 @@ def get_granite_zone_patches() -> List[FilePatchConfig]:
         patch_patterns=disposition_drifblim_patterns
     )
     patches.append(ar06zn01Disposition)
+
+    gkFireWallC = FilePatchConfig(
+        file_id="gkFireWallC",
+        description="Granite Zone FireWall",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Field/Ar06Zn01Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/GkFireWallC.fsb"),
+                    (
+                        "DATA/files/Field/Ar06Zn01Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkFireWallC.fsb"), (
+                        "DATA/files/Field/Ar06Zn01Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkFireWallC.fsb"),
+                    (
+                        "DATA/files/Field/Ar06Zn01Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkFireWallC.fsb"),
+                    (
+                        "DATA/files/Field/Ar06Zn01Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/GkFireWallC.fsb"),
+                    ],
+        patch_patterns=gkFireWallC_pattern
+    )
+    patches.append(gkFireWallC)
+
+    gk0601SwitchB = FilePatchConfig(
+        file_id="gk0601SwitchB_gimmic",
+        description="Granite Zone Flygon DoorB",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+
+        file_group=[("DATA/files/Field/Ar06Zn01Dat.dac", "Gimmick/GkDatArc.dan",
+                     "Gimmick/Gk0601SwitchB.fsb"),
+                    (
+                        "DATA/files/Field/Ar06Zn01Dat_Fr.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0601SwitchB.fsb"), (
+                        "DATA/files/Field/Ar06Zn01Dat_Ge.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0601SwitchB.fsb"),
+                    (
+                        "DATA/files/Field/Ar06Zn01Dat_It.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0601SwitchB.fsb"),
+                    (
+                        "DATA/files/Field/Ar06Zn01Dat_Sp.dac", "Gimmick/GkDatArc.dan",
+                        "Gimmick/Gk0601SwitchB.fsb"),
+                    ],
+        patch_patterns=gk0601SwitchB_pattern
+    )
+    patches.append(gk0601SwitchB)
+
     gk0601DoorB = FilePatchConfig(
         file_id="gk0601_doorb_gimmic",
         description="Granite Zone Flygon DoorB",
@@ -1770,6 +1842,27 @@ def get_granite_zone_patches() -> List[FilePatchConfig]:
         patch_patterns=evAr06Zn01_Gimmic_patterns
     )
     patches.append(evAr06Zn01_Gimmic)
+
+    evAr06Zn01_DemoEvent = FilePatchConfig(
+        file_id="ar06zn01_demoEvent",
+        description="",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar06Zn01Dat.dac", "Temporary/Field/ParkAr06Zn01Dat.dan",
+                     "Script/evAr06Zn01_DemoEvent.fsb"), (
+                        "DATA/files/Field/Ar06Zn01Dat_Fr.dac", "Temporary/Field/ParkAr06Zn01Dat_Fr.dan",
+                        "Script/evAr06Zn01_DemoEvent.fsb"), (
+                        "DATA/files/Field/Ar06Zn01Dat_Ge.dac", "Temporary/Field/ParkAr06Zn01Dat_Ge.dan",
+                        "Script/evAr06Zn01_DemoEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar06Zn01Dat_It.dac", "Temporary/Field/ParkAr06Zn01Dat_It.dan",
+                        "Script/evAr06Zn01_DemoEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar06Zn01Dat_Sp.dac", "Temporary/Field/ParkAr06Zn01Dat_Sp.dan",
+                        "Script/evAr06Zn01_DemoEvent.fsb"),
+                    ],
+        patch_patterns=evAr06Zn01_DemoEvent_patterns
+    )
+    patches.append(evAr06Zn01_DemoEvent)
 
     field_Ar06Zn01_npc_script_config = FilePatchConfig(
         file_id="Ar06_Zn01",

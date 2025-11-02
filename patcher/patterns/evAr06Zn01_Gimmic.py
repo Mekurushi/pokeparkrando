@@ -1,142 +1,40 @@
-from patcher.helper.patttern_handler import parse_pattern_bytes
+from patcher.helper.patttern_handler import create_lstr_script, parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
 from patcher.patterns.general import get_friendship, set_chapter
 
-rotBridgeSwitch = PatchPattern(
-    name="rotBridgeSwitch",
-    description="fixing catch ai",
+f0602FuwarideTaxiStop = PatchPattern(
+    name="f0602FuwarideTaxiStop",
+    description="replace f0602FuwarideTaxiStop with f0601TalkKamex",
     patternJP=[
         Instruction(
-            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0d 00 07"),
-            instruction_readable="grow_stack 0xd"
-        ),
-
-        Instruction(
-            identifier=2, offset=0x44, pattern=parse_pattern_bytes("4e 24 00 10"),
-            instruction_readable="push 0x4e24"
-        ),
-        Instruction(
-            identifier=3, offset=0x374, pattern=parse_pattern_bytes("00 00 00 12"),
-            instruction_readable="push_result"
-        ),
-        Instruction(
-            identifier=4, offset=0x378, pattern=parse_pattern_bytes("00 01 00 10"),
-            instruction_readable="push 0x1"
-        ),
-        Instruction(
-            identifier=5, offset=0x394, pattern=parse_pattern_bytes("00 00 00 12"),
-            instruction_readable="push_result"
-        ),
-        Instruction(
-            identifier=6, offset=0x398, pattern=parse_pattern_bytes("00 00 00 10"),
-            instruction_readable="push 0x0"
-        ),
-
-        Instruction(
-            identifier=7, offset=0x408, pattern=parse_pattern_bytes("00 00 00 12"),
-            instruction_readable="push_result"
-        ),
-        Instruction(
-            identifier=8, offset=0x40c, pattern=parse_pattern_bytes("00 01 00 10"),
-            instruction_readable="push 0x1"
-        ),
-        Instruction(
-            identifier=9, offset=0x428, pattern=parse_pattern_bytes("00 00 00 12"),
-            instruction_readable="push_result"
-        ),
-        Instruction(
-            identifier=10, offset=0x42c, pattern=parse_pattern_bytes("00 00 00 10"),
-            instruction_readable="push 0x0"
+            identifier=1, offset=0x0,
+            pattern=parse_pattern_bytes("66 30 36 30 32 46 75 77 61 72 69 64 65 54 61 78 69 53 74 6f 70 00"),
+            instruction_readable="ds f0602FuwarideTaxiStop"
         ),
     ],
     patchMapJP=[
-
         Patch(
-            identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
-                4,
+            identifier=1,
+            patch_function=lambda offset, data, plando_dict, matches: (0x663036303154616c6b4b616d657800).to_bytes(
+                15,
                 'big'
             ),
-            new_instruction_readable="push 0x1"
-        ),
-        Patch(
-            identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="push 0x1"
-        ),
-        Patch(
-            identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="push 0x1"
-        ),
-        Patch(
-            identifier=9,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="push 0x1"
+            new_instruction_readable="ds f0601TalkKamex"
         ),
     ]
 )
 
-switchB = PatchPattern(
-    name="switchB",
-    description="fixing catch ai",
+string_section_start = PatchPattern(
+    name="string section start",
+    description="string section start for lstr instruction computation",
     patternJP=[
         Instruction(
-            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 17 00 07"),
-            instruction_readable="grow_stack 0x17"
-        ),
-
-        Instruction(
-            identifier=2, offset=0x4c, pattern=parse_pattern_bytes("4e 29 00 10"),
-            instruction_readable="push 0x4e29"
-        ),
-        Instruction(
-            identifier=3, offset=0x3ec, pattern=parse_pattern_bytes("00 00 00 12"),
-            instruction_readable="push_result"
-        ),
-        Instruction(
-            identifier=4, offset=0x3f0, pattern=parse_pattern_bytes("00 00 00 10"),
-            instruction_readable="push 0x0"
-        ),
-        Instruction(
-            identifier=5, offset=0x480, pattern=parse_pattern_bytes("00 00 00 12"),
-            instruction_readable="push_result"
-        ),
-        Instruction(
-            identifier=6, offset=0x484, pattern=parse_pattern_bytes("00 00 00 10"),
-            instruction_readable="push 0x0"
+            identifier=1, offset=0x0,
+            pattern=parse_pattern_bytes("65 76 41 72 30 36 5a 6e 30 31 5f 47 69 6d 6d 69 63 00"),
+            instruction_readable="ds evAr06Zn01_Gimmic"
         ),
 
     ],
-    patchMapJP=[
-
-        Patch(
-            identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="push 0x1"
-        ),
-        Patch(
-            identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="push 0x1"
-        ),
-
-    ]
 )
 
 special_spawn_conditions = PatchPattern(
@@ -153,28 +51,67 @@ special_spawn_conditions = PatchPattern(
             instruction_readable="lstr GlobalManager"
         ),
         Instruction(
-            identifier=3, offset=0x24, pattern=parse_pattern_bytes("1f 72 00 10"),
-            instruction_readable="push 0x1f72"
+            identifier=3, offset=0x13c, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_result"
         ),
 
         Instruction(
             identifier=4, offset=0x384, pattern=parse_pattern_bytes("00 03 00 06"),
             instruction_readable="ret -0x3"
         ),
-
+        Instruction(
+            identifier=5, offset=0x4c, pattern=parse_pattern_bytes("ff fe 00 0b"),
+            instruction_readable="load_arg -0x2"  # blastoise condition
+        ),
     ],
     patchMapJP=[
 
         Patch(
-            identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00030006).to_bytes(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
                 4,
                 'big'
             ),
             new_instruction_readable="push 0x1"
         ),
-
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0x1f810010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x1f81"
+        ),
     ]
+)
+
+switchB = PatchPattern(
+    name="granite zone switchB",
+    description="replacing firewallb with f0601TalkKamex",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 17 00 07"),
+            instruction_readable="grow_stack 0x17"
+        ),
+        Instruction(
+            identifier=2, offset=0x18, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr f0601FireWallB"
+        ),
+        Instruction(
+            identifier=3, offset=0x4c, pattern=parse_pattern_bytes("4e 29 00 10"),
+            instruction_readable="push 0x4e29"
+        )
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+                data, string_section_start, f0602FuwarideTaxiStop
+            ),
+            new_instruction_readable="lstr f0601TalkKamex"
+        ),
+
+    ],
 )
 
 taxi_stop = PatchPattern(
@@ -219,8 +156,9 @@ taxi_stop = PatchPattern(
 evAr06Zn01_Gimmic_patterns = [
     set_chapter,
     get_friendship,
-    rotBridgeSwitch,
     taxi_stop,
+    special_spawn_conditions,
     switchB,
-    special_spawn_conditions
+
+    f0602FuwarideTaxiStop
 ]

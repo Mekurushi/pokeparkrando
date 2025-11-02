@@ -141,6 +141,333 @@ string_section_start = PatchPattern(
 
     ],
 )
+f0601FireWallB = PatchPattern(
+    name="f0601FireWallB",
+    description="f0601FireWallB for lstr instruction computation",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0,
+            pattern=parse_pattern_bytes("66 30 36 30 31 46 69 72 65 57 61 6c 6c 42 00"),
+            instruction_readable="ds f0601FireWallB"
+        ),
+
+    ],
+)
+
+f0601TalkKamex = PatchPattern(
+    name="f0601TalkKamex",
+    description="f0601TalkKamex for lstr instruction computation",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0,
+            pattern=parse_pattern_bytes("66 30 36 30 31 54 61 6c 6b 4b 61 6d 65 78 00"),
+            instruction_readable="ds f0601TalkKamex"
+        ),
+
+    ],
+)
+
+fRuinsGateKey = PatchPattern(
+    name="fRuinsGateKey",
+    description="string section start for lstr instruction computation",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0,
+            pattern=parse_pattern_bytes("66 52 75 69 6e 73 47 61 74 65 4b 65 79 00"),
+            instruction_readable="ds fRuinsGateKey"
+        ),
+
+    ],
+)
+
+init_gate_function = PatchPattern(
+    name="init gate and firewall function",
+    description="setup flags for granite zone so npc ai works correct",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("27 11 00 10"),
+            instruction_readable="push 0x2711"
+        ),
+        Instruction(
+            identifier=2, offset=0x4, pattern=parse_pattern_bytes("00 15 03 01"),
+            instruction_readable="SC3 0x0:0x15"
+        ),
+        Instruction(
+            identifier=3, offset=0x8, pattern=parse_pattern_bytes("00 04 00 08"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=4, offset=0xc, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=5, offset=0x10, pattern=parse_pattern_bytes("ff fe 00 0b"),
+            instruction_readable="load_arg -0x2"
+        ),
+        Instruction(
+            identifier=6, offset=0x14, pattern=parse_pattern_bytes("27 11 00 10"),
+            instruction_readable="push 0x2711"
+        ),
+        Instruction(
+            identifier=7, offset=0x18, pattern=parse_pattern_bytes("00 15 03 01"),
+            instruction_readable="SC3 0x0:0x15"
+        ),
+        Instruction(
+            identifier=8, offset=0x1c, pattern=parse_pattern_bytes("00 04 00 06"),
+            instruction_readable="retv -0x4"
+        ),
+        Instruction(
+            identifier=9, offset=0x20, pattern=parse_pattern_bytes("00 02 00 07"),
+            instruction_readable="grow_stack 0x2"
+        ),
+        Instruction(
+            identifier=10, offset=0x24, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=11, offset=0x28, pattern=parse_pattern_bytes("00 00 00 0b"),
+            instruction_readable="load_arg 0x0"
+        ),
+        Instruction(
+            identifier=12, offset=0x2c, pattern=parse_pattern_bytes("00 00 00 10"),
+            instruction_readable="push 0x0"
+        ),
+        Instruction(
+            identifier=13, offset=0x30, pattern=parse_pattern_bytes("e6 4e 03 03"),
+            instruction_readable="call 0xe64e"
+        ),
+        Instruction(
+            identifier=14, offset=0x34, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_res"
+        ),
+        Instruction(
+            identifier=15, offset=0x38, pattern=parse_pattern_bytes("ff ff 00 0c"),
+            instruction_readable="store_arg -0x1"
+        ),
+        Instruction(
+            identifier=16, offset=0x3c, pattern=parse_pattern_bytes("ff ff 00 0b"),
+            instruction_readable="load_arg -0x1"
+        ),
+        Instruction(
+            identifier=17, offset=0x40, pattern=parse_pattern_bytes("ff fe 00 0c"),
+            instruction_readable="store_arg -0x2"
+        ),
+        Instruction(
+            identifier=18, offset=0x44, pattern=parse_pattern_bytes("ff ff 00 10"),
+            instruction_readable="push -0x1"
+        ),
+        Instruction(
+            identifier=19, offset=0x48, pattern=parse_pattern_bytes("ff fe 00 0b"),
+            instruction_readable="load_arg -0x2"
+        ),
+        Instruction(
+            identifier=20, offset=0x4c, pattern=parse_pattern_bytes("27 11 00 10"),
+            instruction_readable="push 0x2711"
+        ),
+        Instruction(
+            identifier=21, offset=0x50, pattern=parse_pattern_bytes("00 15 03 01"),
+            instruction_readable="SC3 0x0:0x15"
+        ),
+        Instruction(
+            identifier=22, offset=0x54, pattern=parse_pattern_bytes("00 03 00 06"),
+            instruction_readable="retv -0x3"
+        ),
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=1,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010007).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="grow_stack -0x1"
+        ),
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+                data, string_section_start, globalManager
+            ),
+            new_instruction_readable="lstr GlobalManager"
+        ),
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, get_module
+            ),
+            new_instruction_readable="call get_module"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push_result"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0xffff000c).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="store_arg -0x1"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x1"
+        ),
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+                data, string_section_start, f0601FireWallB
+            ),
+            new_instruction_readable="lstr f0601FireWallB"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="load_arg -0x1"
+        ),
+        Patch(
+            identifier=9,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x0"
+        ),
+        Patch(
+            identifier=10,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00150401).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="SC4 0x0:0x15"
+        ),
+        Patch(
+            identifier=11,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x1"
+        ),
+        Patch(
+            identifier=12,
+            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+                data, string_section_start, fRuinsGateKey
+            ),
+            new_instruction_readable="lstr fRuinsGateKey"
+        ),
+        Patch(
+            identifier=13,
+            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="load_arg -0x1"
+        ),
+        Patch(
+            identifier=14,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x0"
+        ),
+        Patch(
+            identifier=15,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00150401).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="SC4 0x0:0x15"
+        ),
+        Patch(
+            identifier=16,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00050010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x5"
+        ),
+        Patch(
+            identifier=17,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x1"
+        ),
+        Patch(
+            identifier=18,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00060010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x6"
+        ),
+        Patch(
+            identifier=19,
+            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(4, 'big'),
+            new_instruction_readable="load_arg -0x1"
+        ),
+        Patch(
+            identifier=20,
+            patch_function=lambda offset, data, plando_dict, matches: (0x002d0010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x2d"
+        ),
+        Patch(
+            identifier=21,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00150501).to_bytes(4, 'big'),
+            new_instruction_readable="SC5 0x0:0x15"
+        ),
+        Patch(
+            identifier=22,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00020006).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="ret -0x2"
+        ),
+    ]
+)
+
+A06_Z01_INIT = PatchPattern(
+    name="A06_Z01_INIT",
+    description="call init_gates_function",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 02 00 07"),
+            instruction_readable="grow_stack 0x2"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x3c, pattern=parse_pattern_bytes("4e 21 00 10"),
+            instruction_readable="push 0x4e21"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x44, pattern=parse_pattern_bytes("4e 22 00 10"),
+            instruction_readable="push 0x4e22"
+        ),
+        Instruction(
+            identifier=4, offset=0x50, pattern=parse_pattern_bytes("00 00 00 0b"),
+            instruction_readable="load_arg 0x0"
+        ),
+        Instruction(
+            identifier=5, offset=0x54, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call unlock_garchomp_tyranitar"
+        ),
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, init_gate_function
+            ),
+            new_instruction_readable="call init_gate_function"
+        ),
+    ]
+)
 
 absol_interaction = PatchPattern(
     name="absol interaction",
@@ -867,65 +1194,33 @@ special_spawn_conditions = PatchPattern(
             identifier=8, offset=0x4c, pattern=parse_pattern_bytes("01 b1 00 10"),
             instruction_readable="push 0xfe4a"
         ),
+        Instruction(
+            identifier=9, offset=0xc0, pattern=parse_pattern_bytes("ff fe 00 0b"),
+            instruction_readable="load_arg -0x2"  # blastoise condition
+        ),
+        Instruction(
+            identifier=10, offset=0x1a0, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr f0601FuwarideTaxiStop"
+        ),
     ],
     patchMapJP=[
-
         Patch(
-            identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00050010).to_bytes(
+            identifier=9,
+            patch_function=lambda offset, data, plando_dict, matches: (0x1f810010).to_bytes(
                 4,
                 'big'
             ),
-            new_instruction_readable="push 0x5"
+            new_instruction_readable="push 0x1f81"
         ),
         Patch(
-            identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="push 0x1"
-        ),
-        Patch(
-            identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00060010).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="push 0x6"
-        ),
-        Patch(
-            identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="load_arg -0x1"
-        ),
-        Patch(
-            identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x002d0010).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="push 0x2d"
-        ),
-        Patch(
-            identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00150501).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="SC5 0x0:0x15"
-        ),
-        Patch(
-            identifier=8,
+            identifier=10,
             patch_function=lambda offset, data, plando_dict, matches: (0x00040006).to_bytes(
                 4,
                 'big'
             ),
             new_instruction_readable="ret -0x4"
         ),
+
     ]
 )
 
@@ -1005,6 +1300,45 @@ drifloon_interaction = PatchPattern(
         )
     ]
 )
+
+skorupi_interaction = PatchPattern(
+    name="skorupi interaction",
+    description="adding absol prisma condition",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 05 00 07"),
+            instruction_readable="grow_stack 0x5"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x28, pattern=parse_pattern_bytes("01 a0 00 10"),
+            instruction_readable="push 0x1a0"
+        ),
+
+        Instruction(
+            identifier=3, offset=0xa8, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr f0601FireWallB"
+        ),
+
+        Instruction(
+            identifier=4, offset=0xb0, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="push 0x1"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+                data, string_section_start,
+                f0601TalkKamex
+            ),
+            new_instruction_readable="lstr f0601TalkKamex"
+        ),
+
+    ]
+)
+
 taillow_interaction = PatchPattern(
     name="taillow interaction",
     description="adding each zone option support",
@@ -1478,11 +1812,14 @@ evAr06Zn01_Npc_Main_patterns = [
     claydol_interaction,
     togekiss_interaction,
     jirachi_interaction,
+    skorupi_interaction,
+    A06_Z01_INIT,
 
     return_at01,
     return_at15,
     get_absol_friendship_location_state,
     get_salamence_friendship_location_state,
     special_spawn_conditions,
-    set_attraction_record
+    set_attraction_record,
+    init_gate_function
 ]
