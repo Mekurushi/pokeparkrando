@@ -185,92 +185,92 @@ init_gate_function = PatchPattern(
     description="setup flags for granite zone so npc ai works correct",
     patternJP=[
         Instruction(
-            identifier=1, offset=0x0, pattern=parse_pattern_bytes("27 11 00 10"),
-            instruction_readable="push 0x2711"
-        ),
-        Instruction(
-            identifier=2, offset=0x4, pattern=parse_pattern_bytes("00 15 03 01"),
-            instruction_readable="SC3 0x0:0x15"
-        ),
-        Instruction(
-            identifier=3, offset=0x8, pattern=parse_pattern_bytes("00 04 00 08"),
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 01 00 0f"),
             instruction_readable="---"
         ),
         Instruction(
-            identifier=4, offset=0xc, pattern=parse_pattern_bytes("00 01 00 10"),
-            instruction_readable="push 0x1"
+            identifier=2, offset=0x4, pattern=parse_pattern_bytes("00 1a 00 08"),
+            instruction_readable="---"
         ),
         Instruction(
-            identifier=5, offset=0x10, pattern=parse_pattern_bytes("ff fe 00 0b"),
-            instruction_readable="load_arg -0x2"
+            identifier=3, offset=0x8, pattern=parse_pattern_bytes("00 15 00 10"),
+            instruction_readable="push 0x15"
         ),
         Instruction(
-            identifier=6, offset=0x14, pattern=parse_pattern_bytes("27 11 00 10"),
-            instruction_readable="push 0x2711"
+            identifier=4, offset=0xc, pattern=parse_pattern_bytes("ff f7 00 0c"),
+            instruction_readable="store_arg -0x9"
         ),
         Instruction(
-            identifier=7, offset=0x18, pattern=parse_pattern_bytes("00 15 03 01"),
-            instruction_readable="SC3 0x0:0x15"
+            identifier=5, offset=0x10, pattern=parse_pattern_bytes("00 17 00 08"),
+            instruction_readable="---"
         ),
         Instruction(
-            identifier=8, offset=0x1c, pattern=parse_pattern_bytes("00 04 00 06"),
-            instruction_readable="retv -0x4"
+            identifier=6, offset=0x14, pattern=parse_pattern_bytes("00 0b 00 10"),
+            instruction_readable="push 0xb"
         ),
         Instruction(
-            identifier=9, offset=0x20, pattern=parse_pattern_bytes("00 02 00 07"),
-            instruction_readable="grow_stack 0x2"
+            identifier=7, offset=0x18, pattern=parse_pattern_bytes("ff f7 00 0c"),
+            instruction_readable="store_arg -0x9"
         ),
         Instruction(
-            identifier=10, offset=0x24, pattern=parse_pattern_bytes("00 01 00 10"),
-            instruction_readable="push 0x1"
+            identifier=8, offset=0x1c, pattern=parse_pattern_bytes("00 14 00 08"),
+            instruction_readable="---"
         ),
         Instruction(
-            identifier=11, offset=0x28, pattern=parse_pattern_bytes("00 00 00 0b"),
-            instruction_readable="load_arg 0x0"
+            identifier=9, offset=0x20, pattern=parse_pattern_bytes("00 1f 00 10"),
+            instruction_readable="push 0x1f"
         ),
         Instruction(
-            identifier=12, offset=0x2c, pattern=parse_pattern_bytes("00 00 00 10"),
-            instruction_readable="push 0x0"
+            identifier=10, offset=0x24, pattern=parse_pattern_bytes("ff f7 00 0c"),
+            instruction_readable="store_arg -0x9"
         ),
         Instruction(
-            identifier=13, offset=0x30, pattern=parse_pattern_bytes("e6 4e 03 03"),
-            instruction_readable="call 0xe64e"
+            identifier=11, offset=0x28, pattern=parse_pattern_bytes("00 11 00 08"),
+            instruction_readable="---"
         ),
         Instruction(
-            identifier=14, offset=0x34, pattern=parse_pattern_bytes("00 00 00 12"),
-            instruction_readable="push_res"
+            identifier=12, offset=0x2c, pattern=parse_pattern_bytes("00 20 00 10"),
+            instruction_readable="push 0x20"
         ),
         Instruction(
-            identifier=15, offset=0x38, pattern=parse_pattern_bytes("ff ff 00 0c"),
-            instruction_readable="store_arg -0x1"
+            identifier=13, offset=0x30, pattern=parse_pattern_bytes("ff f7 00 0c"),
+            instruction_readable="store_arg -0x9"
         ),
         Instruction(
-            identifier=16, offset=0x3c, pattern=parse_pattern_bytes("ff ff 00 0b"),
-            instruction_readable="load_arg -0x1"
+            identifier=14, offset=0x34, pattern=parse_pattern_bytes("00 0e 00 08"),
+            instruction_readable="---"
         ),
         Instruction(
-            identifier=17, offset=0x40, pattern=parse_pattern_bytes("ff fe 00 0c"),
-            instruction_readable="store_arg -0x2"
+            identifier=15, offset=0x38, pattern=parse_pattern_bytes("00 29 00 10"),
+            instruction_readable="push 0x29"
         ),
         Instruction(
-            identifier=18, offset=0x44, pattern=parse_pattern_bytes("ff ff 00 10"),
-            instruction_readable="push -0x1"
+            identifier=16, offset=0x3c, pattern=parse_pattern_bytes("ff f7 00 0c"),
+            instruction_readable="store_arg -0x9"
         ),
         Instruction(
-            identifier=19, offset=0x48, pattern=parse_pattern_bytes("ff fe 00 0b"),
-            instruction_readable="load_arg -0x2"
+            identifier=17, offset=0x40, pattern=parse_pattern_bytes("00 0b 00 08"),
+            instruction_readable="---"
         ),
         Instruction(
-            identifier=20, offset=0x4c, pattern=parse_pattern_bytes("27 11 00 10"),
-            instruction_readable="push 0x2711"
+            identifier=18, offset=0x44, pattern=parse_pattern_bytes("00 2a 00 10"),
+            instruction_readable="push 0x2a"
         ),
         Instruction(
-            identifier=21, offset=0x50, pattern=parse_pattern_bytes("00 15 03 01"),
-            instruction_readable="SC3 0x0:0x15"
+            identifier=19, offset=0x48, pattern=parse_pattern_bytes("ff f7 00 0c"),
+            instruction_readable="store_arg -0x9"
         ),
         Instruction(
-            identifier=22, offset=0x54, pattern=parse_pattern_bytes("00 03 00 06"),
-            instruction_readable="retv -0x3"
+            identifier=20, offset=0x4c, pattern=parse_pattern_bytes("00 08 00 08"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=21, offset=0x50, pattern=parse_pattern_bytes("00 33 00 10"),
+            instruction_readable="push 0x33"
+        ),
+        Instruction(
+            identifier=22, offset=0x54, pattern=parse_pattern_bytes("ff f7 00 0c"),
+            instruction_readable="store_arg -0x9"
         ),
     ],
     patchMapJP=[
@@ -430,6 +430,32 @@ init_gate_function = PatchPattern(
         ),
     ]
 )
+A06_Z01_INIT_PATTERNPAL = [
+
+    Instruction(
+        identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 02 00 07"),
+        instruction_readable="grow_stack 0x2"
+    ),
+
+    Instruction(
+        identifier=2, offset=0x44, pattern=parse_pattern_bytes("4e 21 00 10"),
+        instruction_readable="push 0x4e21"
+    ),
+
+    Instruction(
+        identifier=3, offset=0x4c, pattern=parse_pattern_bytes("4e 22 00 10"),
+        instruction_readable="push 0x4e22"
+    ),
+    Instruction(
+        identifier=4, offset=0x58, pattern=parse_pattern_bytes("00 00 00 0b"),
+        instruction_readable="load_arg 0x0"
+    ),
+    Instruction(
+        identifier=5, offset=0x5c, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+        instruction_readable="call unlock_garchomp_tyranitar"
+    ),
+
+]
 
 A06_Z01_INIT = PatchPattern(
     name="A06_Z01_INIT",
@@ -458,6 +484,8 @@ A06_Z01_INIT = PatchPattern(
             instruction_readable="call unlock_garchomp_tyranitar"
         ),
     ],
+    patternPAL=A06_Z01_INIT_PATTERNPAL,
+    patternNA=A06_Z01_INIT_PATTERNPAL,
     patchMapJP=[
         Patch(
             identifier=5,
