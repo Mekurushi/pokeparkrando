@@ -15,21 +15,23 @@ from PySide6.QtWidgets import (
 from pathlib import Path
 import os
 
-from gui.core.config import get_default_patch_configs
-from gui.core.models import PatchRequest, PatchResult
 from gui.worker_thread import PatcherWorkerThread
+from patcher.config.config import get_all_patches
+from patcher.models.models import PatchRequest, PatchResult
+from patcher.randomizer_service import VERSION
 
 
 class RandoGUI(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("PokéPark Randomizer Patcher")
+        self.setWindowTitle(f"PokéPark Randomizer Patcher v{VERSION[0]}.{VERSION[1]}.{VERSION[2]}")
         self.setFixedSize(700, 450)
         self.patcher_thread = None
         self.iso_path = ""
-        self.output_path = str(Path.home() / "Documents" / "PokeParkRandomizer" / "R8AJ01.iso")
-        self.patch_configs = get_default_patch_configs()
+        self.appkprk_path = ""
+        self.output_path = str(Path.cwd())
+        self.patch_configs = get_all_patches()
         self.setup_ui()
 
     def setup_ui(self):
@@ -42,12 +44,14 @@ class RandoGUI(QMainWindow):
         # Title
         title_label = QLabel("PokéPark Randomizer Patcher")
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        title_label.setStyleSheet("""
-            font-size: 28px; 
-            font-weight: bold; 
-            margin: 20px;
-            color: #2c3e50;
-        """)
+        title_label.setStyleSheet(
+            """
+                        font-size: 28px; 
+                        font-weight: bold; 
+                        margin: 20px;
+                        color: #2c3e50;
+                    """
+        )
         main_layout.addWidget(title_label)
 
         # ISO Selection
@@ -59,17 +63,19 @@ class RandoGUI(QMainWindow):
 
         self.iso_line_edit = QLineEdit()
         self.iso_line_edit.setPlaceholderText("Select PokéPark ISO file...")
-        self.iso_line_edit.setStyleSheet("""
-            QLineEdit {
-                padding: 8px;
-                border: 2px solid #bdc3c7;
-                border-radius: 4px;
-                font-size: 12px;
-            }
-            QLineEdit:focus {
-                border-color: #3498db;
-            }
-        """)
+        self.iso_line_edit.setStyleSheet(
+            """
+                        QLineEdit {
+                            padding: 8px;
+                            border: 2px solid #bdc3c7;
+                            border-radius: 4px;
+                            font-size: 12px;
+                        }
+                        QLineEdit:focus {
+                            border-color: #3498db;
+                        }
+                    """
+        )
 
         iso_browse_btn = QPushButton("Browse")
         iso_browse_btn.setStyleSheet(self._get_button_style("#3498db"))
@@ -79,6 +85,26 @@ class RandoGUI(QMainWindow):
         iso_layout.addWidget(self.iso_line_edit)
         iso_layout.addWidget(iso_browse_btn)
         main_layout.addWidget(iso_group)
+
+        # .appokprk Selection
+        appokprk_group = QWidget()
+        appokprk_layout = QHBoxLayout(appokprk_group)
+        appokprk_label = QLabel("Patch File:")
+        appokprk_label.setMinimumWidth(80)
+        appokprk_label.setStyleSheet("font-weight: bold;")
+
+        self.appkprk_line_edit = QLineEdit()
+        self.appkprk_line_edit.setPlaceholderText("Select .appokprk patch file...")
+        self.appkprk_line_edit.setStyleSheet(self.iso_line_edit.styleSheet())
+
+        appokprk_browse_btn = QPushButton("Browse")
+        appokprk_browse_btn.setStyleSheet(self._get_button_style("#3498db"))
+        appokprk_browse_btn.clicked.connect(self.browse_appokprk)
+
+        appokprk_layout.addWidget(appokprk_label)
+        appokprk_layout.addWidget(self.appkprk_line_edit)
+        appokprk_layout.addWidget(appokprk_browse_btn)
+        main_layout.addWidget(appokprk_group)
 
         # Output File
         output_group = QWidget()
@@ -110,56 +136,62 @@ class RandoGUI(QMainWindow):
         self.progress_label = QLabel("")
         self.progress_label.setVisible(False)
         self.progress_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.progress_label.setStyleSheet("""
-            font-size: 14px;
-            color: #2c3e50;
-            margin: 5px;
-        """)
+        self.progress_label.setStyleSheet(
+            """
+                        font-size: 14px;
+                        color: #2c3e50;
+                        margin: 5px;
+                    """
+        )
         progress_layout.addWidget(self.progress_label)
 
         self.progress_bar = QProgressBar()
         self.progress_bar.setVisible(False)
-        self.progress_bar.setStyleSheet("""
-            QProgressBar {
-                border: 2px solid #bdc3c7;
-                border-radius: 8px;
-                text-align: center;
-                font-weight: bold;
-                height: 25px;
-            }
-            QProgressBar::chunk {
-                background-color: #27ae60;
-                border-radius: 6px;
-            }
-        """)
+        self.progress_bar.setStyleSheet(
+            """
+                        QProgressBar {
+                            border: 2px solid #bdc3c7;
+                            border-radius: 8px;
+                            text-align: center;
+                            font-weight: bold;
+                            height: 25px;
+                        }
+                        QProgressBar::chunk {
+                            background-color: #27ae60;
+                            border-radius: 6px;
+                        }
+                    """
+        )
         progress_layout.addWidget(self.progress_bar)
 
         main_layout.addWidget(progress_group)
 
         # Main button
         self.patching_btn = QPushButton("Start Patching")
-        self.patching_btn.setStyleSheet("""
-            QPushButton {
-                font-size: 18px;
-                font-weight: bold;
-                padding: 15px;
-                background-color: #27ae60;
-                color: white;
-                border: none;
-                border-radius: 8px;
-                margin: 10px;
-            }
-            QPushButton:hover {
-                background-color: #229954;
-            }
-            QPushButton:pressed {
-                background-color: #1e8449;
-            }
-            QPushButton:disabled {
-                background-color: #bdc3c7;
-                color: #7f8c8d;
-            }
-        """)
+        self.patching_btn.setStyleSheet(
+            """
+                        QPushButton {
+                            font-size: 18px;
+                            font-weight: bold;
+                            padding: 15px;
+                            background-color: #27ae60;
+                            color: white;
+                            border: none;
+                            border-radius: 8px;
+                            margin: 10px;
+                        }
+                        QPushButton:hover {
+                            background-color: #229954;
+                        }
+                        QPushButton:pressed {
+                            background-color: #1e8449;
+                        }
+                        QPushButton:disabled {
+                            background-color: #bdc3c7;
+                            color: #7f8c8d;
+                        }
+                    """
+        )
         self.patching_btn.clicked.connect(self.start_patching)
         main_layout.addWidget(self.patching_btn)
 
@@ -217,26 +249,35 @@ class RandoGUI(QMainWindow):
             self.iso_line_edit.setText(file_path)
 
     def browse_output(self):
-        if self.iso_path:
-            input_name = Path(self.iso_path).stem
-            default_name = f"{input_name}_randomized.iso"
-        else:
-            default_name = "R8AJ01_randomized.iso"
+        default_dir = Path.cwd()  # Current working directory
 
-        default_dir = Path.home() / "Documents" / "PokeParkRandomizer"
-        default_dir.mkdir(parents=True, exist_ok=True)
-        default_file = default_dir / default_name
-
-        file_path, _ = QFileDialog.getSaveFileName(
+        # Let user select folder instead of specific file
+        folder_path = QFileDialog.getExistingDirectory(
             self,
-            "Save Randomized ISO As",
-            str(default_file),
-            "ISO Files (*.iso);;All Files (*)"
+            "Select Output Folder",
+            str(default_dir),
+            QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks
+        )
+
+        if folder_path:
+            self.output_path = folder_path
+            self.output_line_edit.setText(folder_path)
+
+    def browse_appokprk(self):
+        file_path, _ = QFileDialog.getOpenFileName(
+            self,
+            "Select .appkprk Patch File",
+            "",
+            "PokéPark Patch Files (*.appkprk);;All Files (*)"
         )
 
         if file_path:
-            self.output_path = file_path
-            self.output_line_edit.setText(file_path)
+            if not Path(file_path).exists():
+                QMessageBox.warning(self, "Error", "Selected patch file does not exist!")
+                return
+
+            self.appkprk_path = file_path
+            self.appkprk_line_edit.setText(file_path)
 
     def start_patching(self):
         # Validation
@@ -250,6 +291,7 @@ class RandoGUI(QMainWindow):
 
         request = PatchRequest(
             iso_path=self.iso_path,
+            appkprk_path=self.appkprk_path,
             output_path=self.output_path,
             patch_configs=self.patch_configs
         )
@@ -271,16 +313,22 @@ class RandoGUI(QMainWindow):
             QMessageBox.warning(self, "Error", "Selected ISO file does not exist!")
             return False
 
+        if not self.appkprk_path:
+            QMessageBox.warning(self, "Error", "Please select an .appkprk file first!")
+            return False
+
+        if not Path(self.appkprk_path).exists():
+            QMessageBox.warning(self, "Error", "Selected .appkprk file does not exist!")
+            return False
+
         self.output_path = self.output_line_edit.text().strip()
         if not self.output_path:
             QMessageBox.warning(self, "Error", "Please specify an output file!")
             return False
 
         output_path = Path(self.output_path)
-        if output_path.suffix.lower() != '.iso':
-            output_path = output_path.with_suffix('.iso')
-            self.output_path = str(output_path)
-            self.output_line_edit.setText(self.output_path)
+        self.output_path = str(output_path)
+        self.output_line_edit.setText(self.output_path)
 
         output_dir = output_path.parent
         try:
@@ -329,12 +377,15 @@ class RandoGUI(QMainWindow):
             self.patching_btn.setText("Start Patching")
             self.progress_bar.setVisible(False)
             self.progress_label.setVisible(False)
-            self.setWindowTitle("PokéPark Randomizer Patcher")
+            self.setWindowTitle(f"PokéPark Randomizer Patcher v{VERSION[0]}.{VERSION[1]}.{VERSION[2]}")
 
     def update_progress(self, message: str, progress: int):
         self.progress_label.setText(message)
         self.progress_bar.setValue(progress)
-        self.setWindowTitle(f"PokéPark Randomizer Patcher - {progress}% Complete")
+        self.setWindowTitle(
+            f"PokéPark Randomizer Patcher v{VERSION[0]}.{VERSION[1]}.{VERSION[2]} - {progress}% "
+            f"Complete"
+        )
 
     def on_patching_complete(self, result: PatchResult):
         self._set_ui_patching_state(False)
