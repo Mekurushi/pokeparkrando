@@ -34,7 +34,7 @@ def compute_addi_to_target(data, matches: dict[int, MemoryData], base_identifier
     return instruction.to_bytes(4, 'big')
 
 
-def setup_global_manager_r3_lower_address(data: bytearray):
+def setup_global_manager_address_part2(data: bytearray):
     data_init_function_match = search_pattern(data, prep_global_manager_data_struc_address.patternJP)
     if not data_init_function_match:
         raise ValueError("Target function not found in pattern match.")
@@ -43,12 +43,27 @@ def setup_global_manager_r3_lower_address(data: bytearray):
             f"ERROR: Ambiguous match ({len(data_init_function_match)}) for pattern: {data_init_function_match.name}"
         )
 
-    suffix = int.from_bytes(data_init_function_match[0].matched_instructions[3].value[-2:], 'big')
-    result = 0x60630000 | suffix
+    instruction = int.from_bytes(data_init_function_match[0].matched_instructions[3].value, 'big')
     print(
-        f"lower address for global Manager r3 Register is 0x{suffix:08X} instruction is: 0x{result.to_bytes(4, 'big').hex()}"
+        f"global manager address setup second instruction is 0x{instruction:08X}"
     )
-    return result.to_bytes(4, 'big')
+    return instruction.to_bytes(4, 'big')
+
+
+def setup_global_manager_address_part1(data: bytearray):
+    data_init_function_match = search_pattern(data, prep_global_manager_data_struc_address.patternJP)
+    if not data_init_function_match:
+        raise ValueError("Target function not found in pattern match.")
+    if len(data_init_function_match) > 1:
+        raise ValueError(
+            f"ERROR: Ambiguous match ({len(data_init_function_match)}) for pattern: {data_init_function_match.name}"
+        )
+
+    instruction = int.from_bytes(data_init_function_match[0].matched_instructions[2].value, 'big')
+    print(
+        f"global manager address setup first instruction is 0x{instruction:08X}"
+    )
+    return instruction.to_bytes(4, 'big')
 
 
 def get_offset_from_patch_pattern(data: bytearray, target_function_pattern: PatchPattern, identifier: int):
@@ -930,12 +945,12 @@ custom_give_item_function_pattern = PatchPattern(
 
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0x3c608037).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, matches: setup_global_manager_address_part1(data),
             new_instruction_readable="lis r3, 0x8037"
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: setup_global_manager_r3_lower_address(data),
+            patch_function=lambda offset, data, plando_dict, matches: setup_global_manager_address_part2(data),
             new_instruction_readable="ori r3, r3, 0x4fe0 | 0x89e8"  # pal 89e8 jp 4fe0
         ),
         Patch(
