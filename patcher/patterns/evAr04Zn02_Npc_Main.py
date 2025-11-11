@@ -1064,7 +1064,10 @@ hitmontop_interaction = PatchPattern(
             identifier=4, offset=0x4ec, pattern=parse_pattern_bytes("ff fa 00 0b"),
             instruction_readable="load_arg -0x6"
         ),
-
+        Instruction(
+            identifier=5, offset=0x578, pattern=parse_pattern_bytes("00 3d 00 10"),
+            instruction_readable="push 0x3d"  # get friendship opcode
+        ),
     ],
     patchMapJP=[
         Patch(
@@ -1075,7 +1078,11 @@ hitmontop_interaction = PatchPattern(
             ),
             new_instruction_readable="jmp"
         ),
-
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: (0x004b0010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x4b"  # bestfriend opcode
+        ),
     ]
 )
 
