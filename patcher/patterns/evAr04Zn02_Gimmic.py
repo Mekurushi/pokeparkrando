@@ -602,6 +602,40 @@ FIRESWITCHA = PatchPattern(
     ],
 )
 
+special_spawn_conditions = PatchPattern(
+    name="special_spawn_conditions",
+    description="removing drifblim despawn",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 03 00 07"),
+            instruction_readable="grow_stack 0x3"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x24, pattern=parse_pattern_bytes("13 ba 00 10"),
+            instruction_readable="push 0x13ba"
+        ),
+        Instruction(
+            identifier=3, offset=0xf0, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr f0402FuwarideTaxiStop"
+        ),
+
+        Instruction(
+            identifier=4, offset=0x100, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_result"
+        ),
+    ],
+    patchMapJP=[
+
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x1"
+        ),
+
+    ]
+)
+
 evAr04Zn02_Gimmic_patterns = [
     set_chapter,
     get_friendship,
@@ -612,5 +646,6 @@ evAr04Zn02_Gimmic_patterns = [
     box_yajilon,
     set_golem_location_function,
     set_baltoy_location_function,
-    f0101FuwarideTaxiStop
+    f0101FuwarideTaxiStop,
+    special_spawn_conditions
 ]
