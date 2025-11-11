@@ -1708,6 +1708,36 @@ groudon_interaction = PatchPattern(
     ]
 )
 
+charmander_interaction = PatchPattern(
+    name="charmander interaction",
+    description="removing unwanted behavior",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 09 00 07"),
+            instruction_readable="grow_stack 0x9"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x20, pattern=parse_pattern_bytes("01 06 00 10"),
+            instruction_readable="push 0x106"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x230, pattern=parse_pattern_bytes("00 3d 00 10"),
+            instruction_readable="push 0x3d"  # get friendship opcode
+        )
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x004b0010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x4b",  # bestfriend opcode
+        ),
+
+    ]
+)
+
 evAr04Zn02_Npc_Main_patterns = [
     set_chapter,
     get_friendship,
@@ -1727,6 +1757,7 @@ evAr04Zn02_Npc_Main_patterns = [
     meditite_quiz,
     camerupt_interaction,
     groudon_interaction,
+    charmander_interaction,
 
     special_spawn_conditions,
     set_attraction_record
