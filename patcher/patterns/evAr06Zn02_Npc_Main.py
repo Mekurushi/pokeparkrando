@@ -294,11 +294,11 @@ get_rayquaza_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00950010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, matches: (0x00630010).to_bytes(
                 4,
                 'big'
             ),
-            new_instruction_readable="push 0x95"  # rayquaza friendship id
+            new_instruction_readable="push 0x63"  # rayquaza friendship id
         ),
         Patch(
             identifier=7,
