@@ -309,9 +309,9 @@ stage_setup_new_file_pattern = PatchPattern(
     ],
 )
 
-setup_new_file_pattern = PatchPattern(
-    name="Setup on new file load",
-    description="patching new file setup to load position 0005 (drifblim), because it is here overwritten again",
+load_file_spawn_position = PatchPattern(
+    name="load file spawn position",
+    description="overwrites the vanilla hardcoded spawn point inside of zones with the saved one in the save file",
     patternJP=[
         Instruction(
             identifier=1, offset=0x0, pattern=parse_pattern_bytes("38 00 00 00"),
@@ -345,8 +345,8 @@ setup_new_file_pattern = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (0x38000005).to_bytes(4, 'big'),
-            new_instruction_readable="li r0, 0x0005"
+            patch_function=lambda offset, data, plando_dict, matches: (0xA01F5F02).to_bytes(4, 'big'),
+            new_instruction_readable="lhz r0, 0x5F02 (r31)"
         ),
 
     ],
@@ -1767,7 +1767,7 @@ main_dol_pattern = [
     custom_give_item_function_call_pattern,
     custom_give_item_function_pattern,
     stage_setup_new_file_pattern,
-    setup_new_file_pattern,
+    load_file_spawn_position,
     ai_difficulty_logic,
     attraction_record_unlock,
 
