@@ -1037,6 +1037,56 @@ misdreavus_interaction = PatchPattern(
     ]
 )
 
+sable_quiz_patternPALNA = [
+    Instruction(
+        identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0b 00 07"),
+        instruction_readable="grow_stack 0xb"
+    ),
+
+    Instruction(
+        identifier=2, offset=0x4, pattern=parse_pattern_bytes("01 80 00 10"),
+        instruction_readable="push 0x180"
+    ),
+
+    Instruction(
+        identifier=3, offset=0x970, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+        instruction_readable="call give_book"
+    ),
+]
+
+sableye_quiz = PatchPattern(
+    name="sableye quiz",
+    description="removing unwanted behavior",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0c 00 07"),
+            instruction_readable="grow_stack 0xc"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x4, pattern=parse_pattern_bytes("01 80 00 10"),
+            instruction_readable="push 0x180"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x970, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="call give_book"
+        ),
+    ],
+    patternPAL=sable_quiz_patternPALNA,
+    patternNA=sable_quiz_patternPALNA,
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay0"
+        )
+    ]
+)
+
 sableye_interaction = PatchPattern(
     name="sableye interaction",
     description="removing unwanted behavior",
@@ -1160,6 +1210,7 @@ evAr05Zn02_Npc_Main_patterns = [
     elekid_interaction,
     luxray_interaction,
     sableye_interaction,
+    sableye_quiz,
     darkrai_interaction,
     prepare_chase_ai,
     are_doors_unlocked,
