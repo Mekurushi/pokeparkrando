@@ -16,7 +16,7 @@ yaml_dumper = YAML(typ="rt")  # Use RoundTripDumper for pretty-formatted dumps.
 from patcher.logic.patchers import PatcherFactory
 from patcher.models.models import PatchRequest, ProgressCallback, PatchResult, FilePatchConfig
 
-VERSION = (1, 0, 1)
+VERSION = (1, 0, 2)
 
 
 class PatcherService:
