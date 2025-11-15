@@ -1146,6 +1146,38 @@ darkrai_interaction = PatchPattern(
         ),
     ]
 )
+mismagius_interaction = PatchPattern(
+    name="mismagius interaction",
+    description="removing unwanted behavior",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 08 00 07"),
+            instruction_readable="grow_stack 0x8"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x20, pattern=parse_pattern_bytes("01 7c 00 10"),
+            instruction_readable="push 0x17c"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x58, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_result"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x1c340010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x1c34"
+        ),
+
+    ]
+)
 
 evAr05Zn02_Npc_Main_patterns = [
     set_chapter,
@@ -1153,6 +1185,7 @@ evAr05Zn02_Npc_Main_patterns = [
     dusknoir_interaction,
     abra_interaction,
     misdreavus_interaction,
+    mismagius_interaction,
     return_at05,
     dusknoir_friendship_event,
     get_dusknoir_friendship_location_state,
