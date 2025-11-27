@@ -1825,6 +1825,60 @@ jirachi_interaction = PatchPattern(
         ),
     ]
 )
+porygon_z_quiz_patternPALNA = [
+    Instruction(
+        identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0b 00 07"),
+        instruction_readable="grow_stack 0xb"
+    ),
+
+    Instruction(
+        identifier=2, offset=0x2c, pattern=parse_pattern_bytes("00 01 00 10"),
+        instruction_readable="push 0x1"
+    ),
+
+    Instruction(
+        identifier=3, offset=0x74c, pattern=parse_pattern_bytes("00 c8 00 10"),
+        instruction_readable="push 0xc8"
+    ),
+    Instruction(
+        identifier=4, offset=0x754, pattern=parse_pattern_bytes("00 3d 00 10"),
+        instruction_readable="push 0x3d"
+    )
+]
+porygon_z_quiz = PatchPattern(
+    name="PorygonZ quiz",
+    description="sending always location",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0c 00 07"),
+            instruction_readable="grow_stack 0xc"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x2c, pattern=parse_pattern_bytes("00 01 00 10"),
+            instruction_readable="push 0x1"
+        ),
+
+        Instruction(
+            identifier=3, offset=0x74c, pattern=parse_pattern_bytes("00 c8 00 10"),
+            instruction_readable="push 0xc8"
+        ),
+        Instruction(
+            identifier=4, offset=0x754, pattern=parse_pattern_bytes("00 3d 00 10"),
+            instruction_readable="push 0x3d"
+        )
+
+    ],
+    patternNA=porygon_z_quiz_patternPALNA,
+    patternPAL=porygon_z_quiz_patternPALNA,
+    patchMapJP=[
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x004b0010).to_bytes(4, 'big'),
+            new_instruction_readable="push 0x4b"  # best friend opcode
+        )
+    ]
+)
 
 evAr06Zn01_Npc_Main_patterns = [
     set_chapter,
@@ -1841,6 +1895,7 @@ evAr06Zn01_Npc_Main_patterns = [
     togekiss_interaction,
     jirachi_interaction,
     skorupi_interaction,
+    porygon_z_quiz,
     A06_Z01_INIT,
 
     return_at01,
