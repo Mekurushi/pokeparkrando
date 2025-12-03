@@ -1391,6 +1391,7 @@ evAr04Zn01_Npc_Main_patterns = [
     dugtrio_interaction,
     diglett_interaction,
     bonsly_interaction,
+    sudoowoodo_interaction,
     unknown_interaction2,
     unknown_interaction3,
     teddiursa_quiz,
