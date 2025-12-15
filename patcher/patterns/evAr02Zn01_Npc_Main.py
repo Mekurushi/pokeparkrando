@@ -3487,7 +3487,7 @@ custom_prisma_amount_function = PatchPattern(
             new_instruction_readable="call prisma_check"  # prisma check function
         ),
         Patch(
-            identifier=78,
+            identifier=79,
             patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(4, 'big'),
             new_instruction_readable="push_result"  # push result
         ),
