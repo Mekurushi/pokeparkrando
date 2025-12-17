@@ -57,7 +57,7 @@ from patcher.patterns.gkWoodBoxKino import gkWoodBoxKinoPattern
 from patcher.patterns.main import main_dol_pattern
 from patcher.patterns.mnAttractionInfo import mnAttractionInfo_pattern
 from patcher.patterns.mnLobby import mnLobby_pattern
-from patcher.patterns.mnStartMenu import load_new_file_pattern
+from patcher.patterns.mnStartMenu import load_new_file_pattern, start_menu_pattern
 from patcher.patterns.treehouse import treehouse_pattern
 
 
@@ -1969,9 +1969,7 @@ def get_misc_patches() -> List[FilePatchConfig]:
                     ("DATA/files/Archive/StartMenuDat_Sp.dac", "unused",
                      "Script/mnStartMenu.fsb"),
                     ],
-        patch_patterns=[
-            load_new_file_pattern
-        ]
+        patch_patterns=start_menu_pattern
     )
     patches.append(start_menu_config)
 
