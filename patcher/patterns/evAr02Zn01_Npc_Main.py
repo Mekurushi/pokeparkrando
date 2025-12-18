@@ -3549,6 +3549,105 @@ custom_prisma_amount_function = PatchPattern(
 
     ]
 )
+
+setBalloon = PatchPattern(
+    name="Treehouse setBalloon",
+    description="Modifying Treehouse balloon to spawn when skygarden condition is reached",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 04 00 07"),
+            instruction_readable="grow_stack 0x4"
+        ),
+        Instruction(
+            identifier=2, offset=0x80, pattern=parse_pattern_bytes("00 15 03 01"),
+            instruction_readable="SC3 0x0:0x15"
+        ),
+        Instruction(
+            identifier=3, offset=0x88, pattern=parse_pattern_bytes("0c 12 00 10"),
+            instruction_readable="push 0xc12"
+        ),
+        Instruction(
+            identifier=4, offset=0xa0, pattern=parse_pattern_bytes("00 15 03 01"),
+            instruction_readable="SC3 0x0:0x15"
+        ),
+        Instruction(
+            identifier=5, offset=0xa8, pattern=parse_pattern_bytes("1c 34 00 10"),
+            instruction_readable="push 0x1c34"
+        ),
+        Instruction(
+            identifier=6, offset=0xe8, pattern=parse_pattern_bytes("00 15 03 01"),
+            instruction_readable="SC3 0x0:0x15"
+        ),
+        Instruction(
+            identifier=7, offset=0xf0, pattern=parse_pattern_bytes("1c 34 00 10"),
+            instruction_readable="push 0x1c34"
+        ),
+        Instruction(
+            identifier=8, offset=0x114, pattern=parse_pattern_bytes("00 15 03 01"),
+            instruction_readable="SC3 0x0:0x15"
+        ),
+        Instruction(
+            identifier=9, offset=0x11c, pattern=parse_pattern_bytes("23 3c 00 10"),
+            instruction_readable="push 0x233c"
+        ),
+    ],
+    patchMapJP=[
+
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, custom_prisma_amount_function
+            ),
+            new_instruction_readable="call get_prisma_amount"
+        ),
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches:
+            get_num_skygarden_prisma_count_from_dict_as_instruction(plando_dict),
+            new_instruction_readable="push prisma count from option"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, custom_prisma_amount_function
+            ),
+            new_instruction_readable="call get_prisma_amount"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches:
+            get_num_skygarden_prisma_count_from_dict_as_instruction(plando_dict),
+            new_instruction_readable="push prisma count from option"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, custom_prisma_amount_function
+            ),
+            new_instruction_readable="call get_prisma_amount"
+        ),
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches:
+            get_num_skygarden_prisma_count_from_dict_as_instruction(plando_dict),
+            new_instruction_readable="push prisma count from option"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+                offset, data, custom_prisma_amount_function
+            ),
+            new_instruction_readable="call get_prisma_amount"
+        ),
+        Patch(
+            identifier=9,
+            patch_function=lambda offset, data, plando_dict, matches:
+            get_num_skygarden_prisma_count_from_dict_as_instruction(plando_dict),
+            new_instruction_readable="push prisma count from option"
+        ),
+    ],
+)
+
 evAr02Zn01_Npc_Main_pattern = [
     set_chapter,
     get_friendship,
@@ -3564,6 +3663,7 @@ evAr02Zn01_Npc_Main_pattern = [
     abra_interaction,
     burmy_interaction,
     piplup_interaction,
+    setBalloon,
 
     custom_prisma_amount_function,
     custom_prisma_check_function,
