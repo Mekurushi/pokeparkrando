@@ -124,8 +124,8 @@ exit_to_zone_data: Final[dict[str, ZoneData]] = {
     FLOWER_ZONE_MAIN_AREA_GRANITE_ZONE_GATE: {"zone": 6, "area": 2, "position": 0},
     GRANITE_ZONE_MAIN_AREA_FLOWER_ZONE_GATE: {"zone": 6, "area": 1, "position": 1},
 
-    TREEHOUSE_PIPLUP_SKYBALLOON: {"zone": 7, "area": 1, "position": 0},
-    SKYGARDEN_PIPLUP_SKYBALLOON: {"zone": 2, "area": 1, "position": 6},
+    TREEHOUSE_PIPLUP_SKYBALLOON: {"zone": 2, "area": 1, "position": 6},
+    SKYGARDEN_PIPLUP_SKYBALLOON: {"zone": 7, "area": 1, "position": 0},
 
     # Fast Travek
     TREEHOUSE_MEADOW_DRIFBLIM_FAST_TRAVEL: {"zone": 2, "area": 1, "position": 5},
