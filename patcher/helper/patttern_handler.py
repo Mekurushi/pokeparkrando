@@ -1,5 +1,16 @@
 from typing import Literal, Union
 
+from patcher.helper.entrance_exit_names import ABSOL_S_HURDLE_BOUNCE_ATTRACTION_ATTRACTION_MENU, \
+    BASTIODON_S_PANEL_CRUSH_ATTRACTION_ATTRACTION_MENU, \
+    BLAZIKEN_S_BOULDER_BASH_ATTRACTION_ATTRACTION_MENU, BULBASAUR_S_DARING_DASH_ATTRACTION_ATTRACTION_MENU, \
+    DUSKNOIR_S_SPEED_SLAM_ATTRACTION_ATTRACTION_MENU, EMPOLEON_S_SNOW_SLIDE_ATTRACTION_ATTRACTION_MENU, \
+    GRANITE_ZONE_MAIN_AREA_TREEHOUSE_CONNECTION, GYARADOS_AQUA_DASH_ATTRACTION_ATTRACTION_MENU, \
+    PELIPPER_S_CIRCLE_CIRCUIT_ATTRACTION_ATTRACTION_MENU, \
+    RAYQUAZA_S_BALLOON_PANIC_ATTRACTION_ATTRACTION_MENU, RHYPERIOR_S_BUMPER_BURN_ATTRACTION_ATTRACTION_MENU, \
+    ROTOM_S_SPOOKY_SHOOT_EM_UP_ATTRACTION_ATTRACTION_MENU, \
+    SALAMENCE_S_SKY_RACE_ATTRACTION_ATTRACTION_MENU, TANGROWTH_S_SWING_ALONG_ATTRACTION_ATTRACTION_MENU, \
+    VENUSAUR_S_VINE_SWING_ATTRACTION_ATTRACTION_MENU
+from patcher.helper.exit_to_zone_data import ZoneKey, exit_to_zone_data
 from patcher.models.models import Instruction, PatternMatch, MemoryData, PatchPattern
 
 
@@ -114,22 +125,35 @@ def get_num_battle_count_from_dict_as_instruction(plando_dict):
     return battle_count_instruction
 
 
+def get_exit_zone_area_position_data(plando_dict, entrance: str, zone_key: ZoneKey):
+
+    exit: str = plando_dict["Entrances"][entrance]
+
+    id = exit_to_zone_data[exit][zone_key]
+    print(f"{entrance}  -> {exit} : {id}")
+
+    id_as_bytes = id.to_bytes(2, byteorder="big")
+    id_instruction = id_as_bytes + b'\x00\x10'
+
+    return id_instruction
+
+
 def get_attraction_id_from_dict(plando_dict, entrance: str):
     exit_to_id: dict[str, int] = {
-        "Bulbasaur's Daring Dash Attraction": 0xf,
-        "Venusaur's Vine Swing Attraction": 0x2,
-        "Pelipper's Circle Circuit Attraction": 0x6,
-        "Gyarados' Aqua Dash Attraction": 0x5,
-        "Empoleon's Snow Slide Attraction": 0x8,
-        "Bastiodon's Panel Crush Attraction": 0x9,
-        "Rhyperior's Bumper Burn Attraction": 0xa,
-        "Blaziken's Boulder Bash Attraction": 0xb,
-        "Dusknoir's Speed Slam Attraction": 0x4,
-        "Tangrowth's Swing-Along Attraction": 0x3,
-        "Rotom's Spooky Shoot-'em-Up Attraction": 0xc,
-        "Absol's Hurdle Bounce Attraction": 0x0,
-        "Salamence's Sky Race Attraction": 0xe,
-        "Rayquaza's Balloon Panic Attraction": 0x1
+        BULBASAUR_S_DARING_DASH_ATTRACTION_ATTRACTION_MENU: 0xf,
+        VENUSAUR_S_VINE_SWING_ATTRACTION_ATTRACTION_MENU: 0x2,
+        PELIPPER_S_CIRCLE_CIRCUIT_ATTRACTION_ATTRACTION_MENU: 0x6,
+        GYARADOS_AQUA_DASH_ATTRACTION_ATTRACTION_MENU: 0x5,
+        EMPOLEON_S_SNOW_SLIDE_ATTRACTION_ATTRACTION_MENU: 0x8,
+        BASTIODON_S_PANEL_CRUSH_ATTRACTION_ATTRACTION_MENU: 0x9,
+        RHYPERIOR_S_BUMPER_BURN_ATTRACTION_ATTRACTION_MENU: 0xa,
+        BLAZIKEN_S_BOULDER_BASH_ATTRACTION_ATTRACTION_MENU: 0xb,
+        DUSKNOIR_S_SPEED_SLAM_ATTRACTION_ATTRACTION_MENU: 0x4,
+        TANGROWTH_S_SWING_ALONG_ATTRACTION_ATTRACTION_MENU: 0x3,
+        ROTOM_S_SPOOKY_SHOOT_EM_UP_ATTRACTION_ATTRACTION_MENU: 0xc,
+        ABSOL_S_HURDLE_BOUNCE_ATTRACTION_ATTRACTION_MENU: 0x0,
+        SALAMENCE_S_SKY_RACE_ATTRACTION_ATTRACTION_MENU: 0xe,
+        RAYQUAZA_S_BALLOON_PANIC_ATTRACTION_ATTRACTION_MENU: 0x1
     }
 
     exit: str = plando_dict["Entrances"][entrance]

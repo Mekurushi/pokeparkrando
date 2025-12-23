@@ -1,3 +1,4 @@
+from patcher.helper.entrance_exit_names import MEADOW_ZONE_VENUSAUR_AREA_VENUSAUR_ATTRACTION
 from patcher.helper.patttern_handler import get_attraction_id_from_dict, parse_pattern_bytes
 from patcher.models.models import PatchPattern, Instruction, Patch
 from patcher.patterns.general import get_friendship, set_chapter
@@ -134,7 +135,7 @@ NPC_Venusaur = PatchPattern(
         Patch(
             identifier=17,
             patch_function=lambda offset, data, plando_dict, matches: get_attraction_id_from_dict(
-                plando_dict, "Meadow Zone Venusaur Area - Venusaur's Vine Swing Attraction"
+                plando_dict, MEADOW_ZONE_VENUSAUR_AREA_VENUSAUR_ATTRACTION
             ),
             new_instruction_readable="update attraction id"
         ),

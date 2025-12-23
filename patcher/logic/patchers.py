@@ -46,12 +46,16 @@ class BasePatcher(ABC):
             with open(file_path, "rb") as f:
                 file_data = bytearray(f.read())
 
+            # find all patterns
             for patchpattern in self.config.patch_patterns:
                 search_all_pattern(file_data, patchpattern)
+                matches = patchpattern.get_matches()
+                print(f"Found {len(matches)} match(es) for pattern: {patchpattern.name}")
 
-                print(f"Match found for pattern: {patchpattern.name}")
+            # patch all found matches
+            for patchpattern in self.config.patch_patterns:
                 match = patchpattern.get_matches()[0].matched_instructions
-
+                print(f"Match found for pattern: {patchpattern.name}")
                 for patch in patchpattern.get_patchmap():
                     mem_data = match.get(patch.identifier)
                     if not mem_data:

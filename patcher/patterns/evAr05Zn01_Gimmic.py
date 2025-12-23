@@ -1,4 +1,6 @@
-from patcher.helper.patttern_handler import compute_call_to_function_script, create_lstr_script, parse_pattern_bytes, \
+from patcher.helper.entrance_exit_names import HAUNTED_ZONE_MAIN_AREA_MANSION_GATE
+from patcher.helper.patttern_handler import compute_call_to_function_script, create_lstr_script, \
+    get_exit_zone_area_position_data, parse_pattern_bytes, \
     create_jmp_instruction_script
 from patcher.models.models import PatchPattern, Instruction, Patch
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
@@ -106,6 +108,7 @@ mansion_door = PatchPattern(
             identifier=10, offset=0x7c, pattern=parse_pattern_bytes("00 0b 00 16"),
             instruction_readable="eq"
         ),
+
     ],
     patchMapJP=[
         Patch(
@@ -180,6 +183,61 @@ mansion_door = PatchPattern(
                 'big'
             ),
             new_instruction_readable="load_arg -0x3"
+        ),
+    ]
+)
+
+ZONECHANGEDR = PatchPattern(
+    name="ZONECHANGEDR",
+    description="Haunted Zone -> Haunted Zone Mansion Connection",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0,
+            pattern=parse_pattern_bytes("00 06 00 07"),
+            instruction_readable="grow_stack 0x6"
+        ),
+        Instruction(
+            identifier=2, offset=0x44,
+            pattern=parse_pattern_bytes("00 05 00 10"),
+            instruction_readable="push 0x5"
+        ),
+        Instruction(
+            identifier=3, offset=0x4c,
+            pattern=parse_pattern_bytes("00 02 00 10"),
+            instruction_readable="push 0x2"
+        ),
+        Instruction(
+            identifier=4, offset=0x54,
+            pattern=parse_pattern_bytes("00 00 00 10"),
+            instruction_readable="push 0x0"
+        ),
+
+    ],
+    patchMapJP=[
+
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                HAUNTED_ZONE_MAIN_AREA_MANSION_GATE, "zone"
+            ),
+            new_instruction_readable="update zone target based on exit"
+        ),
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                HAUNTED_ZONE_MAIN_AREA_MANSION_GATE, "area"
+            ),
+            new_instruction_readable="update area target based on exit"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                HAUNTED_ZONE_MAIN_AREA_MANSION_GATE, "position"
+            ),
+            new_instruction_readable="update position target based on exit"
         ),
     ]
 )
