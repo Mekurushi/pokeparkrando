@@ -1,3 +1,4 @@
+from patcher.helper.entrance_exit_names import HAUNTED_ZONE_MANSION_AREA_DUSKNOIR_ATTRACTION
 from patcher.helper.patttern_handler import compute_call_to_function_script, create_jmp_instruction_script, \
     create_lstr_script, \
     get_attraction_id_from_dict, get_num_battle_count_from_dict_as_instruction, parse_pattern_bytes
@@ -190,7 +191,7 @@ dusknoir_interaction = PatchPattern(
         Patch(
             identifier=4,
             patch_function=lambda offset, data, plando_dict, matches: get_attraction_id_from_dict(
-                plando_dict, "Haunted Zone Mansion Area - Dusknoir's Speed Slam Attraction"
+                plando_dict, HAUNTED_ZONE_MANSION_AREA_DUSKNOIR_ATTRACTION
             ),
             new_instruction_readable="update attraction id"
         ),

@@ -1,3 +1,4 @@
+from patcher.helper.entrance_exit_names import ICE_ZONE_EMPOLEON_AREA_EMPOLEON_ATTRACTION
 from patcher.helper.patttern_handler import get_attraction_id_from_dict, parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
 from patcher.patterns.general import get_friendship, set_chapter
@@ -206,7 +207,7 @@ empoleon_interaction = PatchPattern(
         Patch(
             identifier=4,
             patch_function=lambda offset, data, plando_dict, matches: get_attraction_id_from_dict(
-                plando_dict, "Ice Zone Empoleon Area - Empoleon's Snow Slide Attraction"
+                plando_dict, ICE_ZONE_EMPOLEON_AREA_EMPOLEON_ATTRACTION
             ),
             new_instruction_readable="update attraction id"
         ),
