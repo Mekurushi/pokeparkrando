@@ -706,6 +706,7 @@ evAr05Zn01_Gimmic_patterns = [
     TREECOCOON,
     TREETRANSEL,
     taxi_stop,
+    ZONECHANGEDR,
 
     set_kakuna_location_function,
     set_metapod_location_function,
