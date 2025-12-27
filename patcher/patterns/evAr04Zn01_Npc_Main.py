@@ -1231,28 +1231,24 @@ teddiursa_quiz = PatchPattern(
         # each zone
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big') if
-            plando_dict["Options"]["each_zone"] else None,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big'),
             new_instruction_readable="push 0x0"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00090010).to_bytes(4, 'big') if
-            plando_dict["Options"]["each_zone"] else None,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00090010).to_bytes(4, 'big'),
             new_instruction_readable="push 0x9"
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00070010).to_bytes(4, 'big') if
-            plando_dict["Options"]["each_zone"] else None,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00070010).to_bytes(4, 'big'),
             new_instruction_readable="push 0x7"
         ),
         Patch(
             identifier=5,
             patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
                 offset, data, set_attraction_record
-            ) if
-            plando_dict["Options"]["each_zone"] else None,
+            ),
             new_instruction_readable="call set_attraction_record"
         )
     ]
