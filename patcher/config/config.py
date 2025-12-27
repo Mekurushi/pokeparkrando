@@ -24,6 +24,7 @@ from patcher.patterns.evAr04Zn01_DemoEvent import evAr04Zn01_DemoEvent_patch_pat
 from patcher.patterns.evAr04Zn01_Gimmic import evAr04Zn01_Gimmic_patterns
 from patcher.patterns.evAr04Zn01_Npc_Main import evAr04Zn01_Npc_Main_patterns
 from patcher.patterns.evAr04Zn01_ScriptEvent import evAr04Zn01_ScriptEvent_patch_pattern
+from patcher.patterns.evAr04Zn02_DemoEvent import evAr04Zn02_DemoEvent_patch_pattern
 from patcher.patterns.evAr04Zn02_Gimmic import evAr04Zn02_Gimmic_patterns
 from patcher.patterns.evAr04Zn02_Npc_Main import evAr04Zn02_Npc_Main_patterns
 from patcher.patterns.evAr04Zn02_ScriptEvent import evAr04Zn02_ScriptEvent_patch_pattern
@@ -1445,6 +1446,27 @@ def get_cavern_zone_patches() -> List[FilePatchConfig]:
         patch_patterns=evAr04Zn01_DemoEvent_patch_pattern
     )
     patches.append(field_Ar04Zn01_demo_event_config)
+
+    field_Ar04Zn02_demo_event_config = FilePatchConfig(
+        file_id="Ar04_Zn02_demo_event",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar04Zn02Dat.dac", "Temporary/Field/ParkAr04Zn02Dat.dan",
+                     "Script/evAr04Zn02_DemoEvent.fsb"), (
+                        "DATA/files/Field/Ar04Zn02Dat_Fr.dac", "Temporary/Field/ParkAr04Zn02Dat_Fr.dan",
+                        "Script/evAr04Zn02_DemoEvent.fsb"), (
+                        "DATA/files/Field/Ar04Zn02Dat_Ge.dac", "Temporary/Field/ParkAr04Zn02Dat_Ge.dan",
+                        "Script/evAr04Zn02_DemoEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_It.dac", "Temporary/Field/ParkAr04Zn02Dat_It.dan",
+                        "Script/evAr04Zn02_DemoEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_Sp.dac", "Temporary/Field/ParkAr04Zn02Dat_Sp.dan",
+                        "Script/evAr04Zn02_DemoEvent.fsb"),
+                    ],
+        patch_patterns=evAr04Zn02_DemoEvent_patch_pattern
+    )
+    patches.append(field_Ar04Zn02_demo_event_config)
     return patches
 
 

@@ -119,7 +119,7 @@ exit_to_zone_data: Final[dict[str, ZoneData]] = {
     HAUNTED_ZONE_BOOKSHELF_AREA_ROTOM_CONNECTION: {"zone": 5, "area": 2, "position": 1},
 
     GRANITE_ZONE_MAIN_AREA_TREEHOUSE_CONNECTION: {"zone": 6, "area": 1, "position": 0},
-    TREEHOUSE_GRANITE_PASSAGE_GRANITE_ZONE_CONNECTION: {"zone": 2, "area": 1, "position": 3},
+    TREEHOUSE_GRANITE_PASSAGE_GRANITE_ZONE_CONNECTION: {"zone": 2, "area": 1, "position": 4},
 
     FLOWER_ZONE_MAIN_AREA_GRANITE_ZONE_GATE: {"zone": 6, "area": 2, "position": 0},
     GRANITE_ZONE_MAIN_AREA_FLOWER_ZONE_GATE: {"zone": 6, "area": 1, "position": 1},
@@ -127,7 +127,7 @@ exit_to_zone_data: Final[dict[str, ZoneData]] = {
     TREEHOUSE_PIPLUP_SKYBALLOON: {"zone": 2, "area": 1, "position": 6},
     SKYGARDEN_PIPLUP_SKYBALLOON: {"zone": 7, "area": 1, "position": 0},
 
-    # Fast Travek
+    # Fast Travel
     TREEHOUSE_MEADOW_DRIFBLIM_FAST_TRAVEL: {"zone": 2, "area": 1, "position": 5},
     TREEHOUSE_BEACH_DRIFBLIM_FAST_TRAVEL: {"zone": 2, "area": 1, "position": 5},
     TREEHOUSE_ICE_DRIFBLIM_FAST_TRAVEL: {"zone": 2, "area": 1, "position": 5},
