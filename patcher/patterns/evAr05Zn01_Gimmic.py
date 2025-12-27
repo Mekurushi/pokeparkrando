@@ -1,7 +1,7 @@
 from patcher.helper.entrance_exit_names import HAUNTED_ZONE_MAIN_AREA_MANSION_GATE
 from patcher.helper.patttern_handler import compute_call_to_function_script, create_lstr_script, \
     get_exit_zone_area_position_data, parse_pattern_bytes, \
-    create_jmp_instruction_script
+    create_jmp_instruction_script, patch_taxi_stop
 from patcher.models.models import PatchPattern, Instruction, Patch
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
 
@@ -692,7 +692,7 @@ taxi_stop = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, matches: patch_taxi_stop(plando_dict),
             new_instruction_readable="push 0x1"
         ),
 
