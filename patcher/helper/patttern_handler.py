@@ -138,6 +138,12 @@ def get_exit_zone_area_position_data(plando_dict, entrance: str, zone_key: ZoneK
     return id_instruction
 
 
+def patch_taxi_stop(plando_dict):
+    if plando_dict["Options"]["unlock_fast_travel_with_taxi_stop"]:
+        return None
+    return (0x00010010).to_bytes(4, 'big')
+
+
 def get_attraction_id_from_dict(plando_dict, entrance: str):
     exit_to_id: dict[str, int] = {
         BULBASAUR_S_DARING_DASH_ATTRACTION_ATTRACTION_MENU: 0xf,

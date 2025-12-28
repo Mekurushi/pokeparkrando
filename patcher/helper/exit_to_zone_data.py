@@ -95,7 +95,7 @@ exit_to_zone_data: Final[dict[str, ZoneData]] = {
     TREEHOUSE_BEACH_PASSAGE_BEACH_ZONE_CONNECTION: {"zone": 2, "area": 1, "position": 1},
 
     ICE_ZONE_MAIN_AREA_ICE_ZONE_LAPRAS: {"zone": 3, "area": 2, "position": 0},
-    BEACH_ZONE_LAPRAS_AREA_BEACH_ZONE_LAPRAS: {"zone": 2, "area": 1, "position": 1},
+    BEACH_ZONE_LAPRAS_AREA_BEACH_ZONE_LAPRAS: {"zone": 3, "area": 1, "position": 1},
 
     ICE_ZONE_MAIN_AREA_EMPOLEON_GATE: {"zone": 3, "area": 2, "position": 1},
     ICE_ZONE_EMPOLEON_AREA_ICE_ZONE_MAIN_GATE: {"zone": 3, "area": 3, "position": 0},
