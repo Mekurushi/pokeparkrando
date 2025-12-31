@@ -1,3 +1,4 @@
+from patcher.helper.entrance_exit_names import HAUNTED_ZONE_ROTOM_AREA_ROTOM_ATTRACTION
 from patcher.helper.patttern_handler import create_jmp_instruction_script, get_attraction_id_from_dict, \
     parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
@@ -58,7 +59,7 @@ rotom_interaction = PatchPattern(
         Patch(
             identifier=7,
             patch_function=lambda offset, data, plando_dict, matches: get_attraction_id_from_dict(
-                plando_dict, "Haunted Zone Rotom Area - Rotom's Spooky Shoot-'em-Up Attraction"
+                plando_dict, HAUNTED_ZONE_ROTOM_AREA_ROTOM_ATTRACTION
             ),
             new_instruction_readable="update attraction id"
         ),

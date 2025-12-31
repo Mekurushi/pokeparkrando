@@ -15,7 +15,7 @@ class Instruction:
 @dataclass
 class Patch:
     identifier: int
-    patch_function: Callable[[[Any], [Any], [Any], [Any]], bytes]
+    patch_function: Callable[[[Any], [Any], [Any], [Any]], Optional[bytes]]
     new_instruction_readable: str
 
 

@@ -1,3 +1,4 @@
+from patcher.helper.entrance_exit_names import MAGMA_ZONE_BLAZIKEN_AREA_BLAZIKEN_ATTRACTION
 from patcher.helper.patttern_handler import get_attraction_id_from_dict, parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
 from patcher.patterns.general import get_friendship, set_chapter
@@ -53,7 +54,7 @@ blaziken_interaction = PatchPattern(
         Patch(
             identifier=5,
             patch_function=lambda offset, data, plando_dict, matches: get_attraction_id_from_dict(
-                plando_dict, "Magma Zone Blaziken Area - Blaziken's Boulder Bash Attraction"
+                plando_dict, MAGMA_ZONE_BLAZIKEN_AREA_BLAZIKEN_ATTRACTION
             ),
             new_instruction_readable="update attraction id"
         ),
@@ -122,7 +123,7 @@ blaziken2_interaction = PatchPattern(
         Patch(
             identifier=4,
             patch_function=lambda offset, data, plando_dict, matches: get_attraction_id_from_dict(
-                plando_dict, "Magma Zone Blaziken Area - Blaziken's Boulder Bash Attraction"
+                plando_dict, MAGMA_ZONE_BLAZIKEN_AREA_BLAZIKEN_ATTRACTION
             ),
             new_instruction_readable="update attraction id"
         ),

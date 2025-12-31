@@ -7,30 +7,47 @@ from patcher.patterns.disposition_drifblim import disposition_drifblim_patterns
 from patcher.patterns.evAr01Zn01_Gimmic import evAr01Zn01_Gimmic_patch_pattern
 from patcher.patterns.evAr01Zn01_Npc_Main import \
     evAr01Zn01_Npc_Main_patch_pattern
+from patcher.patterns.evAr01Zn01_ScriptEvent import evAr01Zn01_ScriptEvent_patch_pattern
 from patcher.patterns.evAr01Zn02_Npc_Main import evAr01Zn02_Npc_Main_patterns
+from patcher.patterns.evAr01Zn02_ScriptEvent import evAr01Zn02_ScriptEvent_patch_pattern
 from patcher.patterns.evAr02Zn01_Npc_Main import evAr02Zn01_Npc_Main_pattern
+from patcher.patterns.evAr02Zn01_ScriptEvent import evAr02Zn01_ScriptEvent_patch_pattern
 from patcher.patterns.evAr03Zn01_Gimmic import evAr03Zn01_Gimmic_patch_pattern
 from patcher.patterns.evAr03Zn01_Npc_Main import evAr03Zn01_Npc_Main_pattern
+from patcher.patterns.evAr03Zn01_ScriptEvent import evAr03Zn01_ScriptEvent_patch_pattern
 from patcher.patterns.evAr03Zn02_Gimmic import evAr03Zn02_Gimmic_patch_pattern
 from patcher.patterns.evAr03Zn02_Npc_Main import evAr03Zn02_Npc_Main_patterns
+from patcher.patterns.evAr03Zn02_ScriptEvent import evAr03Zn02_ScriptEvent_patch_pattern
 from patcher.patterns.evAr03Zn03_Npc_Main import evAr03Zn03_Npc_Main_patterns
+from patcher.patterns.evAr03Zn03_ScriptEvent import evAr03Zn03_ScriptEvent_patch_pattern
+from patcher.patterns.evAr04Zn01_DemoEvent import evAr04Zn01_DemoEvent_patch_pattern
 from patcher.patterns.evAr04Zn01_Gimmic import evAr04Zn01_Gimmic_patterns
 from patcher.patterns.evAr04Zn01_Npc_Main import evAr04Zn01_Npc_Main_patterns
+from patcher.patterns.evAr04Zn01_ScriptEvent import evAr04Zn01_ScriptEvent_patch_pattern
+from patcher.patterns.evAr04Zn02_DemoEvent import evAr04Zn02_DemoEvent_patch_pattern
 from patcher.patterns.evAr04Zn02_Gimmic import evAr04Zn02_Gimmic_patterns
 from patcher.patterns.evAr04Zn02_Npc_Main import evAr04Zn02_Npc_Main_patterns
+from patcher.patterns.evAr04Zn02_ScriptEvent import evAr04Zn02_ScriptEvent_patch_pattern
 from patcher.patterns.evAr04Zn03_Npc_Main import evAr04Zn03_Npc_Main_patterns
+from patcher.patterns.evAr04Zn03_ScriptEvent import evAr04Zn03_ScriptEvent_patch_pattern
 from patcher.patterns.evAr05Zn01_Gimmic import evAr05Zn01_Gimmic_patterns
 from patcher.patterns.evAr05Zn01_Npc_Main import evAr05Zn01_Npc_Main_patterns
+from patcher.patterns.evAr05Zn01_ScriptEvent import evAr05Zn01_ScriptEvent_patch_pattern
 from patcher.patterns.evAr05Zn02_Gimmic import evAr05Zn02_Gimmic_patterns
 from patcher.patterns.evAr05Zn02_Npc_Main import evAr05Zn02_Npc_Main_patterns
+from patcher.patterns.evAr05Zn02_ScriptEvent import evAr05Zn02_ScriptEvent_patch_pattern
 from patcher.patterns.evAr05Zn03_Npc_Main import evAr05Zn03_Npc_Main_patterns
+from patcher.patterns.evAr05Zn03_ScriptEvent import evAr05Zn03_ScriptEvent_patch_pattern
 from patcher.patterns.evAr06Zn01_DemoEvent import evAr06Zn01_DemoEvent_patterns
 from patcher.patterns.evAr06Zn01_Gimmic import evAr06Zn01_Gimmic_patterns
 from patcher.patterns.evAr06Zn01_Npc_Main import evAr06Zn01_Npc_Main_patterns
+from patcher.patterns.evAr06Zn01_ScriptEvent import evAr06Zn01_ScriptEvent_patch_pattern
 from patcher.patterns.evAr06Zn02_Gimmic import evAr06Zn02_Gimmic_patch_pattern
 from patcher.patterns.evAr06Zn02_Npc_Main import evAr06Zn02_Npc_Main_patterns
+from patcher.patterns.evAr06Zn02_ScriptEvent import evAr06Zn02_ScriptEvent_patch_pattern
 from patcher.patterns.evAr07Zn01_Npc_Main import evAr07Zn01_Npc_Main_patterns
 from patcher.patterns.evAr99Zn01_Npc_Main import evAr99Zn01_Npc_Main_pattern
+from patcher.patterns.evAr99Zn01_ScriptEvent import evAr99Zn01_ScriptEvent_patch_pattern
 from patcher.patterns.gk0101Gate import gate101_close
 from patcher.patterns.gk0302Gate import gk0302Gate_pattern
 from patcher.patterns.gk0402Bridge import gk0402Bridge_pattern
@@ -102,6 +119,48 @@ def get_meadow_zone_patches() -> List[FilePatchConfig]:
         patch_patterns=evAr01Zn02_Npc_Main_patterns
     )
     patches.append(field_Ar01Zn02_npc_script_config)
+
+    field_Ar01Zn02_script_event_config = FilePatchConfig(
+        file_id="Ar01_Zn02_script_event",
+        description="Zonechanges logic",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar01Zn02Dat.dac", "Temporary/Field/ParkAr01Zn02Dat.dan",
+                     "Script/evAr01Zn02_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar01Zn02Dat_Fr.dac", "Temporary/Field/ParkAr01Zn02Dat_Fr.dan",
+                        "Script/evAr01Zn02_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar01Zn02Dat_Ge.dac", "Temporary/Field/ParkAr01Zn02Dat_Ge.dan",
+                        "Script/evAr01Zn02_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar01Zn02Dat_It.dac", "Temporary/Field/ParkAr01Zn02Dat_It.dan",
+                        "Script/evAr01Zn02_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar01Zn02Dat_Sp.dac", "Temporary/Field/ParkAr01Zn02Dat_Sp.dan",
+                        "Script/evAr01Zn02_ScriptEvent.fsb"),
+                    ],
+        patch_patterns=evAr01Zn02_ScriptEvent_patch_pattern
+    )
+    patches.append(field_Ar01Zn02_script_event_config)
+
+    field_Ar01Zn01_script_event_config = FilePatchConfig(
+        file_id="Ar01_Zn01_script_event",
+        description="Zonechanges logic",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar01Zn01Dat.dac", "Temporary/Field/ParkAr01Zn01Dat.dan",
+                     "Script/evAr01Zn01_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar01Zn01Dat_Fr.dac", "Temporary/Field/ParkAr01Zn01Dat_Fr.dan",
+                        "Script/evAr01Zn01_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar01Zn01Dat_Ge.dac", "Temporary/Field/ParkAr01Zn01Dat_Ge.dan",
+                        "Script/evAr01Zn01_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar01Zn01Dat_It.dac", "Temporary/Field/ParkAr01Zn01Dat_It.dan",
+                        "Script/evAr01Zn01_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar01Zn01Dat_Sp.dac", "Temporary/Field/ParkAr01Zn01Dat_Sp.dan",
+                        "Script/evAr01Zn01_ScriptEvent.fsb"),
+                    ],
+        patch_patterns=evAr01Zn01_ScriptEvent_patch_pattern
+    )
+    patches.append(field_Ar01Zn01_script_event_config)
 
     field_gimmic_shroomish_crate = FilePatchConfig(
         file_id="shroomish_crate_gimmic",
@@ -215,6 +274,26 @@ def get_park_entrance_patches() -> List[FilePatchConfig]:
         patch_patterns=evAr99Zn01_Npc_Main_pattern
     )
     patches.append(field_Ar99Zn01_npc_script_config)
+    field_Ar99Zn01_script_event_config = FilePatchConfig(
+        file_id="Ar99_Zn01_script_event",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar99Zn01Dat.dac", "Temporary/Field/ParkAr99Zn01Dat.dan",
+                     "Script/evAr99Zn01_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar99Zn01Dat_Fr.dac", "Temporary/Field/ParkAr99Zn01Dat_Fr.dan",
+                        "Script/evAr99Zn01_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar99Zn01Dat_Ge.dac", "Temporary/Field/ParkAr99Zn01Dat_Ge.dan",
+                        "Script/evAr99Zn01_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar99Zn01Dat_It.dac", "Temporary/Field/ParkAr99Zn01Dat_It.dan",
+                        "Script/evAr99Zn01_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar99Zn01Dat_Sp.dac", "Temporary/Field/ParkAr99Zn01Dat_Sp.dan",
+                        "Script/evAr99Zn01_ScriptEvent.fsb"),
+                    ],
+        patch_patterns=evAr99Zn01_ScriptEvent_patch_pattern
+    )
+    patches.append(field_Ar99Zn01_script_event_config)
     kabigon_wall = FilePatchConfig(
         file_id="kabigon_wall_gimmic",
         description="Gimmic KabigonWall",
@@ -828,6 +907,26 @@ def get_treehouse_patches() -> List[FilePatchConfig]:
         patch_patterns=evAr02Zn01_Npc_Main_pattern
     )
     patches.append(field_Ar02Zn01_npc_script_config)
+    field_Ar02Zn01_script_event_config = FilePatchConfig(
+        file_id="Ar02_Zn01_script_event",
+        description="Zonechanges logic",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar02Zn01Dat.dac", "Temporary/Field/ParkAr02Zn01Dat.dan",
+                     "Script/evAr02Zn01_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar02Zn01Dat_Fr.dac", "Temporary/Field/ParkAr02Zn01Dat_Fr.dan",
+                        "Script/evAr02Zn01_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar02Zn01Dat_Ge.dac", "Temporary/Field/ParkAr02Zn01Dat_Ge.dan",
+                        "Script/evAr02Zn01_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar02Zn01Dat_It.dac", "Temporary/Field/ParkAr02Zn01Dat_It.dan",
+                        "Script/evAr02Zn01_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar02Zn01Dat_Sp.dac", "Temporary/Field/ParkAr02Zn01Dat_Sp.dan",
+                        "Script/evAr02Zn01_ScriptEvent.fsb"),
+                    ],
+        patch_patterns=evAr02Zn01_ScriptEvent_patch_pattern
+    )
+    patches.append(field_Ar02Zn01_script_event_config)
 
     treehouse = FilePatchConfig(
         file_id="treehouse_gimmic",
@@ -1032,6 +1131,27 @@ def get_beach_zone_patches() -> List[FilePatchConfig]:
     )
     patches.append(field_Ar03Zn01_npc_script_config)
 
+    field_Ar03Zn01_script_event_config = FilePatchConfig(
+        file_id="Ar03_Zn01_script_event",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar03Zn01Dat.dac", "Temporary/Field/ParkAr03Zn01Dat.dan",
+                     "Script/evAr03Zn01_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar03Zn01Dat_Fr.dac", "Temporary/Field/ParkAr03Zn01Dat_Fr.dan",
+                        "Script/evAr03Zn01_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar03Zn01Dat_Ge.dac", "Temporary/Field/ParkAr03Zn01Dat_Ge.dan",
+                        "Script/evAr03Zn01_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn01Dat_It.dac", "Temporary/Field/ParkAr03Zn01Dat_It.dan",
+                        "Script/evAr03Zn01_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn01Dat_Sp.dac", "Temporary/Field/ParkAr03Zn01Dat_Sp.dan",
+                        "Script/evAr03Zn01_ScriptEvent.fsb"),
+                    ],
+        patch_patterns=evAr03Zn01_ScriptEvent_patch_pattern
+    )
+    patches.append(field_Ar03Zn01_script_event_config)
+
     attraction_ranking = FilePatchConfig(
         file_id="attraction_prep",
         description="unlock unused attraction records",
@@ -1111,6 +1231,27 @@ def get_ice_zone_patches() -> List[FilePatchConfig]:
     )
     patches.append(field_Ar03Zn03_npc_script_config)
 
+    field_Ar03Zn03_script_event_config = FilePatchConfig(
+        file_id="Ar03_Zn03_script_event",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar03Zn03Dat.dac", "Temporary/Field/ParkAr03Zn03Dat.dan",
+                     "Script/evAr03Zn03_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar03Zn03Dat_Fr.dac", "Temporary/Field/ParkAr03Zn03Dat_Fr.dan",
+                        "Script/evAr03Zn03_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar03Zn03Dat_Ge.dac", "Temporary/Field/ParkAr03Zn03Dat_Ge.dan",
+                        "Script/evAr03Zn03_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn03Dat_It.dac", "Temporary/Field/ParkAr03Zn03Dat_It.dan",
+                        "Script/evAr03Zn03_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn03Dat_Sp.dac", "Temporary/Field/ParkAr03Zn03Dat_Sp.dan",
+                        "Script/evAr03Zn03_ScriptEvent.fsb"),
+                    ],
+        patch_patterns=evAr03Zn03_ScriptEvent_patch_pattern
+    )
+    patches.append(field_Ar03Zn03_script_event_config)
+
     gkmammoo = FilePatchConfig(
         file_id="gkmammoo_gimmic",
         description="frozen Piloswine",
@@ -1177,6 +1318,27 @@ def get_ice_zone_patches() -> List[FilePatchConfig]:
         patch_patterns=evAr03Zn02_Npc_Main_patterns
     )
     patches.append(field_Ar03Zn02_npc_script_config)
+
+    field_Ar03Zn02_script_event_config = FilePatchConfig(
+        file_id="Ar03_Zn02_script_event",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar03Zn02Dat.dac", "Temporary/Field/ParkAr03Zn02Dat.dan",
+                     "Script/evAr03Zn02_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar03Zn02Dat_Fr.dac", "Temporary/Field/ParkAr03Zn02Dat_Fr.dan",
+                        "Script/evAr03Zn02_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar03Zn02Dat_Ge.dac", "Temporary/Field/ParkAr03Zn02Dat_Ge.dan",
+                        "Script/evAr03Zn02_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn02Dat_It.dac", "Temporary/Field/ParkAr03Zn02Dat_It.dan",
+                        "Script/evAr03Zn02_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar03Zn02Dat_Sp.dac", "Temporary/Field/ParkAr03Zn02Dat_Sp.dan",
+                        "Script/evAr03Zn02_ScriptEvent.fsb"),
+                    ],
+        patch_patterns=evAr03Zn02_ScriptEvent_patch_pattern
+    )
+    patches.append(field_Ar03Zn02_script_event_config)
     return patches
 
 
@@ -1242,6 +1404,69 @@ def get_cavern_zone_patches() -> List[FilePatchConfig]:
         patch_patterns=evAr04Zn01_Npc_Main_patterns
     )
     patches.append(field_Ar04Zn01_npc_script_config)
+
+    field_Ar04Zn01_script_event_config = FilePatchConfig(
+        file_id="Ar04_Zn01_script_event",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar04Zn01Dat.dac", "Temporary/Field/ParkAr04Zn01Dat.dan",
+                     "Script/evAr04Zn01_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar04Zn01Dat_Fr.dac", "Temporary/Field/ParkAr04Zn01Dat_Fr.dan",
+                        "Script/evAr04Zn01_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar04Zn01Dat_Ge.dac", "Temporary/Field/ParkAr04Zn01Dat_Ge.dan",
+                        "Script/evAr04Zn01_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn01Dat_It.dac", "Temporary/Field/ParkAr04Zn01Dat_It.dan",
+                        "Script/evAr04Zn01_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn01Dat_Sp.dac", "Temporary/Field/ParkAr04Zn01Dat_Sp.dan",
+                        "Script/evAr04Zn01_ScriptEvent.fsb"),
+                    ],
+        patch_patterns=evAr04Zn01_ScriptEvent_patch_pattern
+    )
+    patches.append(field_Ar04Zn01_script_event_config)
+
+    field_Ar04Zn01_demo_event_config = FilePatchConfig(
+        file_id="Ar04_Zn01_demo_event",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar04Zn01Dat.dac", "Temporary/Field/ParkAr04Zn01Dat.dan",
+                     "Script/evAr04Zn01_DemoEvent.fsb"), (
+                        "DATA/files/Field/Ar04Zn01Dat_Fr.dac", "Temporary/Field/ParkAr04Zn01Dat_Fr.dan",
+                        "Script/evAr04Zn01_DemoEvent.fsb"), (
+                        "DATA/files/Field/Ar04Zn01Dat_Ge.dac", "Temporary/Field/ParkAr04Zn01Dat_Ge.dan",
+                        "Script/evAr04Zn01_DemoEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn01Dat_It.dac", "Temporary/Field/ParkAr04Zn01Dat_It.dan",
+                        "Script/evAr04Zn01_DemoEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn01Dat_Sp.dac", "Temporary/Field/ParkAr04Zn01Dat_Sp.dan",
+                        "Script/evAr04Zn01_DemoEvent.fsb"),
+                    ],
+        patch_patterns=evAr04Zn01_DemoEvent_patch_pattern
+    )
+    patches.append(field_Ar04Zn01_demo_event_config)
+
+    field_Ar04Zn02_demo_event_config = FilePatchConfig(
+        file_id="Ar04_Zn02_demo_event",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar04Zn02Dat.dac", "Temporary/Field/ParkAr04Zn02Dat.dan",
+                     "Script/evAr04Zn02_DemoEvent.fsb"), (
+                        "DATA/files/Field/Ar04Zn02Dat_Fr.dac", "Temporary/Field/ParkAr04Zn02Dat_Fr.dan",
+                        "Script/evAr04Zn02_DemoEvent.fsb"), (
+                        "DATA/files/Field/Ar04Zn02Dat_Ge.dac", "Temporary/Field/ParkAr04Zn02Dat_Ge.dan",
+                        "Script/evAr04Zn02_DemoEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_It.dac", "Temporary/Field/ParkAr04Zn02Dat_It.dan",
+                        "Script/evAr04Zn02_DemoEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_Sp.dac", "Temporary/Field/ParkAr04Zn02Dat_Sp.dan",
+                        "Script/evAr04Zn02_DemoEvent.fsb"),
+                    ],
+        patch_patterns=evAr04Zn02_DemoEvent_patch_pattern
+    )
+    patches.append(field_Ar04Zn02_demo_event_config)
     return patches
 
 
@@ -1287,6 +1512,27 @@ def get_magma_zone_patches() -> List[FilePatchConfig]:
     )
     patches.append(field_Ar04Zn02_npc_script_config)
 
+    field_Ar04Zn02_script_event_config = FilePatchConfig(
+        file_id="Ar04_Zn02_script_event",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar04Zn02Dat.dac", "Temporary/Field/ParkAr04Zn02Dat.dan",
+                     "Script/evAr04Zn02_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar04Zn02Dat_Fr.dac", "Temporary/Field/ParkAr04Zn02Dat_Fr.dan",
+                        "Script/evAr04Zn02_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar04Zn02Dat_Ge.dac", "Temporary/Field/ParkAr04Zn02Dat_Ge.dan",
+                        "Script/evAr04Zn02_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_It.dac", "Temporary/Field/ParkAr04Zn02Dat_It.dan",
+                        "Script/evAr04Zn02_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_Sp.dac", "Temporary/Field/ParkAr04Zn02Dat_Sp.dan",
+                        "Script/evAr04Zn02_ScriptEvent.fsb"),
+                    ],
+        patch_patterns=evAr04Zn02_ScriptEvent_patch_pattern
+    )
+    patches.append(field_Ar04Zn02_script_event_config)
+
     field_Ar04Zn03_npc_script_config = FilePatchConfig(
         file_id="Ar04_Zn03",
         description="Field Script Main",
@@ -1307,6 +1553,27 @@ def get_magma_zone_patches() -> List[FilePatchConfig]:
         patch_patterns=evAr04Zn03_Npc_Main_patterns
     )
     patches.append(field_Ar04Zn03_npc_script_config)
+
+    field_Ar04Zn03_script_event_config = FilePatchConfig(
+        file_id="Ar04_Zn03_script_event",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar04Zn03Dat.dac", "Temporary/Field/ParkAr04Zn03Dat.dan",
+                     "Script/evAr04Zn03_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar04Zn03Dat_Fr.dac", "Temporary/Field/ParkAr04Zn03Dat_Fr.dan",
+                        "Script/evAr04Zn03_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar04Zn03Dat_Ge.dac", "Temporary/Field/ParkAr04Zn03Dat_Ge.dan",
+                        "Script/evAr04Zn03_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn03Dat_It.dac", "Temporary/Field/ParkAr04Zn03Dat_It.dan",
+                        "Script/evAr04Zn03_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar04Zn03Dat_Sp.dac", "Temporary/Field/ParkAr04Zn03Dat_Sp.dan",
+                        "Script/evAr04Zn03_ScriptEvent.fsb"),
+                    ],
+        patch_patterns=evAr04Zn03_ScriptEvent_patch_pattern
+    )
+    patches.append(field_Ar04Zn03_script_event_config)
 
     gk0402gate = FilePatchConfig(
         file_id="gate0402_gimmic",
@@ -1645,6 +1912,27 @@ def get_haunted_zone_patches() -> List[FilePatchConfig]:
     )
     patches.append(field_Ar05Zn03_npc_script_config)
 
+    field_Ar05Zn03_script_event_config = FilePatchConfig(
+        file_id="Ar05_Zn03_script_event",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar05Zn03Dat.dac", "Temporary/Field/ParkAr05Zn03Dat.dan",
+                     "Script/evAr05Zn03_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar05Zn03Dat_Fr.dac", "Temporary/Field/ParkAr05Zn03Dat_Fr.dan",
+                        "Script/evAr05Zn03_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar05Zn03Dat_Ge.dac", "Temporary/Field/ParkAr05Zn03Dat_Ge.dan",
+                        "Script/evAr05Zn03_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn03Dat_It.dac", "Temporary/Field/ParkAr05Zn03Dat_It.dan",
+                        "Script/evAr05Zn03_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn03Dat_Sp.dac", "Temporary/Field/ParkAr05Zn03Dat_Sp.dan",
+                        "Script/evAr05Zn03_ScriptEvent.fsb"),
+                    ],
+        patch_patterns=evAr05Zn03_ScriptEvent_patch_pattern
+    )
+    patches.append(field_Ar05Zn03_script_event_config)
+
     field_Ar05Zn02_npc_script_config = FilePatchConfig(
         file_id="Ar05_Zn02",
         description="Field Script Main",
@@ -1666,6 +1954,27 @@ def get_haunted_zone_patches() -> List[FilePatchConfig]:
     )
     patches.append(field_Ar05Zn02_npc_script_config)
 
+    field_Ar05Zn02_script_event_config = FilePatchConfig(
+        file_id="Ar05_Zn02_script_event",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar05Zn02Dat.dac", "Temporary/Field/ParkAr05Zn02Dat.dan",
+                     "Script/evAr05Zn02_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar05Zn02Dat_Fr.dac", "Temporary/Field/ParkAr05Zn02Dat_Fr.dan",
+                        "Script/evAr05Zn02_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar05Zn02Dat_Ge.dac", "Temporary/Field/ParkAr05Zn02Dat_Ge.dan",
+                        "Script/evAr05Zn02_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn02Dat_It.dac", "Temporary/Field/ParkAr05Zn02Dat_It.dan",
+                        "Script/evAr05Zn02_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn02Dat_Sp.dac", "Temporary/Field/ParkAr05Zn02Dat_Sp.dan",
+                        "Script/evAr05Zn02_ScriptEvent.fsb"),
+                    ],
+        patch_patterns=evAr05Zn02_ScriptEvent_patch_pattern
+    )
+    patches.append(field_Ar05Zn02_script_event_config)
+
     field_Ar05Zn01_npc_script_config = FilePatchConfig(
         file_id="Ar05_Zn01",
         description="Field Script Main",
@@ -1686,6 +1995,27 @@ def get_haunted_zone_patches() -> List[FilePatchConfig]:
         patch_patterns=evAr05Zn01_Npc_Main_patterns
     )
     patches.append(field_Ar05Zn01_npc_script_config)
+
+    field_Ar05Zn01_script_event_config = FilePatchConfig(
+        file_id="Ar05_Zn01_script_event",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar05Zn01Dat.dac", "Temporary/Field/ParkAr05Zn01Dat.dan",
+                     "Script/evAr05Zn01_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar05Zn01Dat_Fr.dac", "Temporary/Field/ParkAr05Zn01Dat_Fr.dan",
+                        "Script/evAr05Zn01_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar05Zn01Dat_Ge.dac", "Temporary/Field/ParkAr05Zn01Dat_Ge.dan",
+                        "Script/evAr05Zn01_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn01Dat_It.dac", "Temporary/Field/ParkAr05Zn01Dat_It.dan",
+                        "Script/evAr05Zn01_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar05Zn01Dat_Sp.dac", "Temporary/Field/ParkAr05Zn01Dat_Sp.dan",
+                        "Script/evAr05Zn01_ScriptEvent.fsb"),
+                    ],
+        patch_patterns=evAr05Zn01_ScriptEvent_patch_pattern
+    )
+    patches.append(field_Ar05Zn01_script_event_config)
 
     evAr05Zn02_Gimmic = FilePatchConfig(
         file_id="ar05zn02_gimmic",
@@ -1884,6 +2214,27 @@ def get_granite_zone_patches() -> List[FilePatchConfig]:
         patch_patterns=evAr06Zn01_Npc_Main_patterns
     )
     patches.append(field_Ar06Zn01_npc_script_config)
+
+    field_Ar06Zn01_script_event_config = FilePatchConfig(
+        file_id="Ar06_Zn01_script_event",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar06Zn01Dat.dac", "Temporary/Field/ParkAr06Zn01Dat.dan",
+                     "Script/evAr06Zn01_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar06Zn01Dat_Fr.dac", "Temporary/Field/ParkAr06Zn01Dat_Fr.dan",
+                        "Script/evAr06Zn01_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar06Zn01Dat_Ge.dac", "Temporary/Field/ParkAr06Zn01Dat_Ge.dan",
+                        "Script/evAr06Zn01_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar06Zn01Dat_It.dac", "Temporary/Field/ParkAr06Zn01Dat_It.dan",
+                        "Script/evAr06Zn01_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar06Zn01Dat_Sp.dac", "Temporary/Field/ParkAr06Zn01Dat_Sp.dan",
+                        "Script/evAr06Zn01_ScriptEvent.fsb"),
+                    ],
+        patch_patterns=evAr06Zn01_ScriptEvent_patch_pattern
+    )
+    patches.append(field_Ar06Zn01_script_event_config)
     return patches
 
 
@@ -1949,6 +2300,27 @@ def get_flower_zone_patches() -> List[FilePatchConfig]:
         patch_patterns=evAr06Zn02_Npc_Main_patterns
     )
     patches.append(field_Ar06Zn02_npc_script_config)
+
+    field_Ar06Zn02_script_event_config = FilePatchConfig(
+        file_id="Ar06_Zn02_script_event",
+        description="Field Script Main",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar06Zn02Dat.dac", "Temporary/Field/ParkAr06Zn02Dat.dan",
+                     "Script/evAr06Zn02_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar06Zn02Dat_Fr.dac", "Temporary/Field/ParkAr06Zn02Dat_Fr.dan",
+                        "Script/evAr06Zn02_ScriptEvent.fsb"), (
+                        "DATA/files/Field/Ar06Zn02Dat_Ge.dac", "Temporary/Field/ParkAr06Zn02Dat_Ge.dan",
+                        "Script/evAr06Zn02_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar06Zn02Dat_It.dac", "Temporary/Field/ParkAr06Zn02Dat_It.dan",
+                        "Script/evAr06Zn02_ScriptEvent.fsb"),
+                    (
+                        "DATA/files/Field/Ar06Zn02Dat_Sp.dac", "Temporary/Field/ParkAr06Zn02Dat_Sp.dan",
+                        "Script/evAr06Zn02_ScriptEvent.fsb"),
+                    ],
+        patch_patterns=evAr06Zn02_ScriptEvent_patch_pattern
+    )
+    patches.append(field_Ar06Zn02_script_event_config)
     return patches
 
 

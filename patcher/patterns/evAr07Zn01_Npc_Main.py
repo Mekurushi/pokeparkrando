@@ -1,4 +1,6 @@
-from patcher.helper.patttern_handler import create_jmp_instruction_script, parse_pattern_bytes
+from patcher.helper.entrance_exit_names import SKYGARDEN_PIPLUP_SKYBALLOON
+from patcher.helper.patttern_handler import create_jmp_instruction_script, get_exit_zone_area_position_data, \
+    parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
 from patcher.patterns.general import get_friendship, set_chapter
 
@@ -221,6 +223,61 @@ piplup_interaction = PatchPattern(
                 'big'
             ),
             new_instruction_readable="push 0x1"
+        ),
+    ]
+)
+
+EBALLOONAREA = PatchPattern(
+    name="EBALLOONAREA",
+    description="Skygarden -> Treehouse",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0,
+            pattern=parse_pattern_bytes("00 02 00 07"),
+            instruction_readable="grow_stack 0x2"
+        ),
+        Instruction(
+            identifier=2, offset=0x8c,
+            pattern=parse_pattern_bytes("00 06 00 10"),  # position
+            instruction_readable="push 0x6"
+        ),
+        Instruction(
+            identifier=3, offset=0x90,
+            pattern=parse_pattern_bytes("00 01 00 10"),  # area
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=4, offset=0x94,
+            pattern=parse_pattern_bytes("00 02 00 10"),  # zone
+            instruction_readable="push 0x2"
+        ),
+
+    ],
+    patchMapJP=[
+
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                SKYGARDEN_PIPLUP_SKYBALLOON, "zone"
+            ),
+            new_instruction_readable="update zone target based on exit"
+        ),
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                SKYGARDEN_PIPLUP_SKYBALLOON, "area"
+            ),
+            new_instruction_readable="update area target based on exit"
+        ),
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                SKYGARDEN_PIPLUP_SKYBALLOON, "position"
+            ),
+            new_instruction_readable="update position target based on exit"
         ),
     ]
 )

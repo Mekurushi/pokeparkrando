@@ -1,4 +1,12 @@
-from patcher.helper.patttern_handler import get_attraction_id_from_dict, parse_pattern_bytes, \
+from patcher.helper.entrance_exit_names import MEADOW_ZONE_MAIN_AREA_BEACH_DRIFBLIM_FAST_TRAVEL, \
+    MEADOW_ZONE_MAIN_AREA_BULBASAUR_ATTRACTION, \
+    MEADOW_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL, MEADOW_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL, \
+    MEADOW_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL, \
+    MEADOW_ZONE_MAIN_AREA_HAUNTED_DRIFBLIM_FAST_TRAVEL, \
+    MEADOW_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL, \
+    MEADOW_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL, MEADOW_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL
+from patcher.helper.patttern_handler import get_attraction_id_from_dict, get_exit_zone_area_position_data, \
+    parse_pattern_bytes, \
     compute_call_to_function_script, \
     get_num_battle_count_from_dict_as_instruction, create_lstr_script, \
     create_jmp_instruction_script
@@ -9800,7 +9808,7 @@ bulbasaur_friendship_pattern = PatchPattern(
         Patch(
             identifier=36,
             patch_function=lambda offset, data, plando_dict, matches: get_attraction_id_from_dict(
-                plando_dict, "Meadow Zone Main Area - Bulbasaur's Daring Dash Attraction"
+                plando_dict, MEADOW_ZONE_MAIN_AREA_BULBASAUR_ATTRACTION
             ),
             new_instruction_readable="delay"
         ),
@@ -12806,6 +12814,397 @@ get_mankey_friendship_function = PatchPattern(
     ],
 )
 
+STAXIAREA = PatchPattern(
+    name="STAXIAREA",
+    description="Meadow Fast Travels",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0,
+            pattern=parse_pattern_bytes("00 04 00 07"),
+            instruction_readable="grow_stack 0x4"
+        ),
+        # meadow
+        Instruction(
+            identifier=2, offset=0x100,
+            pattern=parse_pattern_bytes("00 03 00 10"),  # position
+            instruction_readable="push 0x3"
+        ),
+        Instruction(
+            identifier=3, offset=0x104,
+            pattern=parse_pattern_bytes("00 01 00 10"),  # area
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=4, offset=0x108,
+            pattern=parse_pattern_bytes("00 01 00 10"),  # zone
+            instruction_readable="push 0x1"
+        ),
+
+        # treehouse
+        Instruction(
+            identifier=5, offset=0x114,
+            pattern=parse_pattern_bytes("00 05 00 10"),  # position
+            instruction_readable="push 0x5"
+        ),
+        Instruction(
+            identifier=6, offset=0x118,
+            pattern=parse_pattern_bytes("00 01 00 10"),  # area
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=7, offset=0x11c,
+            pattern=parse_pattern_bytes("00 02 00 10"),  # zone
+            instruction_readable="push 0x2"
+        ),
+
+        # beach
+        Instruction(
+            identifier=8, offset=0x128,
+            pattern=parse_pattern_bytes("00 02 00 10"),  # position
+            instruction_readable="push 0x2"
+        ),
+        Instruction(
+            identifier=9, offset=0x12c,
+            pattern=parse_pattern_bytes("00 01 00 10"),  # area
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=10, offset=0x130,
+            pattern=parse_pattern_bytes("00 03 00 10"),  # zone
+            instruction_readable="push 0x3"
+        ),
+
+        # ice
+        Instruction(
+            identifier=11, offset=0x13c,
+            pattern=parse_pattern_bytes("00 02 00 10"),  # position
+            instruction_readable="push 0x2"
+        ),
+        Instruction(
+            identifier=12, offset=0x140,
+            pattern=parse_pattern_bytes("00 02 00 10"),  # area
+            instruction_readable="push 0x2"
+        ),
+        Instruction(
+            identifier=13, offset=0x144,
+            pattern=parse_pattern_bytes("00 03 00 10"),  # zone
+            instruction_readable="push 0x3"
+        ),
+
+        # Cavern
+        Instruction(
+            identifier=14, offset=0x150,
+            pattern=parse_pattern_bytes("00 02 00 10"),  # position
+            instruction_readable="push 0x2"
+        ),
+        Instruction(
+            identifier=15, offset=0x154,
+            pattern=parse_pattern_bytes("00 01 00 10"),  # area
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=16, offset=0x158,
+            pattern=parse_pattern_bytes("00 04 00 10"),  # zone
+            instruction_readable="push 0x4"
+        ),
+
+        # Magma
+        Instruction(
+            identifier=17, offset=0x164,
+            pattern=parse_pattern_bytes("00 02 00 10"),  # position
+            instruction_readable="push 0x2"
+        ),
+        Instruction(
+            identifier=18, offset=0x168,
+            pattern=parse_pattern_bytes("00 02 00 10"),  # area
+            instruction_readable="push 0x2"
+        ),
+        Instruction(
+            identifier=19, offset=0x16c,
+            pattern=parse_pattern_bytes("00 04 00 10"),  # zone
+            instruction_readable="push 0x4"
+        ),
+
+        # Haunted
+        Instruction(
+            identifier=20, offset=0x178,
+            pattern=parse_pattern_bytes("00 02 00 10"),  # position
+            instruction_readable="push 0x2"
+        ),
+        Instruction(
+            identifier=21, offset=0x17c,
+            pattern=parse_pattern_bytes("00 01 00 10"),  # area
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=22, offset=0x180,
+            pattern=parse_pattern_bytes("00 05 00 10"),  # zone
+            instruction_readable="push 0x5"
+        ),
+
+        # Granite
+        Instruction(
+            identifier=23, offset=0x1a0,
+            pattern=parse_pattern_bytes("00 02 00 10"),  # position
+            instruction_readable="push 0x2"
+        ),
+        Instruction(
+            identifier=24, offset=0x1a4,
+            pattern=parse_pattern_bytes("00 01 00 10"),  # area
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=25, offset=0x1a8,
+            pattern=parse_pattern_bytes("00 06 00 10"),  # zone
+            instruction_readable="push 0x6"
+        ),
+
+        # Flower
+        Instruction(
+            identifier=26, offset=0x1b4,
+            pattern=parse_pattern_bytes("00 01 00 10"),  # position
+            instruction_readable="push 0x1"
+        ),
+        Instruction(
+            identifier=27, offset=0x1b8,
+            pattern=parse_pattern_bytes("00 02 00 10"),  # area
+            instruction_readable="push 0x2"
+        ),
+        Instruction(
+            identifier=28, offset=0x1bc,
+            pattern=parse_pattern_bytes("00 06 00 10"),  # zone
+            instruction_readable="push 0x6"
+        ),
+    ],
+    patchMapJP=[
+
+        # meadow
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: None,
+            new_instruction_readable="update zone target based on exit"
+        ),
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: None,
+            new_instruction_readable="update area target based on exit"
+        ),
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: None,
+            new_instruction_readable="update position target based on exit"
+        ),
+
+        # treehouse
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                MEADOW_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL, "zone"
+            ),
+            new_instruction_readable="update zone target based on exit"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                MEADOW_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL, "area"
+            ),
+            new_instruction_readable="update area target based on exit"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                MEADOW_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL, "position"
+            ),
+            new_instruction_readable="update position target based on exit"
+        ),
+
+        # beach
+        Patch(
+            identifier=10,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                MEADOW_ZONE_MAIN_AREA_BEACH_DRIFBLIM_FAST_TRAVEL, "zone"
+            ),
+            new_instruction_readable="update zone target based on exit"
+        ),
+        Patch(
+            identifier=9,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                MEADOW_ZONE_MAIN_AREA_BEACH_DRIFBLIM_FAST_TRAVEL, "area"
+            ),
+            new_instruction_readable="update area target based on exit"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                MEADOW_ZONE_MAIN_AREA_BEACH_DRIFBLIM_FAST_TRAVEL, "position"
+            ),
+            new_instruction_readable="update position target based on exit"
+        ),
+
+        # ice
+        Patch(
+            identifier=13,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                MEADOW_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL, "zone"
+            ),
+            new_instruction_readable="update zone target based on exit"
+        ),
+        Patch(
+            identifier=12,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                MEADOW_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL, "area"
+            ),
+            new_instruction_readable="update area target based on exit"
+        ),
+        Patch(
+            identifier=11,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                MEADOW_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL, "position"
+            ),
+            new_instruction_readable="update position target based on exit"
+        ),
+
+        # cavern
+        Patch(
+            identifier=16,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                MEADOW_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL, "zone"
+            ),
+            new_instruction_readable="update zone target based on exit"
+        ),
+        Patch(
+            identifier=15,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                MEADOW_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL, "area"
+            ),
+            new_instruction_readable="update area target based on exit"
+        ),
+        Patch(
+            identifier=14,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                MEADOW_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL, "position"
+            ),
+            new_instruction_readable="update position target based on exit"
+        ),
+
+        # magma
+        Patch(
+            identifier=19,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                MEADOW_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL, "zone"
+            ),
+            new_instruction_readable="update zone target based on exit"
+        ),
+        Patch(
+            identifier=18,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                MEADOW_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL, "area"
+            ),
+            new_instruction_readable="update area target based on exit"
+        ),
+        Patch(
+            identifier=17,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                MEADOW_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL, "position"
+            ),
+            new_instruction_readable="update position target based on exit"
+        ),
+
+        # haunted
+        Patch(
+            identifier=22,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                MEADOW_ZONE_MAIN_AREA_HAUNTED_DRIFBLIM_FAST_TRAVEL, "zone"
+            ),
+            new_instruction_readable="update zone target based on exit"
+        ),
+        Patch(
+            identifier=21,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                MEADOW_ZONE_MAIN_AREA_HAUNTED_DRIFBLIM_FAST_TRAVEL, "area"
+            ),
+            new_instruction_readable="update area target based on exit"
+        ),
+        Patch(
+            identifier=20,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                MEADOW_ZONE_MAIN_AREA_HAUNTED_DRIFBLIM_FAST_TRAVEL, "position"
+            ),
+            new_instruction_readable="update position target based on exit"
+        ),
+
+        # granite
+        Patch(
+            identifier=25,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                MEADOW_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL, "zone"
+            ),
+            new_instruction_readable="update zone target based on exit"
+        ),
+        Patch(
+            identifier=24,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                MEADOW_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL, "area"
+            ),
+            new_instruction_readable="update area target based on exit"
+        ),
+        Patch(
+            identifier=23,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                MEADOW_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL, "position"
+            ),
+            new_instruction_readable="update position target based on exit"
+        ),
+
+        # flower
+        Patch(
+            identifier=28,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                MEADOW_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL, "zone"
+            ),
+            new_instruction_readable="update zone target based on exit"
+        ),
+        Patch(
+            identifier=27,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                MEADOW_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL, "area"
+            ),
+            new_instruction_readable="update area target based on exit"
+        ),
+        Patch(
+            identifier=26,
+            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+                plando_dict,
+                MEADOW_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL, "position"
+            ),
+            new_instruction_readable="update position target based on exit"
+        ),
+    ]
+)
+
 evAr01Zn01_Npc_Main_patch_pattern = [
     set_chapter,
     get_friendship,
@@ -12866,5 +13265,7 @@ evAr01Zn01_Npc_Main_patch_pattern = [
     # magikarp logic
     thunderbolt_hit_magikarp_event,
     set_magikarp_location_function,
-    get_mankey_friendship_function
+    get_mankey_friendship_function,
+
+    STAXIAREA
 ]

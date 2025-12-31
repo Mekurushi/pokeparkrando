@@ -1,4 +1,4 @@
-from patcher.helper.patttern_handler import parse_pattern_bytes, create_lstr_script
+from patcher.helper.patttern_handler import parse_pattern_bytes, create_lstr_script, patch_taxi_stop
 from patcher.models.models import PatchPattern, Instruction, Patch
 from patcher.patterns.general import get_friendship, set_chapter
 
@@ -421,7 +421,7 @@ taxi_stop = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, matches: patch_taxi_stop(plando_dict),
             new_instruction_readable="push 0x1"
         ),
 

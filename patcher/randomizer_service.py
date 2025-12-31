@@ -16,7 +16,7 @@ yaml_dumper = YAML(typ="rt")  # Use RoundTripDumper for pretty-formatted dumps.
 from patcher.logic.patchers import PatcherFactory
 from patcher.models.models import PatchRequest, ProgressCallback, PatchResult, FilePatchConfig
 
-VERSION = (1, 0, 5)
+VERSION = (1, 1, 0)
 
 
 class PatcherService:
@@ -143,7 +143,7 @@ class PatcherService:
             )
 
         # Check for minor version mismatch (breaking feature changes)
-        if minor > patcher_minor:
+        if minor != patcher_minor:
             raise Exception(
                 f"Incompatible minor version: Randomizer Patcher v{patcher_major}.{patcher_minor}.{patcher_patch} "
                 f"vs APWorld v{major}.{minor}.{patch}"
