@@ -1,6 +1,7 @@
 from typing import List
 
 from patcher.models.models import FilePatchConfig, FileProcessingType
+from patcher.patterns.ScriptList_Ar04Zn02 import ScriptList_Ar04Zn02_patterns
 from patcher.patterns.ScriptList_Ar06Zn01 import ScriptList_Ar06Zn01_patterns
 from patcher.patterns.ScriptList_Ar99Zn01 import ScriptList_Ar99Zn01_patterns
 from patcher.patterns.disposition_drifblim import disposition_drifblim_patterns
@@ -1687,6 +1688,27 @@ def get_magma_zone_patches() -> List[FilePatchConfig]:
         patch_patterns=evAr04Zn02_Gimmic_patterns
     )
     patches.append(field_Ar04Zn02_gimmic_config)
+
+    scriptList_Ar04Zn02 = FilePatchConfig(
+        file_id="scriptList_Ar04Zn02",
+        description="ScriptList from Ar04Zn02",
+        processing_type=FileProcessingType.NESTED_DAC_U8,
+        file_group=[("DATA/files/Field/Ar04Zn02Dat.dac", "Temporary/Field/ParkAr04Zn02Dat.dan",
+                     "Event/ScriptList/ScriptList_Ar04Zn02.rlb"), (
+                        "DATA/files/Field/Ar04Zn02Dat_Fr.dac", "Temporary/Field/ParkAr04Zn02Dat_Fr.dan",
+                        "Event/ScriptList/ScriptList_Ar04Zn02.rlb"), (
+                        "DATA/files/Field/Ar04Zn02Dat_Ge.dac", "Temporary/Field/ParkAr04Zn02Dat_Ge.dan",
+                        "Event/ScriptList/ScriptList_Ar04Zn02.rlb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_It.dac", "Temporary/Field/ParkAr04Zn02Dat_It.dan",
+                        "Event/ScriptList/ScriptList_Ar04Zn02.rlb"),
+                    (
+                        "DATA/files/Field/Ar04Zn02Dat_Sp.dac", "Temporary/Field/ParkAr04Zn02Dat_Sp.dan",
+                        "Event/ScriptList/ScriptList_Ar04Zn02.rlb"),
+                    ],
+        patch_patterns=ScriptList_Ar04Zn02_patterns
+    )
+    patches.append(scriptList_Ar04Zn02)
     return patches
 
 

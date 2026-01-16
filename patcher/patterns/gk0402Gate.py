@@ -3,7 +3,7 @@ from patcher.models.models import PatchPattern, Instruction, Patch
 
 close = PatchPattern(
     name="0402Gate Close",
-    description="replacing f0402GateOpen call with rhyperior prisma",
+    description="always opening gate",
     patternJP=[
         Instruction(
             identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 04 00 07"),
@@ -17,23 +17,19 @@ close = PatchPattern(
             identifier=3, offset=0x50, pattern=parse_pattern_bytes("00 01 00 10"),
             instruction_readable="push 0x1"
         ),
+        Instruction(
+            identifier=4, offset=0x58, pattern=parse_pattern_bytes("00 00 00 12"),
+            instruction_readable="push_result"
+        ),
     ],
     patchMapJP=[
         Patch(
-            identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (0x000a0010).to_bytes(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
                 4,
                 'big'
             ),
-            new_instruction_readable="push 0xa"  # rhyperior prisma
-        ),
-        Patch(
-            identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00510010).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="push 0x51"  # check prisma request opcode
+            new_instruction_readable="push 0x1"  # gate always open
         ),
     ],
 )
