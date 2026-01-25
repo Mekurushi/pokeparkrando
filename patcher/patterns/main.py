@@ -6,34 +6,6 @@ from patcher.models.DOL import DOL
 from patcher.models.models import PatchPattern, Instruction, Patch, MemoryData
 
 
-def compute_addi_to_target(data, matches: dict[int, MemoryData], base_identifier: int, target_identifier: int,
-                           src_reg: int, dest_reg: int, ):
-    base_offset = matches.get(base_identifier).address
-
-    target_offset = matches.get(target_identifier).address
-
-    # Calculate the offset needed
-    offset = get_branch_offset(base_offset, data, target_offset)
-
-    # Check if offset fits in 16-bit signed immediate
-    if not (-32768 <= offset <= 32767):
-        raise ValueError(f"Offset {offset} out of range for addi instruction (±32KB)")
-
-    # addi opcode = 14
-    opcode = 14
-    imm = offset & 0xFFFF  # Handle negative offsets properly
-
-    instruction = (opcode << 26) | (dest_reg << 21) | (src_reg << 16) | imm
-
-    print(
-        f"ADDI r{dest_reg}, r{src_reg}, {offset} "
-        f"(0x{base_offset:08X} + {offset} = 0x{target_offset:08X}) "
-        f"→ instruction 0x{instruction:08X}"
-    )
-
-    return instruction.to_bytes(4, 'big')
-
-
 def get_offset_from_patch_pattern(data: bytearray, target_function_pattern: PatchPattern, identifier: int):
     target_function_match = search_pattern(data, target_function_pattern.patternJP)
     if not target_function_match:
@@ -140,25 +112,10 @@ def get_branch_offset(offset: int, data: bytearray, target_offset: int):
     return branch_offset
 
 
-def compute_bl_to_function_with_target_identifier(offset: int, data: bytearray, target_identifier: int,
-                                                  matches: dict[int, MemoryData]):
-    target_offset = matches.get(target_identifier).address
-    branch_offset = get_branch_offset(offset, data, target_offset)
-
-    instruction = get_bl_instruction_from_branch_offset(branch_offset)
-
-    return instruction.to_bytes(4, 'big')
-
-
 def get_player_name_from_dict(plando_dict):
     player_name: str = plando_dict["Name"]
     player_name_bytes = player_name.encode('utf-8')
     return (player_name_bytes + b'\x00' * 0x40)[:0x40]
-
-
-def write_zone_change_string() -> bytes:
-    zone_change_bytes = "ZoneChange".encode('utf-8')
-    return zone_change_bytes + b'\x00'
 
 
 def write_address_of_target_patch(data: bytearray, target_identifier: int,
@@ -189,6 +146,14 @@ def make_ori(reg: int, imm16: int) -> int:
     return 0x60000000 | (reg << 21) | (reg << 16) | (imm16 & 0xFFFF)
 
 
+def get_upper_address(address: int) -> int:
+    return (address >> 16) & 0xFFFF
+
+
+def get_lower_address(address: int) -> int:
+    return address & 0xFFFF
+
+
 def li_upper_address_from_identifier(data: bytearray, target_identifier: int,
                                      matches: dict[int, MemoryData], register: int):
     target_offset = matches.get(target_identifier).address
@@ -196,7 +161,7 @@ def li_upper_address_from_identifier(data: bytearray, target_identifier: int,
     stream = io.BytesIO(data)
     dol.read(stream)
     target_address: int = dol.convert_offset_to_address(target_offset)
-    upper = ((target_address + 0x8000) >> 16) & 0xFFFF
+    upper = get_upper_address(target_address)
 
     instruction = make_lis(register, upper)
     return instruction.to_bytes(4, 'big')
@@ -209,7 +174,7 @@ def ori_lower_address_from_identifier(data: bytearray, target_identifier: int,
     stream = io.BytesIO(data)
     dol.read(stream)
     target_address: int = dol.convert_offset_to_address(target_offset)
-    lower = target_address & 0xFFFF
+    lower = get_lower_address(target_address)
 
     instruction = make_ori(register, lower)
     return instruction.to_bytes(4, 'big')
@@ -221,7 +186,7 @@ def li_upper_address_from_pattern(data: bytearray, target_pattern: PatchPattern,
     stream = io.BytesIO(data)
     dol.read(stream)
     target_address: int = dol.convert_offset_to_address(target_offset)
-    upper = ((target_address + 0x8000) >> 16) & 0xFFFF
+    upper = get_upper_address(target_address)
 
     instruction = make_lis(register, upper)
     return instruction.to_bytes(4, 'big')
@@ -235,70 +200,10 @@ def ori_lower_address_from_pattern(data: bytearray, target_pattern: PatchPattern
     stream = io.BytesIO(data)
     dol.read(stream)
     target_address: int = dol.convert_offset_to_address(target_offset)
-    lower = target_address & 0xFFFF
+    lower = get_lower_address(target_address)
 
     instruction = make_ori(register, lower)
     return instruction.to_bytes(4, 'big')
-
-
-def setup_global_manager_syscall_handler_r12_upper_address(data: bytearray):
-    data_init_function_match = search_pattern(data, global_manager_syscall_handler.patternJP)
-    if not data_init_function_match:
-        raise ValueError("Target function not found in pattern match.")
-    if len(data_init_function_match) > 1:
-        raise ValueError(
-            f"ERROR: Ambiguous match ({len(data_init_function_match)}) for pattern: {data_init_function_match.name}"
-        )
-    dol = DOL()
-    stream = io.BytesIO(data)
-    dol.read(stream)
-    address = dol.convert_offset_to_address(data_init_function_match[0].base_address)
-    address_bytes = address.to_bytes(4, 'big')
-    upper_bits = int.from_bytes(address_bytes[:2], 'big')
-    result = 0x3D800000 | upper_bits
-    print(
-        f"upper address for global Manager r12 Register is 0x{upper_bits:04X} instruction is: 0x{result.to_bytes(4, 'big').hex()}"
-    )
-    return result.to_bytes(4, 'big')
-
-
-def setup_global_manager_syscall_handler_r12_lower_address(data: bytearray):
-    data_init_function_match = search_pattern(data, global_manager_syscall_handler.patternJP)
-    if not data_init_function_match:
-        raise ValueError("Target function not found in pattern match.")
-    if len(data_init_function_match) > 1:
-        raise ValueError(
-            f"ERROR: Ambiguous match ({len(data_init_function_match)}) for pattern: {data_init_function_match.name}"
-        )
-
-    dol = DOL()
-    stream = io.BytesIO(data)
-    dol.read(stream)
-    address = dol.convert_offset_to_address(data_init_function_match[0].base_address)
-    address_bytes = address.to_bytes(4, 'big')
-
-    lower_bits = int.from_bytes(address_bytes[-2:], 'big')
-    result = 0x618C0000 | lower_bits
-    print(
-        f"lower address for global Manager r12 Register is 0x{lower_bits:04X} instruction is: 0x{result.to_bytes(4, 'big').hex()}"
-    )
-    return result.to_bytes(4, 'big')
-
-
-def get_global_manager_syscall_handler_wrapper(data: bytearray):
-    data_init_function_match = search_pattern(data, custom_global_manager_syscall_handler_wrapper.patternJP)
-    if not data_init_function_match:
-        raise ValueError("Target function not found in pattern match.")
-    if len(data_init_function_match) > 1:
-        raise ValueError(
-            f"ERROR: Ambiguous match ({len(data_init_function_match)}) for pattern: {data_init_function_match.name}"
-        )
-
-    dol = DOL()
-    stream = io.BytesIO(data)
-    dol.read(stream)
-    address = dol.convert_offset_to_address(data_init_function_match[0].base_address)
-    return address.to_bytes(4, 'big')
 
 
 def get_enemy_ai_option(plando_dict):
@@ -323,7 +228,7 @@ module_lookup = PatchPattern(
         ),
 
         Instruction(
-            identifier=2, offset=0x4, pattern=parse_pattern_bytes("80 6d bb a0"),
+            identifier=2, offset=0x4, pattern=parse_pattern_bytes("80 6d ?? ??"),
             instruction_readable="lwz r3, -0x4460(r13)"
         ),
         Instruction(
@@ -1266,7 +1171,7 @@ global_manager_interface = PatchPattern(
         ),
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (0x2c07ffff).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, matches: (0x2c08ffff).to_bytes(4, 'big'),
             new_instruction_readable="cmpwi r8, 0xffff"
         ),
         Patch(
@@ -1902,7 +1807,7 @@ mn_field_info_interface = PatchPattern(
         ),
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (0x2c07ffff).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, matches: (0x2c08ffff).to_bytes(4, 'big'),
             new_instruction_readable="cmpwi r8, 0xffff"
         ),
         Patch(
@@ -2024,7 +1929,7 @@ mn_field_info_interface = PatchPattern(
 )
 
 inject_custom_function = PatchPattern(
-    name="Call for custom give item function",
+    name="injecting custom function routine",
     patternJP=[
         Instruction(
             identifier=1, offset=0x0, pattern=parse_pattern_bytes("7f 83 e3 78"),
@@ -2306,13 +2211,13 @@ custom_global_manager_syscall_handler_wrapper = PatchPattern(
         Patch(
             identifier=10,
             patch_function=lambda offset, data, plando_dict, matches:
-            setup_global_manager_syscall_handler_r12_upper_address(data),
+            li_upper_address_from_pattern(data, global_manager_syscall_handler, 1, 12),
             new_instruction_readable="lis r12, 0x8018"
         ),
         Patch(
             identifier=11,
             patch_function=lambda offset, data, plando_dict, matches:
-            setup_global_manager_syscall_handler_r12_lower_address(data),
+            ori_lower_address_from_pattern(data, global_manager_syscall_handler, 1, 12),
             new_instruction_readable="ori r12, r12, 0x0790"
         ),
         Patch(
@@ -2406,7 +2311,10 @@ global_manager_v_table = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: get_global_manager_syscall_handler_wrapper(data),
+            patch_function=lambda offset, data, plando_dict, matches: write_address_of_target_patch_by_pattern(
+                data,
+                custom_global_manager_syscall_handler_wrapper, 1
+            ),
             new_instruction_readable="blr"
         ),
     ]
