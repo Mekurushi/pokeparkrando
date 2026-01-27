@@ -6,70 +6,10 @@ from patcher.models.DOL import DOL
 from patcher.models.models import PatchPattern, Instruction, Patch, MemoryData
 
 
-def compute_addi_to_target(data, matches: dict[int, MemoryData], base_identifier: int, target_identifier: int,
-                           src_reg: int, dest_reg: int, ):
-    base_offset = matches.get(base_identifier).address
-
-    target_offset = matches.get(target_identifier).address
-
-    # Calculate the offset needed
-    offset = get_branch_offset(base_offset, data, target_offset)
-
-    # Check if offset fits in 16-bit signed immediate
-    if not (-32768 <= offset <= 32767):
-        raise ValueError(f"Offset {offset} out of range for addi instruction (±32KB)")
-
-    # addi opcode = 14
-    opcode = 14
-    imm = offset & 0xFFFF  # Handle negative offsets properly
-
-    instruction = (opcode << 26) | (dest_reg << 21) | (src_reg << 16) | imm
-
-    print(
-        f"ADDI r{dest_reg}, r{src_reg}, {offset} "
-        f"(0x{base_offset:08X} + {offset} = 0x{target_offset:08X}) "
-        f"→ instruction 0x{instruction:08X}"
-    )
-
-    return instruction.to_bytes(4, 'big')
-
-
-def setup_global_manager_address_part2(data: bytearray):
-    data_init_function_match = search_pattern(data, prep_global_manager_data_struc_address.patternJP)
-    if not data_init_function_match:
-        raise ValueError("Target function not found in pattern match.")
-    if len(data_init_function_match) > 1:
-        raise ValueError(
-            f"ERROR: Ambiguous match ({len(data_init_function_match)}) for pattern: {data_init_function_match.name}"
-        )
-
-    instruction = int.from_bytes(data_init_function_match[0].matched_instructions[3].value, 'big')
-    print(
-        f"global manager address setup second instruction is 0x{instruction:08X}"
-    )
-    return instruction.to_bytes(4, 'big')
-
-
-def setup_global_manager_address_part1(data: bytearray):
-    data_init_function_match = search_pattern(data, prep_global_manager_data_struc_address.patternJP)
-    if not data_init_function_match:
-        raise ValueError("Target function not found in pattern match.")
-    if len(data_init_function_match) > 1:
-        raise ValueError(
-            f"ERROR: Ambiguous match ({len(data_init_function_match)}) for pattern: {data_init_function_match.name}"
-        )
-
-    instruction = int.from_bytes(data_init_function_match[0].matched_instructions[2].value, 'big')
-    print(
-        f"global manager address setup first instruction is 0x{instruction:08X}"
-    )
-    return instruction.to_bytes(4, 'big')
-
-
 def get_offset_from_patch_pattern(data: bytearray, target_function_pattern: PatchPattern, identifier: int):
     target_function_match = search_pattern(data, target_function_pattern.patternJP)
     if not target_function_match:
-        raise ValueError("Target function not found in pattern match.")
+        raise ValueError("Target function not found in pattern match: ", target_function_pattern.name)
     if len(target_function_match) > 1:
         raise ValueError(
             f"ERROR: Ambiguous match ({len(target_function_match)}) for pattern: {target_function_pattern.name}"
@@ -172,80 +112,98 @@ def get_branch_offset(offset: int, data: bytearray, target_offset: int):
     return branch_offset
 
 
-def compute_bl_to_function_with_target_identifier(offset: int, data: bytearray, target_identifier: int,
-                                                  matches: dict[int, MemoryData]):
-    target_offset = matches.get(target_identifier).address
-    branch_offset = get_branch_offset(offset, data, target_offset)
-
-    instruction = get_bl_instruction_from_branch_offset(branch_offset)
-
-    return instruction.to_bytes(4, 'big')
-
-
 def get_player_name_from_dict(plando_dict):
     player_name: str = plando_dict["Name"]
     player_name_bytes = player_name.encode('utf-8')
     return (player_name_bytes + b'\x00' * 0x40)[:0x40]
 
 
-def setup_global_manager_syscall_handler_r12_upper_address(data: bytearray):
-    data_init_function_match = search_pattern(data, global_manager_syscall_handler.patternJP)
-    if not data_init_function_match:
-        raise ValueError("Target function not found in pattern match.")
-    if len(data_init_function_match) > 1:
-        raise ValueError(
-            f"ERROR: Ambiguous match ({len(data_init_function_match)}) for pattern: {data_init_function_match.name}"
-        )
+def write_address_of_target_patch(data: bytearray, target_identifier: int,
+                                  matches: dict[int, MemoryData]) -> bytes:
+    target_offset = matches.get(target_identifier).address
     dol = DOL()
     stream = io.BytesIO(data)
     dol.read(stream)
-    address = dol.convert_offset_to_address(data_init_function_match[0].base_address)
-    address_bytes = address.to_bytes(4, 'big')
-    upper_bits = int.from_bytes(address_bytes[:2], 'big')
-    result = 0x3D800000 | upper_bits
-    print(
-        f"upper address for global Manager r12 Register is 0x{upper_bits:04X} instruction is: 0x{result.to_bytes(4, 'big').hex()}"
-    )
-    return result.to_bytes(4, 'big')
+    target_address: int = dol.convert_offset_to_address(target_offset)
+    return target_address.to_bytes(4, 'big')
 
 
-def setup_global_manager_syscall_handler_r12_lower_address(data: bytearray):
-    data_init_function_match = search_pattern(data, global_manager_syscall_handler.patternJP)
-    if not data_init_function_match:
-        raise ValueError("Target function not found in pattern match.")
-    if len(data_init_function_match) > 1:
-        raise ValueError(
-            f"ERROR: Ambiguous match ({len(data_init_function_match)}) for pattern: {data_init_function_match.name}"
-        )
-
+def write_address_of_target_patch_by_pattern(data: bytearray, target_pattern: PatchPattern,
+                                             target_identifier: int) -> bytes:
+    target_offset = get_offset_from_patch_pattern(data, target_pattern, target_identifier)
     dol = DOL()
     stream = io.BytesIO(data)
     dol.read(stream)
-    address = dol.convert_offset_to_address(data_init_function_match[0].base_address)
-    address_bytes = address.to_bytes(4, 'big')
-
-    lower_bits = int.from_bytes(address_bytes[-2:], 'big')
-    result = 0x618C0000 | lower_bits
-    print(
-        f"lower address for global Manager r12 Register is 0x{lower_bits:04X} instruction is: 0x{result.to_bytes(4, 'big').hex()}"
-    )
-    return result.to_bytes(4, 'big')
+    target_address: int = dol.convert_offset_to_address(target_offset)
+    return target_address.to_bytes(4, 'big')
 
 
-def get_global_manager_syscall_handler_wrapper(data: bytearray):
-    data_init_function_match = search_pattern(data, custom_global_manager_syscall_handler_wrapper.patternJP)
-    if not data_init_function_match:
-        raise ValueError("Target function not found in pattern match.")
-    if len(data_init_function_match) > 1:
-        raise ValueError(
-            f"ERROR: Ambiguous match ({len(data_init_function_match)}) for pattern: {data_init_function_match.name}"
-        )
+def make_lis(reg: int, imm16: int) -> int:
+    return 0x3C000000 | (reg << 21) | (imm16 & 0xFFFF)
 
+
+def make_ori(reg: int, imm16: int) -> int:
+    return 0x60000000 | (reg << 21) | (reg << 16) | (imm16 & 0xFFFF)
+
+
+def get_upper_address(address: int) -> int:
+    return (address >> 16) & 0xFFFF
+
+
+def get_lower_address(address: int) -> int:
+    return address & 0xFFFF
+
+
+def li_upper_address_from_identifier(data: bytearray, target_identifier: int,
+                                     matches: dict[int, MemoryData], register: int):
+    target_offset = matches.get(target_identifier).address
     dol = DOL()
     stream = io.BytesIO(data)
     dol.read(stream)
-    address = dol.convert_offset_to_address(data_init_function_match[0].base_address)
-    return address.to_bytes(4, 'big')
+    target_address: int = dol.convert_offset_to_address(target_offset)
+    upper = get_upper_address(target_address)
+
+    instruction = make_lis(register, upper)
+    return instruction.to_bytes(4, 'big')
+
+
+def ori_lower_address_from_identifier(data: bytearray, target_identifier: int,
+                                      matches: dict[int, MemoryData], register: int):
+    target_offset = matches.get(target_identifier).address
+    dol = DOL()
+    stream = io.BytesIO(data)
+    dol.read(stream)
+    target_address: int = dol.convert_offset_to_address(target_offset)
+    lower = get_lower_address(target_address)
+
+    instruction = make_ori(register, lower)
+    return instruction.to_bytes(4, 'big')
+
+
+def li_upper_address_from_pattern(data: bytearray, target_pattern: PatchPattern, target_identifier: int, register: int):
+    target_offset = get_offset_from_patch_pattern(data, target_pattern, target_identifier)
+    dol = DOL()
+    stream = io.BytesIO(data)
+    dol.read(stream)
+    target_address: int = dol.convert_offset_to_address(target_offset)
+    upper = get_upper_address(target_address)
+
+    instruction = make_lis(register, upper)
+    return instruction.to_bytes(4, 'big')
+
+
+def ori_lower_address_from_pattern(data: bytearray, target_pattern: PatchPattern,
+                                   target_identifier: int,
+                                   register: int):
+    target_offset = get_offset_from_patch_pattern(data, target_pattern, target_identifier)
+    dol = DOL()
+    stream = io.BytesIO(data)
+    dol.read(stream)
+    target_address: int = dol.convert_offset_to_address(target_offset)
+    lower = get_lower_address(target_address)
+
+    instruction = make_ori(register, lower)
+    return instruction.to_bytes(4, 'big')
 
 
 def get_enemy_ai_option(plando_dict):
@@ -260,6 +218,29 @@ def get_enemy_ai_option(plando_dict):
         f"unknown option value for harder_enemy_ai value: {enemy_ai_option}"
     )
 
+
+module_lookup = PatchPattern(
+    name="module lookup function",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("7c 64 1b 78"),
+            instruction_readable="or r4,r4,r4"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x4, pattern=parse_pattern_bytes("80 6d ?? ??"),
+            instruction_readable="lwz r3, -0x4460(r13)"
+        ),
+        Instruction(
+            identifier=3, offset=0x8, pattern=parse_pattern_bytes("80 84 00 00"),
+            instruction_readable="lwz r4, 0x0 (r4)"
+        ),
+        Instruction(
+            identifier=4, offset=0xc, pattern=parse_pattern_bytes("48 ?? ?? ??"),
+            instruction_readable="b search_module"
+        ),
+    ],
+)
 
 stage_setup_new_file_pattern = PatchPattern(
     name="Stage Setup new File",
@@ -471,7 +452,7 @@ prep_global_manager_data_struc_address = PatchPattern(
     ],
 )
 
-global_manager_function_pattern = PatchPattern(
+global_manager_syscall_handler_pattern = PatchPattern(
     name="Global Manager Function entry that allows with opcode to run code",
     patternJP=[
         Instruction(
@@ -509,23 +490,61 @@ global_manager_function_pattern = PatchPattern(
     ],
 )
 
-custom_give_item_function_pattern = PatchPattern(
-    name="give item that runs GlobalManager Syscalls",
-    # for displaying client text in-game banner syscall is opcode 0x11 address: 8011a3ec
-    patternJP=[Instruction(
-        identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 00 00 00"),
-        instruction_readable="- - -"
-    ),
+mnFieldInfo_syscall_handler = PatchPattern(
+    name="mnFieldInfo module syscall handler",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("94 21 ff c0"),
+            instruction_readable="stwu r1, -0x40 (r1)"
+        ),
+        Instruction(
+            identifier=2, offset=0x4, pattern=parse_pattern_bytes("7c 08 02 a6"),
+            instruction_readable="mfspr r0, LR"
+        ),
+        Instruction(
+            identifier=3, offset=0x8, pattern=parse_pattern_bytes("90 01 00 44"),
+            instruction_readable="stw r0, 0x44 (r1)"
+        ),
+        Instruction(
+            identifier=5, offset=0x0c, pattern=parse_pattern_bytes("39 61 00 30"),
+            instruction_readable="addi r11,r1, 0x30"
+        ),
+        Instruction(
+            identifier=6, offset=0x10, pattern=parse_pattern_bytes("db e1 00 30"),
+            instruction_readable="stfd f31, 0x30 (r1)"
+        ),
+        Instruction(
+            identifier=7, offset=0x14, pattern=parse_pattern_bytes("f3 e1 00 38"),
+            instruction_readable="psq_st f31, 0x38(r1), 0x0, GQR0"
+        ),
+        Instruction(
+            identifier=8, offset=0x18, pattern=parse_pattern_bytes("48 ?? ?? ??"),
+            instruction_readable="bl ???"
+        ),
+        Instruction(
+            identifier=9, offset=0x1c, pattern=parse_pattern_bytes("28 04 00 3c"),
+            instruction_readable="cmplwi r4, 0x3c"
+        ),
+    ],
+)
+
+data_space = PatchPattern(
+    name="data space",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 00 e5 d8"),
+            instruction_readable="- - -"
+        ),
         Instruction(
             identifier=2, offset=0x4, pattern=parse_pattern_bytes("00 00 00 00"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=3, offset=0x8, pattern=parse_pattern_bytes("e5 f9 e8 b5"),
+            identifier=3, offset=0x8, pattern=parse_pattern_bytes("00 00 00 00"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=4, offset=0xc, pattern=parse_pattern_bytes("00 00 00 00"),
+            identifier=4, offset=0xc, pattern=parse_pattern_bytes("e5 cf 00 00"),
             instruction_readable="- - -"
         ),
         Instruction(
@@ -533,15 +552,15 @@ custom_give_item_function_pattern = PatchPattern(
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=6, offset=0x14, pattern=parse_pattern_bytes("00 00 00 00"),
+            identifier=6, offset=0x14, pattern=parse_pattern_bytes("e5 d9 00 00"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=7, offset=0x18, pattern=parse_pattern_bytes("00 00 00 00"),
+            identifier=7, offset=0x18, pattern=parse_pattern_bytes("e5 db 00 00"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=8, offset=0x1c, pattern=parse_pattern_bytes("89 a6 00 00"),
+            identifier=8, offset=0x1c, pattern=parse_pattern_bytes("00 00 00 00"),
             instruction_readable="- - -"
         ),
         Instruction(
@@ -549,7 +568,7 @@ custom_give_item_function_pattern = PatchPattern(
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=10, offset=0x24, pattern=parse_pattern_bytes("00 00 00 00"),
+            identifier=10, offset=0x24, pattern=parse_pattern_bytes("00 00 94 ed"),
             instruction_readable="- - -"
         ),
         Instruction(
@@ -557,11 +576,11 @@ custom_give_item_function_pattern = PatchPattern(
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=12, offset=0x2c, pattern=parse_pattern_bytes("e5 fc 8b dd"),
+            identifier=12, offset=0x2c, pattern=parse_pattern_bytes("e5 d7 00 00"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=13, offset=0x30, pattern=parse_pattern_bytes("e5 fb 00 00"),
+            identifier=13, offset=0x30, pattern=parse_pattern_bytes("e5 dc e5 de"),
             instruction_readable="- - -"
         ),
         Instruction(
@@ -569,11 +588,11 @@ custom_give_item_function_pattern = PatchPattern(
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=15, offset=0x38, pattern=parse_pattern_bytes("e6 41 00 00"),
+            identifier=15, offset=0x38, pattern=parse_pattern_bytes("8c d1 e5 d2"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=16, offset=0x3c, pattern=parse_pattern_bytes("e6 40 00 00"),
+            identifier=16, offset=0x3c, pattern=parse_pattern_bytes("00 00 88 bf"),
             instruction_readable="- - -"
         ),
         Instruction(
@@ -581,31 +600,31 @@ custom_give_item_function_pattern = PatchPattern(
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=18, offset=0x44, pattern=parse_pattern_bytes("e6 43 00 00"),
+            identifier=18, offset=0x44, pattern=parse_pattern_bytes("00 00 00 00"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=19, offset=0x48, pattern=parse_pattern_bytes("00 00 e6 42"),
+            identifier=19, offset=0x48, pattern=parse_pattern_bytes("00 00 00 00"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=20, offset=0x4c, pattern=parse_pattern_bytes("00 00 e6 44"),
+            identifier=20, offset=0x4c, pattern=parse_pattern_bytes("00 00 e5 dd"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=21, offset=0x50, pattern=parse_pattern_bytes("00 00 00 00"),
+            identifier=21, offset=0x50, pattern=parse_pattern_bytes("00 00 8d d9"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=22, offset=0x54, pattern=parse_pattern_bytes("8f 50 00 00"),
+            identifier=22, offset=0x54, pattern=parse_pattern_bytes("97 f4 e5 df"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=23, offset=0x58, pattern=parse_pattern_bytes("e6 45 00 00"),
+            identifier=23, offset=0x58, pattern=parse_pattern_bytes("e5 e0 91 95"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=24, offset=0x5c, pattern=parse_pattern_bytes("00 00 e6 46"),
+            identifier=24, offset=0x5c, pattern=parse_pattern_bytes("00 00 00 00"),
             instruction_readable="- - -"
         ),
         Instruction(
@@ -621,47 +640,47 @@ custom_give_item_function_pattern = PatchPattern(
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=28, offset=0x6c, pattern=parse_pattern_bytes("e6 47 90 bc"),
+            identifier=28, offset=0x6c, pattern=parse_pattern_bytes("00 00 97 a0"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=29, offset=0x70, pattern=parse_pattern_bytes("00 00 97 76"),
+            identifier=29, offset=0x70, pattern=parse_pattern_bytes("00 00 00 00"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=30, offset=0x74, pattern=parse_pattern_bytes("00 00 e6 48"),
+            identifier=30, offset=0x74, pattern=parse_pattern_bytes("00 00 00 00"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=31, offset=0x78, pattern=parse_pattern_bytes("00 00 00 00"),
+            identifier=31, offset=0x78, pattern=parse_pattern_bytes("e5 e1 97 54"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=32, offset=0x7c, pattern=parse_pattern_bytes("95 a2 94 65"),
+            identifier=32, offset=0x7c, pattern=parse_pattern_bytes("00 00 00 00"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=33, offset=0x80, pattern=parse_pattern_bytes("e6 49 00 00"),
+            identifier=33, offset=0x80, pattern=parse_pattern_bytes("e5 e2 e5 e3"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=34, offset=0x84, pattern=parse_pattern_bytes("e6 4a 8c a9"),
+            identifier=34, offset=0x84, pattern=parse_pattern_bytes("00 00 00 00"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=35, offset=0x88, pattern=parse_pattern_bytes("00 00 00 00"),
+            identifier=35, offset=0x88, pattern=parse_pattern_bytes("95 e2 e5 e4"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=36, offset=0x8c, pattern=parse_pattern_bytes("00 00 8b 4b"),
+            identifier=36, offset=0x8c, pattern=parse_pattern_bytes("00 00 8d be"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=37, offset=0x90, pattern=parse_pattern_bytes("00 00 00 00"),
+            identifier=37, offset=0x90, pattern=parse_pattern_bytes("00 00 97 a1"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=38, offset=0x94, pattern=parse_pattern_bytes("00 00 e6 4b"),
+            identifier=38, offset=0x94, pattern=parse_pattern_bytes("00 00 00 00"),
             instruction_readable="- - -"
         ),
         Instruction(
@@ -669,15 +688,15 @@ custom_give_item_function_pattern = PatchPattern(
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=40, offset=0x9c, pattern=parse_pattern_bytes("8e 8b 94 60"),
+            identifier=40, offset=0x9c, pattern=parse_pattern_bytes("00 00 00 00"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=41, offset=0xa0, pattern=parse_pattern_bytes("e6 4c 00 00"),
+            identifier=41, offset=0xa0, pattern=parse_pattern_bytes("e5 e9 00 00"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=42, offset=0xa4, pattern=parse_pattern_bytes("8a 6f 00 00"),
+            identifier=42, offset=0xa4, pattern=parse_pattern_bytes("00 00 00 00"),
             instruction_readable="- - -"
         ),
         Instruction(
@@ -689,239 +708,200 @@ custom_give_item_function_pattern = PatchPattern(
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=45, offset=0xb0, pattern=parse_pattern_bytes("00 00 e6 4d"),
+            identifier=45, offset=0xb0, pattern=parse_pattern_bytes("00 00 00 00"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=46, offset=0xb4, pattern=parse_pattern_bytes("00 00 00 00"),
+            identifier=46, offset=0xb4, pattern=parse_pattern_bytes("e5 ea 8f d6"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=47, offset=0xb8, pattern=parse_pattern_bytes("00 00 00 00"),
+            identifier=47, offset=0xb8, pattern=parse_pattern_bytes("e5 e8 fb a2"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=48, offset=0xbc, pattern=parse_pattern_bytes("e6 4f 97 97"),
+            identifier=48, offset=0xbc, pattern=parse_pattern_bytes("00 00 00 00"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=49, offset=0xc0, pattern=parse_pattern_bytes("00 00 e6 4e"),
+            identifier=49, offset=0xc0, pattern=parse_pattern_bytes("97 87 e5 e5"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=50, offset=0xc4, pattern=parse_pattern_bytes("90 65 00 00"),
+            identifier=50, offset=0xc4, pattern=parse_pattern_bytes("00 00 00 00"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=51, offset=0xc8, pattern=parse_pattern_bytes("e6 50 00 00"),
+            identifier=51, offset=0xc8, pattern=parse_pattern_bytes("e5 e7 90 bb"),
             instruction_readable="- - -"
         ),
         Instruction(
-            identifier=52, offset=0xcc, pattern=parse_pattern_bytes("00 00 e6 51"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=53, offset=0xd0, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=54, offset=0xd4, pattern=parse_pattern_bytes("e6 52 8a cf"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=55, offset=0xd8, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=56, offset=0xdc, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=57, offset=0xe0, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=58, offset=0xe4, pattern=parse_pattern_bytes("e6 53 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=59, offset=0xe8, pattern=parse_pattern_bytes("00 00 e6 54"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=60, offset=0xec, pattern=parse_pattern_bytes("00 00 e6 55"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=61, offset=0xf0, pattern=parse_pattern_bytes("e6 56 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=62, offset=0xf4, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=63, offset=0xf8, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=64, offset=0xfc, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=65, offset=0x100, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=66, offset=0x104, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=67, offset=0x108, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=68, offset=0x10c, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=69, offset=0x110, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=70, offset=0x114, pattern=parse_pattern_bytes("8a 70 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=71, offset=0x118, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=72, offset=0x11c, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=73, offset=0x120, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=74, offset=0x124, pattern=parse_pattern_bytes("e6 57 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=75, offset=0x128, pattern=parse_pattern_bytes("e6 58 e6 59"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=76, offset=0x12c, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=77, offset=0x130, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=78, offset=0x134, pattern=parse_pattern_bytes("00 00 89 f0"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=79, offset=0x138, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=80, offset=0x13c, pattern=parse_pattern_bytes("90 47 e6 5a"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=81, offset=0x140, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=82, offset=0x144, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=83, offset=0x148, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=84, offset=0x14c, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=85, offset=0x150, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=86, offset=0x154, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=87, offset=0x158, pattern=parse_pattern_bytes("e6 5b 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=88, offset=0x15c, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=89, offset=0x160, pattern=parse_pattern_bytes("e6 5c 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=90, offset=0x164, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=91, offset=0x168, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=92, offset=0x16c, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=93, offset=0x170, pattern=parse_pattern_bytes("8c be 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=94, offset=0x174, pattern=parse_pattern_bytes("92 f9 e6 5d"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=95, offset=0x178, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=96, offset=0x17c, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=97, offset=0x180, pattern=parse_pattern_bytes("8c 76 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=98, offset=0x184, pattern=parse_pattern_bytes("90 75 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=99, offset=0x188, pattern=parse_pattern_bytes("e6 60 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=100, offset=0x18c, pattern=parse_pattern_bytes("93 a2 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=101, offset=0x190, pattern=parse_pattern_bytes("e6 5f 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=102, offset=0x194, pattern=parse_pattern_bytes("fb a3 8c 50"),
+            identifier=52, offset=0xcc, pattern=parse_pattern_bytes("90 9e 00 00"),
             instruction_readable="- - -"
         ),
     ],
     patchMapJP=[
+        # strings + pointers
+        Patch(
+            identifier=1,
+            patch_function=lambda offset, data, plando_dict, matches: "GlobalManager".encode('utf-8') + b'\x00',
+            new_instruction_readable="GlobalManager string"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: write_address_of_target_patch(
+                data, 1,
+                matches
+            ),
+            new_instruction_readable="GlobalManager string pointer"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: "SceneManager".encode('utf-8') + b'\x00',
+            new_instruction_readable="SceneManager string"
+        ),
+        Patch(
+            identifier=10,
+            patch_function=lambda offset, data, plando_dict, matches: write_address_of_target_patch(
+                data, 6,
+                matches
+            ),
+            new_instruction_readable="SceneManager string pointer"
+        ),
+        Patch(
+            identifier=11,
+            patch_function=lambda offset, data, plando_dict, matches: "mnFieldInfo".encode('utf-8') + b'\x00',
+            new_instruction_readable="mnFieldInfo string"
+        ),
+
+        Patch(
+            identifier=15,
+            patch_function=lambda offset, data, plando_dict, matches: write_address_of_target_patch(
+                data, 11,
+                matches
+            ),
+            new_instruction_readable="mnFieldInfo string pointer"
+        ),
+
+        Patch(
+            identifier=16,
+            patch_function=lambda offset, data, plando_dict, matches: "mnLobby".encode('utf-8') + b'\x00',
+            new_instruction_readable="mnLobby string"
+        ),
+
+        Patch(
+            identifier=19,
+            patch_function=lambda offset, data, plando_dict, matches: write_address_of_target_patch(
+                data, 16,
+                matches
+            ),
+            new_instruction_readable="mnLobby string pointer"
+        ),
+        Patch(
+            identifier=20,
+            patch_function=lambda offset, data, plando_dict, matches: "mnAtInfo".encode('utf-8') + b'\x00',
+            new_instruction_readable="mnAtInfo string"
+        ),
+
+        Patch(
+            identifier=23,
+            patch_function=lambda offset, data, plando_dict, matches: write_address_of_target_patch(
+                data, 20,
+                matches
+            ),
+            new_instruction_readable="mnAtInfo string pointer"
+        ),
+        # misc strings
+        Patch(
+            identifier=24,
+            patch_function=lambda offset, data, plando_dict, matches: bytes([0xFF] * 28),
+            new_instruction_readable="flag names"
+        ),
+        Patch(
+            identifier=31,
+            patch_function=lambda offset, data, plando_dict, matches: "ZoneChange".encode('utf-8') + b'\x00',
+            new_instruction_readable="Scene Name String"  # 12 bytes
+        ),
+        Patch(
+            identifier=35,
+            patch_function=lambda offset, data, plando_dict, matches: get_player_name_from_dict(plando_dict),
+            new_instruction_readable="PlayerName String"  # 0x40 bytes
+        ),
+        # up to idx 51
+
+    ]
+)
+
+main_routine = PatchPattern(
+    name="main_routine",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=2, offset=0x4, pattern=parse_pattern_bytes("e5 e6 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=3, offset=0x8, pattern=parse_pattern_bytes("e5 eb 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=4, offset=0xc, pattern=parse_pattern_bytes("00 00 95 a1"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=5, offset=0x10, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=6, offset=0x14, pattern=parse_pattern_bytes("e5 ed 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=7, offset=0x18, pattern=parse_pattern_bytes("e5 ec 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=8, offset=0x1c, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=9, offset=0x20, pattern=parse_pattern_bytes("8a 8c 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=10, offset=0x24, pattern=parse_pattern_bytes("96 4a e5 ee"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=11, offset=0x28, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=12, offset=0x2c, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=13, offset=0x30, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=14, offset=0x34, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=15, offset=0x38, pattern=parse_pattern_bytes("fa 5d e5 fa"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=16, offset=0x3c, pattern=parse_pattern_bytes("e5 f0 00 00"),
+            instruction_readable="- - -"
+        ),
+    ],
+    patchMapJP=[
+        # function header
         Patch(
             identifier=1,
             patch_function=lambda offset, data, plando_dict, matches: (0x9421FFE0).to_bytes(4, 'big'),
@@ -943,120 +923,685 @@ custom_give_item_function_pattern = PatchPattern(
             new_instruction_readable="stw r3, 0x0014 (sp)"
         ),
 
+        # function body
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: setup_global_manager_address_part1(data),
-            new_instruction_readable="lis r3, 0x8037"
-        ),
-        Patch(
-            identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: setup_global_manager_address_part2(data),
-            new_instruction_readable="ori r3, r3, 0x4fe0 | 0x89e8"  # pal 89e8 jp 4fe0
-        ),
-        Patch(
-            identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: (0x3CC08000).to_bytes(4, 'big'),
-            new_instruction_readable="lis r6, 0x8000"
-        ),
-        Patch(
-            identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (0x60C61800).to_bytes(4, 'big'),
-            new_instruction_readable="ori r6, r6, 0x1800"
-        ),
-        Patch(
-            identifier=9,
-            patch_function=lambda offset, data, plando_dict, matches: (0x9066000c).to_bytes(4, 'big'),
-            new_instruction_readable="stw r3, 0xc (r6)"
-        ),
-        Patch(
-            identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (0x38C60000).to_bytes(4, 'big'),
-            new_instruction_readable="addi r6, r6, 0x0"
-        ),
-        Patch(
-            identifier=11,
-            patch_function=lambda offset, data, plando_dict, matches: (0x80e60000).to_bytes(4, 'big'),
-            new_instruction_readable="lwz r7, 0 (r6)"
-        ),
-        Patch(
-            identifier=12,
-            patch_function=lambda offset, data, plando_dict, matches: (0x2c07ffff).to_bytes(4, 'big'),
-            new_instruction_readable="cmpwi r7, 0xffff"
-        ),
-        Patch(
-            identifier=13,
-            patch_function=lambda offset, data, plando_dict,
-                                  matches: compute_conditional_branch_instruction_from_identifier(
-                offset, data, 23, matches, "beq"
+            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function(
+                offset, data,
+                global_manager_interface, 1
             ),
-            new_instruction_readable="beq-"
-        ),
-        Patch(
-            identifier=14,
-            patch_function=lambda offset, data, plando_dict, matches: (0x7CC53378).to_bytes(4, 'big'),
-            new_instruction_readable="mr r5, r6"
+            new_instruction_readable="call GlobalManagerInterface"
         ),
 
         Patch(
-            identifier=15,
-            patch_function=lambda offset, data, plando_dict, matches: (0x80860008).to_bytes(4, 'big'),
-            new_instruction_readable="lwz r4, 0x8 (r6)"  # opcode in offset 0x8
-        ),
-        Patch(
-            identifier=16,
-            patch_function=lambda offset, data, plando_dict, matches: (0x7cde3378).to_bytes(4, 'big'),
-            new_instruction_readable="mr r30, r6"
-        ),
-        Patch(
-            identifier=17,
+            identifier=6,
             patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function(
                 offset, data,
-                global_manager_function_pattern, 1
+                scene_manager_interface, 1
             ),
-            new_instruction_readable="bl GlobalManager syscall"
+            new_instruction_readable="call SceneManagerInterface"
         ),
+
         Patch(
-            identifier=18,
-            patch_function=lambda offset, data, plando_dict, matches: (0x38e0ffff).to_bytes(4, 'big'),
-            new_instruction_readable="li r7, 0xffff"
-        ),
-        Patch(
-            identifier=19,
-            patch_function=lambda offset, data, plando_dict, matches: (0x7FC6f378).to_bytes(4, 'big'),
-            new_instruction_readable="mr r6, r30"
-        ),
-        Patch(
-            identifier=20,
-            patch_function=lambda offset, data, plando_dict, matches: (0x90E60000).to_bytes(4, 'big'),
-            new_instruction_readable="stw r7, 0 (r6)"  # cleanup parameter1
-        ),
-        Patch(
-            identifier=21,
-            patch_function=lambda offset, data, plando_dict, matches: (0x90E60004).to_bytes(4, 'big'),
-            new_instruction_readable="stw r7, 0x4 (r6)"  # cleanup parameter2
-        ),
-        Patch(
-            identifier=22,
-            patch_function=lambda offset, data, plando_dict, matches: (0x90E60008).to_bytes(4, 'big'),
-            new_instruction_readable="stw r7, 0x8 (r6)"  # cleanup opcode
-        ),
-        Patch(
-            identifier=23,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_with_target_identifier(
-                offset, data, 31, matches
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function(
+                offset, data,
+                mn_field_info_interface, 1
             ),
-            new_instruction_readable="bl PlayerName Init"
+            new_instruction_readable="call mnFieldInfoInterface"
         ),
+
+        # function footer
         Patch(
-            identifier=24,
+            identifier=8,
             patch_function=lambda offset, data, plando_dict, matches: (0x80610014).to_bytes(4, 'big'),
             new_instruction_readable="lwz r3, 0x0014 (sp)"
         ),
 
         Patch(
-            identifier=25,
+            identifier=9,
             patch_function=lambda offset, data, plando_dict, matches: (0x8001001C).to_bytes(4, 'big'),
             new_instruction_readable="lwz r0, 0x001c (sp)"
+        ),
+        Patch(
+            identifier=10,
+            patch_function=lambda offset, data, plando_dict, matches: (0x7c0803a6).to_bytes(4, 'big'),
+            new_instruction_readable="mtlr r0"
+        ),
+        Patch(
+            identifier=11,
+            patch_function=lambda offset, data, plando_dict, matches: (0x38210020).to_bytes(4, 'big'),
+            new_instruction_readable="addi sp, sp, 32"
+        ),
+        Patch(
+            identifier=12,
+            patch_function=lambda offset, data, plando_dict, matches: (0x4e800020).to_bytes(4, 'big'),
+            new_instruction_readable="blr"
+        )
+
+    ]
+)
+
+global_manager_interface = PatchPattern(
+    name="GlobalManagerInterface",
+    patternJP=[
+        Instruction(
+            identifier=0, offset=0x00, pattern=parse_pattern_bytes("e5 b8 e5 b9"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=1, offset=0x04, pattern=parse_pattern_bytes("00 00 8a 49"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=2, offset=0x08, pattern=parse_pattern_bytes("00 00 8b 61"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=3, offset=0x0c, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=4, offset=0x10, pattern=parse_pattern_bytes("e5 b7 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=5, offset=0x14, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=6, offset=0x18, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=7, offset=0x1c, pattern=parse_pattern_bytes("00 00 e5 a2"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=8, offset=0x20, pattern=parse_pattern_bytes("00 00 fb a1"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=9, offset=0x24, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=10, offset=0x28, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=11, offset=0x2c, pattern=parse_pattern_bytes("00 00 e5 b6"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=12, offset=0x30, pattern=parse_pattern_bytes("e5 ba e5 b5"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=13, offset=0x34, pattern=parse_pattern_bytes("00 00 e5 bc"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=14, offset=0x38, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=15, offset=0x3c, pattern=parse_pattern_bytes("00 00 e5 be"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=16, offset=0x40, pattern=parse_pattern_bytes("e5 bd 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=17, offset=0x44, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=18, offset=0x48, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=19, offset=0x4c, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=20, offset=0x50, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=21, offset=0x54, pattern=parse_pattern_bytes("00 00 e5 c0"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=22, offset=0x58, pattern=parse_pattern_bytes("e5 bf e5 79"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=23, offset=0x5c, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=24, offset=0x60, pattern=parse_pattern_bytes("00 00 e5 c4"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=25, offset=0x64, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=26, offset=0x68, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=27, offset=0x6c, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=28, offset=0x70, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=29, offset=0x74, pattern=parse_pattern_bytes("00 00 e5 c1"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=30, offset=0x78, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=31, offset=0x7c, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+    ],
+    patchMapJP=[
+        # function header
+        Patch(
+            identifier=1,
+            patch_function=lambda offset, data, plando_dict, matches: (0x9421FFF0).to_bytes(4, 'big'),
+            new_instruction_readable="stwu sp, -0x0010 (sp)"
+        ),
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: (0x7c0802a6).to_bytes(4, 'big'),
+            new_instruction_readable="mflr r0"
+        ),
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x9001000C).to_bytes(4, 'big'),
+            new_instruction_readable="stw r0, 0x000c (sp)"
+        ),
+        # function body
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: li_upper_address_from_identifier(
+                data, 29,
+                matches, 30
+            ),
+            new_instruction_readable="li r30, parameter1_upper"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: ori_lower_address_from_identifier(
+                data, 29,
+                matches, 30
+            ),
+            new_instruction_readable="ori r30, parameter1_lower"
+        ),
+
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: (0x809EFFFC).to_bytes(4, 'big'),
+            new_instruction_readable="lwz r4, -0x4 (r30)"
+        ),
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: (0x811E0000).to_bytes(4, 'big'),
+            new_instruction_readable="lwz r8, 0 (r30)"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: (0x2C04FFFF).to_bytes(4, 'big'),
+            new_instruction_readable="cmpwi r4, 0xffff"
+        ),
+        Patch(
+            identifier=9,
+            patch_function=lambda offset, data, plando_dict,
+                                  matches: compute_conditional_branch_instruction_from_identifier(
+                offset, data, 24, matches, "beq"
+            ),
+            new_instruction_readable="beq-"
+        ),
+        Patch(
+            identifier=10,
+            patch_function=lambda offset, data, plando_dict, matches: (0x2c08ffff).to_bytes(4, 'big'),
+            new_instruction_readable="cmpwi r8, 0xffff"
+        ),
+        Patch(
+            identifier=11,
+            patch_function=lambda offset, data, plando_dict,
+                                  matches: compute_conditional_branch_instruction_from_identifier(
+                offset, data, 24, matches, "beq"
+            ),
+            new_instruction_readable="beq-"
+        ),
+
+        Patch(
+            identifier=12,
+            patch_function=lambda offset, data, plando_dict, matches: li_upper_address_from_pattern(
+                data, data_space, 5, 3
+            ),
+            new_instruction_readable="lis r3, GlobalManager string pointer"
+        ),
+        Patch(
+            identifier=13,
+            patch_function=lambda offset, data, plando_dict, matches: ori_lower_address_from_pattern(
+                data, data_space, 5, 3
+            ),
+            new_instruction_readable="ori r3, r3, module_name_pointer_lower"
+        ),
+        Patch(
+            identifier=14,
+            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function(
+                offset, data,
+                module_lookup, 1
+            ),
+            new_instruction_readable="bl lookup_module"
+        ),
+
+        Patch(
+            identifier=15,
+            patch_function=lambda offset, data, plando_dict, matches: (0x809EFFFC).to_bytes(4, 'big'),
+            new_instruction_readable="lwz r4, -0x4 (r30)"
+        ),
+        Patch(
+            identifier=16,
+            patch_function=lambda offset, data, plando_dict, matches: (0x38e0ffff).to_bytes(4, 'big'),
+            new_instruction_readable="li r7, 0xffff"
+        ),
+        Patch(
+            identifier=17,
+            patch_function=lambda offset, data, plando_dict, matches: (0x90FEFFFC).to_bytes(4, 'big'),
+            new_instruction_readable="stw r7, -0x4 (r30)"  # cleanup opcode
+        ),
+        Patch(
+            identifier=18,
+            patch_function=lambda offset, data, plando_dict, matches: (0x7FC5F378).to_bytes(4, 'big'),
+            new_instruction_readable="mr r5, r30"
+        ),
+
+        Patch(
+            identifier=19,
+            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function(
+                offset, data,
+                global_manager_syscall_handler_pattern, 1
+            ),
+            new_instruction_readable="bl GlobalManager syscall"
+        ),
+        Patch(
+            identifier=20,
+            patch_function=lambda offset, data, plando_dict, matches: (0x38e0ffff).to_bytes(4, 'big'),
+            new_instruction_readable="li r7, 0xffff"
+        ),
+        Patch(
+            identifier=21,
+            patch_function=lambda offset, data, plando_dict, matches: (0x90FE0008).to_bytes(4, 'big'),
+            new_instruction_readable="stw r7, 0x8 (r30)"  # cleanup parameter3
+        ),
+        Patch(
+            identifier=22,
+            patch_function=lambda offset, data, plando_dict, matches: (0x90FE0004).to_bytes(4, 'big'),
+            new_instruction_readable="stw r7, 0x4 (r30)"  # cleanup parameter2
+        ),
+        Patch(
+            identifier=23,
+            patch_function=lambda offset, data, plando_dict, matches: (0x90FE0000).to_bytes(4, 'big'),
+            new_instruction_readable="stw r7, 0x0 (r30)"  # cleanup parameter1
+        ),
+
+        Patch(
+            identifier=24,
+            patch_function=lambda offset, data, plando_dict, matches: (0x8001000C).to_bytes(4, 'big'),
+            new_instruction_readable="lwz r0, 0x000c (sp)"
+        ),
+        Patch(
+            identifier=25,
+            patch_function=lambda offset, data, plando_dict, matches: (0x7c0803a6).to_bytes(4, 'big'),
+            new_instruction_readable="mtlr r0"
+        ),
+        Patch(
+            identifier=26,
+            patch_function=lambda offset, data, plando_dict, matches: (0x38210010).to_bytes(4, 'big'),
+            new_instruction_readable="addi sp, sp, 16"
+        ),
+        Patch(
+            identifier=27,
+            patch_function=lambda offset, data, plando_dict, matches: (0x4e800020).to_bytes(4, 'big'),
+            new_instruction_readable="blr"
+        ),
+        # data
+        Patch(
+            identifier=28,
+            patch_function=lambda offset, data, plando_dict, matches: (0xFFFFFFFF).to_bytes(4, 'big'),
+            new_instruction_readable="opcode"
+        ),
+        Patch(
+            identifier=29,
+            patch_function=lambda offset, data, plando_dict, matches: (0xFFFFFFFF).to_bytes(4, 'big'),
+            new_instruction_readable="parameter1"
+        ),
+        Patch(
+            identifier=30,
+            patch_function=lambda offset, data, plando_dict, matches: (0xFFFFFFFF).to_bytes(4, 'big'),
+            new_instruction_readable="parameter2"
+        ),
+        Patch(
+            identifier=31,
+            patch_function=lambda offset, data, plando_dict, matches: (0xFFFFFFFF).to_bytes(4, 'big'),
+            new_instruction_readable="parameter3"
+        ),
+    ]
+)
+
+scene_manager_interface = PatchPattern(
+    name="SceneManagerInterface",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x00, pattern=parse_pattern_bytes("8c be 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=2, offset=0x04, pattern=parse_pattern_bytes("92 f9 e6 5d"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=3, offset=0x08, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=4, offset=0x0c, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=5, offset=0x10, pattern=parse_pattern_bytes("8c 76 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=6, offset=0x14, pattern=parse_pattern_bytes("90 75 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=7, offset=0x18, pattern=parse_pattern_bytes("e6 60 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=8, offset=0x1c, pattern=parse_pattern_bytes("93 a2 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=9, offset=0x20, pattern=parse_pattern_bytes("e6 5f 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=10, offset=0x24, pattern=parse_pattern_bytes("fb a3 8c 50"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=11, offset=0x28, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=12, offset=0x2c, pattern=parse_pattern_bytes("e6 5e 91 f5"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=13, offset=0x30, pattern=parse_pattern_bytes("8b 4c 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=14, offset=0x34, pattern=parse_pattern_bytes("00 00 e6 61"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=15, offset=0x38, pattern=parse_pattern_bytes("00 00 e6 62"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=16, offset=0x3c, pattern=parse_pattern_bytes("00 00 8f d7"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=17, offset=0x40, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=18, offset=0x44, pattern=parse_pattern_bytes("00 00 8c 8d"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=19, offset=0x48, pattern=parse_pattern_bytes("00 00 e6 63"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=20, offset=0x4c, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=21, offset=0x50, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=22, offset=0x54, pattern=parse_pattern_bytes("96 4b 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=23, offset=0x58, pattern=parse_pattern_bytes("00 00 90 dd"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=24, offset=0x5c, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=25, offset=0x60, pattern=parse_pattern_bytes("00 00 8b 96"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=26, offset=0x64, pattern=parse_pattern_bytes("00 00 96 f3"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=27, offset=0x68, pattern=parse_pattern_bytes("91 69 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=28, offset=0x6c, pattern=parse_pattern_bytes("e6 64 fb a4"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=29, offset=0x70, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=30, offset=0x74, pattern=parse_pattern_bytes("90 66 92 90"),
+            instruction_readable="- - -"
+        ),
+    ],
+    patchMapJP=[
+        # function header
+        Patch(
+            identifier=1,
+            patch_function=lambda offset, data, plando_dict, matches: (0x9421FFF0).to_bytes(4, 'big'),
+            new_instruction_readable="stwu sp, -0x0010 (sp)"
+        ),
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: (0x7c0802a6).to_bytes(4, 'big'),
+            new_instruction_readable="mflr r0"
+        ),
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x9001000C).to_bytes(4, 'big'),
+            new_instruction_readable="stw r0, 0x000c (sp)"
+        ),
+        # Check the address
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: li_upper_address_from_identifier(
+                data, 30,
+                matches, 3
+            ),
+            new_instruction_readable="lis r3, parameter1"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: ori_lower_address_from_identifier(
+                data, 30,
+                matches, 3
+            ),
+            new_instruction_readable="ori r3, r3, parameter1"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: (0x80830000).to_bytes(4, 'big'),
+            new_instruction_readable="lwz r4, 0 (r3)"
+        ),
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: (0x2C040001).to_bytes(4, 'big'),
+            new_instruction_readable="cmpwi r4, 1"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict,
+                                  matches: compute_conditional_branch_instruction_from_identifier(
+                offset, data, 25, matches, "bne"  # Skip to end if not equal to 1
+            ),
+            new_instruction_readable="bne- to_end"
+        ),
+        # get SceneManager module
+        Patch(
+            identifier=9,
+            patch_function=lambda offset, data, plando_dict, matches: li_upper_address_from_pattern(
+                data, data_space, 10, 3
+            ),
+            new_instruction_readable="lis r3, SceneManager string pointer"
+        ),
+        Patch(
+            identifier=10,
+            patch_function=lambda offset, data, plando_dict, matches: ori_lower_address_from_pattern(
+                data, data_space, 10, 3
+            ),
+            new_instruction_readable="ori r3, r3, SceneManager string pointer"
+        ),
+        Patch(
+            identifier=11,
+            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function(
+                offset, data,
+                module_lookup, 1
+            ),
+            new_instruction_readable="bl lookup_module"
+        ),
+
+        Patch(
+            identifier=12,
+            patch_function=lambda offset, data, plando_dict, matches: (0x38800006).to_bytes(4, 'big'),
+            new_instruction_readable="li r4, 0x6"
+        ),
+        Patch(
+            identifier=13,
+            patch_function=lambda offset, data, plando_dict, matches: li_upper_address_from_identifier(
+                data, 29,
+                matches, 5
+            ),
+            new_instruction_readable="lis r5, SceneName pointer"
+        ),
+        Patch(
+            identifier=14,
+            patch_function=lambda offset, data, plando_dict, matches: ori_lower_address_from_identifier(
+                data, 29,
+                matches,
+                5
+            ),
+            new_instruction_readable="ori r5, r5, SceneName pointer"
+        ),
+        Patch(
+            identifier=15,
+            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function(
+                offset, data,
+                scene_manager_syscall_handler, 1
+            ),
+            new_instruction_readable="bl SceneManager syscall handler"
+        ),
+
+        Patch(
+            identifier=16,
+            patch_function=lambda offset, data, plando_dict, matches: li_upper_address_from_pattern(
+                data, data_space, 10, 3
+            ),
+            new_instruction_readable="lis r3, SceneManager string pointer"
+        ),
+        Patch(
+            identifier=17,
+            patch_function=lambda offset, data, plando_dict, matches: ori_lower_address_from_pattern(
+                data, data_space, 10, 3
+            ),
+            new_instruction_readable="ori r3, r3, SceneManager string pointer"
+        ),
+        Patch(
+            identifier=18,
+            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function(
+                offset, data,
+                module_lookup, 1
+            ),
+            new_instruction_readable="bl lookup_module"
+        ),
+        Patch(
+            identifier=19,
+            patch_function=lambda offset, data, plando_dict, matches: (0x38800003).to_bytes(4, 'big'),
+            new_instruction_readable="li r4, 0x3"
+        ),
+        Patch(
+            identifier=20,
+            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function(
+                offset, data,
+                scene_manager_syscall_handler, 1
+            ),
+            new_instruction_readable="bl SceneManager syscall handler"
+        ),
+        # Set value back to 0xFF
+        Patch(
+            identifier=21,
+            patch_function=lambda offset, data, plando_dict, matches: li_upper_address_from_identifier(
+                data, 30,
+                matches, 3
+            ),
+            new_instruction_readable="lis r3, parameter1"
+        ),
+        Patch(
+            identifier=22,
+            patch_function=lambda offset, data, plando_dict, matches: ori_lower_address_from_identifier(
+                data, 30,
+                matches, 3
+            ),
+            new_instruction_readable="ori r3, r3, parameter1"
+        ),
+        Patch(
+            identifier=23,
+            patch_function=lambda offset, data, plando_dict, matches: (0x3880FFFF).to_bytes(4, 'big'),
+            new_instruction_readable="li r4, 0xFFFF"
+        ),
+        Patch(
+            identifier=24,
+            patch_function=lambda offset, data, plando_dict, matches: (0x90830000).to_bytes(4, 'big'),
+            new_instruction_readable="stw r4, 0 (r3)"
+        ),
+
+        # Restore and return
+        Patch(
+            identifier=25,
+            patch_function=lambda offset, data, plando_dict, matches: (0x8001000C).to_bytes(4, 'big'),
+            new_instruction_readable="lwz r0, 0x000c (sp)"
         ),
         Patch(
             identifier=26,
@@ -1065,233 +1610,334 @@ custom_give_item_function_pattern = PatchPattern(
         ),
         Patch(
             identifier=27,
-            patch_function=lambda offset, data, plando_dict, matches: (0x38210020).to_bytes(4, 'big'),
-            new_instruction_readable="addi sp, sp, 32"
+            patch_function=lambda offset, data, plando_dict, matches: (0x38210010).to_bytes(4, 'big'),
+            new_instruction_readable="addi sp, sp, 16"
         ),
         Patch(
             identifier=28,
             patch_function=lambda offset, data, plando_dict, matches: (0x4e800020).to_bytes(4, 'big'),
             new_instruction_readable="blr"
         ),
-
-        # PlayerName Function
-
+        # data
         Patch(
-            identifier=31,
-            patch_function=lambda offset, data, plando_dict, matches: (0x7C0802A6).to_bytes(4, 'big'),
+            identifier=29,
+            patch_function=lambda offset, data, plando_dict, matches: write_address_of_target_patch_by_pattern(
+                data,
+                data_space, 31
+            ),
+            new_instruction_readable="SceneName string pointer"
+        ),
+        Patch(
+            identifier=30,
+            patch_function=lambda offset, data, plando_dict, matches: (0xFFFFFFFF).to_bytes(4, 'big'),
+            new_instruction_readable="parameter1"
+        ),
+    ]
+)
+
+mn_field_info_interface = PatchPattern(
+    name="mnFieldInfoInterface",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x00, pattern=parse_pattern_bytes("8c ea 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=2, offset=0x04, pattern=parse_pattern_bytes("90 bd e6 72"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=3, offset=0x08, pattern=parse_pattern_bytes("00 00 e6 77"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=4, offset=0x0c, pattern=parse_pattern_bytes("8c eb e6 74"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=5, offset=0x10, pattern=parse_pattern_bytes("e6 75 fb a6"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=6, offset=0x14, pattern=parse_pattern_bytes("e6 71 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=7, offset=0x18, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=8, offset=0x1c, pattern=parse_pattern_bytes("90 e0 93 c7"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=9, offset=0x20, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=10, offset=0x24, pattern=parse_pattern_bytes("92 4e 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=11, offset=0x28, pattern=parse_pattern_bytes("89 db 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=12, offset=0x2c, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=13, offset=0x30, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=14, offset=0x34, pattern=parse_pattern_bytes("00 00 94 ee"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=15, offset=0x38, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=16, offset=0x3c, pattern=parse_pattern_bytes("8b 62 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=17, offset=0x40, pattern=parse_pattern_bytes("fb a7 92 b2"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=18, offset=0x44, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=19, offset=0x48, pattern=parse_pattern_bytes("e6 7a 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=20, offset=0x4c, pattern=parse_pattern_bytes("e6 78 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=21, offset=0x50, pattern=parse_pattern_bytes("00 00 92 6b"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=22, offset=0x54, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=23, offset=0x58, pattern=parse_pattern_bytes("00 00 90 bf"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=24, offset=0x5c, pattern=parse_pattern_bytes("8a d0 e6 79"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=25, offset=0x60, pattern=parse_pattern_bytes("00 00 90 7a"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=26, offset=0x64, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=27, offset=0x68, pattern=parse_pattern_bytes("97 c8 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=28, offset=0x6c, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=29, offset=0x70, pattern=parse_pattern_bytes("98 5f 00 00"),
+            instruction_readable="- - -"
+        ),
+    ],
+    patchMapJP=[
+        # function header
+        Patch(
+            identifier=1,
+            patch_function=lambda offset, data, plando_dict, matches: (0x9421FFF0).to_bytes(4, 'big'),
+            new_instruction_readable="stwu sp, -0x0010 (sp)"
+        ),
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, matches: (0x7c0802a6).to_bytes(4, 'big'),
             new_instruction_readable="mflr r0"
         ),
         Patch(
-            identifier=32,
-            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function_with_target_identifier(
-                offset, data, 33, matches
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, matches: (0x9001000C).to_bytes(4, 'big'),
+            new_instruction_readable="stw r0, 0x000c (sp)"
+        ),
+        # function body
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, matches: li_upper_address_from_identifier(
+                data, 28,
+                matches, 30
             ),
-            new_instruction_readable="bl +0x4"
+            new_instruction_readable="li r30, parameter1_upper"
         ),
         Patch(
-            identifier=33,
-            patch_function=lambda offset, data, plando_dict, matches: (0x7C8802A6).to_bytes(4, 'big'),
-            new_instruction_readable="mflr r4"
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, matches: ori_lower_address_from_identifier(
+                data, 28,
+                matches, 30
+            ),
+            new_instruction_readable="ori r30, parameter1_lower"
+        ),
+
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, matches: (0x809EFFFC).to_bytes(4, 'big'),
+            new_instruction_readable="lwz r4, -0x4 (r30)"
         ),
         Patch(
-            identifier=34,
-            patch_function=lambda offset, data, plando_dict, matches: (0x7C0803A6).to_bytes(4, 'big'),
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, matches: (0x811E0000).to_bytes(4, 'big'),
+            new_instruction_readable="lwz r8, 0 (r30)"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, matches: (0x2C04FFFF).to_bytes(4, 'big'),
+            new_instruction_readable="cmpwi r4, 0xffff"
+        ),
+        Patch(
+            identifier=9,
+            patch_function=lambda offset, data, plando_dict,
+                                  matches: compute_conditional_branch_instruction_from_identifier(
+                offset, data, 23, matches, "beq"
+            ),
+            new_instruction_readable="beq-"
+        ),
+        Patch(
+            identifier=10,
+            patch_function=lambda offset, data, plando_dict, matches: (0x2c08ffff).to_bytes(4, 'big'),
+            new_instruction_readable="cmpwi r8, 0xffff"
+        ),
+        Patch(
+            identifier=11,
+            patch_function=lambda offset, data, plando_dict,
+                                  matches: compute_conditional_branch_instruction_from_identifier(
+                offset, data, 23, matches, "beq"
+            ),
+            new_instruction_readable="beq-"
+        ),
+
+        Patch(
+            identifier=12,
+            patch_function=lambda offset, data, plando_dict, matches: li_upper_address_from_pattern(
+                data, data_space, 15, 3
+            ),
+            new_instruction_readable="lis r3, mnFieldInfo string pointer"
+        ),
+        Patch(
+            identifier=13,
+            patch_function=lambda offset, data, plando_dict, matches: ori_lower_address_from_pattern(
+                data, data_space, 15, 3
+            ),
+            new_instruction_readable="ori r3, r3, mnFieldInfo string pointer"
+        ),
+        Patch(
+            identifier=14,
+            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function(
+                offset, data,
+                module_lookup, 1
+            ),
+            new_instruction_readable="bl lookup_module"
+        ),
+
+        Patch(
+            identifier=15,
+            patch_function=lambda offset, data, plando_dict, matches: (0x809EFFFC).to_bytes(4, 'big'),
+            new_instruction_readable="lwz r4, -0x4 (r30)"
+        ),
+
+        Patch(
+            identifier=16,
+            patch_function=lambda offset, data, plando_dict, matches: (0x7FC5F378).to_bytes(4, 'big'),
+            new_instruction_readable="mr r5, r30"
+        ),
+        Patch(
+            identifier=17,
+            patch_function=lambda offset, data, plando_dict, matches: (0x38e0ffff).to_bytes(4, 'big'),
+            new_instruction_readable="li r7, 0xffff"
+        ),
+
+        Patch(
+            identifier=18,
+            patch_function=lambda offset, data, plando_dict, matches: (0x90FEFFFC).to_bytes(4, 'big'),
+            new_instruction_readable="stw r7, -0x4 (r30)"  # block usage during execution
+        ),
+
+        Patch(
+            identifier=19,
+            patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function(
+                offset, data,
+                mnFieldInfo_syscall_handler, 1
+            ),
+            new_instruction_readable="bl mnFieldInfo syscall"
+        ),
+        Patch(
+            identifier=20,
+            patch_function=lambda offset, data, plando_dict, matches: (0x38e0ffff).to_bytes(4, 'big'),
+            new_instruction_readable="li r7, 0xffff"
+        ),
+        Patch(
+            identifier=21,
+            patch_function=lambda offset, data, plando_dict, matches: (0x90FE0000).to_bytes(4, 'big'),
+            new_instruction_readable="stw r7, 0x0 (r30)"  # cleanup parameter1
+        ),
+        Patch(
+            identifier=22,
+            patch_function=lambda offset, data, plando_dict, matches: (0x90FE0004).to_bytes(4, 'big'),
+            new_instruction_readable="stw r7, 0x4 (r30)"  # cleanup parameter2
+        ),
+        # function ending
+        Patch(
+            identifier=23,
+            patch_function=lambda offset, data, plando_dict, matches: (0x8001000C).to_bytes(4, 'big'),
+            new_instruction_readable="lwz r0, 0x000c (sp)"
+        ),
+        Patch(
+            identifier=24,
+            patch_function=lambda offset, data, plando_dict, matches: (0x7c0803a6).to_bytes(4, 'big'),
             new_instruction_readable="mtlr r0"
         ),
         Patch(
-            identifier=35,
-            patch_function=lambda offset, data, plando_dict, matches: compute_addi_to_target(
-                data, matches, 33, 81, 4, 4
-            ),
-            new_instruction_readable="addi r4, r4 (offset to PlayerName)"
+            identifier=25,
+            patch_function=lambda offset, data, plando_dict, matches: (0x38210010).to_bytes(4, 'big'),
+            new_instruction_readable="addi sp, sp, 16"
         ),
         Patch(
-            identifier=36,
-            patch_function=lambda offset, data, plando_dict, matches: (0x3C608000).to_bytes(4, 'big'),
-            new_instruction_readable="lis r3, 0x8000"
-        ),
-        Patch(
-            identifier=37,
-            patch_function=lambda offset, data, plando_dict, matches: (0x60631820).to_bytes(4, 'big'),
-            new_instruction_readable="ori r3, r3, 0x1820"
-        ),
-        Patch(
-            identifier=38,
-            patch_function=lambda offset, data, plando_dict, matches: (0x80A40000).to_bytes(4, 'big'),
-            new_instruction_readable="lwz r5, 0 (r4)"
-        ),
-        Patch(
-            identifier=39,
-            patch_function=lambda offset, data, plando_dict, matches: (0x80C40004).to_bytes(4, 'big'),
-            new_instruction_readable="lwz r6, 0x0004 (r4)"
-        ),
-        Patch(
-            identifier=40,
-            patch_function=lambda offset, data, plando_dict, matches: (0x80E40008).to_bytes(4, 'big'),
-            new_instruction_readable="lwz r7, 0x0008 (r4)"
-        ),
-        Patch(
-            identifier=41,
-            patch_function=lambda offset, data, plando_dict, matches: (0x8104000c).to_bytes(4, 'big'),
-            new_instruction_readable="lwz r8, 0x000c (r4)"
-        ),
-        Patch(
-            identifier=42,
-            patch_function=lambda offset, data, plando_dict, matches: (0x81240010).to_bytes(4, 'big'),
-            new_instruction_readable="lwz r9, 0x0010 (r4)"
-        ),
-        Patch(
-            identifier=43,
-            patch_function=lambda offset, data, plando_dict, matches: (0x81440014).to_bytes(4, 'big'),
-            new_instruction_readable="lwz r10, 0x0014 (r4)"
-        ),
-        Patch(
-            identifier=44,
-            patch_function=lambda offset, data, plando_dict, matches: (0x81640018).to_bytes(4, 'big'),
-            new_instruction_readable="lwz r11, 0x0018 (r4)"
-        ),
-        Patch(
-            identifier=45,
-            patch_function=lambda offset, data, plando_dict, matches: (0x8184001c).to_bytes(4, 'big'),
-            new_instruction_readable="lwz r12, 0x001c (r4)"
-        ),
-        Patch(
-            identifier=46,
-            patch_function=lambda offset, data, plando_dict, matches: (0x90A30000).to_bytes(4, 'big'),
-            new_instruction_readable="stw r5, 0 (r3)"
-        ),
-        Patch(
-            identifier=47,
-            patch_function=lambda offset, data, plando_dict, matches: (0x90C30004).to_bytes(4, 'big'),
-            new_instruction_readable="stw r6, 0x0004 (r3)"
-        ),
-        Patch(
-            identifier=48,
-            patch_function=lambda offset, data, plando_dict, matches: (0x90E30008).to_bytes(4, 'big'),
-            new_instruction_readable="stw r7, 0x0008 (r3)"
-        ),
-        Patch(
-            identifier=49,
-            patch_function=lambda offset, data, plando_dict, matches: (0x9103000c).to_bytes(4, 'big'),
-            new_instruction_readable="stw r8, 0x000c (r3)"
-        ),
-        Patch(
-            identifier=50,
-            patch_function=lambda offset, data, plando_dict, matches: (0x91230010).to_bytes(4, 'big'),
-            new_instruction_readable="stw r9, 0x0010 (r3)"
-        ),
-        Patch(
-            identifier=51,
-            patch_function=lambda offset, data, plando_dict, matches: (0x91430014).to_bytes(4, 'big'),
-            new_instruction_readable="stw r10, 0x0014 (r3)"
-        ),
-        Patch(
-            identifier=52,
-            patch_function=lambda offset, data, plando_dict, matches: (0x91630018).to_bytes(4, 'big'),
-            new_instruction_readable="stw r11, 0x0018 (r3)"
-        ),
-        Patch(
-            identifier=53,
-            patch_function=lambda offset, data, plando_dict, matches: (0x9183001c).to_bytes(4, 'big'),
-            new_instruction_readable="stw r12, 0x001c (r3)"
-        ),
-        Patch(
-            identifier=54,
-            patch_function=lambda offset, data, plando_dict, matches: (0x80A40020).to_bytes(4, 'big'),
-            new_instruction_readable="lwz r5, 0x0020 (r4)"
-        ),
-        Patch(
-            identifier=55,
-            patch_function=lambda offset, data, plando_dict, matches: (0x80C40024).to_bytes(4, 'big'),
-            new_instruction_readable="lwz r6, 0x0024 (r4)"
-        ),
-        Patch(
-            identifier=56,
-            patch_function=lambda offset, data, plando_dict, matches: (0x80E40028).to_bytes(4, 'big'),
-            new_instruction_readable="lwz r7, 0x0028 (r4)"
-        ),
-        Patch(
-            identifier=57,
-            patch_function=lambda offset, data, plando_dict, matches: (0x8104002c).to_bytes(4, 'big'),
-            new_instruction_readable="lwz r8, 0x002c (r4)"
-        ),
-        Patch(
-            identifier=58,
-            patch_function=lambda offset, data, plando_dict, matches: (0x81240030).to_bytes(4, 'big'),
-            new_instruction_readable="lwz r9, 0x0030 (r4)"
-        ),
-        Patch(
-            identifier=59,
-            patch_function=lambda offset, data, plando_dict, matches: (0x81440034).to_bytes(4, 'big'),
-            new_instruction_readable="lwz r10, 0x0034 (r4)"
-        ),
-        Patch(
-            identifier=60,
-            patch_function=lambda offset, data, plando_dict, matches: (0x81640038).to_bytes(4, 'big'),
-            new_instruction_readable="lwz r11, 0x0038 (r4)"
-        ),
-        Patch(
-            identifier=61,
-            patch_function=lambda offset, data, plando_dict, matches: (0x8184003c).to_bytes(4, 'big'),
-            new_instruction_readable="lwz r12, 0x003c (r4)"
-        ),
-
-        Patch(
-            identifier=62,
-            patch_function=lambda offset, data, plando_dict, matches: (0x90A30020).to_bytes(4, 'big'),
-            new_instruction_readable="stw r5, 0x0020 (r3)"
-        ),
-        Patch(
-            identifier=63,
-            patch_function=lambda offset, data, plando_dict, matches: (0x90C30024).to_bytes(4, 'big'),
-            new_instruction_readable="stw r6, 0x0024 (r3)"
-        ),
-        Patch(
-            identifier=64,
-            patch_function=lambda offset, data, plando_dict, matches: (0x90E30028).to_bytes(4, 'big'),
-            new_instruction_readable="stw r7, 0x0028 (r3)"
-        ),
-        Patch(
-            identifier=65,
-            patch_function=lambda offset, data, plando_dict, matches: (0x9103002c).to_bytes(4, 'big'),
-            new_instruction_readable="stw r8, 0x002c (r3)"
-        ),
-        Patch(
-            identifier=66,
-            patch_function=lambda offset, data, plando_dict, matches: (0x91230030).to_bytes(4, 'big'),
-            new_instruction_readable="stw r9, 0x0030 (r3)"
-        ),
-        Patch(
-            identifier=67,
-            patch_function=lambda offset, data, plando_dict, matches: (0x91430034).to_bytes(4, 'big'),
-            new_instruction_readable="stw r10, 0x0034 (r3)"
-        ),
-        Patch(
-            identifier=68,
-            patch_function=lambda offset, data, plando_dict, matches: (0x91630038).to_bytes(4, 'big'),
-            new_instruction_readable="stw r11, 0x0038 (r3)"
-        ),
-        Patch(
-            identifier=69,
-            patch_function=lambda offset, data, plando_dict, matches: (0x9183003c).to_bytes(4, 'big'),
-            new_instruction_readable="stw r12, 0x003c (r3)"
-        ),
-        Patch(
-            identifier=70,
-            patch_function=lambda offset, data, plando_dict, matches: (0x4E800020).to_bytes(4, 'big'),
+            identifier=26,
+            patch_function=lambda offset, data, plando_dict, matches: (0x4e800020).to_bytes(4, 'big'),
             new_instruction_readable="blr"
         ),
-
+        # data
         Patch(
-            identifier=81,
-            patch_function=lambda offset, data, plando_dict, matches: get_player_name_from_dict(plando_dict),
-            new_instruction_readable="PlayerName String"
+            identifier=27,
+            patch_function=lambda offset, data, plando_dict, matches: (0xFFFFFFFF).to_bytes(4, 'big'),
+            new_instruction_readable="opcode"
         ),
-    ],
+        Patch(
+            identifier=28,
+            patch_function=lambda offset, data, plando_dict, matches: (0xFFFFFFFF).to_bytes(4, 'big'),
+            new_instruction_readable="parameter1"
+        ),
+        Patch(
+            identifier=29,
+            patch_function=lambda offset, data, plando_dict, matches: (0xFFFFFFFF).to_bytes(4, 'big'),
+            new_instruction_readable="parameter2"
+        )
+    ]
 )
 
-custom_give_item_function_call_pattern = PatchPattern(
-    name="Call for custom give item function",
+inject_custom_function = PatchPattern(
+    name="injecting custom function routine",
     patternJP=[
         Instruction(
             identifier=1, offset=0x0, pattern=parse_pattern_bytes("7f 83 e3 78"),
@@ -1371,9 +2017,9 @@ custom_give_item_function_call_pattern = PatchPattern(
             identifier=10,
             patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function(
                 offset, data,
-                custom_give_item_function_pattern, 1
+                main_routine, 1
             ),
-            new_instruction_readable="bl custom_give_item_function"
+            new_instruction_readable="bl main_routine"
         ),
         Patch(
             identifier=11,
@@ -1422,101 +2068,100 @@ custom_global_manager_syscall_handler_wrapper = PatchPattern(
     name="Wrapper for the global Manager syscall handler",
     patternJP=[
         Instruction(
-            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 00 e6 63"),
-            instruction_readable="---"
-        ),
-
-        Instruction(
-            identifier=2, offset=0x4, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="---"
+            identifier=1, offset=0x00, pattern=parse_pattern_bytes("e6 6c e6 6b"),
+            instruction_readable="- - -"
         ),
         Instruction(
-            identifier=3, offset=0x8, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="---"
+            identifier=2, offset=0x04, pattern=parse_pattern_bytes("91 46 00 00"),
+            instruction_readable="- - -"
         ),
         Instruction(
-            identifier=4, offset=0xc, pattern=parse_pattern_bytes("96 4b 00 00"),
-            instruction_readable="---"
+            identifier=3, offset=0x08, pattern=parse_pattern_bytes("8b 6c 98 62"),
+            instruction_readable="- - -"
         ),
         Instruction(
-            identifier=5, offset=0x10, pattern=parse_pattern_bytes("00 00 90 dd"),
-            instruction_readable="---"
+            identifier=4, offset=0x0c, pattern=parse_pattern_bytes("8a 59 8f da"),
+            instruction_readable="- - -"
+        ),
+        Instruction(
+            identifier=5, offset=0x10, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
         ),
         Instruction(
             identifier=6, offset=0x14, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="---"
+            instruction_readable="- - -"
         ),
         Instruction(
-            identifier=7, offset=0x18, pattern=parse_pattern_bytes("00 00 8b 96"),
-            instruction_readable="---"
+            identifier=7, offset=0x18, pattern=parse_pattern_bytes("00 00 fb a5"),
+            instruction_readable="- - -"
         ),
         Instruction(
-            identifier=8, offset=0x1c, pattern=parse_pattern_bytes("00 00 96 f3"),
-            instruction_readable="---"
+            identifier=8, offset=0x1c, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
         ),
         Instruction(
-            identifier=9, offset=0x20, pattern=parse_pattern_bytes("91 69 00 00"),
-            instruction_readable="---"
+            identifier=9, offset=0x20, pattern=parse_pattern_bytes("e6 6a 00 00"),
+            instruction_readable="- - -"
         ),
         Instruction(
-            identifier=10, offset=0x24, pattern=parse_pattern_bytes("e6 64 fb a4"),
-            instruction_readable="---"
+            identifier=10, offset=0x24, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
         ),
         Instruction(
             identifier=11, offset=0x28, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="---"
+            instruction_readable="- - -"
         ),
         Instruction(
-            identifier=12, offset=0x2c, pattern=parse_pattern_bytes("90 66 92 90"),
-            instruction_readable="---"
+            identifier=12, offset=0x2c, pattern=parse_pattern_bytes("e6 6f 00 00"),
+            instruction_readable="- - -"
         ),
         Instruction(
-            identifier=13, offset=0x30, pattern=parse_pattern_bytes("8f d8 00 00"),
-            instruction_readable="---"
+            identifier=13, offset=0x30, pattern=parse_pattern_bytes("e6 70 e6 6e"),
+            instruction_readable="- - -"
         ),
         Instruction(
-            identifier=14, offset=0x34, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="---"
+            identifier=14, offset=0x34, pattern=parse_pattern_bytes("00 00 8c d6"),
+            instruction_readable="- - -"
         ),
         Instruction(
-            identifier=15, offset=0x38, pattern=parse_pattern_bytes("00 00 e6 65"),
-            instruction_readable="---"
+            identifier=15, offset=0x38, pattern=parse_pattern_bytes("00 00 97 5f"),
+            instruction_readable="- - -"
         ),
         Instruction(
             identifier=16, offset=0x3c, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="---"
+            instruction_readable="- - -"
         ),
         Instruction(
-            identifier=17, offset=0x40, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="---"
+            identifier=17, offset=0x40, pattern=parse_pattern_bytes("8e 8f 94 46"),
+            instruction_readable="- - -"
         ),
         Instruction(
-            identifier=18, offset=0x44, pattern=parse_pattern_bytes("e6 68 00 00"),
-            instruction_readable="---"
+            identifier=18, offset=0x44, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
         ),
         Instruction(
-            identifier=19, offset=0x48, pattern=parse_pattern_bytes("e6 69 00 00"),
-            instruction_readable="---"
+            identifier=19, offset=0x48, pattern=parse_pattern_bytes("00 00 e6 73"),
+            instruction_readable="- - -"
         ),
         Instruction(
-            identifier=20, offset=0x4c, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="---"
+            identifier=20, offset=0x4c, pattern=parse_pattern_bytes("00 00 90 be"),
+            instruction_readable="- - -"
         ),
         Instruction(
-            identifier=21, offset=0x50, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="---"
+            identifier=21, offset=0x50, pattern=parse_pattern_bytes("00 00 92 61"),
+            instruction_readable="- - -"
         ),
         Instruction(
             identifier=22, offset=0x54, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="---"
+            instruction_readable="- - -"
         ),
         Instruction(
-            identifier=23, offset=0x58, pattern=parse_pattern_bytes("8d bc 91 c0"),
-            instruction_readable="---"
+            identifier=23, offset=0x58, pattern=parse_pattern_bytes("97 55 00 00"),
+            instruction_readable="- - -"
         ),
         Instruction(
-            identifier=24, offset=0x5c, pattern=parse_pattern_bytes("e6 67 00 00"),
-            instruction_readable="---"
+            identifier=24, offset=0x5c, pattern=parse_pattern_bytes("e6 76 00 00"),
+            instruction_readable="- - -"
         ),
     ], patchMapJP=[
         Patch(
@@ -1574,13 +2219,13 @@ custom_global_manager_syscall_handler_wrapper = PatchPattern(
         Patch(
             identifier=10,
             patch_function=lambda offset, data, plando_dict, matches:
-            setup_global_manager_syscall_handler_r12_upper_address(data),
+            li_upper_address_from_pattern(data, global_manager_syscall_handler, 1, 12),
             new_instruction_readable="lis r12, 0x8018"
         ),
         Patch(
             identifier=11,
             patch_function=lambda offset, data, plando_dict, matches:
-            setup_global_manager_syscall_handler_r12_lower_address(data),
+            ori_lower_address_from_pattern(data, global_manager_syscall_handler, 1, 12),
             new_instruction_readable="ori r12, r12, 0x0790"
         ),
         Patch(
@@ -1614,6 +2259,26 @@ custom_global_manager_syscall_handler_wrapper = PatchPattern(
             new_instruction_readable="blr"
         ),
     ]
+)
+
+scene_manager_syscall_handler = PatchPattern(
+    name="SceneManager syscall Handler",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("94 21 ff f0"),
+            instruction_readable="stwu r1,-0x50(r1)"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x4, pattern=parse_pattern_bytes("7c 08 02 a6"),
+            instruction_readable="mfspr r0, LR"
+        ),
+        Instruction(
+            identifier=3, offset=0x8, pattern=parse_pattern_bytes("2c 04 00 06"),
+            instruction_readable="cmplwi r4, 0xcf"
+        ),
+
+    ],
 )
 
 global_manager_syscall_handler = PatchPattern(
@@ -1654,7 +2319,10 @@ global_manager_v_table = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: get_global_manager_syscall_handler_wrapper(data),
+            patch_function=lambda offset, data, plando_dict, matches: write_address_of_target_patch_by_pattern(
+                data,
+                custom_global_manager_syscall_handler_wrapper, 1
+            ),
             new_instruction_readable="blr"
         ),
     ]
@@ -1764,13 +2432,18 @@ attraction_record_unlock = PatchPattern(
 )
 
 main_dol_pattern = [
-    custom_give_item_function_call_pattern,
-    custom_give_item_function_pattern,
+    inject_custom_function,
     stage_setup_new_file_pattern,
     load_file_spawn_position,
     ai_difficulty_logic,
     attraction_record_unlock,
 
     global_manager_v_table,
-    custom_global_manager_syscall_handler_wrapper
+    custom_global_manager_syscall_handler_wrapper,
+
+    main_routine,
+    global_manager_interface,
+    scene_manager_interface,
+    mn_field_info_interface,
+    data_space,
 ]
