@@ -1109,7 +1109,10 @@ global_manager_interface = PatchPattern(
             identifier=30, offset=0x78, pattern=parse_pattern_bytes("00 00 00 00"),
             instruction_readable="- - -"
         ),
-
+        Instruction(
+            identifier=31, offset=0x7c, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="- - -"
+        ),
     ],
     patchMapJP=[
         # function header
@@ -1132,7 +1135,7 @@ global_manager_interface = PatchPattern(
         Patch(
             identifier=4,
             patch_function=lambda offset, data, plando_dict, matches: li_upper_address_from_identifier(
-                data, 28,
+                data, 29,
                 matches, 30
             ),
             new_instruction_readable="li r30, parameter1_upper"
@@ -1140,7 +1143,7 @@ global_manager_interface = PatchPattern(
         Patch(
             identifier=5,
             patch_function=lambda offset, data, plando_dict, matches: ori_lower_address_from_identifier(
-                data, 28,
+                data, 29,
                 matches, 30
             ),
             new_instruction_readable="ori r30, parameter1_lower"
@@ -1165,7 +1168,7 @@ global_manager_interface = PatchPattern(
             identifier=9,
             patch_function=lambda offset, data, plando_dict,
                                   matches: compute_conditional_branch_instruction_from_identifier(
-                offset, data, 23, matches, "beq"
+                offset, data, 24, matches, "beq"
             ),
             new_instruction_readable="beq-"
         ),
@@ -1178,10 +1181,11 @@ global_manager_interface = PatchPattern(
             identifier=11,
             patch_function=lambda offset, data, plando_dict,
                                   matches: compute_conditional_branch_instruction_from_identifier(
-                offset, data, 23, matches, "beq"
+                offset, data, 24, matches, "beq"
             ),
             new_instruction_readable="beq-"
         ),
+
         Patch(
             identifier=12,
             patch_function=lambda offset, data, plando_dict, matches: li_upper_address_from_pattern(
@@ -1210,15 +1214,24 @@ global_manager_interface = PatchPattern(
             patch_function=lambda offset, data, plando_dict, matches: (0x809EFFFC).to_bytes(4, 'big'),
             new_instruction_readable="lwz r4, -0x4 (r30)"
         ),
-
         Patch(
             identifier=16,
+            patch_function=lambda offset, data, plando_dict, matches: (0x38e0ffff).to_bytes(4, 'big'),
+            new_instruction_readable="li r7, 0xffff"
+        ),
+        Patch(
+            identifier=17,
+            patch_function=lambda offset, data, plando_dict, matches: (0x90FEFFFC).to_bytes(4, 'big'),
+            new_instruction_readable="stw r7, -0x4 (r30)"  # cleanup opcode
+        ),
+        Patch(
+            identifier=18,
             patch_function=lambda offset, data, plando_dict, matches: (0x7FC5F378).to_bytes(4, 'big'),
             new_instruction_readable="mr r5, r30"
         ),
 
         Patch(
-            identifier=17,
+            identifier=19,
             patch_function=lambda offset, data, plando_dict, matches: compute_bl_to_function(
                 offset, data,
                 global_manager_syscall_handler_pattern, 1
@@ -1226,69 +1239,64 @@ global_manager_interface = PatchPattern(
             new_instruction_readable="bl GlobalManager syscall"
         ),
         Patch(
-            identifier=18,
+            identifier=20,
             patch_function=lambda offset, data, plando_dict, matches: (0x38e0ffff).to_bytes(4, 'big'),
             new_instruction_readable="li r7, 0xffff"
         ),
         Patch(
-            identifier=19,
+            identifier=21,
             patch_function=lambda offset, data, plando_dict, matches: (0x90FE0008).to_bytes(4, 'big'),
             new_instruction_readable="stw r7, 0x8 (r30)"  # cleanup parameter3
         ),
         Patch(
-            identifier=20,
-            patch_function=lambda offset, data, plando_dict, matches: (0x90FE0004).to_bytes(4, 'big'),
-            new_instruction_readable="stw r7, 0x4 (r6)"  # cleanup parameter2
-        ),
-        Patch(
-            identifier=21,
-            patch_function=lambda offset, data, plando_dict, matches: (0x90FE0000).to_bytes(4, 'big'),
-            new_instruction_readable="stw r7, 0x0 (r6)"  # cleanup parameter1
-        ),
-        Patch(
             identifier=22,
-            patch_function=lambda offset, data, plando_dict, matches: (0x90FEFFFC).to_bytes(4, 'big'),
-            new_instruction_readable="stw r7, -0x4 (r6)"  # cleanup opcode
+            patch_function=lambda offset, data, plando_dict, matches: (0x90FE0004).to_bytes(4, 'big'),
+            new_instruction_readable="stw r7, 0x4 (r30)"  # cleanup parameter2
+        ),
+        Patch(
+            identifier=23,
+            patch_function=lambda offset, data, plando_dict, matches: (0x90FE0000).to_bytes(4, 'big'),
+            new_instruction_readable="stw r7, 0x0 (r30)"  # cleanup parameter1
         ),
 
         Patch(
-            identifier=23,
+            identifier=24,
             patch_function=lambda offset, data, plando_dict, matches: (0x8001000C).to_bytes(4, 'big'),
             new_instruction_readable="lwz r0, 0x000c (sp)"
         ),
         Patch(
-            identifier=24,
+            identifier=25,
             patch_function=lambda offset, data, plando_dict, matches: (0x7c0803a6).to_bytes(4, 'big'),
             new_instruction_readable="mtlr r0"
         ),
         Patch(
-            identifier=25,
+            identifier=26,
             patch_function=lambda offset, data, plando_dict, matches: (0x38210010).to_bytes(4, 'big'),
             new_instruction_readable="addi sp, sp, 16"
         ),
         Patch(
-            identifier=26,
+            identifier=27,
             patch_function=lambda offset, data, plando_dict, matches: (0x4e800020).to_bytes(4, 'big'),
             new_instruction_readable="blr"
         ),
         # data
         Patch(
-            identifier=27,
+            identifier=28,
             patch_function=lambda offset, data, plando_dict, matches: (0xFFFFFFFF).to_bytes(4, 'big'),
             new_instruction_readable="opcode"
         ),
         Patch(
-            identifier=28,
+            identifier=29,
             patch_function=lambda offset, data, plando_dict, matches: (0xFFFFFFFF).to_bytes(4, 'big'),
             new_instruction_readable="parameter1"
         ),
         Patch(
-            identifier=29,
+            identifier=30,
             patch_function=lambda offset, data, plando_dict, matches: (0xFFFFFFFF).to_bytes(4, 'big'),
             new_instruction_readable="parameter2"
         ),
         Patch(
-            identifier=30,
+            identifier=31,
             patch_function=lambda offset, data, plando_dict, matches: (0xFFFFFFFF).to_bytes(4, 'big'),
             new_instruction_readable="parameter3"
         ),
