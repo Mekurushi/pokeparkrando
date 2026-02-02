@@ -1468,16 +1468,16 @@ scene_manager_interface = PatchPattern(
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: (0x2C040001).to_bytes(4, 'big'),
-            new_instruction_readable="cmpwi r4, 1"
+            patch_function=lambda offset, data, plando_dict, matches: (0x2C04ffff).to_bytes(4, 'big'),
+            new_instruction_readable="cmpwi r4, 0xFFFFFF"
         ),
         Patch(
             identifier=8,
             patch_function=lambda offset, data, plando_dict,
                                   matches: compute_conditional_branch_instruction_from_identifier(
-                offset, data, 25, matches, "bne"  # Skip to end if not equal to 1
+                offset, data, 25, matches, "beq"
             ),
-            new_instruction_readable="bne- to_end"
+            new_instruction_readable="beq to_end"
         ),
         # get SceneManager module
         Patch(
