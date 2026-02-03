@@ -346,7 +346,6 @@ class PatcherService:
     def _remove_unneeded_files(self):
         files_to_remove = [
             "DATA/files/Thp/Opening.thp",
-            "DATA/files/Thp/Ending.thp",
         ]
 
         try:
