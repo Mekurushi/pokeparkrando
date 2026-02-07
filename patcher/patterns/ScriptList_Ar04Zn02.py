@@ -14,7 +14,7 @@ bridgeSwitch = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000000).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000000).to_bytes(
                 4,
                 'big'
             ),

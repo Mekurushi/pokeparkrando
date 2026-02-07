@@ -37,7 +37,7 @@ blaziken_interaction = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -45,7 +45,8 @@ blaziken_interaction = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x004b0010).to_bytes(  # get bestfriend opcode
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x004b0010).to_bytes(
+                # get bestfriend opcode
                 4,
                 'big'
             ),
@@ -53,7 +54,7 @@ blaziken_interaction = PatchPattern(
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: get_attraction_id_from_dict(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: get_attraction_id_from_dict(
                 plando_dict, MAGMA_ZONE_BLAZIKEN_AREA_BLAZIKEN_ATTRACTION
             ),
             new_instruction_readable="update attraction id"
@@ -114,7 +115,7 @@ blaziken2_interaction = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -122,7 +123,7 @@ blaziken2_interaction = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: get_attraction_id_from_dict(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: get_attraction_id_from_dict(
                 plando_dict, MAGMA_ZONE_BLAZIKEN_AREA_BLAZIKEN_ATTRACTION
             ),
             new_instruction_readable="update attraction id"

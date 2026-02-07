@@ -14,7 +14,8 @@ f0502DoorE = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (0x6630353032446f6f724100).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
+                0x6630353032446f6f724100).to_bytes(
                 11,
                 'big'
             ),

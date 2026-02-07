@@ -63,17 +63,23 @@ attraction_result = PatchPattern(
 
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00680010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00680010).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="push 0x68"
         ),
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00690010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00690010).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="push 0x69"
         ),
         Patch(
             identifier=12,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="push 0x0"
         ),
     ],
@@ -115,7 +121,9 @@ attraction_start_demo = PatchPattern(
 
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00680010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00680010).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="push 0x68"
         )
     ],
@@ -156,7 +164,9 @@ attraction_start_demo_end = PatchPattern(
 
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00680010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00680010).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="push 0x68"
         )
     ],
@@ -186,12 +196,16 @@ condition_legendary_friendship = PatchPattern(
 
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="push 0x1"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x004b0010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x004b0010).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="push 0x4b"  # so it checks for the checked location
         ),
 
@@ -229,22 +243,30 @@ set_friendship = PatchPattern(
         # removing friendship flag
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="delay(0)"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="delay(0)"
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="delay(0)"
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="delay(0)"
         ),
 

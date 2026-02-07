@@ -26,7 +26,7 @@ break_switch = PatchPattern(
 
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00020010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00020010).to_bytes(
                 4,
                 'big'
             ),
@@ -34,7 +34,7 @@ break_switch = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00020010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00020010).to_bytes(
                 4,
                 'big'
             ),

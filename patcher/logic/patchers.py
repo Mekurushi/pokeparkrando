@@ -65,7 +65,10 @@ class BasePatcher(ABC):
 
                     offset = mem_data.address
                     old_bytes = mem_data.value
-                    new_bytes = patch.patch_function(offset, file_data, self.plando_dict, match)
+                    new_bytes = patch.patch_function(
+                        offset, file_data, self.plando_dict, self.config.patch_patterns,
+                        patchpattern.name
+                        )
 
                     if new_bytes is None:
                         continue

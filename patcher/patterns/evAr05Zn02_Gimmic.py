@@ -29,7 +29,7 @@ f0101FuwarideTaxiStop = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x663035303254616c6b596f6e6f697200).to_bytes(16, 'big'),
             new_instruction_readable="ds f0502TalkYonoir"
         ),
@@ -89,7 +89,7 @@ set_voltorb_location_function = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010007).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010007).to_bytes(
                 4,
                 'big'
             ),
@@ -97,21 +97,22 @@ set_voltorb_location_function = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
                 data, string_section_start, globalManager
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_to_function_script(
                 offset, data, get_module
             ),
             new_instruction_readable="call get_module"
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000012).to_bytes(
                 4,
                 'big'
             ),
@@ -119,7 +120,7 @@ set_voltorb_location_function = PatchPattern(
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000c).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000c).to_bytes(
                 4,
                 'big'
             ),
@@ -127,7 +128,7 @@ set_voltorb_location_function = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
                 4,
                 'big'
             ),
@@ -135,14 +136,14 @@ set_voltorb_location_function = PatchPattern(
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
                 data, string_section_start, f0101FuwarideTaxiStop
             ),
             new_instruction_readable="lstr f0502TalkYonoir"
         ),
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000b).to_bytes(
                 4,
                 'big'
             ),
@@ -150,7 +151,7 @@ set_voltorb_location_function = PatchPattern(
         ),
         Patch(
             identifier=9,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
                 4,
                 'big'
             ),
@@ -158,7 +159,7 @@ set_voltorb_location_function = PatchPattern(
         ),
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00150401).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00150401).to_bytes(
                 4,
                 'big'
             ),
@@ -166,7 +167,7 @@ set_voltorb_location_function = PatchPattern(
         ),
         Patch(
             identifier=11,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00020006).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00020006).to_bytes(
                 4,
                 'big'
             ),
@@ -212,7 +213,7 @@ JAR_BIRIRI = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
                 data, string_section_start, f0101FuwarideTaxiStop
             ),
             new_instruction_readable="lstr fTalkFuwaride"
@@ -220,7 +221,7 @@ JAR_BIRIRI = PatchPattern(
 
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
                 4,
                 'big'
             ),
@@ -229,7 +230,7 @@ JAR_BIRIRI = PatchPattern(
 
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -237,7 +238,8 @@ JAR_BIRIRI = PatchPattern(
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_to_function_script(
                 offset, data, set_voltorb_location_function
             ),
             new_instruction_readable="call set_voltorb_location_function"

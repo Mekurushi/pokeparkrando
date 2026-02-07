@@ -32,7 +32,8 @@ EMAPA05_Z02 = PatchPattern(
 
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 HAUNTED_ZONE_ROTOM_AREA_BOOKSHELF_AREA_CONNECTION, "zone"
             ),
@@ -40,7 +41,8 @@ EMAPA05_Z02 = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 HAUNTED_ZONE_ROTOM_AREA_BOOKSHELF_AREA_CONNECTION, "area"
             ),
@@ -48,7 +50,8 @@ EMAPA05_Z02 = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 HAUNTED_ZONE_ROTOM_AREA_BOOKSHELF_AREA_CONNECTION, "position"
             ),

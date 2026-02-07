@@ -35,7 +35,8 @@ EMAPA01_Z01 = PatchPattern(
 
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 TREEHOUSE_MEADOW_PASSAGE_MEADOW_ZONE_CONNECTION, "zone"
             ),
@@ -43,7 +44,8 @@ EMAPA01_Z01 = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 TREEHOUSE_MEADOW_PASSAGE_MEADOW_ZONE_CONNECTION, "area"
             ),
@@ -51,7 +53,8 @@ EMAPA01_Z01 = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 TREEHOUSE_MEADOW_PASSAGE_MEADOW_ZONE_CONNECTION, "position"
             ),
@@ -90,7 +93,8 @@ EMAPA03_Z01 = PatchPattern(
 
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 TREEHOUSE_BEACH_PASSAGE_BEACH_ZONE_CONNECTION, "zone"
             ),
@@ -98,7 +102,8 @@ EMAPA03_Z01 = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 TREEHOUSE_BEACH_PASSAGE_BEACH_ZONE_CONNECTION, "area"
             ),
@@ -106,7 +111,8 @@ EMAPA03_Z01 = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 TREEHOUSE_BEACH_PASSAGE_BEACH_ZONE_CONNECTION, "position"
             ),
@@ -145,7 +151,8 @@ EMAPA04_Z01 = PatchPattern(
 
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 TREEHOUSE_CAVERN_PASSAGE_CAVERN_ZONE_CONNECTION, "zone"
             ),
@@ -153,7 +160,8 @@ EMAPA04_Z01 = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 TREEHOUSE_CAVERN_PASSAGE_CAVERN_ZONE_CONNECTION, "area"
             ),
@@ -161,7 +169,8 @@ EMAPA04_Z01 = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 TREEHOUSE_CAVERN_PASSAGE_CAVERN_ZONE_CONNECTION, "position"
             ),
@@ -200,7 +209,8 @@ EMAPA05_Z01 = PatchPattern(
 
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 TREEHOUSE_HAUNTED_PASSAGE_HAUNTED_ZONE_CONNECTION, "zone"
             ),
@@ -208,7 +218,8 @@ EMAPA05_Z01 = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 TREEHOUSE_HAUNTED_PASSAGE_HAUNTED_ZONE_CONNECTION, "area"
             ),
@@ -216,7 +227,8 @@ EMAPA05_Z01 = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 TREEHOUSE_HAUNTED_PASSAGE_HAUNTED_ZONE_CONNECTION, "position"
             ),
@@ -254,7 +266,8 @@ EMAPA06_Z01 = PatchPattern(
 
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 TREEHOUSE_GRANITE_PASSAGE_GRANITE_ZONE_CONNECTION, "zone"
             ),
@@ -262,7 +275,8 @@ EMAPA06_Z01 = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 TREEHOUSE_GRANITE_PASSAGE_GRANITE_ZONE_CONNECTION, "area"
             ),
@@ -270,7 +284,8 @@ EMAPA06_Z01 = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 TREEHOUSE_GRANITE_PASSAGE_GRANITE_ZONE_CONNECTION, "position"
             ),

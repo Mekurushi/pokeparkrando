@@ -15,7 +15,8 @@ f0602FuwarideTaxiStop = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (0x663036303154616c6b4b616d657800).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
+                0x663036303154616c6b4b616d657800).to_bytes(
                 15,
                 'big'
             ),
@@ -68,7 +69,7 @@ special_spawn_conditions = PatchPattern(
 
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
                 4,
                 'big'
             ),
@@ -76,7 +77,7 @@ special_spawn_conditions = PatchPattern(
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0x1f810010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x1f810010).to_bytes(
                 4,
                 'big'
             ),
@@ -105,7 +106,7 @@ switchB = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
                 data, string_section_start, f0602FuwarideTaxiStop
             ),
             new_instruction_readable="lstr f0601TalkKamex"
@@ -146,7 +147,7 @@ taxi_stop = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: patch_taxi_stop(plando_dict),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: patch_taxi_stop(plando_dict),
             new_instruction_readable="push 0x1"
         ),
 

@@ -223,9 +223,16 @@ def create_lstr_script(data: bytearray, start_string_section_pattern: PatchPatte
     return lstr_instruction
 
 
-def create_jmp_instruction_script(offset: int, target_identifier: int, matches: dict[int, MemoryData],
+def find_pattern_matches_by_name(patterns: list[PatchPattern], name: str):
+    return next((p for p in patterns if p.name == name), None).get_matches()[0].matched_instructions
+
+
+def create_jmp_instruction_script(offset: int, target_identifier: int, patch_patterns: list[PatchPattern],
+                                  pattern_name: str,
                                   condition: Literal["jmp"] | Literal["jnz"] | Literal["jz"] = "jmp"):
-    target_address = matches.get(target_identifier).address
+    pattern = find_pattern_matches_by_name(patch_patterns, pattern_name)
+    target_address = pattern.get(target_identifier).address
+
     branch_offset = target_address - (offset + 0x4)
     operand = branch_offset // 4
 

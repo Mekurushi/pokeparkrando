@@ -28,7 +28,7 @@ error_slFindModule = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x663033303254616c6b5472656500).to_bytes(14, 'big'),
             new_instruction_readable="ds f0302TalkTree"
         ),
@@ -60,7 +60,7 @@ step01 = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
                 data, string_section_start,
                 error_slFindModule
             ),
@@ -68,12 +68,16 @@ step01 = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="push 0x0"
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x000b0016).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x000b0016).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="eq"
         ),
     ],
