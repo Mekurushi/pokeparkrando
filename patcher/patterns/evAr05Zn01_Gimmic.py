@@ -1,7 +1,7 @@
 from patcher.helper.entrance_exit_names import HAUNTED_ZONE_MAIN_AREA_MANSION_GATE
 from patcher.helper.patttern_handler import compute_call_to_function_script, create_lstr_script, \
     get_exit_zone_area_position_data, parse_pattern_bytes, \
-    create_jmp_instruction_script, patch_taxi_stop
+    patch_taxi_stop
 from patcher.models.models import PatchPattern, Instruction, Patch
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
 
@@ -32,7 +32,7 @@ f0101FuwarideTaxiStop = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x663035303154616c6b4d6f7a79616e626f00).to_bytes(18, 'big'),
             new_instruction_readable="ds f0501TalkMozyanbo"
         ),
@@ -54,7 +54,7 @@ f0301FuwarideTaxiStop = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x663035303153656b69686900).to_bytes(12, 'big'),
             new_instruction_readable="ds f0501Sekihi"
         ),
@@ -113,7 +113,7 @@ mansion_door = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -121,7 +121,7 @@ mansion_door = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00030010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00030010).to_bytes(
                 4,
                 'big'
             ),
@@ -129,7 +129,7 @@ mansion_door = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000b).to_bytes(
                 4,
                 'big'
             ),
@@ -137,7 +137,7 @@ mansion_door = PatchPattern(
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00510010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00510010).to_bytes(
                 4,
                 'big'
             ),
@@ -145,7 +145,7 @@ mansion_door = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00150301).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00150301).to_bytes(
                 4,
                 'big'
             ),
@@ -153,7 +153,7 @@ mansion_door = PatchPattern(
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000012).to_bytes(
                 4,
                 'big'
             ),
@@ -162,7 +162,7 @@ mansion_door = PatchPattern(
 
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
                 4,
                 'big'
             ),
@@ -170,7 +170,7 @@ mansion_door = PatchPattern(
         ),
         Patch(
             identifier=9,
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffd000c).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffd000c).to_bytes(
                 4,
                 'big'
             ),
@@ -178,7 +178,7 @@ mansion_door = PatchPattern(
         ),
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffd000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffd000b).to_bytes(
                 4,
                 'big'
             ),
@@ -217,7 +217,8 @@ ZONECHANGEDR = PatchPattern(
 
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 HAUNTED_ZONE_MAIN_AREA_MANSION_GATE, "zone"
             ),
@@ -225,7 +226,8 @@ ZONECHANGEDR = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 HAUNTED_ZONE_MAIN_AREA_MANSION_GATE, "area"
             ),
@@ -233,7 +235,8 @@ ZONECHANGEDR = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 HAUNTED_ZONE_MAIN_AREA_MANSION_GATE, "position"
             ),
@@ -294,7 +297,7 @@ set_kakuna_location_function = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010007).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010007).to_bytes(
                 4,
                 'big'
             ),
@@ -302,21 +305,22 @@ set_kakuna_location_function = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
                 data, string_section_start, globalManager
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_to_function_script(
                 offset, data, get_module
             ),
             new_instruction_readable="call get_module"
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000012).to_bytes(
                 4,
                 'big'
             ),
@@ -324,7 +328,7 @@ set_kakuna_location_function = PatchPattern(
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000c).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000c).to_bytes(
                 4,
                 'big'
             ),
@@ -332,7 +336,7 @@ set_kakuna_location_function = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
                 4,
                 'big'
             ),
@@ -340,14 +344,14 @@ set_kakuna_location_function = PatchPattern(
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
                 data, string_section_start, f0101FuwarideTaxiStop
             ),
             new_instruction_readable="lstr f0501TalkMozyanbo"
         ),
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000b).to_bytes(
                 4,
                 'big'
             ),
@@ -355,7 +359,7 @@ set_kakuna_location_function = PatchPattern(
         ),
         Patch(
             identifier=9,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
                 4,
                 'big'
             ),
@@ -363,7 +367,7 @@ set_kakuna_location_function = PatchPattern(
         ),
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00150401).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00150401).to_bytes(
                 4,
                 'big'
             ),
@@ -371,7 +375,7 @@ set_kakuna_location_function = PatchPattern(
         ),
         Patch(
             identifier=11,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00020006).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00020006).to_bytes(
                 4,
                 'big'
             ),
@@ -432,7 +436,7 @@ set_metapod_location_function = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010007).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010007).to_bytes(
                 4,
                 'big'
             ),
@@ -440,21 +444,22 @@ set_metapod_location_function = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
                 data, string_section_start, globalManager
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_to_function_script(
                 offset, data, get_module
             ),
             new_instruction_readable="call get_module"
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000012).to_bytes(
                 4,
                 'big'
             ),
@@ -462,7 +467,7 @@ set_metapod_location_function = PatchPattern(
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000c).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000c).to_bytes(
                 4,
                 'big'
             ),
@@ -470,7 +475,7 @@ set_metapod_location_function = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
                 4,
                 'big'
             ),
@@ -478,14 +483,14 @@ set_metapod_location_function = PatchPattern(
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
                 data, string_section_start, f0301FuwarideTaxiStop
             ),
             new_instruction_readable="lstr f0501Sekihi"
         ),
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000b).to_bytes(
                 4,
                 'big'
             ),
@@ -493,7 +498,7 @@ set_metapod_location_function = PatchPattern(
         ),
         Patch(
             identifier=9,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
                 4,
                 'big'
             ),
@@ -501,7 +506,7 @@ set_metapod_location_function = PatchPattern(
         ),
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00150401).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00150401).to_bytes(
                 4,
                 'big'
             ),
@@ -509,7 +514,7 @@ set_metapod_location_function = PatchPattern(
         ),
         Patch(
             identifier=11,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00020006).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00020006).to_bytes(
                 4,
                 'big'
             ),
@@ -555,7 +560,7 @@ TREECOCOON = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
                 data, string_section_start, f0101FuwarideTaxiStop
             ),
             new_instruction_readable="lstr fTalkFuwaride"
@@ -563,7 +568,7 @@ TREECOCOON = PatchPattern(
 
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
                 4,
                 'big'
             ),
@@ -572,7 +577,7 @@ TREECOCOON = PatchPattern(
 
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -580,7 +585,8 @@ TREECOCOON = PatchPattern(
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_to_function_script(
                 offset, data, set_kakuna_location_function
             ),
             new_instruction_readable="call set_kakuna_location_function"
@@ -626,7 +632,7 @@ TREETRANSEL = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
                 data, string_section_start, f0301FuwarideTaxiStop
             ),
             new_instruction_readable="lstr f0501Sekihi"
@@ -634,7 +640,7 @@ TREETRANSEL = PatchPattern(
 
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
                 4,
                 'big'
             ),
@@ -643,7 +649,7 @@ TREETRANSEL = PatchPattern(
 
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -651,7 +657,8 @@ TREETRANSEL = PatchPattern(
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_to_function_script(
                 offset, data, set_metapod_location_function
             ),
             new_instruction_readable="call set_metapod_location_function"
@@ -692,7 +699,7 @@ taxi_stop = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: patch_taxi_stop(plando_dict),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: patch_taxi_stop(plando_dict),
             new_instruction_readable="push 0x1"
         ),
 

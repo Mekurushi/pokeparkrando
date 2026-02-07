@@ -34,7 +34,8 @@ EMAPA02_Z01 = PatchPattern(
 
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_TREEHOUSE_CONNECTION, "zone"
             ),
@@ -42,7 +43,8 @@ EMAPA02_Z01 = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_TREEHOUSE_CONNECTION, "area"
             ),
@@ -50,7 +52,8 @@ EMAPA02_Z01 = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_TREEHOUSE_CONNECTION, "position"
             ),
@@ -89,7 +92,8 @@ EMAPA01_Z02 = PatchPattern(
 
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_VENUSAUR_GATE, "zone"
             ),
@@ -97,7 +101,8 @@ EMAPA01_Z02 = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_VENUSAUR_GATE, "area"
             ),
@@ -105,7 +110,8 @@ EMAPA01_Z02 = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_VENUSAUR_GATE, "position"
             ),
@@ -144,7 +150,8 @@ EMAPA99_Z01 = PatchPattern(
 
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_POKEPARK_ENTRANCE_GATE, "zone"
             ),
@@ -152,7 +159,8 @@ EMAPA99_Z01 = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_POKEPARK_ENTRANCE_GATE, "area"
             ),
@@ -160,7 +168,8 @@ EMAPA99_Z01 = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_POKEPARK_ENTRANCE_GATE, "position"
             ),

@@ -16,7 +16,8 @@ f0301FuwarideTaxiStop_Ar01Zn01 = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (0x663031303148696465416e645365656b00).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
+                0x663031303148696465416e645365656b00).to_bytes(
                 17, 'big'
             ),
             new_instruction_readable="ds f0101HideAndSeek"
@@ -38,7 +39,8 @@ f0302FuwarideTaxiStop_Ar01Zn01 = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (0x66303130314576656e745445303300).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
+                0x66303130314576656e745445303300).to_bytes(
                 15, 'big'
             ),
             new_instruction_readable="ds f0101EventTE03"
@@ -61,7 +63,8 @@ f0401FuwarideTaxiStop_Ar01Zn01 = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (0x663031303154616c6b4d616e6b657900).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
+                0x663031303154616c6b4d616e6b657900).to_bytes(
                 16, 'big'
             ),
             new_instruction_readable="ds f0101TalkMankey"
@@ -133,21 +136,23 @@ caterpie_tree_gimmic = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
                 data, string_section_start, f0301FuwarideTaxiStop_Ar01Zn01
             ),
             new_instruction_readable="f0101HideAndSeek"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="push 0x1"
         ),
 
         #
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
                 data, string_section_start,
                 f0301FuwarideTaxiStop_Ar01Zn01
             ),
@@ -156,7 +161,9 @@ caterpie_tree_gimmic = PatchPattern(
 
         Patch(
             identifier=9,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="delay(0)"
         ),
 
@@ -200,19 +207,21 @@ weedle_tree_gimmic_logic = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
                 data, string_section_start, f0302FuwarideTaxiStop_Ar01Zn01
             ),
             new_instruction_readable="f0101EventTE03"
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="delay(0)"
         ),
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
                 data, string_section_start,
                 f0302FuwarideTaxiStop_Ar01Zn01
             ),
@@ -220,12 +229,16 @@ weedle_tree_gimmic_logic = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000b).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="f0101HideAndSeek"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="push 0x1"
         ),
 
@@ -256,14 +269,16 @@ weedle_tree_gimmic = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
                 data, string_section_start, f0302FuwarideTaxiStop_Ar01Zn01
             ),
             new_instruction_readable="f0101EventTE03"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="push 0x1"
         ),
 
@@ -295,14 +310,16 @@ shroomish_box_gimmic = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
                 data, string_section_start, f0401FuwarideTaxiStop_Ar01Zn01
             ),
             new_instruction_readable="f0101TalkMankey"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="push 0x1"
         ),
 
@@ -350,12 +367,14 @@ unlock_function = PatchPattern(
 
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="push 0x1"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
                 data, string_section_start,
                 f0401FuwarideTaxiStop_Ar01Zn01
             ),
@@ -363,27 +382,37 @@ unlock_function = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000b).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="load_arg -0x2"
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="push 0x0"
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00150401).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00150401).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="SC4 0x0:0x15"
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="push 0x1"
         ),
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00040106).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00040106).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="retv -0x4"
         ),
 
@@ -421,7 +450,7 @@ taxi_stop = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: patch_taxi_stop(plando_dict),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: patch_taxi_stop(plando_dict),
             new_instruction_readable="push 0x1"
         ),
 
