@@ -80,8 +80,8 @@ def get_b_instruction(branch_offset: int):
     return instruction
 
 
-def compute_b_instruction_from_identifier(offset: int, data: bytearray, target_identifier: int,
-                                          patch_patterns: list[PatchPattern], pattern_name: str):
+def compute_b_instruction_from_identifier(offset: int, data: bytearray, pattern_name: str,
+                                          patch_patterns: list[PatchPattern], target_identifier: int):
     pattern = find_pattern_by_name(patch_patterns, pattern_name)
     target_offset = pattern.get(target_identifier).address
 
@@ -125,11 +125,17 @@ def get_player_name_from_dict(plando_dict):
 
 
 def find_pattern_by_name(patterns: list[PatchPattern], name: str):
-    return next((p for p in patterns if p.name == name), None).get_matches()[0].matched_instructions
+    matches = next((p for p in patterns if p.name == name), None).get_matches()
+    if len(matches) > 1:
+        raise ValueError("ambiguous match for pattern name: ", name)
+    if len(matches) == 0:
+        raise ValueError("no match found for pattern name: ", name)
+
+    return matches[0].matched_instructions
 
 
-def write_address_of_target_patch(data: bytearray, target_identifier: int,
-                                  patch_patterns: list[PatchPattern], pattern_name: str) -> bytes:
+def write_address_of_target_patch(data: bytearray, patch_patterns: list[PatchPattern], pattern_name: str,
+                                  target_identifier: int) -> bytes:
     pattern = find_pattern_by_name(patch_patterns, pattern_name)
     target_offset = pattern.get(target_identifier).address
     dol = DOL()
@@ -139,15 +145,28 @@ def write_address_of_target_patch(data: bytearray, target_identifier: int,
     return target_address.to_bytes(4, 'big')
 
 
-def write_address_of_target_patch_by_pattern(data: bytearray, patch_patterns: list[PatchPattern], pattern_name: str,
-                                             target_identifier: int) -> bytes:
+def get_addr16_ha(data: bytearray, patch_patterns: list[PatchPattern], pattern_name: str,
+                  target_identifier: int) -> bytes:
     pattern = find_pattern_by_name(patch_patterns, pattern_name)
     target_offset = pattern.get(target_identifier).address
     dol = DOL()
     stream = io.BytesIO(data)
     dol.read(stream)
     target_address: int = dol.convert_offset_to_address(target_offset)
-    return target_address.to_bytes(4, 'big')
+    upper = (target_address + 0x8000) >> 16
+    return (upper & 0xFFFF).to_bytes(2, 'big')
+
+
+def get_addr16_lo(data: bytearray, patch_patterns: list[PatchPattern], pattern_name: str,
+                  target_identifier: int) -> bytes:
+    pattern = find_pattern_by_name(patch_patterns, pattern_name)
+    target_offset = pattern.get(target_identifier).address
+    dol = DOL()
+    stream = io.BytesIO(data)
+    dol.read(stream)
+    target_address: int = dol.convert_offset_to_address(target_offset)
+    lower = target_address & 0xFFFF
+    return lower.to_bytes(2, 'big')
 
 
 def make_lis(reg: int, imm16: int) -> int:
@@ -164,34 +183,6 @@ def get_upper_address(address: int) -> int:
 
 def get_lower_address(address: int) -> int:
     return address & 0xFFFF
-
-
-def li_upper_address_from_identifier(data: bytearray, target_identifier: int,
-                                     patch_patterns: list[PatchPattern], pattern_name: str, register: int):
-    pattern = find_pattern_by_name(patch_patterns, pattern_name)
-    target_offset = pattern.get(target_identifier).address
-    dol = DOL()
-    stream = io.BytesIO(data)
-    dol.read(stream)
-    target_address: int = dol.convert_offset_to_address(target_offset)
-    upper = get_upper_address(target_address)
-
-    instruction = make_lis(register, upper)
-    return instruction.to_bytes(4, 'big')
-
-
-def ori_lower_address_from_identifier(data: bytearray, target_identifier: int,
-                                      patch_patterns: list[PatchPattern], pattern_name: str, register: int):
-    pattern = find_pattern_by_name(patch_patterns, pattern_name)
-    target_offset = pattern.get(target_identifier).address
-    dol = DOL()
-    stream = io.BytesIO(data)
-    dol.read(stream)
-    target_address: int = dol.convert_offset_to_address(target_offset)
-    lower = get_lower_address(target_address)
-
-    instruction = make_ori(register, lower)
-    return instruction.to_bytes(4, 'big')
 
 
 def li_upper_address_from_pattern(data: bytearray, patch_patterns: list[PatchPattern], pattern_name: str,
@@ -392,64 +383,6 @@ global_manager_syscall_handler_pattern = PatchPattern(
             instruction_readable="or r30, r3, r3"
         ),
     ],
-)
-
-mnFieldInfo_syscall_handler = PatchPattern(
-    name="mnFieldInfo module syscall handler",
-    patternJP=[
-        Instruction(
-            identifier=1, offset=0x0, pattern=parse_pattern_bytes("94 21 ff c0"),
-            instruction_readable="stwu r1, -0x40 (r1)"
-        ),
-        Instruction(
-            identifier=2, offset=0x4, pattern=parse_pattern_bytes("7c 08 02 a6"),
-            instruction_readable="mfspr r0, LR"
-        ),
-        Instruction(
-            identifier=3, offset=0x8, pattern=parse_pattern_bytes("90 01 00 44"),
-            instruction_readable="stw r0, 0x44 (r1)"
-        ),
-        Instruction(
-            identifier=5, offset=0x0c, pattern=parse_pattern_bytes("39 61 00 30"),
-            instruction_readable="addi r11,r1, 0x30"
-        ),
-        Instruction(
-            identifier=6, offset=0x10, pattern=parse_pattern_bytes("db e1 00 30"),
-            instruction_readable="stfd f31, 0x30 (r1)"
-        ),
-        Instruction(
-            identifier=7, offset=0x14, pattern=parse_pattern_bytes("f3 e1 00 38"),
-            instruction_readable="psq_st f31, 0x38(r1), 0x0, GQR0"
-        ),
-        Instruction(
-            identifier=8, offset=0x18, pattern=parse_pattern_bytes("48 ?? ?? ??"),
-            instruction_readable="bl ???"
-        ),
-        Instruction(
-            identifier=9, offset=0x1c, pattern=parse_pattern_bytes("28 04 00 3c"),
-            instruction_readable="cmplwi r4, 0x3c"
-        ),
-
-        # case 0x11 (banner)
-        Instruction(
-            identifier=10, offset=0x31c, pattern=parse_pattern_bytes("83 65 00 00"),
-            instruction_readable="lwz r27, 0x0 (r5)"
-        ),
-        # .
-        Instruction(
-            identifier=11, offset=0x34c, pattern=parse_pattern_bytes("4e 80 ?? ??"),
-            instruction_readable="bctrl"
-        ),
-    ],
-    patchMapJP=[
-        Patch(
-            identifier=11,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
-                offset, data, patch_patterns, wrapper.name, 1
-            ),
-            new_instruction_readable="bl wrapped message_id_to_index"
-        ),
-    ]
 )
 
 data_space = PatchPattern(
@@ -676,10 +609,7 @@ data_space = PatchPattern(
         Patch(
             identifier=5,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: write_address_of_target_patch(
-                data, 1,
-                patch_patterns, pattern_name
-            ),
+                                  pattern_name: write_address_of_target_patch(data, patch_patterns, pattern_name, 1),
             new_instruction_readable="GlobalManager string pointer"
         ),
         Patch(
@@ -692,10 +622,7 @@ data_space = PatchPattern(
         Patch(
             identifier=10,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: write_address_of_target_patch(
-                data, 6,
-                patch_patterns, pattern_name
-            ),
+                                  pattern_name: write_address_of_target_patch(data, patch_patterns, pattern_name, 6),
             new_instruction_readable="SceneManager string pointer"
         ),
         Patch(
@@ -709,10 +636,7 @@ data_space = PatchPattern(
         Patch(
             identifier=15,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: write_address_of_target_patch(
-                data, 11,
-                patch_patterns, pattern_name
-            ),
+                                  pattern_name: write_address_of_target_patch(data, patch_patterns, pattern_name, 11),
             new_instruction_readable="mnFieldInfo string pointer"
         ),
 
@@ -727,10 +651,7 @@ data_space = PatchPattern(
         Patch(
             identifier=19,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: write_address_of_target_patch(
-                data, 16,
-                patch_patterns, pattern_name
-            ),
+                                  pattern_name: write_address_of_target_patch(data, patch_patterns, pattern_name, 16),
             new_instruction_readable="mnLobby string pointer"
         ),
         Patch(
@@ -744,10 +665,7 @@ data_space = PatchPattern(
         Patch(
             identifier=23,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: write_address_of_target_patch(
-                data, 20,
-                patch_patterns, pattern_name
-            ),
+                                  pattern_name: write_address_of_target_patch(data, patch_patterns, pattern_name, 20),
             new_instruction_readable="mnAtInfo string pointer"
         ),
         # misc strings
@@ -897,7 +815,9 @@ main_routine = PatchPattern(
             identifier=7,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns,
-                mn_field_info_interface.name, 1
+                __import__(
+                    'patcher.patterns.custom.custom_patches', fromlist=['custom_functions_cgu0_print_archipelago_text']
+                ).custom_functions_cgu0_print_archipelago_text.name, 1
             ),
             new_instruction_readable="call mnFieldInfoInterface"
         ),
@@ -1102,18 +1022,16 @@ global_manager_interface = PatchPattern(
         Patch(
             identifier=4,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: li_upper_address_from_identifier(
-                data, 29,
-                patch_patterns, pattern_name, 30
+                                  pattern_name: li_upper_address_from_pattern(
+                data, patch_patterns, pattern_name, 29, 30
             ),
             new_instruction_readable="li r30, parameter1_upper"
         ),
         Patch(
             identifier=5,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: ori_lower_address_from_identifier(
-                data, 29,
-                patch_patterns, pattern_name, 30
+                                  pattern_name: ori_lower_address_from_pattern(
+                data, patch_patterns, pattern_name, 29, 30
             ),
             new_instruction_readable="ori r30, parameter1_lower"
         ),
@@ -1465,18 +1383,16 @@ scene_manager_interface = PatchPattern(
         Patch(
             identifier=4,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: li_upper_address_from_identifier(
-                data, 30,
-                patch_patterns, pattern_name, 3
+                                  pattern_name: li_upper_address_from_pattern(
+                data, patch_patterns, pattern_name, 30, 3
             ),
             new_instruction_readable="lis r3, parameter1"
         ),
         Patch(
             identifier=5,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: ori_lower_address_from_identifier(
-                data, 30,
-                patch_patterns, pattern_name, 3
+                                  pattern_name: ori_lower_address_from_pattern(
+                data, patch_patterns, pattern_name, 30, 3
             ),
             new_instruction_readable="ori r3, r3, parameter1"
         ),
@@ -1538,19 +1454,16 @@ scene_manager_interface = PatchPattern(
         Patch(
             identifier=13,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: li_upper_address_from_identifier(
-                data, 29,
-                patch_patterns, pattern_name, 5
+                                  pattern_name: li_upper_address_from_pattern(
+                data, patch_patterns, pattern_name, 29, 5
             ),
             new_instruction_readable="lis r5, SceneName pointer"
         ),
         Patch(
             identifier=14,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: ori_lower_address_from_identifier(
-                data, 29,
-                patch_patterns, pattern_name,
-                5
+                                  pattern_name: ori_lower_address_from_pattern(
+                data, patch_patterns, pattern_name, 29, 5
             ),
             new_instruction_readable="ori r5, r5, SceneName pointer"
         ),
@@ -1606,18 +1519,16 @@ scene_manager_interface = PatchPattern(
         Patch(
             identifier=21,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: li_upper_address_from_identifier(
-                data, 30,
-                patch_patterns, pattern_name, 3
+                                  pattern_name: li_upper_address_from_pattern(
+                data, patch_patterns, pattern_name, 30, 3
             ),
             new_instruction_readable="lis r3, parameter1"
         ),
         Patch(
             identifier=22,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: ori_lower_address_from_identifier(
-                data, 30,
-                patch_patterns, pattern_name, 3
+                                  pattern_name: ori_lower_address_from_pattern(
+                data, patch_patterns, pattern_name, 30, 3
             ),
             new_instruction_readable="ori r3, r3, parameter1"
         ),
@@ -1669,9 +1580,8 @@ scene_manager_interface = PatchPattern(
         Patch(
             identifier=29,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: write_address_of_target_patch_by_pattern(
-                data,
-                patch_patterns, data_space.name, 31
+                                  pattern_name: write_address_of_target_patch(
+                data, patch_patterns, data_space.name, 31
             ),
             new_instruction_readable="SceneName string pointer"
         ),
@@ -1681,521 +1591,6 @@ scene_manager_interface = PatchPattern(
                 4, 'big'
             ),
             new_instruction_readable="parameter1"
-        ),
-    ]
-)
-
-mn_field_info_interface = PatchPattern(
-    name="mnFieldInfoInterface",
-    patternJP=[
-        Instruction(
-            identifier=1, offset=0x00, pattern=parse_pattern_bytes("8c ea 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=2, offset=0x04, pattern=parse_pattern_bytes("90 bd e6 72"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=3, offset=0x08, pattern=parse_pattern_bytes("00 00 e6 77"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=4, offset=0x0c, pattern=parse_pattern_bytes("8c eb e6 74"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=5, offset=0x10, pattern=parse_pattern_bytes("e6 75 fb a6"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=6, offset=0x14, pattern=parse_pattern_bytes("e6 71 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=7, offset=0x18, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=8, offset=0x1c, pattern=parse_pattern_bytes("90 e0 93 c7"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=9, offset=0x20, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=10, offset=0x24, pattern=parse_pattern_bytes("92 4e 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=11, offset=0x28, pattern=parse_pattern_bytes("89 db 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=12, offset=0x2c, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=13, offset=0x30, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=14, offset=0x34, pattern=parse_pattern_bytes("00 00 94 ee"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=15, offset=0x38, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=16, offset=0x3c, pattern=parse_pattern_bytes("8b 62 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=17, offset=0x40, pattern=parse_pattern_bytes("fb a7 92 b2"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=18, offset=0x44, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=19, offset=0x48, pattern=parse_pattern_bytes("e6 7a 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=20, offset=0x4c, pattern=parse_pattern_bytes("e6 78 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=21, offset=0x50, pattern=parse_pattern_bytes("00 00 92 6b"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=22, offset=0x54, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=23, offset=0x58, pattern=parse_pattern_bytes("00 00 90 bf"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=24, offset=0x5c, pattern=parse_pattern_bytes("8a d0 e6 79"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=25, offset=0x60, pattern=parse_pattern_bytes("00 00 90 7a"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=26, offset=0x64, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=27, offset=0x68, pattern=parse_pattern_bytes("97 c8 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=28, offset=0x6c, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=29, offset=0x70, pattern=parse_pattern_bytes("98 5f 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=30, offset=0x74, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=31, offset=0x78, pattern=parse_pattern_bytes("e6 7b e6 87"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=32, offset=0x7c, pattern=parse_pattern_bytes("92 b3 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=33, offset=0x80, pattern=parse_pattern_bytes("e6 86 fb a8"),
-            instruction_readable="- - -"
-        ),
-    ],
-    patchMapJP=[
-        # function header
-        Patch(
-            identifier=1,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x9421FFF0).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="stwu sp, -0x0010 (sp)"
-        ),
-        Patch(
-            identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x7c0802a6).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="mflr r0"
-        ),
-        Patch(
-            identifier=3,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x9001000C).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="stw r0, 0x000c (sp)"
-        ),
-        # function body
-        Patch(
-            identifier=4,
-            patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: li_upper_address_from_identifier(
-                data, 28,
-                patch_patterns, pattern_name, 30
-            ),
-            new_instruction_readable="li r30, parameter1_upper"
-        ),
-        Patch(
-            identifier=5,
-            patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: ori_lower_address_from_identifier(
-                data, 28,
-                patch_patterns, pattern_name, 30
-            ),
-            new_instruction_readable="ori r30, parameter1_lower"
-        ),
-
-        Patch(
-            identifier=6,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x809EFFFC).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="lwz r4, -0x4 (r30)"
-        ),
-        Patch(
-            identifier=7,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x811E0000).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="lwz r8, 0 (r30)"
-        ),
-        Patch(
-            identifier=8,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x2C04FFFF).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="cmpwi r4, 0xffff"
-        ),
-        Patch(
-            identifier=9,
-            patch_function=lambda offset, data, plando_dict,
-                                  patch_patterns, pattern_name: compute_conditional_branch_instruction_from_identifier(
-                offset, data, 23, patch_patterns, pattern_name, "beq"
-            ),
-            new_instruction_readable="beq-"
-        ),
-        Patch(
-            identifier=10,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x2c08ffff).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="cmpwi r8, 0xffff"
-        ),
-        Patch(
-            identifier=11,
-            patch_function=lambda offset, data, plando_dict,
-                                  patch_patterns, pattern_name: compute_conditional_branch_instruction_from_identifier(
-                offset, data, 23, patch_patterns, pattern_name, "beq"
-            ),
-            new_instruction_readable="beq-"
-        ),
-
-        Patch(
-            identifier=12,
-            patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: li_upper_address_from_pattern(
-                data, patch_patterns, data_space.name, 15, 3
-            ),
-            new_instruction_readable="lis r3, mnFieldInfo string pointer"
-        ),
-        Patch(
-            identifier=13,
-            patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: ori_lower_address_from_pattern(
-                data, patch_patterns, data_space.name, 15, 3
-            ),
-            new_instruction_readable="ori r3, r3, mnFieldInfo string pointer"
-        ),
-        Patch(
-            identifier=14,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
-                offset, data, patch_patterns,
-                module_lookup.name, 1
-            ),
-            new_instruction_readable="bl lookup_module"
-        ),
-
-        Patch(
-            identifier=15,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x809EFFFC).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="lwz r4, -0x4 (r30)"
-        ),
-
-        Patch(
-            identifier=16,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x7FC5F378).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="mr r5, r30"
-        ),
-        Patch(
-            identifier=17,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x38e0ffff).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="li r7, 0xffff"
-        ),
-
-        Patch(
-            identifier=18,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x90FEFFFC).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="stw r7, -0x4 (r30)"  # block usage during execution
-        ),
-
-        Patch(
-            identifier=19,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
-                offset, data, patch_patterns,
-                mnFieldInfo_syscall_handler.name, 1
-            ),
-            new_instruction_readable="bl mnFieldInfo syscall"
-        ),
-        Patch(
-            identifier=20,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x38e0ffff).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="li r7, 0xffff"
-        ),
-        Patch(
-            identifier=21,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x90FE0000).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="stw r7, 0x0 (r30)"  # cleanup parameter1
-        ),
-        Patch(
-            identifier=22,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x90FE0004).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="stw r7, 0x4 (r30)"  # cleanup parameter2
-        ),
-        # function ending
-        Patch(
-            identifier=23,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x8001000C).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="lwz r0, 0x000c (sp)"
-        ),
-        Patch(
-            identifier=24,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x7c0803a6).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="mtlr r0"
-        ),
-        Patch(
-            identifier=25,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x38210010).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="addi sp, sp, 16"
-        ),
-        Patch(
-            identifier=26,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x4e800020).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="blr"
-        ),
-        # data
-        Patch(
-            identifier=27,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xFFFFFFFF).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="opcode"
-        ),
-        Patch(
-            identifier=28,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xFFFFFFFF).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="parameter1"
-        ),
-        Patch(
-            identifier=29,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xFFFFFFFF).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="parameter2"
-        ),
-        Patch(
-            identifier=30,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: "00_00000".encode(
-                "ascii"
-            ) + b'\x00',
-            new_instruction_readable="00_00000"
-        ),
-
-    ]
-)
-
-inject_custom_function = PatchPattern(
-    name="injecting custom function routine",
-    patternJP=[
-        Instruction(
-            identifier=1, offset=0x0, pattern=parse_pattern_bytes("7f 83 e3 78"),
-            instruction_readable="mr r3, r30"
-        ),
-
-        Instruction(
-            identifier=2, offset=0x4, pattern=parse_pattern_bytes("7f e5 fb 78"),
-            instruction_readable="bl FUN_??????"
-        ),
-        Instruction(
-            identifier=3, offset=0x8, pattern=parse_pattern_bytes("4b ff ?? ??"),
-            instruction_readable="mr r3, r30"
-        ),
-        Instruction(
-            identifier=4, offset=0xc, pattern=parse_pattern_bytes("7f 83 e3 78"),
-            instruction_readable="lwz r0, 0x0014 (sp)"
-        ),
-        Instruction(
-            identifier=5, offset=0x10, pattern=parse_pattern_bytes("7f a4 eb 78"),
-            instruction_readable="lwz r31, 0x000c (sp)"
-        ),
-        Instruction(
-            identifier=6, offset=0x14, pattern=parse_pattern_bytes("7f c5 f3 78"),
-            instruction_readable="lwz r30, 0x0008 (sp)"
-        ),
-        Instruction(
-            identifier=7, offset=0x18, pattern=parse_pattern_bytes("4b ff ?? ??"),
-            instruction_readable="mtlr r0"
-        ),
-        Instruction(
-            identifier=8, offset=0x1c, pattern=parse_pattern_bytes("48 00 00 08"),
-            instruction_readable="addi sp, sp, 16"
-        ),
-        Instruction(
-            identifier=9, offset=0x20, pattern=parse_pattern_bytes("38 60 00 00"),
-            instruction_readable="blr"
-        ),
-        Instruction(
-            identifier=10, offset=0x24, pattern=parse_pattern_bytes("80 01 00 24"),
-            instruction_readable="blr"
-        ),
-        Instruction(
-            identifier=11, offset=0x28, pattern=parse_pattern_bytes("83 e1 00 1c"),
-            instruction_readable="blr"
-        ),
-        Instruction(
-            identifier=12, offset=0x2c, pattern=parse_pattern_bytes("83 c1 00 18"),
-            instruction_readable="blr"
-        ),
-        Instruction(
-            identifier=13, offset=0x30, pattern=parse_pattern_bytes("83 a1 00 14"),
-            instruction_readable="blr"
-        ),
-        Instruction(
-            identifier=14, offset=0x34, pattern=parse_pattern_bytes("83 81 00 10"),
-            instruction_readable="blr"
-        ),
-        Instruction(
-            identifier=15, offset=0x38, pattern=parse_pattern_bytes("7c 08 03 a6"),
-            instruction_readable="blr"
-        ),
-        Instruction(
-            identifier=16, offset=0x3c, pattern=parse_pattern_bytes("38 21 00 20"),
-            instruction_readable="blr"
-        ),
-        Instruction(
-            identifier=17, offset=0x40, pattern=parse_pattern_bytes("4e 80 00 20"),
-            instruction_readable="blr"
-        ),
-        Instruction(
-            identifier=18, offset=0x44, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="blr"
-        ),
-    ], patchMapJP=[
-        Patch(
-            identifier=10,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
-                offset, data, patch_patterns,
-                main_routine.name, 1
-            ),
-            new_instruction_readable="bl main_routine"
-        ),
-        Patch(
-            identifier=11,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x080010024).to_bytes(
-                length=4, byteorder='big'
-            ),
-            new_instruction_readable="lwz r0, 0x0014 (sp)"
-        ),
-        Patch(
-            identifier=12,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x83e1001c).to_bytes(
-                length=4, byteorder='big'
-            ),
-            new_instruction_readable="lwz r31, 0x000C (sp)"
-        ),
-        Patch(
-            identifier=13,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x83c10018).to_bytes(
-                length=4, byteorder='big'
-            ),
-            new_instruction_readable="lwz r30, 0x0008 (sp)"
-        ),
-        Patch(
-            identifier=14,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x83a10014).to_bytes(
-                length=4, byteorder='big'
-            ),
-            new_instruction_readable="mtlr r0"
-        ),
-        Patch(
-            identifier=15,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x83810010).to_bytes(
-                length=4, byteorder='big'
-            ),
-            new_instruction_readable="addi sp, sp, 16"
-        ),
-        Patch(
-            identifier=16,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x7c0803a6).to_bytes(
-                length=4, byteorder='big'
-            ),
-            new_instruction_readable="blr"
-        ),
-        Patch(
-            identifier=17,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x38210020).to_bytes(
-                length=4, byteorder='big'
-            ),
-            new_instruction_readable="blr"
-        ),
-        Patch(
-            identifier=18,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x4e800020).to_bytes(
-                length=4, byteorder='big'
-            ),
-            new_instruction_readable="blr"
         ),
     ]
 )
@@ -2347,9 +1742,7 @@ custom_global_manager_syscall_handler_wrapper = PatchPattern(
             identifier=7,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
                                   pattern_name: compute_b_instruction_from_identifier(
-                offset,
-                data, 10,
-                patch_patterns, pattern_name
+                offset, data, pattern_name, patch_patterns, 10
             ),
             new_instruction_readable="b global_manager_syscall_handler"
         ),
@@ -2485,43 +1878,8 @@ global_manager_v_table = PatchPattern(
         Patch(
             identifier=2,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: write_address_of_target_patch_by_pattern(
-                data,
-                patch_patterns, custom_global_manager_syscall_handler_wrapper.name, 1
-            ),
-            new_instruction_readable="blr"
-        ),
-    ]
-)
-
-resident_text_v_table = PatchPattern(
-    name="resident_text_v_table",
-    patternJP=[
-        Instruction(
-            identifier=1, offset=0x0, pattern=parse_pattern_bytes(
-                "2f 4d 65 73 73 61 67 65 2f"
-            ),
-            instruction_readable="/Message/"
-        ),
-        Instruction(
-            identifier=2, offset=0xb, pattern=parse_pattern_bytes(
-                "2f 52 65 73 69 64 65 6e 74 2e 62 6d 67"
-            ),
-            instruction_readable="/Resident.bmg"
-        ),
-
-        Instruction(
-            identifier=3, offset=-0x18, pattern=parse_pattern_bytes("80 ?? ?? ??"),
-            instruction_readable="call resident_text_lookup"
-        ),
-    ],
-    patchMapJP=[
-        Patch(
-            identifier=3,
-            patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: write_address_of_target_patch_by_pattern(
-                data,
-                patch_patterns, wrapper.name, 19
+                                  pattern_name: write_address_of_target_patch(
+                data, patch_patterns, custom_global_manager_syscall_handler_wrapper.name, 1
             ),
             new_instruction_readable="blr"
         ),
@@ -2637,358 +1995,6 @@ attraction_record_unlock = PatchPattern(
     ],
 )
 
-wrapper = PatchPattern(
-    name="wrapper",
-    patternJP=[
-        Instruction(
-            identifier=1, offset=0x00, pattern=parse_pattern_bytes("fb aa e6 85"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=2, offset=0x04, pattern=parse_pattern_bytes("8f 94 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=3, offset=0x08, pattern=parse_pattern_bytes("8c bf 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=4, offset=0x0c, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=5, offset=0x10, pattern=parse_pattern_bytes("91 f8 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=6, offset=0x14, pattern=parse_pattern_bytes("96 64 89 79"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=7, offset=0x18, pattern=parse_pattern_bytes("88 e0 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=8, offset=0x1c, pattern=parse_pattern_bytes("93 a3 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=9, offset=0x20, pattern=parse_pattern_bytes("00 00 e6 89"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=10, offset=0x24, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=11, offset=0x28, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=12, offset=0x2c, pattern=parse_pattern_bytes("e6 88 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=13, offset=0x30, pattern=parse_pattern_bytes("93 e4 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=14, offset=0x34, pattern=parse_pattern_bytes("e6 8d 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=15, offset=0x38, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=16, offset=0x3c, pattern=parse_pattern_bytes("e6 82 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=17, offset=0x40, pattern=parse_pattern_bytes("e6 8c e6 8e"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=18, offset=0x44, pattern=parse_pattern_bytes("00 00 8c aa"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=19, offset=0x48, pattern=parse_pattern_bytes("e6 8a 8d 75"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=20, offset=0x4c, pattern=parse_pattern_bytes("00 00 8e d3"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=21, offset=0x50, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=22, offset=0x54, pattern=parse_pattern_bytes("e6 8f 97 77"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=23, offset=0x58, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=24, offset=0x5c, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=25, offset=0x60, pattern=parse_pattern_bytes("e6 92 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=26, offset=0x64, pattern=parse_pattern_bytes("e6 95 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=27, offset=0x68, pattern=parse_pattern_bytes("00 00 e6 93"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=28, offset=0x6c, pattern=parse_pattern_bytes("95 54 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=29, offset=0x70, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=30, offset=0x74, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=31, offset=0x78, pattern=parse_pattern_bytes("00 00 e6 90"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=32, offset=0x7c, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-        Instruction(
-            identifier=33, offset=0x80, pattern=parse_pattern_bytes("00 00 00 00"),
-            instruction_readable="- - -"
-        ),
-    ],
-    patchMapJP=[
-        # function header
-        Patch(
-            identifier=1,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x9421FFF0).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="stwu sp, -0x0010 (sp)"
-        ),
-        Patch(
-            identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x7c0802a6).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="mflr r0"
-        ),
-        Patch(
-            identifier=3,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x9001000C).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="stw r0, 0x000c (sp)"
-        ),
-        Patch(
-            identifier=4,
-            patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: li_upper_address_from_pattern(
-                data, patch_patterns, "mnFieldInfoInterface", 30, 6
-            ),
-            new_instruction_readable="lis r6, messageId string pointer"
-        ),
-        Patch(
-            identifier=5,
-            patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: ori_lower_address_from_pattern(
-                data, patch_patterns, "mnFieldInfoInterface", 30, 6
-            ),
-            new_instruction_readable="ori r3, r3, messageId string pointer"
-        ),
-        Patch(
-            identifier=6,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x7c043040).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="cmplwi r4,r6"
-        ),
-        Patch(
-            identifier=7,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name:
-            compute_conditional_branch_instruction_from_identifier(
-                offset, data, 10, patch_patterns, pattern_name, "bne"
-            ),
-            new_instruction_readable=" bne original function"
-        ),
-        Patch(
-            identifier=8,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x38607777).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="li r3,0x7777"
-        ),
-        Patch(
-            identifier=9,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name:
-            compute_b_instruction_from_identifier(offset, data, 11, patch_patterns, pattern_name),
-            new_instruction_readable="leave function"
-        ),
-        Patch(
-            identifier=10,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name:
-            compute_bl_to_function(offset, data, patch_patterns, original_message_id_to_index.name, 1),
-            new_instruction_readable="bl original_function"
-        ),
-        # Restore and return
-        Patch(
-            identifier=11,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x8001000C).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="lwz r0, 0x000c (sp)"
-        ),
-        Patch(
-            identifier=12,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x7c0803a6).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="mtlr r0"
-        ),
-        Patch(
-            identifier=13,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x38210010).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="addi sp, sp, 16"
-        ),
-        Patch(
-            identifier=14,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x4e800020).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="blr"
-        ),
-
-        #
-        #
-        #
-        # function header
-        Patch(
-            identifier=19,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x9421FFF0).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="stwu sp, -0x0010 (sp)"
-        ),
-        Patch(
-            identifier=20,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x7c0802a6).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="mflr r0"
-        ),
-        Patch(
-            identifier=21,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x9001000C).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="stw r0, 0x000c (sp)"
-        ),
-        Patch(
-            identifier=22,
-            patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: (0x38c07777).to_bytes(4, 'big'),
-            new_instruction_readable="lis r6, 0x7777"
-        ),
-        Patch(
-            identifier=23,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x7c043040).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="cmplwi r4,r6"
-        ),
-        Patch(
-            identifier=24,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name:
-            compute_conditional_branch_instruction_from_identifier(
-                offset, data, 28, patch_patterns, pattern_name, "bne"
-            ),
-            new_instruction_readable=" bne original function"
-        ),
-        Patch(
-            identifier=25,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name:
-            li_upper_address_from_pattern(data, patch_patterns, wrapper.name, 33, 3),
-            new_instruction_readable="li r3, clientText pointer"
-        ),
-        Patch(
-            identifier=26,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name:
-            ori_lower_address_from_pattern(
-                data, patch_patterns,
-                wrapper.name, 33, 3
-            ),
-            new_instruction_readable="ori r3, clientText pointer"
-        ),
-        Patch(
-            identifier=27,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name:
-            compute_b_instruction_from_identifier(offset, data, 29, patch_patterns, pattern_name),
-            new_instruction_readable="leave function"
-        ),
-        Patch(
-            identifier=28,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name:
-            compute_bl_to_function(offset, data, patch_patterns, original_resident_text_lookup.name, 1),
-            new_instruction_readable="bl original_function"
-        ),
-        # Restore and return
-        Patch(
-            identifier=29,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x8001000C).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="lwz r0, 0x000c (sp)"
-        ),
-        Patch(
-            identifier=30,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x7c0803a6).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="mtlr r0"
-        ),
-        Patch(
-            identifier=31,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x38210010).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="addi sp, sp, 16"
-        ),
-        Patch(
-            identifier=32,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x4e800020).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="blr"
-        ),
-        Patch(
-            identifier=33,  # Client Text
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: "Player1 received "
-                                                                                           "100 Berries".encode(
-                'utf-16-be'
-            ) + b'\x00\x00',
-            new_instruction_readable="ClientText"
-        )
-    ]
-)
-
 original_message_id_to_index = PatchPattern(
     name="messageId to index function",
     patternJP=[
@@ -3054,9 +2060,132 @@ original_resident_text_lookup = PatchPattern(
     ],
 )
 
+main_game_loop_iteration_restore = PatchPattern(
+    name="main game loop iteration restore",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("83 6b ff ec"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=2, offset=0x4, pattern=parse_pattern_bytes("83 8b ff f0"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=3, offset=0x8, pattern=parse_pattern_bytes("83 ab ff f4"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=4, offset=0xc, pattern=parse_pattern_bytes("83 cb ff f8"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=5, offset=0x10, pattern=parse_pattern_bytes("83 eb ff fc"),
+            instruction_readable="---"
+        ),
+        Instruction(
+            identifier=6, offset=0x14, pattern=parse_pattern_bytes("4e 80 00 20"),
+            instruction_readable="---"
+        ),
+    ],
+    patchMapJP=[]
+)
+
+main_game_loop_iteration = PatchPattern(
+    name="main game loop iteration",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("94 21 ff e0"),
+            instruction_readable="stwu r1,local_20(r1)"
+        ),
+        Instruction(
+            identifier=2, offset=0x334, pattern=parse_pattern_bytes("39 61 00 20"),
+            instruction_readable="addi r11,r1,0x20"
+        ),
+        Instruction(
+            identifier=3, offset=0x338, pattern=parse_pattern_bytes("48 2c ?? ??"),
+            instruction_readable="bl restore_main_game_loop_iteration"
+        ),
+        Instruction(
+            identifier=4, offset=0x33c, pattern=parse_pattern_bytes("80 01 00 24"),
+            instruction_readable="lwz r0,local_res4(r1)"
+        ),
+        Instruction(
+            identifier=5, offset=0x340, pattern=parse_pattern_bytes("7c 08 03 a6"),
+            instruction_readable="mtspr LR,r0"
+        ),
+        Instruction(
+            identifier=6, offset=0x344, pattern=parse_pattern_bytes("38 21 00 20"),
+            instruction_readable="addi r1,r1,0x20"
+        ),
+        Instruction(
+            identifier=7, offset=0x348, pattern=parse_pattern_bytes("4e 80 00 20"),
+            instruction_readable="blr"
+        ),
+        Instruction(
+            identifier=8, offset=0x34c, pattern=parse_pattern_bytes("00 00 00 00"),
+            instruction_readable="---"
+        ),
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=2,
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
+                offset, data, patch_patterns,
+                main_routine.name, 1
+            ),
+            new_instruction_readable="bl main_routine"
+        ),
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x39610020).to_bytes(
+                4, 'big'
+            ),
+            new_instruction_readable="addi r11,r1,0x20"
+        ),
+        Patch(
+            identifier=4,
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
+                offset, data, patch_patterns,
+                main_game_loop_iteration_restore.name, 1
+            ),
+            new_instruction_readable="bl main_game_loop_iteration_restore"
+        ),
+        Patch(
+            identifier=5,
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x80010024).to_bytes(
+                4, 'big'
+            ),
+            new_instruction_readable="lwz r0,local_res4(r1)"
+        ),
+        Patch(
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x7c0803a6).to_bytes(
+                4, 'big'
+            ),
+            new_instruction_readable="mtspr LR,r0"
+        ),
+        Patch(
+            identifier=7,
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x38210020).to_bytes(
+                4, 'big'
+            ),
+            new_instruction_readable="addi r1,r1,0x60"
+        ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x4e800020).to_bytes(
+                4, 'big'
+            ),
+            new_instruction_readable="blr"
+        ),
+    ]
+)
+
 main_dol_pattern = [
     module_lookup,
-    inject_custom_function,
+    main_game_loop_iteration_restore,
+    main_game_loop_iteration,
     stage_setup_new_file_pattern,
     load_file_spawn_position,
     ai_difficulty_logic,
@@ -3070,13 +2199,7 @@ main_dol_pattern = [
     global_manager_interface,
     scene_manager_interface,
 
-    wrapper,
-    mn_field_info_interface,
-    mnFieldInfo_syscall_handler,
     data_space,
     scene_manager_syscall_handler,
     global_manager_syscall_handler,
-    original_resident_text_lookup,
-    original_message_id_to_index,
-    resident_text_v_table
 ]

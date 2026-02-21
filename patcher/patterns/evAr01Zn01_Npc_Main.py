@@ -28,7 +28,7 @@ string_section_start = PatchPattern(
 
 f0301BippaFlag = PatchPattern(
     name="ds f0301BippaFlag",
-    description="using f0301BippaFlag string for custom get_module calls",
+    description="using f0301BippaFlag string for custom-functions get_module calls",
     patternJP=[
         Instruction(
             identifier=1, offset=0x0,
@@ -13362,7 +13362,7 @@ evAr01Zn01_Npc_Main_patch_pattern = [
     eventTE03_logic,
     torterra_starly_unlock,
 
-    # custom beach bidoof
+    # custom-functions beach bidoof
     unlock_beach_bidoof_interaction,
     custom_check_f0301BippaFlag_funtion,
 

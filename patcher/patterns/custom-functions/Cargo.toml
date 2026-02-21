@@ -1,0 +1,26 @@
+[package]
+name = "custom-functions"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["staticlib"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+opt-level = 2
+lto = true
+
+[dependencies]
+arrayvec = { version = "0.7.4", default-features = false }
+bitflags = "2.4.2"
+cstr = "0.2.11"
+field-offset = "0.3.4"
+heapless = { version = "0.7.16", default-features = false }
+panic-abort = "0.3.2"
+wchar = "0.11.0"
