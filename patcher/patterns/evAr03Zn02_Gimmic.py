@@ -74,8 +74,9 @@ special_spawn_conditions = PatchPattern(
 
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
-                offset, 6, matches,
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: create_jmp_instruction_script(
+                offset, 6, patch_patterns, pattern_name,
                 "jmp"
             ),
             new_instruction_readable="jmp"

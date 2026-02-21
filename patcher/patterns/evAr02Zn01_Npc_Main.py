@@ -2897,7 +2897,7 @@ piplup_interaction = PatchPattern(
 )
 
 custom_prisma_amount_function = PatchPattern(
-    name="custom get_prisma_amount function",
+    name="custom-functions get_prisma_amount function",
     description="using unused space to get prisma amount",
     patternJP=[
         Instruction(
