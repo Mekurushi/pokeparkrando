@@ -818,7 +818,7 @@ set_attraction_record = PatchPattern(
 )
 
 starly2_interaction = PatchPattern(
-    name="starly interaction ice zone",
+    name="starly 2 interaction ice zone",
     description="added support for each zone option",
     patternJP=[
         Instruction(

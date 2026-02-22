@@ -1,3 +1,4 @@
+from collections import Counter
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
@@ -160,6 +161,10 @@ class FilePatchConfig:
             self.patch_operations = []
         if self.file_group is None:
             self.file_group = []
+        if self.patch_patterns:
+            names = [obj.name for obj in self.patch_patterns]
+            duplicates = [name for name, count in Counter(names).items() if count > 1]
+            assert not duplicates, f"Duplicate name values found: {duplicates}"
 
 
 @dataclass

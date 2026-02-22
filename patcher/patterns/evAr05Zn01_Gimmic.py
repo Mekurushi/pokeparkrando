@@ -41,7 +41,7 @@ f0101FuwarideTaxiStop = PatchPattern(
 )
 
 f0301FuwarideTaxiStop = PatchPattern(
-    name="ds f0101FuwarideTaxiStop",
+    name="ds f0301FuwarideTaxiStop",
     description="replacing f0301FuwarideTaxiStop with flag for metapod location",
     patternJP=[
         Instruction(
