@@ -12553,7 +12553,7 @@ unlock_beach_bidoof_interaction = PatchPattern(
 )
 
 custom_check_f0301BippaFlag_funtion = PatchPattern(
-    name="unused code space",
+    name="f0301BippaFlag check",
     description="using unused code space for f0301BippaFlag check",
     patternJP=[
         Instruction(
@@ -12760,7 +12760,7 @@ thunderbolt_hit_magikarp_event = PatchPattern(
 )
 
 get_mankey_friendship_function = PatchPattern(
-    name="unused code space",
+    name="get_mankey_friendship_function",
     description="get mankey friendship function",
     patternJP=[
         Instruction(

@@ -166,8 +166,8 @@ mew_power_competition = PatchPattern(
 )
 
 spawn_conditions = PatchPattern(
-    name="mew interaction",
-    description="modify mew Power Competition logic to suit ap implementation",
+    name="setup_npcs_and_player",
+    description="modify spawn conditions for npcs and player",
     patternJP=[
         Instruction(
             identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 05 00 07"),
