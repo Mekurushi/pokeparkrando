@@ -24,7 +24,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=4,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 '3c60'
-                ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_archipelago_text_buffer.name, 1),
+            ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_archipelago_text_buffer.name, 1),
             new_instruction_readable="lis     r3,0"
         ),
         Patch(
@@ -41,7 +41,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=7,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 '3883'
-                ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_archipelago_text_buffer.name, 1),
+            ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_archipelago_text_buffer.name, 1),
             new_instruction_readable="addi    r4,r3,0"
         ),
         Patch(
@@ -128,7 +128,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=24,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_memcpy.name, 1
-                ),
+            ),
             new_instruction_readable="bl memcpy"
         ),
         Patch(
@@ -150,28 +150,28 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=28,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 '3c80'
-                ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_cst4.name, 1),
+            ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_cst4.name, 1),
             new_instruction_readable="lis     r4,0"
         ),
         Patch(
             identifier=29,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 'c3e4'
-                ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_cst4.name, 1),
+            ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_cst4.name, 1),
             new_instruction_readable="lfs     f31,0(r4)"
         ),
         Patch(
             identifier=30,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 '3c80'
-                ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_cst4.name, 2),
+            ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_cst4.name, 2),
             new_instruction_readable="lis     r4,0"
         ),
         Patch(
             identifier=31,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 'c004'
-                ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_cst4.name, 2),
+            ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_cst4.name, 2),
             new_instruction_readable="lfs     f0,0(r4)"
         ),
         Patch(
@@ -228,9 +228,9 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=42,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 '3ce0'
-                ) + get_addr16_ha(
+            ) + get_addr16_ha(
                 data, patch_patterns, custom_functions_cgu0__Lanon_c56ae961650860ac32e9b2618d293ecb_6.name, 1
-                ),
+            ),
             new_instruction_readable="lis     r7,0"
         ),
         Patch(
@@ -267,9 +267,9 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=49,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 '38c7'
-                ) + get_addr16_lo(
+            ) + get_addr16_lo(
                 data, patch_patterns, custom_functions_cgu0__Lanon_c56ae961650860ac32e9b2618d293ecb_6.name, 1
-                ),
+            ),
             new_instruction_readable="addi    r6,r7,0"
         ),
         Patch(
@@ -1406,7 +1406,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=276,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_memset.name, 1
-                ),
+            ),
             new_instruction_readable="bl memset"
         ),
         Patch(
@@ -1418,7 +1418,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=278,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0___ct__TextWriterBase_WChar.name, 1
-                ),
+            ),
             new_instruction_readable="bl __ct__TextWriterBase_WChar"
         ),
         Patch(
@@ -1470,7 +1470,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=288,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_CharWriter__UpdateVertexColor.name, 1
-                ),
+            ),
             new_instruction_readable="bl CharWriter__UpdateVertexColor"
         ),
         Patch(
@@ -1522,7 +1522,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=298,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_memcpy.name, 1
-                ),
+            ),
             new_instruction_readable="bl memcpy"
         ),
         Patch(
@@ -1544,7 +1544,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=302,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_CharWriter__UpdateVertexColor.name, 1
-                ),
+            ),
             new_instruction_readable="bl CharWriter__UpdateVertexColor"
         ),
         Patch(
@@ -1571,7 +1571,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=307,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_get_font_data.name, 1
-                ),
+            ),
             new_instruction_readable="bl get_font_data"
         ),
         Patch(
@@ -1598,14 +1598,14 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=312,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 '3c60'
-                ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_cst4.name, 3),
+            ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_cst4.name, 3),
             new_instruction_readable="lis     r3,0"
         ),
         Patch(
             identifier=313,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 'c363'
-                ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_cst4.name, 3),
+            ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_cst4.name, 3),
             new_instruction_readable="lfs     f27,0(r3)"
         ),
         Patch(
@@ -1782,14 +1782,14 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=348,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_CalcStringRect_TextWriterBase_WChar.name, 1
-                ),
+            ),
             new_instruction_readable="bl CalcStringRect_TextWriterBase_WChar"
         ),
         Patch(
             identifier=349,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 '3c60'
-                ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_cst4.name, 4),
+            ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_cst4.name, 4),
             new_instruction_readable="lis     r3,0"
         ),
         Patch(
@@ -1801,7 +1801,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=351,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 'c063'
-                ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_cst4.name, 4),
+            ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_cst4.name, 4),
             new_instruction_readable="lfs     f3,0(r3)"
         ),
         Patch(
@@ -1958,21 +1958,21 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=382,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_memset.name, 1
-                ),
+            ),
             new_instruction_readable="bl memset"
         ),
         Patch(
             identifier=383,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 '3c60'
-                ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_cst4.name, 5),
+            ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_cst4.name, 5),
             new_instruction_readable="lis     r3,0"
         ),
         Patch(
             identifier=384,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 'c303'
-                ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_cst4.name, 5),
+            ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_cst4.name, 5),
             new_instruction_readable="lfs     f24,0(r3)"
         ),
         Patch(
@@ -2024,7 +2024,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=394,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_C_MTXOrtho.name, 1
-                ),
+            ),
             new_instruction_readable="bl C_MTXOrtho"
         ),
         Patch(
@@ -2041,7 +2041,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=397,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXSetProjection.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXSetProjection"
         ),
         Patch(
@@ -2078,7 +2078,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=404,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXSetViewport.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXSetViewport"
         ),
         Patch(
@@ -2090,7 +2090,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=406,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_float_to_unsigned.name, 1
-                ),
+            ),
             new_instruction_readable="bl float_to_unsigned"
         ),
         Patch(
@@ -2107,7 +2107,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=409,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_float_to_unsigned.name, 1
-                ),
+            ),
             new_instruction_readable="bl float_to_unsigned"
         ),
         Patch(
@@ -2124,7 +2124,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=412,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_float_to_unsigned.name, 1
-                ),
+            ),
             new_instruction_readable="bl float_to_unsigned"
         ),
         Patch(
@@ -2141,7 +2141,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=415,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_float_to_unsigned.name, 1
-                ),
+            ),
             new_instruction_readable="bl float_to_unsigned"
         ),
         Patch(
@@ -2168,7 +2168,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=420,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXSetScissor.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXSetScissor"
         ),
         Patch(
@@ -2185,7 +2185,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=423,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXLoadPosMtxImm.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXLoadPosMtxImm"
         ),
         Patch(
@@ -2197,21 +2197,21 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=425,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXSetCurrentMtx.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXSetCurrentMtx"
         ),
         Patch(
             identifier=426,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXClearVtxDesc.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXClearVtxDesc"
         ),
         Patch(
             identifier=427,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXInvalidateVtxCache.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXInvalidateVtxCache"
         ),
         Patch(
@@ -2228,7 +2228,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=430,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXSetVtxDesc.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXSetVtxDesc"
         ),
         Patch(
@@ -2260,7 +2260,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=436,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXSetVtxAttrFmt.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXSetVtxAttrFmt"
         ),
         Patch(
@@ -2272,7 +2272,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=438,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXSetNumChans.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXSetNumChans"
         ),
         Patch(
@@ -2289,7 +2289,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=441,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXSetChanMatColor.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXSetChanMatColor"
         ),
         Patch(
@@ -2331,7 +2331,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=449,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXSetChanCtrl.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXSetChanCtrl"
         ),
         Patch(
@@ -2343,7 +2343,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=451,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXSetNumTexGens.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXSetNumTexGens"
         ),
         Patch(
@@ -2355,7 +2355,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=453,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXSetNumIndStages.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXSetNumIndStages"
         ),
         Patch(
@@ -2367,7 +2367,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=455,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0___GXSetIndirectMask.name, 1
-                ),
+            ),
             new_instruction_readable="bl __GXSetIndirectMask"
         ),
         Patch(
@@ -2379,7 +2379,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=457,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXSetNumTevStages.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXSetNumTevStages"
         ),
         Patch(
@@ -2396,7 +2396,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=460,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXSetTevOp.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXSetTevOp"
         ),
         Patch(
@@ -2423,7 +2423,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=465,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXSetTevOrder.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXSetTevOrder"
         ),
         Patch(
@@ -2490,7 +2490,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=478,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXSetBlendMode.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXSetBlendMode"
         ),
         Patch(
@@ -2502,7 +2502,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=480,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXSetColorUpdate.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXSetColorUpdate"
         ),
         Patch(
@@ -2514,7 +2514,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=482,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXSetAlphaUpdate.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXSetAlphaUpdate"
         ),
         Patch(
@@ -2541,7 +2541,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=487,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXSetZMode.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXSetZMode"
         ),
         Patch(
@@ -2553,7 +2553,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=489,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXSetCullMode.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXSetCullMode"
         ),
         Patch(
@@ -2575,7 +2575,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=493,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXBegin.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXBegin"
         ),
         Patch(
@@ -2662,14 +2662,14 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=510,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 '3c60'
-                ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_cst4.name, 6),
+            ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_cst4.name, 6),
             new_instruction_readable="lis     r3,0"
         ),
         Patch(
             identifier=511,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 'c003'
-                ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_cst4.name, 6),
+            ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_cst4.name, 6),
             new_instruction_readable="lfs     f0,0(r3)"
         ),
         Patch(
@@ -2766,63 +2766,63 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=530,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_memset.name, 1
-                ),
+            ),
             new_instruction_readable="bl memset"
         ),
         Patch(
             identifier=531,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 '3c60'
-                ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_cst4.name, 7),
+            ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_cst4.name, 7),
             new_instruction_readable="lis     r3,0"
         ),
         Patch(
             identifier=532,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 'c3e3'
-                ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_cst4.name, 7),
+            ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_cst4.name, 7),
             new_instruction_readable="lfs     f31,0(r3)"
         ),
         Patch(
             identifier=533,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 '3c60'
-                ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_cst4.name, 8),
+            ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_cst4.name, 8),
             new_instruction_readable="lis     r3,0"
         ),
         Patch(
             identifier=534,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 'c3c3'
-                ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_cst4.name, 8),
+            ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_cst4.name, 8),
             new_instruction_readable="lfs     f30,0(r3)"
         ),
         Patch(
             identifier=535,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 '3c60'
-                ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_cst4.name, 3),
+            ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_cst4.name, 3),
             new_instruction_readable="lis     r3,0"
         ),
         Patch(
             identifier=536,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 'c3a3'
-                ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_cst4.name, 3),
+            ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_cst4.name, 3),
             new_instruction_readable="lfs     f29,0(r3)"
         ),
         Patch(
             identifier=537,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 '3c60'
-                ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_cst4.name, 9),
+            ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_cst4.name, 9),
             new_instruction_readable="lis     r3,0"
         ),
         Patch(
             identifier=538,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 'c0c3'
-                ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_cst4.name, 9),
+            ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_cst4.name, 9),
             new_instruction_readable="lfs     f6,0(r3)"
         ),
         Patch(
@@ -2859,7 +2859,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=545,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_C_MTXOrtho.name, 1
-                ),
+            ),
             new_instruction_readable="bl C_MTXOrtho"
         ),
         Patch(
@@ -2876,21 +2876,21 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=548,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXSetProjection.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXSetProjection"
         ),
         Patch(
             identifier=549,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 '3c60'
-                ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_cst4.name, 5),
+            ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_cst4.name, 5),
             new_instruction_readable="lis     r3,0"
         ),
         Patch(
             identifier=550,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 'c0c3'
-                ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_cst4.name, 5),
+            ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_cst4.name, 5),
             new_instruction_readable="lfs     f6,0(r3)"
         ),
         Patch(
@@ -2922,7 +2922,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=556,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXSetViewport.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXSetViewport"
         ),
         Patch(
@@ -2939,7 +2939,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=559,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXLoadPosMtxImm.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXLoadPosMtxImm"
         ),
         Patch(
@@ -2951,7 +2951,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=561,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXSetCurrentMtx.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXSetCurrentMtx"
         ),
         Patch(
@@ -3013,28 +3013,28 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=573,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 '3ca0'
-                ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_data.name, 1),
+            ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_data.name, 1),
             new_instruction_readable="lis     r5,0"
         ),
         Patch(
             identifier=574,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 '90c5'
-                ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_data.name, 1),
+            ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_data.name, 1),
             new_instruction_readable="stw     r6,0(r5)"
         ),
         Patch(
             identifier=575,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 '3ca0'
-                ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_data.name, 2),
+            ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_data.name, 2),
             new_instruction_readable="lis     r5,0"
         ),
         Patch(
             identifier=576,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 '90c5'
-                ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_data.name, 2),
+            ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_data.name, 2),
             new_instruction_readable="stw     r6,0(r5)"
         ),
         Patch(
@@ -3126,7 +3126,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=594,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_CharWriter__UpdateVertexColor.name, 1
-                ),
+            ),
             new_instruction_readable="bl CharWriter__UpdateVertexColor"
         ),
         Patch(
@@ -3148,7 +3148,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=598,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_get_font_data.name, 1
-                ),
+            ),
             new_instruction_readable="bl get_font_data"
         ),
         Patch(
@@ -3180,7 +3180,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=604,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_CharWriter__GetFontWidth.name, 1
-                ),
+            ),
             new_instruction_readable="bl CharWriter__GetFontWidth"
         ),
         Patch(
@@ -3207,7 +3207,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=609,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_get_font_data.name, 1
-                ),
+            ),
             new_instruction_readable="bl get_font_data"
         ),
         Patch(
@@ -3239,7 +3239,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=615,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_CharWriter__SetupGX.name, 1
-                ),
+            ),
             new_instruction_readable="bl CharWriter__SetupGX"
         ),
         Patch(
@@ -3271,7 +3271,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=621,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_GXSetAlphaCompare.name, 1
-                ),
+            ),
             new_instruction_readable="bl GXSetAlphaCompare"
         ),
         Patch(
@@ -3303,7 +3303,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=627,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 '3c80'
-                ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_data.name, 1),
+            ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_data.name, 1),
             new_instruction_readable="lis     r4,0"
         ),
         Patch(
@@ -3315,21 +3315,21 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=629,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 '3c60'
-                ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_data.name, 2),
+            ) + get_addr16_ha(data, patch_patterns, custom_functions_cgu0_data.name, 2),
             new_instruction_readable="lis     r3,0"
         ),
         Patch(
             identifier=630,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 '8063'
-                ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_data.name, 2),
+            ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_data.name, 2),
             new_instruction_readable="lwz     r3,0(r3)"
         ),
         Patch(
             identifier=631,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: bytes.fromhex(
                 '8084'
-                ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_data.name, 1),
+            ) + get_addr16_lo(data, patch_patterns, custom_functions_cgu0_data.name, 1),
             new_instruction_readable="lwz     r4,0(r4)"
         ),
         Patch(
@@ -3361,7 +3361,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=637,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_CharWriter__UpdateVertexColor.name, 1
-                ),
+            ),
             new_instruction_readable="bl CharWriter__UpdateVertexColor"
         ),
         Patch(
@@ -3383,7 +3383,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=641,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_Print_TextWriterBase_WChar.name, 1
-                ),
+            ),
             new_instruction_readable="bl Print_TextWriterBase_WChar"
         ),
         Patch(
@@ -3435,7 +3435,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=651,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_CharWriter__UpdateVertexColor.name, 1
-                ),
+            ),
             new_instruction_readable="bl CharWriter__UpdateVertexColor"
         ),
         Patch(
@@ -3457,7 +3457,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=655,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0_Print_TextWriterBase_WChar.name, 1
-                ),
+            ),
             new_instruction_readable="bl Print_TextWriterBase_WChar"
         ),
         Patch(
@@ -3474,7 +3474,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             identifier=658,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns, custom_functions_cgu0___dt__TextWriterBase_WChar.name, 1
-                ),
+            ),
             new_instruction_readable="bl __dt__TextWriterBase_WChar"
         ),
         Patch(
@@ -3582,7 +3582,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns,
                 custom_functions_cgu0__ZN4core6result13unwrap_failed17h0125321215ca17fdE.name, 1
-                ),
+            ),
             new_instruction_readable="bl .text.unlikely._ZN4core6result13unwrap_failed17h0125321215ca17fdE"
         ),
         Patch(
@@ -3590,7 +3590,7 @@ custom_functions_cgu0_print_archipelago_text = PatchPattern(
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
                 offset, data, patch_patterns,
                 custom_functions_cgu0__ZN4core6option13unwrap_failed17hfe475aa334a9986aE.name, 1
-                ),
+            ),
             new_instruction_readable="bl .text.unlikely._ZN4core6option13unwrap_failed17hfe475aa334a9986aE"
         ),
     ],
@@ -14354,7 +14354,7 @@ custom_functions_cgu0_Print_TextWriterBase_WChar = PatchPattern(
             instruction_readable="---"
         ),
         Instruction(
-            identifier=64, offset=0xfc, pattern=parse_pattern_bytes("48 00 0a a5"),
+            identifier=64, offset=0xfc, pattern=parse_pattern_bytes("48 00 0a 75"),
             instruction_readable="---"
         ),
         Instruction(
@@ -14386,7 +14386,7 @@ custom_functions_cgu0_Print_TextWriterBase_WChar = PatchPattern(
             instruction_readable="---"
         ),
         Instruction(
-            identifier=72, offset=0x11c, pattern=parse_pattern_bytes("4b ff da f5"),
+            identifier=72, offset=0x11c, pattern=parse_pattern_bytes("4b ff b1 55"),
             instruction_readable="---"
         ),
         Instruction(

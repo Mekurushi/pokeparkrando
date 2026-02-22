@@ -633,7 +633,7 @@
   custom_functions_cgu0_CharWriter__GetFontWidth: 0x802b6db0 (1 match(es))
   custom_functions_cgu0_GXSetAlphaCompare: 0x80224300 (1 match(es))
   custom_functions_cgu0_CharWriter__SetupGX: 0x802b6050 (1 match(es))
-  custom_functions_cgu0_Print_TextWriterBase_WChar: 0x801fdb90 (1 match(es))
+  custom_functions_cgu0_Print_TextWriterBase_WChar: 0x80200530 (1 match(es))
   custom_functions_cgu0___dt__TextWriterBase_WChar: 0x802b8e00 (1 match(es))
   custom_functions_cgu0__ZN4core6result13unwrap_failed17h0125321215ca17fdE: 0x803678c8 (1 match(es))
   custom_functions_cgu0__ZN4core9panicking9panic_fmt17h7abdb1aa5838eaaeE: 0x803672f0 (1 match(es))
