@@ -1,0 +1,651 @@
+[mnLobby.fsb]
+  Prisma check: 0xf94 (1 match(es))
+  Postgame check: 0x1128 (1 match(es))
+
+[mnAttractionInfo.fsb]
+  Attraction Result Prisma Check: 0x1d90 (1 match(es))
+  Attraction Start Demo Prisma Check: 0x2e64 (1 match(es))
+  Attraction Start Demo End Prisma Check: 0x2ff4 (1 match(es))
+  checking conditions for legendary Pokemon Friendship: 0xf0 (1 match(es))
+  set legendary Pokemon friendship + additional features: 0x2dd0 (1 match(es))
+
+[Ar01Zn01Dp00.rlb]
+  Disposition Drifblim: 0x67c (1 match(es))
+
+[evAr01Zn02_Npc_Main.fsb]
+  set_chapter: 0x4a10 (1 match(es))
+  get_friendship function: 0x473c (1 match(es))
+  Venusaur Interaction Logic: 0x8d24 (1 match(es))
+
+[evAr01Zn02_ScriptEvent.fsb]
+  EMAPA01_Z01: 0x7e10 (1 match(es))
+
+[evAr01Zn01_ScriptEvent.fsb]
+  EMAPA02_Z01: 0x80f8 (1 match(es))
+  EMAPA01_Z02: 0x7f84 (1 match(es))
+  EMAPA99_Z01: 0x7e10 (1 match(es))
+
+[GkWoodBoxKino.fsb]
+  Shroomish Box Wait: 0xb90 (1 match(es))
+  ds EventManager: 0x10f8 (1 match(es))
+
+[evAr01Zn01_Npc_Main.fsb]
+  set_chapter: 0x4a10 (1 match(es))
+  get_friendship function: 0x473c (1 match(es))
+  Overworld Pokemon Spawn Logic: 0xbef4 (1 match(es))
+  Turtwig Friendship Logic: 0x11a3c (1 match(es))
+  Turtwig dialog options logic: 0x11934 (1 match(es))
+  Buneary Friendship Logic: 0x11fdc (1 match(es))
+  Buneary dialog options logic: 0x11ec8 (1 match(es))
+  Pachirisu 1 Friendship Logic: 0x12308 (1 match(es))
+  Pachirisu 2 Friendship Logic: 0x196cc (1 match(es))
+  Munchlax Friendship Logic: 0x123b4 (1 match(es))
+  Munchlax 2 Friendship Logic: 0x19150 (1 match(es))
+  Treecko Friendship Logic: 0x1268c (1 match(es))
+  Chimchar Friendship Logic: 0x129a0 (1 match(es))
+  Magikarp Friendship Logic: 0x12c4c (1 match(es))
+  Lotad 1 Friendship Logic: 0x12ef8 (1 match(es))
+  Caterpie Friendship Logic: 0x131fc (1 match(es))
+  Weedle Friendship Logic: 0x134e4 (1 match(es))
+  Event Bidoof Friendship Logic: 0xf338 (1 match(es))
+  Oddish Friendship Logic: 0x137a0 (1 match(es))
+  Shroomish Friendship Logic: 0x13a54 (1 match(es))
+  Bonsly Friendship Logic: 0x13cf8 (1 match(es))
+  Shinx Friendship Logic: 0x14020 (1 match(es))
+  Aipom Tree Friendship Logic: 0x145b0 (1 match(es))
+  Aipom Friendship Logic: 0x16e08 (1 match(es))
+  Spearow Overworld Friendship Logic: 0x14890 (1 match(es))
+  Torterra Overworld Friendship Logic: 0x14b3c (1 match(es))
+  Starly Overworld Friendship Logic: 0x14e24 (1 match(es))
+  Butterfree Overworld Friendship Logic: 0x150d0 (1 match(es))
+  Tropius Friendship Logic: 0x1538c (1 match(es))
+  Bibarel Friendship Logic: 0x155b8 (1 match(es))
+  Ambipom Friendship Logic: 0x15864 (1 match(es))
+  Sudowoodo Friendship Logic: 0x15b20 (1 match(es))
+  Scyther Friendship Logic: 0x15dc4 (1 match(es))
+  Leafeon Friendship Logic: 0x1618c (1 match(es))
+  Croagunk Friendship Logic: 0xfa08 (1 match(es))
+  Bulbasaur Friendship Logic: 0x105cc (1 match(es))
+  Drifblim Friendship Logic: 0x111f8 (1 match(es))
+  Starly 2 Friendship Logic: 0x1688c (1 match(es))
+  Starly 3 Friendship Logic: 0x16b5c (1 match(es))
+  Starly 4 Friendship Logic: 0x170e8 (1 match(es))
+  Spearow Attraction Friendship Logic: 0x173a4 (1 match(es))
+  Lotad 2 Friendship Logic: 0x17784 (1 match(es))
+  Lotad 3 Friendship Logic: 0x17a68 (1 match(es))
+  Starly 5 Friendship Logic: 0x17d38 (1 match(es))
+  Shinx 2 Friendship Logic: 0x18500 (1 match(es))
+  Butterfree 2 Friendship Logic: 0x18eb4 (1 match(es))
+  Return Attraction: 0x19ec0 (1 match(es))
+  f0101EventTE03 Logic: 0xcf24 (1 match(es))
+  Torterra Starly Unlock after Venusaur Prisma Logic: 0xb67c (1 match(es))
+  Unlock Beach Bidoof Unlock: 0xf1d8 (1 match(es))
+  f0301BippaFlag check: 0xb650 (1 match(es))
+  hitting Magikarp with Thunderbolt event Logic: 0xc808 (1 match(es))
+  set_magikarp_location: 0xb624 (1 match(es))
+  get_mankey_friendship_function: 0x3bec (1 match(es))
+  STAXIAREA: 0x7adc (1 match(es))
+
+[evAr01Zn01_Gimmic.fsb]
+  set_chapter: 0x4a10 (1 match(es))
+  get_friendship function: 0x473c (1 match(es))
+  Caterpie Tree Gimmic: 0x82fc (1 match(es))
+  Weedle Tree Gimmic: 0x827c (1 match(es))
+  Weedle Tree Gimmic Logic: 0x7e54 (1 match(es))
+  Shroomish Box Gimmic: 0x8bd8 (1 match(es))
+  unlock function: 0x1fc (1 match(es))
+  meadow taxi stop: 0x8774 (1 match(es))
+  f0301FuwarideTaxiStop: 0x9166 (1 match(es))
+  f0302FuwarideTaxiStop: 0x9185 (1 match(es))
+  f0401FuwarideTaxiStop: 0x91a4 (1 match(es))
+
+[Gk0101Gate.fsb]
+  Close Gate Function from Venusaur Gate in Meadow Zone: 0xd0 (1 match(es))
+
+[evAr99Zn01_Npc_Main.fsb]
+  set_chapter: 0x4a10 (1 match(es))
+  get_friendship function: 0x473c (1 match(es))
+  C00000_00010: 0xc914 (1 match(es))
+  skip event c00020_00030: 0xcaa0 (1 match(es))
+  skip event c00060_01000: 0xcb48 (1 match(es))
+  skip event area01: 0xcb74 (1 match(es))
+  skip event area04: 0xcb88 (1 match(es))
+  skip event area06: 0xcc1c (1 match(es))
+  skip event area07: 0xcc34 (1 match(es))
+  skip events based on chapter: 0x8d88 (1 match(es))
+  snorlax_spawn_conditions: 0x7ef0 (1 match(es))
+  a99_z01_init remove spawn conditions: 0xc7dc (1 match(es))
+  celebi_interaction: 0xba1c (1 match(es))
+
+[evAr99Zn01_ScriptEvent.fsb]
+  EMAPA01_Z01: 0x7e10 (1 match(es))
+
+[GkKabigonWall.fsb]
+  Kabigon Wall Wait: 0x88 (1 match(es))
+
+[evAr02Zn01_Npc_Main.fsb]
+  set_chapter: 0x4a10 (1 match(es))
+  get_friendship function: 0x473c (1 match(es))
+  Close ar02Zn01 Gates depending on: 0xffd0 (1 match(es))
+  Treehouse Pokemon Spawns: 0xc490 (1 match(es))
+  Treehouse Pokemon Spawns 2: 0xfdc8 (1 match(es))
+  Ponyta Powerup Interaction: 0x16264 (1 match(es))
+  Electabuzz Powerup Interaction: 0x15498 (1 match(es))
+  Bibarel Powerup Interaction: 0x1665c (1 match(es))
+  Primeape Powerup Interaction: 0x169b0 (1 match(es))
+  Drifblim Interaction: 0x16e08 (1 match(es))
+  mime_jr interaction: 0x13f64 (1 match(es))
+  abra interaction: 0x145e4 (1 match(es))
+  burmy interaction: 0x14f54 (1 match(es))
+  Treehouse Piplup interaction: 0x15960 (1 match(es))
+  Treehouse setBalloon: 0xbff4 (1 match(es))
+  custom-functions get_prisma_amount function: 0xd2e0 (1 match(es))
+  unused code space: 0x4a98 (1 match(es))
+  EBALLOONAREA: 0x8f64 (1 match(es))
+  STAXIAREA: 0x7adc (1 match(es))
+
+[evAr02Zn01_ScriptEvent.fsb]
+  EMAPA01_Z01: 0xbff4 (1 match(es))
+  EMAPA03_Z01: 0xc160 (1 match(es))
+  EMAPA04_Z01: 0xc2cc (1 match(es))
+  EMAPA05_Z01: 0xc438 (1 match(es))
+  EMAPA06_Z01: 0xc5a4 (1 match(es))
+
+[GkTreeHouse.fsb]
+  Wait1: 0xb90 (1 match(es))
+  Wait2: 0xbe8 (1 match(es))
+  Wait3: 0xc40 (1 match(es))
+
+[Ar03Zn01Dp00.rlb]
+  Disposition Drifblim: 0x67c (1 match(es))
+
+[evAr03Zn01_Gimmic.fsb]
+  beach taxi stop: 0x89c8 (1 match(es))
+  Recycle: 0x838c (1 match(es))
+
+[GkRockB.fsb]
+  wait for RockB: 0x88 (1 match(es))
+
+[GkRecycleSanbasiA.fsb]
+  step01 for bridge 1: 0x88 (1 match(es))
+  ds ERROR: slFindModule: 0x225 (1 match(es))
+
+[GkRecycleSanbasiB.fsb]
+  step01 for bridge 2: 0x88 (1 match(es))
+  ds ERROR: slFindModule: 0x225 (1 match(es))
+
+[GkRecycleSanbasiC.fsb]
+  step01 for bridge 3: 0x88 (1 match(es))
+  ds ERROR: slFindModule: 0x225 (1 match(es))
+
+[GkRecycleSanbasiD.fsb]
+  step01 for bridge 4: 0x88 (1 match(es))
+  ds ERROR: slFindModule: 0x225 (1 match(es))
+
+[evAr03Zn01_Npc_Main.fsb]
+  set_chapter: 0x4a10 (1 match(es))
+  get_friendship function: 0x473c (1 match(es))
+  piplup interaction: 0x12f30 (1 match(es))
+  psyduck interaction: 0x13574 (1 match(es))
+  mudkip interaction: 0x14fd0 (1 match(es))
+  feraligatr interaction: 0x10cf8 (1 match(es))
+  wailord interaction: 0x15c54 (1 match(es))
+  starly interaction beach zone: 0x14274 (1 match(es))
+  starly2 interaction beach zone: 0x17b3c (1 match(es))
+  starly3 interaction beach zone: 0x17df8 (1 match(es))
+  spearow interaction beach zone: 0x18388 (1 match(es))
+  spearow2 interaction beach zone: 0x14530 (1 match(es))
+  pelipper return attraction event: 0x19e4c (1 match(es))
+  gyarados return attraction event: 0x199b0 (1 match(es))
+  pelipper interaction: 0x117a8 (1 match(es))
+  pelipper friendship event: 0xfefc (1 match(es))
+  gyarados interaction: 0x11ef8 (1 match(es))
+  gyarados friendship event: 0xfc1c (1 match(es))
+  special_spawn_conditions: 0xd864 (1 match(es))
+  set_attraction_record: 0xd2dc (1 match(es))
+  ELAPLACEAREA: 0x11298 (1 match(es))
+  STAXIAREA: 0x7adc (1 match(es))
+
+[evAr03Zn01_ScriptEvent.fsb]
+  EMAPA02_Z01: 0x7e10 (1 match(es))
+
+[Ar03Zn02Dp00.rlb]
+  Disposition Drifblim: 0x5e0 (1 match(es))
+
+[evAr03Zn02_Gimmic.fsb]
+  ice zone taxi stop: 0x8efc (1 match(es))
+
+[evAr03Zn03_Npc_Main.fsb]
+  set_chapter: 0x4a10 (1 match(es))
+  get_friendship function: 0x473c (1 match(es))
+  get Chapter function in empoleon area: 0x4a64 (1 match(es))
+  Empoleon return attraction event: 0x8f68 (1 match(es))
+  Empoleon friendship event: 0x871c (1 match(es))
+  Empoleon friendship check: 0x4998 (1 match(es))
+  Empoleon Interaction: 0x8b04 (1 match(es))
+
+[evAr03Zn03_ScriptEvent.fsb]
+  EMAPA03_Z02: 0x7e1c (1 match(es))
+
+[GkMammoo.fsb]
+  step01 for mammoo: 0x88 (1 match(es))
+  ds ERROR: slFindModule: 0x53c (1 match(es))
+
+[Gk0302Gate.fsb]
+  0302Gate Close: 0xd0 (1 match(es))
+
+[evAr03Zn02_Npc_Main.fsb]
+  set_chapter: 0x4a10 (1 match(es))
+  get_friendship function: 0x473c (1 match(es))
+  Lift Top: 0x148f4 (1 match(es))
+  Kirlia Tree Talk: 0x1001c (1 match(es))
+  C03070_03080: 0x1b5e0 (1 match(es))
+  piloswine_unlock: 0xe7a0 (1 match(es))
+  einomu_talk: 0xee50 (1 match(es))
+  froslass interaction: 0x123d4 (1 match(es))
+  piloswine interaction: 0x135d4 (1 match(es))
+  mudkip interaction: 0x15330 (1 match(es))
+  primeape interaction: 0x17434 (1 match(es))
+  starly interaction ice zone: 0x1821c (1 match(es))
+  starly 2 interaction ice zone: 0x16734 (1 match(es))
+  krabby interaction ice zone: 0x15610 (1 match(es))
+  krabby2 interaction ice zone: 0x1a43c (1 match(es))
+  krabby3 interaction ice zone: 0x1a6f4 (1 match(es))
+  corphish interaction ice zone: 0x158d8 (1 match(es))
+  corphish2 interaction ice zone: 0x18a28 (1 match(es))
+  corphish3 interaction ice zone: 0x18cbc (1 match(es))
+  taillow interaction ice zone: 0x16cac (1 match(es))
+  staravia interaction ice zone: 0x169d0 (1 match(es))
+  wingull interaction ice zone: 0x1a988 (1 match(es))
+  wingull2 interaction ice zone: 0x16f40 (1 match(es))
+  wingull3 interaction ice zone: 0x1ac1c (1 match(es))
+  prinplup2 interaction: 0x139b8 (1 match(es))
+  glalie interaction ice zone: 0x113fc (1 match(es))
+  delibird interaction ice zone: 0x102f8 (1 match(es))
+  special_spawn_conditions: 0x7e10 (1 match(es))
+  special_spawn_conditions2: 0xe27c (1 match(es))
+  set_attraction_record: 0xdee0 (1 match(es))
+  unused code space: 0x4040 (1 match(es))
+  ELAPLACEAREA: 0x121e0 (1 match(es))
+  STAXIAREA: 0x7adc (1 match(es))
+
+[evAr03Zn02_ScriptEvent.fsb]
+  EMAPA03_Z03: 0x7e10 (1 match(es))
+
+[Ar04Zn01Dp00.rlb]
+  Disposition Drifblim: 0x510 (1 match(es))
+
+[evAr04Zn01_Gimmic.fsb]
+  set_chapter: 0x4a10 (1 match(es))
+  get_friendship function: 0x473c (1 match(es))
+  box_digda: 0x8460 (1 match(es))
+  box_coil1: 0x8b50 (1 match(es))
+  box_coil2: 0x9088 (1 match(es))
+  box_coil3: 0x95c0 (1 match(es))
+  cavern zone taxi stop: 0x9e40 (1 match(es))
+  set_magnemite_location: 0x178 (1 match(es))
+  set_magnemite2_location: 0x1a4 (1 match(es))
+  set_magnemite3_location: 0x1d0 (1 match(es))
+  ds f0101FuwarideTaxiStop: 0xa483 (1 match(es))
+  ds f0301FuwarideTaxiStop: 0xa4a2 (1 match(es))
+  ds f0402FuwarideTaxiStop: 0xa4ff (1 match(es))
+  ds slFindModule:_module_not_found: 0xa392 (1 match(es))
+
+[evAr04Zn01_Npc_Main.fsb]
+  set_chapter: 0x4a10 (1 match(es))
+  get_friendship function: 0x473c (1 match(es))
+  special spawn conditions: 0xb73c (1 match(es))
+  gimmic spawn conditions: 0x7e2c (1 match(es))
+  bastiodon interaction: 0x11a30 (1 match(es))
+  return at 10: 0x190b4 (1 match(es))
+  bastiodon friendship event: 0xbf2c (1 match(es))
+  gible_interaction: 0x12690 (1 match(es))
+  gible_interaction_2: 0xe964 (1 match(es))
+  mawile_interaction: 0xeda4 (1 match(es))
+  scizor_interaction: 0x15448 (1 match(es))
+  marowak_interaction: 0xf92c (1 match(es))
+  dugtrio_interaction: 0x10120 (1 match(es))
+  diglett_interaction: 0xfe58 (1 match(es))
+  bonsly interaction: 0x131fc (1 match(es))
+  sudoowoodo interaction: 0x14ff4 (1 match(es))
+  unkown interaction2: 0x13638 (1 match(es))
+  unkown interaction3: 0x14ff4 (1 match(es))
+  teddiursa quiz: 0xa270 (1 match(es))
+  chimchar interaction: 0x12f68 (1 match(es))
+  unused code space: 0x9494 (1 match(es))
+  set_attraction_record: 0x4cfc (1 match(es))
+  STAXIAREA: 0x7adc (1 match(es))
+
+[evAr04Zn01_ScriptEvent.fsb]
+  EMAPA02_Z01: 0x7e10 (1 match(es))
+
+[evAr04Zn01_DemoEvent.fsb]
+  ZONECHANGETR: 0x7f90 (1 match(es))
+
+[evAr04Zn02_DemoEvent.fsb]
+  ZONECHANGETR: 0x7f44 (1 match(es))
+
+[Ar04Zn02Dp00.rlb]
+  Disposition Drifblim: 0x544 (1 match(es))
+
+[evAr04Zn02_Npc_Main.fsb]
+  set_chapter: 0x4a10 (1 match(es))
+  get_friendship function: 0x473c (1 match(es))
+  Trap Events: 0x152f8 (1 match(es))
+  rhyperior interaction: 0xc160 (1 match(es))
+  return at 11: 0x15384 (1 match(es))
+  rhyperior friendship event: 0xb624 (1 match(es))
+  infernape interaction: 0x11654 (1 match(es))
+  bonsly interaction: 0xed30 (1 match(es))
+  geodude interaction: 0xfbb8 (1 match(es))
+  hitmontop interaction: 0x9f54 (1 match(es))
+  farfetch'd interaction: 0x12054 (1 match(es))
+  chimchar interaction: 0x10148 (1 match(es))
+  aron interaction: 0x10430 (1 match(es))
+  torchic interaction: 0xfe8c (1 match(es))
+  baltoy interaction: 0xf004 (1 match(es))
+  meditite quiz: 0xd108 (1 match(es))
+  camerupt interaction: 0x11d48 (1 match(es))
+  groudon interaction: 0x12600 (1 match(es))
+  charmander interaction: 0xea84 (1 match(es))
+  special_spawn_conditions: 0x9510 (1 match(es))
+  set_attraction_record: 0x91d0 (1 match(es))
+  ZONECHANGETR: 0x7f44 (1 match(es))
+  STAXIAREA: 0x7adc (1 match(es))
+
+[evAr04Zn02_ScriptEvent.fsb]
+  EMAPA04_Z03: 0x7e10 (1 match(es))
+
+[evAr04Zn03_Npc_Main.fsb]
+  set_chapter: 0x4a10 (1 match(es))
+  blaziken interaction: 0x8b1c (1 match(es))
+  blaziken 2 interaction: 0x9418 (1 match(es))
+  get_friendship function: 0x473c (1 match(es))
+
+[evAr04Zn03_ScriptEvent.fsb]
+  EMAPA04_Z02: 0x7e10 (1 match(es))
+
+[Gk0402Gate.fsb]
+  0402Gate Close: 0xd0 (1 match(es))
+
+[Gk0402Bridge.fsb]
+  0402Bridge Wait: 0x88 (1 match(es))
+
+[Gk0402Switch.fsb]
+  0402 bridge switch: 0xde8 (1 match(es))
+
+[GkFireWallB.fsb]
+  ds f0402FireWallB: 0x3d8 (1 match(es))
+
+[evAr04Zn02_Gimmic.fsb]
+  set_chapter: 0x4a10 (1 match(es))
+  get_friendship function: 0x473c (1 match(es))
+  drill_switch: 0x90a4 (1 match(es))
+  yokoro: 0x80a0 (1 match(es))
+  magma zone taxi stop: 0x9dd0 (1 match(es))
+  FIRESWITCHA: 0x86d0 (1 match(es))
+  BOX_YAJILON: 0x99d0 (1 match(es))
+  set_golem_location: 0x7ab0 (1 match(es))
+  set_baltoy_location: 0x7a84 (1 match(es))
+  ds f0101FuwarideTaxiStop: 0xa3ff (1 match(es))
+  special_spawn_conditions: 0x7e10 (1 match(es))
+
+[ScriptList_Ar04Zn02.rlb]
+  BridgeSwitch: 0x2028 (1 match(es))
+
+[Ar05Zn01Dp00.rlb]
+  Disposition Drifblim: 0x4dc (1 match(es))
+
+[ScriptList_Ar99Zn01.rlb]
+  Ar99Zn01Init: 0x464 (1 match(es))
+  enterZoneScriptListInit: 0x420 (1 match(es))
+
+[ScriptList_Ar06Zn01.rlb]
+  f0601FireWallB: 0x978 (1 match(es))
+
+[GkBookShelf.fsb]
+  gkBookshelf Wait: 0xbbc (1 match(es))
+
+[Gk0502DoorB.fsb]
+  ds f0502DoorB: 0xe2b (1 match(es))
+
+[Gk0502DoorC.fsb]
+  ds f0502DoorCD: 0xe2b (1 match(es))
+
+[Gk0502DoorD.fsb]
+  ds f0502DoorCD: 0xe2b (1 match(es))
+
+[Gk0502DoorE.fsb]
+  ds f0502DoorE: 0xe2b (1 match(es))
+
+[Gk0501GateA.fsb]
+  0501GateA Wait: 0xbbc (1 match(es))
+
+[evAr05Zn03_Npc_Main.fsb]
+  set_chapter: 0x4a10 (1 match(es))
+  get_friendship function: 0x473c (1 match(es))
+  rotom interaction: 0x8554 (1 match(es))
+
+[evAr05Zn03_ScriptEvent.fsb]
+  EMAPA05_Z02: 0x7e1c (1 match(es))
+
+[evAr05Zn02_Npc_Main.fsb]
+  set_chapter: 0x4a10 (1 match(es))
+  get_friendship function: 0x473c (1 match(es))
+  dusknoir interaction: 0x10600 (1 match(es))
+  abra interaction: 0x119c4 (1 match(es))
+  misdreavus interaction: 0xed44 (1 match(es))
+  mismagius interaction: 0x12c9c (1 match(es))
+  return_at05: 0x16c58 (1 match(es))
+  dusknoir_friendship_event: 0xd620 (1 match(es))
+  dusknoir friendship location state: 0xa0ac (1 match(es))
+  spinarak interaction: 0xfb1c (1 match(es))
+  elekid interaction: 0x116fc (1 match(es))
+  luxray interaction: 0x12f78 (1 match(es))
+  sableye interaction: 0x100fc (1 match(es))
+  sableye quiz: 0xa8ec (1 match(es))
+  darkrai interaction: 0x137f8 (1 match(es))
+  fix_chase_ai_haunted_zone: 0xb388 (1 match(es))
+  unused code space: 0xa3f4 (1 match(es))
+  set_attraction_record: 0xa3c4 (1 match(es))
+
+[evAr05Zn02_ScriptEvent.fsb]
+  EMAPA05_Z01: 0x7e10 (1 match(es))
+  EMAPA05_Z03: 0x7f90 (1 match(es))
+
+[evAr05Zn01_Npc_Main.fsb]
+  set_chapter: 0x4a10 (1 match(es))
+  get_friendship function: 0x473c (1 match(es))
+  Trap Event Mansion Gate: 0x904c (1 match(es))
+  tangrowth interaction: 0x9110 (1 match(es))
+  raichu interaction: 0xb650 (1 match(es))
+  meowth quiz: 0xa508 (1 match(es))
+  aipom interaction: 0xaf34 (1 match(es))
+  ambipom interaction: 0xb23c (1 match(es))
+  kakuna interaction: 0xbf10 (1 match(es))
+  metapod interaction: 0xc0d0 (1 match(es))
+  return_at04: 0xcde0 (1 match(es))
+  tangrowth friendship location state: 0x4a98 (1 match(es))
+  special_spawn_conditions: 0x8eb8 (1 match(es))
+  set_attraction_record: 0x85a0 (1 match(es))
+  STAXIAREA: 0x7adc (1 match(es))
+
+[evAr05Zn01_ScriptEvent.fsb]
+  EMAPA02_Z01: 0x7e10 (1 match(es))
+
+[evAr05Zn02_Gimmic.fsb]
+  set_chapter: 0x4a10 (1 match(es))
+  get_friendship function: 0x473c (1 match(es))
+  JAR_BIRIRI: 0x8260 (1 match(es))
+  set_voltorb_location: 0x1d0 (1 match(es))
+  ds f0101FuwarideTaxiStop: 0x8953 (1 match(es))
+
+[evAr05Zn01_Gimmic.fsb]
+  set_chapter: 0x4a10 (1 match(es))
+  get_friendship function: 0x473c (1 match(es))
+  mansion door condition: 0x8058 (1 match(es))
+  TREECOCOON: 0x8d58 (1 match(es))
+  TREETRANSEL: 0x87e0 (1 match(es))
+  haunted zone taxi stop: 0x8384 (1 match(es))
+  ZONECHANGEDR: 0x7f84 (1 match(es))
+  set_kakuna_location: 0x7284 (1 match(es))
+  set_metapod_location: 0x72b0 (1 match(es))
+  ds f0101FuwarideTaxiStop: 0x9463 (1 match(es))
+  ds f0301FuwarideTaxiStop: 0x9482 (1 match(es))
+
+[Ar06Zn01Dp00.rlb]
+  Disposition Drifblim: 0x544 (1 match(es))
+
+[GkFireWallC.fsb]
+  gkFireWallC run: 0x88 (1 match(es))
+
+[Gk0601SwitchB.fsb]
+  ds f0601FireWallB: 0xde1 (1 match(es))
+
+[Gk0601DoorB.fsb]
+  gk0601DoorB Close: 0xd0 (1 match(es))
+
+[evAr06Zn01_Gimmic.fsb]
+  set_chapter: 0x4a10 (1 match(es))
+  get_friendship function: 0x473c (1 match(es))
+  granite zone taxi stop: 0x9714 (1 match(es))
+  special_spawn_condtitions: 0x8110 (1 match(es))
+  granite zone switchB: 0x898c (1 match(es))
+  f0602FuwarideTaxiStop: 0x9e1c (1 match(es))
+
+[evAr06Zn01_DemoEvent.fsb]
+  special_spawn_condtitions: 0x7e10 (1 match(es))
+
+[evAr06Zn01_Npc_Main.fsb]
+  set_chapter: 0x4a10 (1 match(es))
+  get_friendship function: 0x473c (1 match(es))
+  absol interaction: 0xdbe0 (1 match(es))
+  salamence interaction: 0xd558 (1 match(es))
+  furret interaction: 0x119b8 (1 match(es))
+  arcanine interaction: 0x10510 (1 match(es))
+  drifloon interaction: 0x10b2c (1 match(es))
+  taillow interaction: 0xffa8 (1 match(es))
+  marowak interaction: 0xf1cc (1 match(es))
+  baltoy interaction: 0xfc9c (1 match(es))
+  claydol interaction: 0xf480 (1 match(es))
+  togekiss interaction: 0xbfe4 (1 match(es))
+  jirachi interaction: 0x11c74 (1 match(es))
+  skorupi interaction: 0xea54 (1 match(es))
+  PorygonZ quiz: 0x8af4 (1 match(es))
+  A06_Z01_INIT: 0x11f74 (1 match(es))
+  return_at01: 0x12640 (1 match(es))
+  return_at15: 0x12988 (1 match(es))
+  absol friendship location state: 0x4070 (1 match(es))
+  salamence friendship location state: 0x3be4 (1 match(es))
+  special_spawn_conditions: 0xa1a4 (1 match(es))
+  set_attraction_record: 0x8664 (1 match(es))
+  init gate and firewall function: 0x860c (1 match(es))
+  STAXIAREA: 0x7adc (1 match(es))
+
+[evAr06Zn01_ScriptEvent.fsb]
+  EMAPA02_Z01: 0x7e10 (1 match(es))
+  EMAPA06_Z02: 0x7f84 (1 match(es))
+
+[Ar06Zn02Dp00.rlb]
+  Disposition Drifblim: 0x474 (1 match(es))
+
+[evAr06Zn02_Gimmic.fsb]
+  flower zone taxi stop: 0x8574 (1 match(es))
+
+[evAr06Zn02_Npc_Main.fsb]
+  set_chapter: 0x4a10 (1 match(es))
+  get_friendship function: 0x473c (1 match(es))
+  mareep interaction: 0xb514 (1 match(es))
+  teddiursa interaction: 0xc940 (1 match(es))
+  rayquaza interaction: 0xa020 (1 match(es))
+  furret interaction: 0xc640 (1 match(es))
+  meditite quiz: 0xb870 (1 match(es))
+  return_at02: 0xe508 (1 match(es))
+  rayquaza_friendship_event: 0xb02c (1 match(es))
+  rayquaza friendship location state: 0x9160 (1 match(es))
+  special_spawn_conditions: 0x92ac (1 match(es))
+  special_spawn_conditions2: 0x81c0 (1 match(es))
+  bellosom interaction: 0xa540 (1 match(es))
+  ar06zn02_init: 0xe0c4 (1 match(es))
+  set_attraction_record: 0x9130 (1 match(es))
+  STAXIAREA: 0x7adc (1 match(es))
+
+[evAr06Zn02_ScriptEvent.fsb]
+  EMAPA06_Z01: 0x7e10 (1 match(es))
+
+[mnStartMenu.fsb]
+  load new File Logic: 0x1df4 (1 match(es))
+  start_menu_attractions: 0x1504 (1 match(es))
+
+[main.dol]
+  module lookup function: 0x802edba0 (1 match(es))
+  main game loop iteration restore: 0x802f1d4c (1 match(es))
+  main game loop iteration: 0x80030c20 (1 match(es))
+  Stage Setup new File: 0x80123da0 (1 match(es))
+  load file spawn position: 0x80124f80 (1 match(es))
+  ai difficulty: 0x80075540 (1 match(es))
+  attraction record unlock: 0x8017a8e0 (1 match(es))
+  GlobalManager v table: 0x803365f4 (1 match(es))
+  Wrapper for the global Manager syscall handler: 0x803666f0 (1 match(es))
+  Global Manager Function entry that allows with opcode to run code: 0x80180790 (1 match(es))
+  main_routine: 0x80366418 (1 match(es))
+  GlobalManagerInterface: 0x80366204 (1 match(es))
+  SceneManagerInterface: 0x80366618 (1 match(es))
+  data space: 0x80366348 (1 match(es))
+  SceneManager syscall Handler: 0x801674e0 (1 match(es))
+  GlobalManager syscall Handler: 0x80180790 (1 match(es))
+  custom_functions_cgu0_print_archipelago_text: 0x80365760 (1 match(es))
+  custom_functions_cgu0_archipelago_text_buffer: 0x80365010 (1 match(es))
+  custom_functions_cgu0_cst4: 0x80364eac (1 match(es))
+  custom_functions_cgu0_memcpy: 0x80004364 (1 match(es))
+  custom_functions_cgu0_.Lanon.c56ae961650860ac32e9b2618d293ecb.6: 0x80364d3c (1 match(es))
+  custom_functions_cgu0_memset: 0x800046b4 (1 match(es))
+  custom_functions_cgu0___ct__TextWriterBase_WChar: 0x801fa670 (1 match(es))
+  custom_functions_cgu0_CharWriter__UpdateVertexColor: 0x801fa230 (1 match(es))
+  custom_functions_cgu0_CalcStringRect_TextWriterBase_WChar: 0x801fdc00 (1 match(es))
+  custom_functions_cgu0_GXSetProjection: 0x802228dc (1 match(es))
+  custom_functions_cgu0_C_MTXOrtho: 0x8021abd0 (1 match(es))
+  custom_functions_cgu0_GXSetViewport: 0x80222cac (1 match(es))
+  custom_functions_cgu0_float_to_unsigned: 0x802f1bd8 (1 match(es))
+  custom_functions_cgu0_GXSetScissor: 0x80222cfc (1 match(es))
+  custom_functions_cgu0_GXLoadPosMtxImm: 0x802229e0 (1 match(es))
+  custom_functions_cgu0_GXSetCurrentMtx: 0x80222afc (1 match(es))
+  custom_functions_cgu0_GXClearVtxDesc: 0x8021d96c (1 match(es))
+  custom_functions_cgu0_GXSetVtxAttrFmt: 0x8021d9b0 (1 match(es))
+  custom_functions_cgu0_GXInvalidateVtxCache: 0x8021e040 (1 match(es))
+  custom_functions_cgu0_GXSetVtxDesc: 0x8021d360 (1 match(es))
+  custom_functions_cgu0_GXSetNumChans: 0x802201ec (1 match(es))
+  custom_functions_cgu0_GXSetChanCtrl: 0x80220220 (1 match(es))
+  custom_functions_cgu0_GXSetNumTexGens: 0x8021e29c (1 match(es))
+  custom_functions_cgu0_GXSetNumIndStages: 0x8022174c (1 match(es))
+  custom_functions_cgu0_GXSetChanMatColor: 0x80220110 (1 match(es))
+  custom_functions_cgu0___GXSetIndirectMask: 0x802217cc (1 match(es))
+  custom_functions_cgu0_GXSetNumTevStages: 0x80221ecc (1 match(es))
+  custom_functions_cgu0_GXSetTevOp: 0x80221830 (1 match(es))
+  custom_functions_cgu0_GXSetTevOrder: 0x80221d70 (1 match(es))
+  custom_functions_cgu0_GXSetBlendMode: 0x8022239c (1 match(es))
+  custom_functions_cgu0_GXSetColorUpdate: 0x802223ec (1 match(es))
+  custom_functions_cgu0_GXSetAlphaUpdate: 0x8022241c (1 match(es))
+  custom_functions_cgu0_GXSetZMode: 0x8022244c (1 match(es))
+  custom_functions_cgu0_GXSetCullMode: 0x8021f0fc (1 match(es))
+  custom_functions_cgu0_GXBegin: 0x8021ee10 (1 match(es))
+  custom_functions_cgu0_data: 0x803647b8 (1 match(es))
+  custom_functions_cgu0_CharWriter__GetFontWidth: 0x802b4750 (1 match(es))
+  custom_functions_cgu0_GXSetAlphaCompare: 0x80221ca0 (1 match(es))
+  custom_functions_cgu0_CharWriter__SetupGX: 0x802b39f0 (1 match(es))
+  custom_functions_cgu0_Print_TextWriterBase_WChar: 0x801fb760 (1 match(es))
+  custom_functions_cgu0___dt__TextWriterBase_WChar: 0x802b67a0 (1 match(es))
+  custom_functions_cgu0__ZN4core6result13unwrap_failed17h0125321215ca17fdE: 0x80364f28 (1 match(es))
+  custom_functions_cgu0__ZN4core9panicking9panic_fmt17h7abdb1aa5838eaaeE: 0x80364950 (1 match(es))
+  custom_functions_cgu0__ZN4core6option13unwrap_failed17hfe475aa334a9986aE: 0x80364cd0 (1 match(es))
+  custom_functions_cgu0__ZN4core9panicking5panic17h83cc215b64fda1bbE: 0x80364ca0 (1 match(es))
+  custom_functions_cgu0_get_font_data: 0x80106330 (1 match(es))
+
+[evAr07Zn01_Npc_Main.fsb]
+  set_chapter: 0x4a10 (1 match(es))
+  get_friendship function: 0x473c (1 match(es))
+  mew interaction: 0x11a20 (1 match(es))
+  mew power competition: 0xdfd0 (1 match(es))
+  setup_npcs_and_player: 0xce14 (1 match(es))
+  piplup interaction: 0x12734 (1 match(es))
+
