@@ -1,4 +1,4 @@
-from patcher.helper.patttern_handler import parse_pattern_bytes, create_lstr_script
+from patcher.helper.patttern_handler import parse_pattern_bytes
 from patcher.models.models import PatchPattern, Instruction, Patch
 
 wait = PatchPattern(
@@ -27,7 +27,7 @@ wait = PatchPattern(
             identifier=2,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00050010).to_bytes(
                 4, 'big'
-                ),
+            ),
             new_instruction_readable="push 0x5"
         ),
 
@@ -35,7 +35,7 @@ wait = PatchPattern(
             identifier=4,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00510010).to_bytes(
                 4, 'big'
-                ),
+            ),
             new_instruction_readable="push 0x51"
         ),
     ],

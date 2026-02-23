@@ -1,5 +1,5 @@
 from patcher.helper.entrance_exit_names import HAUNTED_ZONE_MAIN_AREA_MANSION_GATE
-from patcher.helper.patttern_handler import compute_call_to_function_script, create_lstr_script, \
+from patcher.helper.patttern_handler import compute_call_to_function_script, create_lstr_instruction_fsb, \
     get_exit_zone_area_position_data, parse_pattern_bytes, \
     patch_taxi_stop
 from patcher.models.models import PatchPattern, Instruction, Patch
@@ -305,8 +305,8 @@ set_kakuna_location_function = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, globalManager.name
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
@@ -344,8 +344,8 @@ set_kakuna_location_function = PatchPattern(
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, f0101FuwarideTaxiStop
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, f0101FuwarideTaxiStop.name
             ),
             new_instruction_readable="lstr f0501TalkMozyanbo"
         ),
@@ -444,8 +444,8 @@ set_metapod_location_function = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, globalManager.name
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
@@ -483,8 +483,8 @@ set_metapod_location_function = PatchPattern(
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, f0301FuwarideTaxiStop
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, f0301FuwarideTaxiStop.name
             ),
             new_instruction_readable="lstr f0501Sekihi"
         ),
@@ -560,8 +560,8 @@ TREECOCOON = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, f0101FuwarideTaxiStop
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, f0101FuwarideTaxiStop.name
             ),
             new_instruction_readable="lstr fTalkFuwaride"
         ),
@@ -632,8 +632,8 @@ TREETRANSEL = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, f0301FuwarideTaxiStop
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, f0301FuwarideTaxiStop.name
             ),
             new_instruction_readable="lstr f0501Sekihi"
         ),
@@ -707,6 +707,8 @@ taxi_stop = PatchPattern(
 )
 
 evAr05Zn01_Gimmic_patterns = [
+    string_section_start,
+    globalManager,
     set_chapter,
     get_friendship,
     mansion_door,

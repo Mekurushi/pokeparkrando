@@ -1,4 +1,5 @@
-from patcher.helper.patttern_handler import parse_pattern_bytes, create_jmp_instruction_script, create_lstr_script
+from patcher.helper.patttern_handler import parse_pattern_bytes, create_jmp_instruction_script, \
+    create_lstr_instruction_fsb
 from patcher.models.models import Instruction, PatchPattern, Patch
 from patcher.patterns.general import get_friendship, set_chapter
 
@@ -91,28 +92,28 @@ a99_z01_init = PatchPattern(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x003c0010).to_bytes(
                 4, 'big'
-                ),
+            ),
             new_instruction_readable="push 0x3c"
         ),
         Patch(
             identifier=4,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x0fa10010).to_bytes(
                 4, 'big'
-                ),
+            ),
             new_instruction_readable="push 0xfa1"
         ),
         Patch(
             identifier=5,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4, 'big'
-                ),
+            ),
             new_instruction_readable="delay0"
         ),
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
                 4, 'big'
-                ),
+            ),
             new_instruction_readable="push 0x0"
         ),
 
@@ -378,7 +379,7 @@ area01 = PatchPattern(
             identifier=2,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4, 'big'
-                ),
+            ),
             new_instruction_readable="delay(0)"
         )
 
@@ -708,13 +709,13 @@ celebi_interaction = PatchPattern(
             identifier=15,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
                 4, 'big'
-                ),
+            ),
             new_instruction_readable="push 0x1"
         ),
         Patch(
             identifier=16,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, f9901TalkCelebi
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, f9901TalkCelebi.name
             ),
             new_instruction_readable="lstr f9901TalkCelebi"
         ),
@@ -723,21 +724,21 @@ celebi_interaction = PatchPattern(
             identifier=17,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000b).to_bytes(
                 4, 'big'
-                ),
+            ),
             new_instruction_readable="load_arg -0x2"  # load globalManager
         ),
         Patch(
             identifier=18,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
                 4, 'big'
-                ),
+            ),
             new_instruction_readable="push 0x0"  # opcode
         ),
         Patch(
             identifier=19,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00150401).to_bytes(
                 4, 'big'
-                ),
+            ),
             new_instruction_readable="SC4 0x0:0x15"
         ),
     ]
@@ -766,7 +767,7 @@ remove_snorlax = PatchPattern(
             identifier=2,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
                 4, 'big'
-                ),
+            ),
             new_instruction_readable="push 0x0"
         )
 
@@ -774,6 +775,7 @@ remove_snorlax = PatchPattern(
 )
 
 evAr99Zn01_Npc_Main_pattern = [
+    string_section_start,
     set_chapter,
     get_friendship,
     # remove events
@@ -789,5 +791,6 @@ evAr99Zn01_Npc_Main_pattern = [
     # spawn condition
     remove_snorlax,
     a99_z01_init,
-    celebi_interaction
+    celebi_interaction,
+    f9901TalkCelebi
 ]

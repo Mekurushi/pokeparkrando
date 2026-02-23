@@ -1,6 +1,6 @@
 import io
 
-from patcher.helper.patttern_handler import parse_pattern_bytes, \
+from patcher.helper.patttern_handler import find_pattern_by_name, parse_pattern_bytes, \
     search_pattern
 from patcher.models.DOL import DOL
 from patcher.models.models import PatchPattern, Instruction, Patch
@@ -59,7 +59,7 @@ def compute_conditional_branch_instruction_from_identifier(offset: int, data: by
                                                            patch_patterns: list[PatchPattern], pattern_name: str,
                                                            condition: str):
     pattern = find_pattern_by_name(patch_patterns, pattern_name)
-    target_offset = pattern.get(target_identifier).address
+    target_offset = pattern.matched_instructions.get(target_identifier).address
     branch_offset = get_branch_offset(offset, data, target_offset)
 
     instruction = get_conditional_branch_instruction(branch_offset, condition)
@@ -83,7 +83,7 @@ def get_b_instruction(branch_offset: int):
 def compute_b_instruction_from_identifier(offset: int, data: bytearray, pattern_name: str,
                                           patch_patterns: list[PatchPattern], target_identifier: int):
     pattern = find_pattern_by_name(patch_patterns, pattern_name)
-    target_offset = pattern.get(target_identifier).address
+    target_offset = pattern.matched_instructions.get(target_identifier).address
 
     branch_offset = get_branch_offset(offset, data, target_offset)
 
@@ -95,7 +95,7 @@ def compute_b_instruction_from_identifier(offset: int, data: bytearray, pattern_
 def compute_bl_to_function(offset: int, data: bytearray, patch_patterns: list[PatchPattern], pattern_name: str,
                            target_identifier: int):
     pattern = find_pattern_by_name(patch_patterns, pattern_name)
-    target_offset = pattern.get(target_identifier).address
+    target_offset = pattern.matched_instructions.get(target_identifier).address
 
     branch_offset = get_branch_offset(offset, data, target_offset)
 
@@ -124,20 +124,10 @@ def get_player_name_from_dict(plando_dict):
     return (player_name_bytes + b'\x00' * 0x40)[:0x40]
 
 
-def find_pattern_by_name(patterns: list[PatchPattern], name: str):
-    matches = next((p for p in patterns if p.name == name), None).get_matches()
-    if len(matches) > 1:
-        raise ValueError("ambiguous match for pattern name: ", name)
-    if len(matches) == 0:
-        raise ValueError("no match found for pattern name: ", name)
-
-    return matches[0].matched_instructions
-
-
 def write_address_of_target_patch(data: bytearray, patch_patterns: list[PatchPattern], pattern_name: str,
                                   target_identifier: int) -> bytes:
     pattern = find_pattern_by_name(patch_patterns, pattern_name)
-    target_offset = pattern.get(target_identifier).address
+    target_offset = pattern.matched_instructions.get(target_identifier).address
     dol = DOL()
     stream = io.BytesIO(data)
     dol.read(stream)
@@ -148,7 +138,7 @@ def write_address_of_target_patch(data: bytearray, patch_patterns: list[PatchPat
 def get_addr16_ha(data: bytearray, patch_patterns: list[PatchPattern], pattern_name: str,
                   target_identifier: int) -> bytes:
     pattern = find_pattern_by_name(patch_patterns, pattern_name)
-    target_offset = pattern.get(target_identifier).address
+    target_offset = pattern.matched_instructions.get(target_identifier).address
     dol = DOL()
     stream = io.BytesIO(data)
     dol.read(stream)
@@ -160,7 +150,7 @@ def get_addr16_ha(data: bytearray, patch_patterns: list[PatchPattern], pattern_n
 def get_addr16_lo(data: bytearray, patch_patterns: list[PatchPattern], pattern_name: str,
                   target_identifier: int) -> bytes:
     pattern = find_pattern_by_name(patch_patterns, pattern_name)
-    target_offset = pattern.get(target_identifier).address
+    target_offset = pattern.matched_instructions.get(target_identifier).address
     dol = DOL()
     stream = io.BytesIO(data)
     dol.read(stream)
@@ -188,7 +178,7 @@ def get_lower_address(address: int) -> int:
 def li_upper_address_from_pattern(data: bytearray, patch_patterns: list[PatchPattern], pattern_name: str,
                                   target_identifier: int, register: int):
     pattern = find_pattern_by_name(patch_patterns, pattern_name)
-    target_offset = pattern.get(target_identifier).address
+    target_offset = pattern.matched_instructions.get(target_identifier).address
     dol = DOL()
     stream = io.BytesIO(data)
     dol.read(stream)
@@ -203,7 +193,7 @@ def ori_lower_address_from_pattern(data: bytearray, patch_patterns: list[PatchPa
                                    target_identifier: int,
                                    register: int):
     pattern = find_pattern_by_name(patch_patterns, pattern_name)
-    target_offset = pattern.get(target_identifier).address
+    target_offset = pattern.matched_instructions.get(target_identifier).address
     dol = DOL()
     stream = io.BytesIO(data)
     dol.read(stream)

@@ -7,7 +7,7 @@ from patcher.helper.entrance_exit_names import TREEHOUSE_BEACH_DRIFBLIM_FAST_TRA
     TREEHOUSE_PIPLUP_SKYBALLOON
 from patcher.helper.patttern_handler import get_exit_zone_area_position_data, \
     get_num_skygarden_prisma_count_from_dict_as_instruction, \
-    parse_pattern_bytes, compute_call_to_function_script, create_lstr_script, \
+    parse_pattern_bytes, compute_call_to_function_script, create_lstr_instruction_fsb, \
     create_jmp_instruction_script
 from patcher.models.models import PatchPattern, Instruction, Patch
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
@@ -442,9 +442,9 @@ custom_prisma_check_function = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start,
-                globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name,
+                globalManager.name
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
@@ -2804,8 +2804,8 @@ piplup_interaction = PatchPattern(
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, string_21_60170
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, string_21_60170.name
             ),
             new_instruction_readable="lstr 21_60170"
         ),
@@ -2835,8 +2835,8 @@ piplup_interaction = PatchPattern(
         ),
         Patch(
             identifier=11,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, string_21_60160
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, string_21_60160.name
             ),
             new_instruction_readable="lstr 21_60160"
         ),
@@ -4656,6 +4656,11 @@ STAXIAREA = PatchPattern(
 )
 
 evAr02Zn01_Npc_Main_pattern = [
+    string_section_start,
+    string_21_60160,
+    string_21_60170,
+    globalManager,
+
     set_chapter,
     get_friendship,
     gate_open_logic,

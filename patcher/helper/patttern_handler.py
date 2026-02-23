@@ -196,26 +196,12 @@ def fill_with_delay_instructions_script(start_offset: int, end_offset: int):
     return byte_sequence
 
 
-def create_lstr_script(data: bytearray, start_string_section_pattern: PatchPattern,
-                       target_string_pattern: PatchPattern):
-    start_string_section_match = search_pattern(data, start_string_section_pattern.patternJP)
-    target_string_match = search_pattern(data, target_string_pattern.patternJP)
-    if not start_string_section_match or not target_string_match:
-        print(f"ERROR: No match found for pattern: {start_string_section_pattern.name} or {target_string_pattern.name}")
-        raise Exception(
-            f"ERROR: No match found for pattern: {start_string_section_pattern.name} or {target_string_pattern.name}"
-        )
+def create_lstr_instruction_fsb(patch_patterns: list[PatchPattern], start_pattern_name: str,
+                                target_pattern_name: str):
+    start_pattern = find_pattern_by_name(patch_patterns, start_pattern_name)
+    target_pattern = find_pattern_by_name(patch_patterns, target_pattern_name)
 
-    if len(start_string_section_match) > 1 or len(target_string_match) > 1:
-        print(
-            f"ERROR: Ambiguous match ({len(start_string_section_match)}) for pattern: {start_string_section_pattern.name}"
-        )
-        print(f"ERROR: Ambiguous match ({len(target_string_match)}) for pattern: {target_string_pattern.name}")
-        raise Exception(
-            f"non unique pattern"
-        )
-
-    string_offset = target_string_match[0].base_address - start_string_section_match[0].base_address
+    string_offset = target_pattern.base_address - start_pattern.base_address
     string_offset_as_bytes = string_offset.to_bytes(3, "big")
     lstr_instruction = string_offset_as_bytes + b'\x13'
     print(f"writing lstr instruction: 0x{int.from_bytes(lstr_instruction, 'big'):08X}")
@@ -223,15 +209,21 @@ def create_lstr_script(data: bytearray, start_string_section_pattern: PatchPatte
     return lstr_instruction
 
 
-def find_pattern_matches_by_name(patterns: list[PatchPattern], name: str):
-    return next((p for p in patterns if p.name == name), None).get_matches()[0].matched_instructions
+def find_pattern_by_name(patterns: list[PatchPattern], name: str):
+    matches = next((p for p in patterns if p.name == name), None).get_matches()
+    if len(matches) > 1:
+        raise ValueError("ambiguous match for pattern name: ", name)
+    if len(matches) == 0:
+        raise ValueError("no match found for pattern name: ", name)
+
+    return matches[0]
 
 
 def create_jmp_instruction_script(offset: int, target_identifier: int, patch_patterns: list[PatchPattern],
                                   pattern_name: str,
                                   condition: Literal["jmp"] | Literal["jnz"] | Literal["jz"] = "jmp"):
-    pattern = find_pattern_matches_by_name(patch_patterns, pattern_name)
-    target_address = pattern.get(target_identifier).address
+    pattern = find_pattern_by_name(patch_patterns, pattern_name)
+    target_address = pattern.matched_instructions.get(target_identifier).address
 
     branch_offset = target_address - (offset + 0x4)
     operand = branch_offset // 4

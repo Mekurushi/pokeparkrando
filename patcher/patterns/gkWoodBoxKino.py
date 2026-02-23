@@ -1,4 +1,4 @@
-from patcher.helper.patttern_handler import parse_pattern_bytes, create_lstr_script
+from patcher.helper.patttern_handler import parse_pattern_bytes, create_lstr_instruction_fsb
 from patcher.models.models import PatchPattern, Instruction, Patch
 
 string_section_start = PatchPattern(
@@ -68,9 +68,9 @@ shroomish_box_wait = PatchPattern(
 
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start,
-                eventManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name,
+                eventManager.name
             ),
             new_instruction_readable="lstr f0101TalkMankey"
         ),
@@ -78,7 +78,7 @@ shroomish_box_wait = PatchPattern(
             identifier=5,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
                 4, 'big'
-                ),
+            ),
             new_instruction_readable="push 0x1"
         ),
 
@@ -88,5 +88,6 @@ shroomish_box_wait = PatchPattern(
 gkWoodBoxKinoPattern = [
     shroomish_box_wait,
     # String Section
+    string_section_start,
     eventManager
 ]

@@ -8,7 +8,7 @@ from patcher.helper.entrance_exit_names import MEADOW_ZONE_MAIN_AREA_BEACH_DRIFB
 from patcher.helper.patttern_handler import get_attraction_id_from_dict, get_exit_zone_area_position_data, \
     parse_pattern_bytes, \
     compute_call_to_function_script, \
-    get_num_battle_count_from_dict_as_instruction, create_lstr_script, \
+    get_num_battle_count_from_dict_as_instruction, create_lstr_instruction_fsb, \
     create_jmp_instruction_script
 from patcher.models.models import PatchPattern, Instruction, Patch
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
@@ -91,9 +91,9 @@ overworld_pokemon_spawning_Ar01Zn01 = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start,
-                f0101TalkOnisuzume
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name,
+                f0101TalkOnisuzume.name
             ),
             new_instruction_readable="lstr f0101TalkOnisuzume"
         ),
@@ -175,8 +175,8 @@ set_magikarp_location_function = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, globalManager.name
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
@@ -214,8 +214,8 @@ set_magikarp_location_function = PatchPattern(
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, f0101TalkOnisuzume
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, f0101TalkOnisuzume.name
             ),
             new_instruction_readable="lstr f0101TalkOnisuzume"
         ),
@@ -12611,9 +12611,9 @@ custom_check_f0301BippaFlag_funtion = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start,
-                globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name,
+                globalManager.name
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
@@ -12642,8 +12642,8 @@ custom_check_f0301BippaFlag_funtion = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, f0301BippaFlag
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, f0301BippaFlag.name
             ),
             new_instruction_readable="lstr f0301BippaFlag"
         ),
@@ -12819,9 +12819,9 @@ get_mankey_friendship_function = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start,
-                globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name,
+                globalManager.name
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
@@ -13310,6 +13310,11 @@ STAXIAREA = PatchPattern(
 )
 
 evAr01Zn01_Npc_Main_patch_pattern = [
+    string_section_start,
+    f0101TalkOnisuzume,
+    globalManager,
+    f0301BippaFlag,
+
     set_chapter,
     get_friendship,
     overworld_pokemon_spawning_Ar01Zn01,
