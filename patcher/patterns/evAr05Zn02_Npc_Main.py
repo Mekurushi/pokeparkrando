@@ -1,6 +1,6 @@
 from patcher.helper.entrance_exit_names import HAUNTED_ZONE_MANSION_AREA_DUSKNOIR_ATTRACTION
 from patcher.helper.patttern_handler import compute_call_to_function_script, create_jmp_instruction_script, \
-    create_lstr_script, \
+    create_lstr_instruction_fsb, \
     get_attraction_id_from_dict, get_num_battle_count_from_dict_as_instruction, parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
@@ -70,9 +70,9 @@ set_attraction_record = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start,
-                globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name,
+                globalManager.name
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
@@ -289,8 +289,8 @@ get_dusknoir_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, globalManager.name
             ),
             new_instruction_readable="lstr globalmanager"
         ),
@@ -786,9 +786,9 @@ are_doors_unlocked = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start,
-                globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name,
+                globalManager.name
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
@@ -817,8 +817,8 @@ are_doors_unlocked = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, f0502DoorA
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, f0502DoorA.name
             ),
             new_instruction_readable="lstr f0502DoorA"
         ),
@@ -1309,6 +1309,9 @@ mismagius_interaction = PatchPattern(
 )
 
 evAr05Zn02_Npc_Main_patterns = [
+    string_section_start,
+    f0502DoorA,
+    globalManager,
     set_chapter,
     get_friendship,
     dusknoir_interaction,

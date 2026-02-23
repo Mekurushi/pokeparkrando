@@ -4,7 +4,7 @@ from patcher.helper.entrance_exit_names import HAUNTED_ZONE_MAIN_AREA_BEACH_DRIF
     HAUNTED_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL, \
     HAUNTED_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL, HAUNTED_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL, \
     HAUNTED_ZONE_MAIN_AREA_TANGROWTH_ATTRACTION, HAUNTED_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL
-from patcher.helper.patttern_handler import compute_call_to_function_script, create_lstr_script, \
+from patcher.helper.patttern_handler import compute_call_to_function_script, create_lstr_instruction_fsb, \
     get_attraction_id_from_dict, get_exit_zone_area_position_data, parse_pattern_bytes, \
     create_jmp_instruction_script
 from patcher.models.models import PatchPattern, Instruction, Patch
@@ -75,9 +75,9 @@ set_attraction_record = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start,
-                globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name,
+                globalManager.name
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
@@ -354,8 +354,8 @@ get_tangrowth_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, globalManager.name
             ),
             new_instruction_readable="lstr globalmanager"
         ),
@@ -1392,6 +1392,8 @@ STAXIAREA = PatchPattern(
 )
 
 evAr05Zn01_Npc_Main_patterns = [
+    string_section_start,
+    globalManager,
     set_chapter,
     get_friendship,
     trap_gate,

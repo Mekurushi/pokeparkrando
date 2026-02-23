@@ -1,4 +1,4 @@
-from patcher.helper.patttern_handler import create_lstr_script, parse_pattern_bytes, patch_taxi_stop
+from patcher.helper.patttern_handler import create_lstr_instruction_fsb, parse_pattern_bytes, patch_taxi_stop
 from patcher.models.models import Instruction, Patch, PatchPattern
 from patcher.patterns.general import get_friendship, set_chapter
 
@@ -106,8 +106,8 @@ switchB = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, f0602FuwarideTaxiStop
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, f0602FuwarideTaxiStop.name
             ),
             new_instruction_readable="lstr f0601TalkKamex"
         ),
@@ -155,6 +155,7 @@ taxi_stop = PatchPattern(
 )
 
 evAr06Zn01_Gimmic_patterns = [
+    string_section_start,
     set_chapter,
     get_friendship,
     taxi_stop,

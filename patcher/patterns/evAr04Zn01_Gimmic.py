@@ -1,4 +1,5 @@
-from patcher.helper.patttern_handler import compute_call_to_function_script, create_lstr_script, parse_pattern_bytes, \
+from patcher.helper.patttern_handler import compute_call_to_function_script, create_lstr_instruction_fsb, \
+    parse_pattern_bytes, \
     patch_taxi_stop
 from patcher.models.models import PatchPattern, Instruction, Patch
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
@@ -144,8 +145,8 @@ box_digda = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, f0101FuwarideTaxiStop
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, f0101FuwarideTaxiStop.name
             ),
             new_instruction_readable="lstr f0401ClearTorideps"
         ),
@@ -161,8 +162,8 @@ box_digda = PatchPattern(
 
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, f0101FuwarideTaxiStop
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, f0101FuwarideTaxiStop.name
             ),
             new_instruction_readable="lstr f0401ClearTorideps"
         ),
@@ -215,8 +216,8 @@ box_coil1 = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, f0301FuwarideTaxiStop
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, f0301FuwarideTaxiStop.name
             ),
             new_instruction_readable="lstr f0201TalkEleboo"
         ),
@@ -287,8 +288,8 @@ box_coil2 = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, slFindModule
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, slFindModule.name
             ),
             new_instruction_readable="lstr f0101TalkFushigidaneBefore"
         ),
@@ -359,8 +360,8 @@ box_coil3 = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, f0402FuwarideTaxiStop
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, f0402FuwarideTaxiStop.name
             ),
             new_instruction_readable="lstr fTalkFuwaride"
         ),
@@ -454,8 +455,8 @@ set_magnemite_location_function = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, globalManager.name
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
@@ -493,8 +494,8 @@ set_magnemite_location_function = PatchPattern(
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, f0301FuwarideTaxiStop
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, f0301FuwarideTaxiStop.name
             ),
             new_instruction_readable="lstr f0201TalkEleboo"
         ),
@@ -593,8 +594,8 @@ set_magnemite2_location_function = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, globalManager.name
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
@@ -632,8 +633,8 @@ set_magnemite2_location_function = PatchPattern(
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, slFindModule
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, slFindModule.name
             ),
             new_instruction_readable="lstr f0101TalkFushigidaneBefore"
         ),
@@ -732,8 +733,8 @@ set_magnemite3_location_function = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, globalManager.name
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
@@ -771,8 +772,8 @@ set_magnemite3_location_function = PatchPattern(
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, f0402FuwarideTaxiStop
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, f0402FuwarideTaxiStop.name
             ),
             new_instruction_readable="lstr fTalkFuwaride"
         ),
@@ -851,6 +852,8 @@ taxi_stop = PatchPattern(
 )
 
 evAr04Zn01_Gimmic_patterns = [
+    string_section_start,
+    globalManager,
     set_chapter,
     get_friendship,
     box_digda,

@@ -1,5 +1,5 @@
 from patcher.helper.patttern_handler import compute_call_to_function_script, create_jmp_instruction_script, \
-    create_lstr_script, parse_pattern_bytes, patch_taxi_stop
+    create_lstr_instruction_fsb, parse_pattern_bytes, patch_taxi_stop
 from patcher.models.models import Instruction, Patch, PatchPattern
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
 
@@ -150,8 +150,8 @@ set_golem_location_function = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, globalManager.name
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
@@ -189,8 +189,8 @@ set_golem_location_function = PatchPattern(
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, f0402TrapKamonegi
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, f0402TrapKamonegi.name
             ),
             new_instruction_readable="lstr f0402TrapKamonegi"
         ),
@@ -289,8 +289,8 @@ set_baltoy_location_function = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, globalManager.name
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
@@ -328,8 +328,8 @@ set_baltoy_location_function = PatchPattern(
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, f0101FuwarideTaxiStop
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, f0101FuwarideTaxiStop.name
             ),
             new_instruction_readable="lstr f0402ClearDosidon"
         ),
@@ -399,8 +399,8 @@ yokoro = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, f0402TrapKamonegi
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, f0402TrapKamonegi.name
             ),
             new_instruction_readable="lstr f0402TrapKamonegi"
         ),
@@ -460,8 +460,8 @@ box_yajilon_patternPALNA = [
 box_yajilon_patchMapPALNA = [
     Patch(
         identifier=2,
-        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-            data, string_section_start, f0101FuwarideTaxiStop
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+            patch_patterns, string_section_start.name, f0101FuwarideTaxiStop.name
         ),
         new_instruction_readable="lstr f0402ClearDosidon"
     ),
@@ -515,8 +515,8 @@ box_yajilon = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, f0101FuwarideTaxiStop
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, f0101FuwarideTaxiStop.name
             ),
             new_instruction_readable="lstr f0402ClearDosidon"
         ),
@@ -651,6 +651,9 @@ special_spawn_conditions = PatchPattern(
 )
 
 evAr04Zn02_Gimmic_patterns = [
+    string_section_start,
+    f0402TrapKamonegi,
+    globalManager,
     set_chapter,
     get_friendship,
     drill_switch,

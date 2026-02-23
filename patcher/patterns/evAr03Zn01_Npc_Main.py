@@ -8,7 +8,7 @@ from patcher.helper.entrance_exit_names import BEACH_ZONE_LAPRAS_AREA_BEACH_ZONE
     BEACH_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL, BEACH_ZONE_RECYCLE_AREA_GYARADOS_ATTRACTION
 from patcher.helper.patttern_handler import get_attraction_id_from_dict, get_exit_zone_area_position_data, \
     parse_pattern_bytes, \
-    create_jmp_instruction_script, create_lstr_script, \
+    create_jmp_instruction_script, create_lstr_instruction_fsb, \
     compute_call_to_function_script
 from patcher.models.models import Instruction, PatchPattern, Patch
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
@@ -120,9 +120,9 @@ custom_prisma_check_function = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start,
-                globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name,
+                globalManager.name
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
@@ -348,8 +348,8 @@ bidoof_quest_condition = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start, fBippasWoodLevel
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, fBippasWoodLevel.name
             ),
             new_instruction_readable="lstr fBippasWoodLevel"
         ),
@@ -1523,9 +1523,9 @@ set_attraction_record = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start,
-                globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name,
+                globalManager.name
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
@@ -2552,6 +2552,8 @@ STAXIAREA = PatchPattern(
 )
 
 evAr03Zn01_Npc_Main_pattern = [
+    string_section_start,
+    globalManager,
     set_chapter,
     get_friendship,
     # bidoof_quest_condition,

@@ -27,9 +27,14 @@
 
 [GkWoodBoxKino.fsb]
   Shroomish Box Wait: 0xb90 (1 match(es))
+  string section start: 0x107c (1 match(es))
   ds EventManager: 0x10f8 (1 match(es))
 
 [evAr01Zn01_Npc_Main.fsb]
+  string section start: 0x1b108 (1 match(es))
+  ds f0101TalkOnisuzume: 0x1b75e (1 match(es))
+  ds GlobalManager: 0x1b16e (1 match(es))
+  ds f0301BippaFlag: 0x1b998 (1 match(es))
   set_chapter: 0x4a18 (1 match(es))
   get_friendship function: 0x4744 (1 match(es))
   Overworld Pokemon Spawn Logic: 0xc3c0 (1 match(es))
@@ -87,6 +92,7 @@
   STAXIAREA: 0x7f88 (1 match(es))
 
 [evAr01Zn01_Gimmic.fsb]
+  string section start: 0x9518 (1 match(es))
   set_chapter: 0x4a18 (1 match(es))
   get_friendship function: 0x4744 (1 match(es))
   Caterpie Tree Gimmic: 0x87bc (1 match(es))
@@ -103,6 +109,7 @@
   Close Gate Function from Venusaur Gate in Meadow Zone: 0xd0 (1 match(es))
 
 [evAr99Zn01_Npc_Main.fsb]
+  string section start: 0xd2f0 (1 match(es))
   set_chapter: 0x4a18 (1 match(es))
   get_friendship function: 0x4744 (1 match(es))
   C00000_00010: 0xcd38 (1 match(es))
@@ -116,6 +123,7 @@
   snorlax_spawn_conditions: 0x839c (1 match(es))
   a99_z01_init remove spawn conditions: 0xcbf8 (1 match(es))
   celebi_interaction: 0xbe38 (1 match(es))
+  f9901TalkCelebi: 0xd8c2 (1 match(es))
 
 [evAr99Zn01_ScriptEvent.fsb]
   EMAPA01_Z01: 0x82bc (1 match(es))
@@ -124,6 +132,10 @@
   Kabigon Wall Wait: 0x88 (1 match(es))
 
 [evAr02Zn01_Npc_Main.fsb]
+  string section start: 0x1b6f4 (1 match(es))
+  ds 21_60160: 0x1c5f3 (1 match(es))
+  ds 21_60170: 0x1c5fc (1 match(es))
+  ds GlobalManager: 0x1b75a (1 match(es))
   set_chapter: 0x4a18 (1 match(es))
   get_friendship function: 0x4744 (1 match(es))
   Close ar02Zn01 Gates depending on: 0x104c4 (1 match(es))
@@ -167,22 +179,28 @@
   wait for RockB: 0x88 (1 match(es))
 
 [GkRecycleSanbasiA.fsb]
+  string section start: 0x1f0 (1 match(es))
   step01 for bridge 1: 0x88 (1 match(es))
   ds ERROR: slFindModule: 0x225 (1 match(es))
 
 [GkRecycleSanbasiB.fsb]
   step01 for bridge 2: 0x88 (1 match(es))
+  string section start: 0x1f0 (1 match(es))
   ds ERROR: slFindModule: 0x225 (1 match(es))
 
 [GkRecycleSanbasiC.fsb]
   step01 for bridge 3: 0x88 (1 match(es))
+  string section start: 0x1f0 (1 match(es))
   ds ERROR: slFindModule: 0x225 (1 match(es))
 
 [GkRecycleSanbasiD.fsb]
   step01 for bridge 4: 0x88 (1 match(es))
+  string section start: 0x1f0 (1 match(es))
   ds ERROR: slFindModule: 0x225 (1 match(es))
 
 [evAr03Zn01_Npc_Main.fsb]
+  string section start: 0x1ade4 (1 match(es))
+  ds GlobalManager: 0x1ae4a (1 match(es))
   set_chapter: 0x4a18 (1 match(es))
   get_friendship function: 0x4744 (1 match(es))
   piplup interaction: 0x13384 (1 match(es))
@@ -229,12 +247,17 @@
 
 [GkMammoo.fsb]
   step01 for mammoo: 0x88 (1 match(es))
+  string section start: 0x574 (1 match(es))
   ds ERROR: slFindModule: 0x5a0 (1 match(es))
 
 [Gk0302Gate.fsb]
   0302Gate Close: 0xd0 (1 match(es))
 
 [evAr03Zn02_Npc_Main.fsb]
+  string section start: 0x1c1a8 (1 match(es))
+  ds GlobalManager: 0x1c20e (1 match(es))
+  ds disposManager: 0x1c200 (1 match(es))
+  ds f0302TalkTree: 0x1d220 (1 match(es))
   set_chapter: 0x4a18 (1 match(es))
   get_friendship function: 0x4744 (1 match(es))
   Lift Top: 0x14c48 (1 match(es))
@@ -276,6 +299,8 @@
   Disposition Drifblim: 0x510 (1 match(es))
 
 [evAr04Zn01_Gimmic.fsb]
+  string section start: 0xa850 (1 match(es))
+  ds GlobalManager: 0xa8b4 (1 match(es))
   set_chapter: 0x4a18 (1 match(es))
   get_friendship function: 0x4744 (1 match(es))
   box_digda: 0x890c (1 match(es))
@@ -292,6 +317,8 @@
   ds slFindModule:_module_not_found: 0xa862 (1 match(es))
 
 [evAr04Zn01_Npc_Main.fsb]
+  string section start: 0x19ff0 (1 match(es))
+  ds GlobalManager: 0x1a056 (1 match(es))
   set_chapter: 0x4a18 (1 match(es))
   get_friendship function: 0x4744 (1 match(es))
   special spawn conditions: 0xbb24 (1 match(es))
@@ -329,6 +356,8 @@
   Disposition Drifblim: 0x544 (1 match(es))
 
 [evAr04Zn02_Npc_Main.fsb]
+  string section start: 0x16088 (1 match(es))
+  ds GlobalManager: 0x160ee (1 match(es))
   set_chapter: 0x4a18 (1 match(es))
   get_friendship function: 0x4744 (1 match(es))
   Trap Events: 0x15704 (1 match(es))
@@ -378,6 +407,9 @@
   ds f0402FireWallB: 0x3d8 (1 match(es))
 
 [evAr04Zn02_Gimmic.fsb]
+  string section start: 0xa90c (1 match(es))
+  ds f0402TrapKamonegi: 0xac5b (1 match(es))
+  ds GlobalManager: 0xa970 (1 match(es))
   set_chapter: 0x4a18 (1 match(es))
   get_friendship function: 0x4744 (1 match(es))
   drill_switch: 0x9550 (1 match(es))
@@ -430,6 +462,9 @@
   EMAPA05_Z02: 0x82c8 (1 match(es))
 
 [evAr05Zn02_Npc_Main.fsb]
+  string section start: 0x17a9c (1 match(es))
+  ds f0502DoorA: 0x182d9 (1 match(es))
+  ds GlobalManager: 0x17b02 (1 match(es))
   set_chapter: 0x4a18 (1 match(es))
   get_friendship function: 0x4744 (1 match(es))
   dusknoir interaction: 0x10a80 (1 match(es))
@@ -454,6 +489,8 @@
   EMAPA05_Z03: 0x843c (1 match(es))
 
 [evAr05Zn01_Npc_Main.fsb]
+  string section start: 0xda20 (1 match(es))
+  ds GlobalManager: 0xda86 (1 match(es))
   set_chapter: 0x4a18 (1 match(es))
   get_friendship function: 0x4744 (1 match(es))
   Trap Event Mansion Gate: 0x94f8 (1 match(es))
@@ -474,6 +511,8 @@
   EMAPA02_Z01: 0x82bc (1 match(es))
 
 [evAr05Zn02_Gimmic.fsb]
+  string section start: 0x8cfc (1 match(es))
+  ds GlobalManager: 0x8d60 (1 match(es))
   set_chapter: 0x4a18 (1 match(es))
   get_friendship function: 0x4744 (1 match(es))
   JAR_BIRIRI: 0x870c (1 match(es))
@@ -481,6 +520,8 @@
   ds f0101FuwarideTaxiStop: 0x8f22 (1 match(es))
 
 [evAr05Zn01_Gimmic.fsb]
+  string section start: 0x980c (1 match(es))
+  ds GlobalManager: 0x9870 (1 match(es))
   set_chapter: 0x4a18 (1 match(es))
   get_friendship function: 0x4744 (1 match(es))
   mansion door condition: 0x8504 (1 match(es))
@@ -506,6 +547,7 @@
   gk0601DoorB Close: 0xd0 (1 match(es))
 
 [evAr06Zn01_Gimmic.fsb]
+  string section start: 0xa12c (1 match(es))
   set_chapter: 0x4a18 (1 match(es))
   get_friendship function: 0x4744 (1 match(es))
   granite zone taxi stop: 0x9c00 (1 match(es))
@@ -517,6 +559,11 @@
   special_spawn_condtitions: 0x82bc (1 match(es))
 
 [evAr06Zn01_Npc_Main.fsb]
+  string section start: 0x13798 (1 match(es))
+  f0601TalkKamex: 0x13f60 (1 match(es))
+  ds GlobalManager: 0x137fe (1 match(es))
+  f0601FireWallB: 0x13ed3 (1 match(es))
+  fRuinsGateKey: 0x140fb (1 match(es))
   set_chapter: 0x4a18 (1 match(es))
   get_friendship function: 0x4744 (1 match(es))
   absol interaction: 0xe0c8 (1 match(es))
@@ -553,6 +600,8 @@
   flower zone taxi stop: 0x8a20 (1 match(es))
 
 [evAr06Zn02_Npc_Main.fsb]
+  string section start: 0xf1ec (1 match(es))
+  ds GlobalManager: 0xf252 (1 match(es))
   set_chapter: 0x4a18 (1 match(es))
   get_friendship function: 0x4744 (1 match(es))
   mareep interaction: 0xb9bc (1 match(es))

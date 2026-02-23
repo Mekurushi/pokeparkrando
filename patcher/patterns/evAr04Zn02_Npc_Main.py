@@ -6,7 +6,7 @@ from patcher.helper.entrance_exit_names import MAGMA_ZONE_CIRCLE_AREA_RHYPERIOR_
     MAGMA_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL, \
     MAGMA_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL, \
     MAGMA_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL
-from patcher.helper.patttern_handler import compute_call_to_function_script, create_lstr_script, \
+from patcher.helper.patttern_handler import compute_call_to_function_script, create_lstr_instruction_fsb, \
     get_attraction_id_from_dict, \
     get_exit_zone_area_position_data, get_num_battle_count_from_dict_as_instruction, \
     parse_pattern_bytes, \
@@ -92,9 +92,9 @@ set_attraction_record = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_script(
-                data, string_section_start,
-                globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name,
+                globalManager.name
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
@@ -2343,6 +2343,8 @@ STAXIAREA = PatchPattern(
 )
 
 evAr04Zn02_Npc_Main_patterns = [
+    string_section_start,
+    globalManager,
     set_chapter,
     get_friendship,
     trap_events,
