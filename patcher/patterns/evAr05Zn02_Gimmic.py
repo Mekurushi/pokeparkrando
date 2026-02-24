@@ -1,4 +1,4 @@
-from patcher.helper.patttern_handler import compute_call_to_function_script, create_lstr_instruction_fsb, \
+from patcher.helper.patttern_handler import compute_call_instruction_fsb, create_lstr_instruction_fsb, \
     parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
@@ -106,8 +106,8 @@ set_voltorb_location_function = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_module
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_module.name
             ),
             new_instruction_readable="call get_module"
         ),
@@ -240,8 +240,8 @@ JAR_BIRIRI = PatchPattern(
         Patch(
             identifier=7,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_voltorb_location_function
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_voltorb_location_function.name
             ),
             new_instruction_readable="call set_voltorb_location_function"
         ),
@@ -250,6 +250,7 @@ JAR_BIRIRI = PatchPattern(
 )
 
 evAr05Zn02_Gimmic_patterns = [
+    get_module,
     string_section_start,
     globalManager,
     set_chapter,

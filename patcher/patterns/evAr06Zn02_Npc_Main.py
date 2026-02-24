@@ -5,7 +5,7 @@ from patcher.helper.entrance_exit_names import FLOWER_ZONE_MAIN_AREA_BEACH_DRIFB
     FLOWER_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL, \
     FLOWER_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL, \
     FLOWER_ZONE_MAIN_AREA_RAYQUAZA_ATTRACTION, FLOWER_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL
-from patcher.helper.patttern_handler import compute_call_to_function_script, create_jmp_instruction_script, \
+from patcher.helper.patttern_handler import compute_call_instruction_fsb, create_jmp_instruction_script, \
     create_lstr_instruction_fsb, get_attraction_id_from_dict, get_exit_zone_area_position_data, parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
@@ -84,9 +84,9 @@ set_attraction_record = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data,
-                get_module
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                get_module.name
             ),
             new_instruction_readable="call get_module()"
         ),
@@ -300,8 +300,8 @@ get_rayquaza_friendship_location_state = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_module
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_module.name
             ),
             new_instruction_readable="call get_module"
         ),
@@ -438,8 +438,8 @@ return_at02 = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_rayquaza_friendship_location_state
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_rayquaza_friendship_location_state.name
             ),
             new_instruction_readable="call get_rayquaza_friendship_location_state"
         ),
@@ -686,8 +686,8 @@ furret_interaction = PatchPattern(
         Patch(
             identifier=13,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -936,8 +936,8 @@ ar06zn02_init = PatchPattern(
         Patch(
             identifier=4,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_items
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_items.name
             ),
             new_instruction_readable="call set_items"
         ),
@@ -1061,8 +1061,8 @@ teddiursa_interaction = PatchPattern(
         Patch(
             identifier=7,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -1176,8 +1176,8 @@ meditite_quiz = PatchPattern(
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -1601,6 +1601,8 @@ STAXIAREA = PatchPattern(
 )
 
 evAr06Zn02_Npc_Main_patterns = [
+    set_items,
+    get_module,
     string_section_start,
     globalManager,
     set_chapter,

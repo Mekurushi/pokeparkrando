@@ -1,5 +1,5 @@
 from patcher.helper.entrance_exit_names import HAUNTED_ZONE_MAIN_AREA_MANSION_GATE
-from patcher.helper.patttern_handler import compute_call_to_function_script, create_lstr_instruction_fsb, \
+from patcher.helper.patttern_handler import compute_call_instruction_fsb, create_lstr_instruction_fsb, \
     get_exit_zone_area_position_data, parse_pattern_bytes, \
     patch_taxi_stop
 from patcher.models.models import PatchPattern, Instruction, Patch
@@ -313,8 +313,8 @@ set_kakuna_location_function = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_module
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_module.name
             ),
             new_instruction_readable="call get_module"
         ),
@@ -452,8 +452,8 @@ set_metapod_location_function = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_module
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_module.name
             ),
             new_instruction_readable="call get_module"
         ),
@@ -586,8 +586,8 @@ TREECOCOON = PatchPattern(
         Patch(
             identifier=7,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_kakuna_location_function
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_kakuna_location_function.name
             ),
             new_instruction_readable="call set_kakuna_location_function"
         ),
@@ -658,8 +658,8 @@ TREETRANSEL = PatchPattern(
         Patch(
             identifier=7,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_metapod_location_function
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_metapod_location_function.name
             ),
             new_instruction_readable="call set_metapod_location_function"
         ),
@@ -707,6 +707,7 @@ taxi_stop = PatchPattern(
 )
 
 evAr05Zn01_Gimmic_patterns = [
+    get_module,
     string_section_start,
     globalManager,
     set_chapter,

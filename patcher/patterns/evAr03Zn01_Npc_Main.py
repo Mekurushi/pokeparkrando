@@ -9,7 +9,7 @@ from patcher.helper.entrance_exit_names import BEACH_ZONE_LAPRAS_AREA_BEACH_ZONE
 from patcher.helper.patttern_handler import get_attraction_id_from_dict, get_exit_zone_area_position_data, \
     parse_pattern_bytes, \
     create_jmp_instruction_script, create_lstr_instruction_fsb, \
-    compute_call_to_function_script
+    compute_call_instruction_fsb
 from patcher.models.models import Instruction, PatchPattern, Patch
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
 
@@ -129,7 +129,7 @@ custom_prisma_check_function = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
+                                  pattern_name: compute_call_instruction_fsb(
                 offset, data,
                 get_module
             ),
@@ -402,8 +402,8 @@ bidoof_quest_condition = PatchPattern(
         Patch(
             identifier=17,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, eEvent02090
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, eEvent02090.name
             ),
             new_instruction_readable="call event"
         ),
@@ -478,8 +478,8 @@ piplup_interaction = PatchPattern(
         Patch(
             identifier=4,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_bestfriend
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_bestfriend.name
             ),
             new_instruction_readable="call set_bestfriend"
         ),
@@ -1532,9 +1532,9 @@ set_attraction_record = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data,
-                get_module
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                get_module.name
             ),
             new_instruction_readable="call get_module()"
         ),
@@ -1669,8 +1669,8 @@ starly_interaction = PatchPattern(
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -1751,8 +1751,8 @@ starly2_interaction = PatchPattern(
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -1833,8 +1833,8 @@ starly3_interaction = PatchPattern(
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -1927,8 +1927,8 @@ spearow_interaction = PatchPattern(
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -2041,8 +2041,8 @@ spearow2_interaction = PatchPattern(
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -2552,6 +2552,7 @@ STAXIAREA = PatchPattern(
 )
 
 evAr03Zn01_Npc_Main_pattern = [
+    get_module,
     string_section_start,
     globalManager,
     set_chapter,
@@ -2569,6 +2570,7 @@ evAr03Zn01_Npc_Main_pattern = [
     starly3_interaction,
     spearow_interaction,
     spearow2_interaction,
+    set_bestfriend,
 
     return_at7,
     return_at6,

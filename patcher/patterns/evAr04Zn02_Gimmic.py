@@ -1,4 +1,4 @@
-from patcher.helper.patttern_handler import compute_call_to_function_script, create_jmp_instruction_script, \
+from patcher.helper.patttern_handler import compute_call_instruction_fsb, create_jmp_instruction_script, \
     create_lstr_instruction_fsb, parse_pattern_bytes, patch_taxi_stop
 from patcher.models.models import Instruction, Patch, PatchPattern
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
@@ -158,8 +158,8 @@ set_golem_location_function = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_module
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_module.name
             ),
             new_instruction_readable="call get_module"
         ),
@@ -297,8 +297,8 @@ set_baltoy_location_function = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_module
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_module.name
             ),
             new_instruction_readable="call get_module"
         ),
@@ -421,8 +421,8 @@ yokoro = PatchPattern(
         Patch(
             identifier=5,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_golem_location_function
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_golem_location_function.name
             ),
             new_instruction_readable="call set_golem_location"
         ),
@@ -473,8 +473,8 @@ box_yajilon_patchMapPALNA = [
 
     Patch(
         identifier=4,
-        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_call_to_function_script(
-            offset, data, set_baltoy_location_function
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_call_instruction_fsb(
+            offset, patch_patterns, set_baltoy_location_function.name
         ),
         new_instruction_readable="call set_baltoy_location_function"
     ),
@@ -531,8 +531,8 @@ box_yajilon = PatchPattern(
         Patch(
             identifier=4,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_baltoy_location_function
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_baltoy_location_function.name
             ),
             new_instruction_readable="call set_baltoy_location_function"
         ),
@@ -651,6 +651,7 @@ special_spawn_conditions = PatchPattern(
 )
 
 evAr04Zn02_Gimmic_patterns = [
+    get_module,
     string_section_start,
     f0402TrapKamonegi,
     globalManager,

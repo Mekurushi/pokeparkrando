@@ -4,7 +4,7 @@ from patcher.helper.entrance_exit_names import HAUNTED_ZONE_MAIN_AREA_BEACH_DRIF
     HAUNTED_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL, \
     HAUNTED_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL, HAUNTED_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL, \
     HAUNTED_ZONE_MAIN_AREA_TANGROWTH_ATTRACTION, HAUNTED_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL
-from patcher.helper.patttern_handler import compute_call_to_function_script, create_lstr_instruction_fsb, \
+from patcher.helper.patttern_handler import compute_call_instruction_fsb, create_lstr_instruction_fsb, \
     get_attraction_id_from_dict, get_exit_zone_area_position_data, parse_pattern_bytes, \
     create_jmp_instruction_script
 from patcher.models.models import PatchPattern, Instruction, Patch
@@ -84,9 +84,9 @@ set_attraction_record = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data,
-                get_module
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                get_module.name
             ),
             new_instruction_readable="call get_module()"
         ),
@@ -362,8 +362,8 @@ get_tangrowth_friendship_location_state = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_module
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_module.name
             ),
             new_instruction_readable="call get_module"
         ),
@@ -500,8 +500,8 @@ return_at04 = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_tangrowth_friendship_location_state
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_tangrowth_friendship_location_state.name
             ),
             new_instruction_readable="call get_tangrowth_friendship_location"
         ),
@@ -627,8 +627,8 @@ raichu_interaction = PatchPattern(
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -734,8 +734,8 @@ meowth_quiz = PatchPattern(
         Patch(
             identifier=5,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -817,8 +817,8 @@ aipom_interaction = PatchPattern(
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -899,8 +899,8 @@ ambipom_interaction = PatchPattern(
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -1392,6 +1392,7 @@ STAXIAREA = PatchPattern(
 )
 
 evAr05Zn01_Npc_Main_patterns = [
+    get_module,
     string_section_start,
     globalManager,
     set_chapter,
