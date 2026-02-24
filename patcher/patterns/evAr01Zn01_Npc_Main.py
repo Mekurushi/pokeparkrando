@@ -9,7 +9,7 @@ from patcher.helper.patttern_handler import get_attraction_id_from_dict, get_exi
     parse_pattern_bytes, \
     compute_call_instruction_fsb, \
     get_num_battle_count_from_dict_as_instruction, create_lstr_instruction_fsb, \
-    create_jmp_instruction_script
+    compute_jmp_instruction_fsb
 from patcher.models.models import PatchPattern, Instruction, Patch
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
 
@@ -12441,7 +12441,7 @@ torterra_starly_unlock_patternPAL = [
 torterra_starly_unlock_patchmapJP = [
     Patch(
         identifier=1,
-        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_jmp_instruction_script(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_jmp_instruction_fsb(
             offset, 3,
             patch_patterns, pattern_name
         ),
@@ -12452,7 +12452,7 @@ torterra_starly_unlock_patchmapJP = [
 torterra_starly_unlock_patchmapPAL = [
     Patch(
         identifier=1,
-        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_jmp_instruction_script(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_jmp_instruction_fsb(
             offset, 3,
             patch_patterns, pattern_name
         ),
@@ -12734,7 +12734,7 @@ thunderbolt_hit_magikarp_event_patternPAL = [
 thunderbolt_hit_magikarp_event_patchMapPAL = [
     Patch(
         identifier=2,
-        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_jmp_instruction_script(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_jmp_instruction_fsb(
             offset, 3, patch_patterns, pattern_name
         ),
         new_instruction_readable="jmp"

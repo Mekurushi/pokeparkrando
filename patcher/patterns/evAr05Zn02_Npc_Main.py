@@ -1,5 +1,5 @@
 from patcher.helper.entrance_exit_names import HAUNTED_ZONE_MANSION_AREA_DUSKNOIR_ATTRACTION
-from patcher.helper.patttern_handler import compute_call_instruction_fsb, create_jmp_instruction_script, \
+from patcher.helper.patttern_handler import compute_call_instruction_fsb, compute_jmp_instruction_fsb, \
     create_lstr_instruction_fsb, \
     get_attraction_id_from_dict, get_num_battle_count_from_dict_as_instruction, parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
@@ -943,7 +943,7 @@ prepare_chase_ai = PatchPattern(
         Patch(
             identifier=5,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 12, patch_patterns, pattern_name,
                 "jz"
             ),

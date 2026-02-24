@@ -4,7 +4,7 @@ from patcher.helper.entrance_exit_names import ABSOL_S_HURDLE_BOUNCE_ATTRACTION_
     BASTIODON_S_PANEL_CRUSH_ATTRACTION_ATTRACTION_MENU, \
     BLAZIKEN_S_BOULDER_BASH_ATTRACTION_ATTRACTION_MENU, BULBASAUR_S_DARING_DASH_ATTRACTION_ATTRACTION_MENU, \
     DUSKNOIR_S_SPEED_SLAM_ATTRACTION_ATTRACTION_MENU, EMPOLEON_S_SNOW_SLIDE_ATTRACTION_ATTRACTION_MENU, \
-    GRANITE_ZONE_MAIN_AREA_TREEHOUSE_CONNECTION, GYARADOS_AQUA_DASH_ATTRACTION_ATTRACTION_MENU, \
+    GYARADOS_AQUA_DASH_ATTRACTION_ATTRACTION_MENU, \
     PELIPPER_S_CIRCLE_CIRCUIT_ATTRACTION_ATTRACTION_MENU, \
     RAYQUAZA_S_BALLOON_PANIC_ATTRACTION_ATTRACTION_MENU, RHYPERIOR_S_BUMPER_BURN_ATTRACTION_ATTRACTION_MENU, \
     ROTOM_S_SPOOKY_SHOOT_EM_UP_ATTRACTION_ATTRACTION_MENU, \
@@ -181,21 +181,6 @@ def get_num_skygarden_prisma_count_from_dict_as_instruction(plando_dict):
     return prisma_count_instruction
 
 
-def fill_with_delay_instructions_script(start_offset: int, end_offset: int):
-    num_bytes = end_offset - start_offset
-
-    if num_bytes % 4 != 0:
-        raise ValueError("The offset range must be a multiple of 4 bytes")
-
-    repeats = num_bytes // 4
-
-    byte_sequence = (0x00000002).to_bytes(4, 'big') * repeats
-
-    # Optional: Print or use the bytes
-    print(byte_sequence)
-    return byte_sequence
-
-
 def create_lstr_instruction_fsb(patch_patterns: list[PatchPattern], start_pattern_name: str,
                                 target_pattern_name: str):
     start_pattern = find_pattern_by_name(patch_patterns, start_pattern_name)
@@ -219,9 +204,9 @@ def find_pattern_by_name(patterns: list[PatchPattern], name: str):
     return matches[0]
 
 
-def create_jmp_instruction_script(offset: int, target_identifier: int, patch_patterns: list[PatchPattern],
-                                  pattern_name: str,
-                                  condition: Literal["jmp"] | Literal["jnz"] | Literal["jz"] = "jmp"):
+def compute_jmp_instruction_fsb(offset: int, target_identifier: int, patch_patterns: list[PatchPattern],
+                                pattern_name: str,
+                                condition: Literal["jmp"] | Literal["jnz"] | Literal["jz"] = "jmp"):
     pattern = find_pattern_by_name(patch_patterns, pattern_name)
     target_address = pattern.matched_instructions.get(target_identifier).address
 

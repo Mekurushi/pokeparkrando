@@ -1,4 +1,4 @@
-from patcher.helper.patttern_handler import parse_pattern_bytes, create_jmp_instruction_script, \
+from patcher.helper.patttern_handler import parse_pattern_bytes, compute_jmp_instruction_fsb, \
     create_lstr_instruction_fsb
 from patcher.models.models import Instruction, PatchPattern, Patch
 from patcher.patterns.general import get_friendship, set_chapter
@@ -179,7 +179,7 @@ C00000_00010_pattern_PAL = [
 C00000_00010_patchmap_JP = [
     Patch(
         identifier=1,
-        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_jmp_instruction_script(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_jmp_instruction_fsb(
             offset, 5, patch_patterns, "C00000_00010"
         ),
         new_instruction_readable="jmp"
@@ -190,7 +190,7 @@ C00000_00010_patchmap_JP = [
 C00000_00010_patchmap_PAL = [
     Patch(
         identifier=1,
-        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_jmp_instruction_script(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_jmp_instruction_fsb(
             offset, 5, patch_patterns, "C00000_00010"
         ),
         new_instruction_readable="jmp"
@@ -264,7 +264,7 @@ C00020_00030_patternPAL = [
 C00020_00030_patchMapJP = [
     Patch(
         identifier=1,
-        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_jmp_instruction_script(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_jmp_instruction_fsb(
             offset, 5, patch_patterns, "skip event c00020_00030"
         ),
         new_instruction_readable="jmp"  # skipping all event logic
@@ -274,7 +274,7 @@ C00020_00030_patchMapJP = [
 C00020_00030_patchMapPAL = [
     Patch(
         identifier=1,
-        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_jmp_instruction_script(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_jmp_instruction_fsb(
             offset, 5, patch_patterns, "skip event c00020_00030"
         ),
         new_instruction_readable="jmp"  # skipping all event logic
@@ -341,7 +341,7 @@ C00060_01000 = PatchPattern(
         Patch(
             identifier=1,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 4, patch_patterns, "skip event c00060_01000"
             ),
             new_instruction_readable="jmp"  # skipping all event logic
@@ -414,7 +414,7 @@ area04 = PatchPattern(
         Patch(
             identifier=1,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 5, patch_patterns, "skip event area04"
             ),
             new_instruction_readable="jmp"  # skipping all event logic
@@ -452,7 +452,7 @@ area05 = PatchPattern(
         Patch(
             identifier=1,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 4, patch_patterns, "skip event area05"
             ),
             new_instruction_readable="jmp"  # skipping all event logic
@@ -499,7 +499,7 @@ area06 = PatchPattern(
         Patch(
             identifier=1,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 4, patch_patterns, "skip event area06"
             ),
             new_instruction_readable="jmp"
@@ -549,7 +549,7 @@ area07 = PatchPattern(
         Patch(
             identifier=1,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 4, patch_patterns, "skip event area07"
             ),
             new_instruction_readable="jmp"
@@ -583,7 +583,7 @@ chapter_event_logic = PatchPattern(
         Patch(
             identifier=2,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 4, patch_patterns, "skip events based on chapter"
             ),
             new_instruction_readable="jmp"
@@ -688,7 +688,7 @@ celebi_interaction = PatchPattern(
         Patch(
             identifier=2,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 10, patch_patterns, "celebi_interaction"
             ),
             new_instruction_readable="jmp"
@@ -698,7 +698,7 @@ celebi_interaction = PatchPattern(
         Patch(
             identifier=11,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 14, patch_patterns, "celebi_interaction"
             ),
             new_instruction_readable="jmp"

@@ -8,7 +8,7 @@ from patcher.helper.entrance_exit_names import BEACH_ZONE_LAPRAS_AREA_BEACH_ZONE
     BEACH_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL, BEACH_ZONE_RECYCLE_AREA_GYARADOS_ATTRACTION
 from patcher.helper.patttern_handler import get_attraction_id_from_dict, get_exit_zone_area_position_data, \
     parse_pattern_bytes, \
-    create_jmp_instruction_script, create_lstr_instruction_fsb, \
+    compute_jmp_instruction_fsb, create_lstr_instruction_fsb, \
     compute_call_instruction_fsb
 from patcher.models.models import Instruction, PatchPattern, Patch
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
@@ -385,7 +385,7 @@ bidoof_quest_condition = PatchPattern(
         Patch(
             identifier=15,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 20,
                 patch_patterns, pattern_name, "jnz"
             ),
@@ -410,7 +410,7 @@ bidoof_quest_condition = PatchPattern(
         Patch(
             identifier=18,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 21, patch_patterns, pattern_name
             ),
             new_instruction_readable="call event"
@@ -539,7 +539,7 @@ psyduck_interaction = PatchPattern(
         Patch(
             identifier=2,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 3, patch_patterns, pattern_name,
                 "jmp"
             ),
@@ -641,7 +641,7 @@ mudkip_interaction = PatchPattern(
         Patch(
             identifier=2,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 3, patch_patterns, pattern_name,
                 "jmp"
             ),
@@ -796,7 +796,7 @@ pelipper_interaction = PatchPattern(
         Patch(
             identifier=2,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 3, patch_patterns, pattern_name,
                 "jmp"
             ),
@@ -805,7 +805,7 @@ pelipper_interaction = PatchPattern(
         Patch(
             identifier=4,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 5, patch_patterns, pattern_name,
                 "jmp"
             ),
@@ -852,7 +852,7 @@ pelipper_interaction = PatchPattern(
         Patch(
             identifier=10,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 11, patch_patterns, pattern_name,
                 "jmp"
             ),
@@ -1013,7 +1013,7 @@ return_at7 = PatchPattern(
         Patch(
             identifier=8,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 9, patch_patterns, pattern_name,
                 "jmp"
             ),
@@ -1117,7 +1117,7 @@ gyarados_interaction = PatchPattern(
         Patch(
             identifier=2,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 3, patch_patterns, pattern_name,
                 "jmp"
             ),
@@ -1126,7 +1126,7 @@ gyarados_interaction = PatchPattern(
         Patch(
             identifier=4,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 5, patch_patterns, pattern_name,
                 "jmp"
             ),
@@ -1163,7 +1163,7 @@ gyarados_interaction = PatchPattern(
         Patch(
             identifier=10,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 11, patch_patterns, pattern_name,
                 "jmp"
             ),
@@ -1324,7 +1324,7 @@ return_at6 = PatchPattern(
         Patch(
             identifier=8,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 9, patch_patterns, pattern_name,
                 "jmp"
             ),
@@ -1411,7 +1411,7 @@ special_spawn_conditions = PatchPattern(
         Patch(
             identifier=5,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 6, patch_patterns, pattern_name,
                 "jmp"
             ),
@@ -1936,7 +1936,7 @@ spearow_interaction = PatchPattern(
         Patch(
             identifier=7,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 9, patch_patterns, pattern_name,
                 "jmp"
             ) if
@@ -1946,7 +1946,7 @@ spearow_interaction = PatchPattern(
         Patch(
             identifier=8,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 4, patch_patterns, pattern_name,
                 "jmp"
             ) if
@@ -2050,7 +2050,7 @@ spearow2_interaction = PatchPattern(
         Patch(
             identifier=7,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 9, patch_patterns, pattern_name,
                 "jmp"
             ) if
@@ -2060,7 +2060,7 @@ spearow2_interaction = PatchPattern(
         Patch(
             identifier=8,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 4, patch_patterns, pattern_name,
                 "jmp"
             ) if
