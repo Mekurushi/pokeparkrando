@@ -5,7 +5,7 @@ from patcher.helper.entrance_exit_names import ICE_ZONE_MAIN_AREA_BEACH_DRIFBLIM
     ICE_ZONE_MAIN_AREA_ICE_ZONE_LAPRAS, \
     ICE_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL, ICE_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL, \
     ICE_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL
-from patcher.helper.patttern_handler import compute_call_to_function_script, create_lstr_instruction_fsb, \
+from patcher.helper.patttern_handler import compute_call_instruction_fsb, create_lstr_instruction_fsb, \
     get_exit_zone_area_position_data, get_num_battle_count_from_dict_as_instruction, \
     parse_pattern_bytes, create_jmp_instruction_script
 from patcher.models.models import PatchPattern, Instruction, Patch
@@ -527,8 +527,8 @@ mudkip_interaction = PatchPattern(
         Patch(
             identifier=13,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -745,9 +745,9 @@ set_attraction_record = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data,
-                get_module
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                get_module.name
             ),
             new_instruction_readable="call get_module()"
         ),
@@ -878,8 +878,8 @@ starly2_interaction = PatchPattern(
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -948,8 +948,8 @@ starly_interaction = PatchPattern(
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -1018,8 +1018,8 @@ krabby_interaction = PatchPattern(
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -1088,8 +1088,8 @@ krabby2_interaction = PatchPattern(
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -1158,8 +1158,8 @@ krabby3_interaction = PatchPattern(
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -1228,8 +1228,8 @@ corphish_interaction = PatchPattern(
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -1298,8 +1298,8 @@ corphish2_interaction = PatchPattern(
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -1368,8 +1368,8 @@ corphish3_interaction = PatchPattern(
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -1438,8 +1438,8 @@ taillow_interaction = PatchPattern(
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -1508,8 +1508,8 @@ staravia_interaction = PatchPattern(
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -1578,8 +1578,8 @@ wingull_interaction = PatchPattern(
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -1648,8 +1648,8 @@ wingull2_interaction = PatchPattern(
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -1718,8 +1718,8 @@ wingull3_interaction = PatchPattern(
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -1950,32 +1950,32 @@ delibird_interaction = PatchPattern(
         Patch(
             identifier=4,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_friendship_function
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_friendship_function.name
             ),
             new_instruction_readable="call get_friendship"
         ),
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_friendship_function
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_friendship_function.name
             ),
             new_instruction_readable="call get_friendship"
         ),
         Patch(
             identifier=8,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_friendship_function
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_friendship_function.name
             ),
             new_instruction_readable="call get_friendship"
         ),
         Patch(
             identifier=10,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_friendship_function
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_friendship_function.name
             ),
             new_instruction_readable="call get_friendship"
         ),
@@ -1990,64 +1990,64 @@ delibird_interaction = PatchPattern(
         Patch(
             identifier=13,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_friendship_function
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_friendship_function.name
             ),
             new_instruction_readable="call get_friendship"
         ),
         Patch(
             identifier=15,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_friendship_function
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_friendship_function.name
             ),
             new_instruction_readable="call get_friendship"
         ),
         Patch(
             identifier=17,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_friendship_function
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_friendship_function.name
             ),
             new_instruction_readable="call get_friendship"
         ),
         Patch(
             identifier=19,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_friendship_function
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_friendship_function.name
             ),
             new_instruction_readable="call get_friendship"
         ),
         Patch(
             identifier=21,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_friendship_function
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_friendship_function.name
             ),
             new_instruction_readable="call get_friendship"
         ),
         Patch(
             identifier=23,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_friendship_function
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_friendship_function.name
             ),
             new_instruction_readable="call get_friendship"
         ),
         Patch(
             identifier=25,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_friendship_function
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_friendship_function.name
             ),
             new_instruction_readable="call get_friendship"
         ),
         Patch(
             identifier=27,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_friendship_function
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_friendship_function.name
             ),
             new_instruction_readable="call get_friendship"
         ),
@@ -2179,9 +2179,9 @@ get_friendship_function = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data,
-                get_module
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                get_module.name
             ),
             new_instruction_readable="call get_module()"
         ),
@@ -2210,9 +2210,9 @@ get_friendship_function = PatchPattern(
         Patch(
             identifier=7,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data,
-                get_module
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                get_module.name
             ),
             new_instruction_readable="call get_module()"
         ),
@@ -2820,6 +2820,7 @@ STAXIAREA = PatchPattern(
 )
 
 evAr03Zn02_Npc_Main_patterns = [
+    get_module,
     string_section_start,
     globalManager,
     disposManager,

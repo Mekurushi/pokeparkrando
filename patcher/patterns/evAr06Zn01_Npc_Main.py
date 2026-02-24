@@ -5,7 +5,7 @@ from patcher.helper.entrance_exit_names import GRANITE_ZONE_MAIN_AREA_ABSOL_ATTR
     GRANITE_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL, GRANITE_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL, \
     GRANITE_ZONE_MAIN_AREA_SALAMENCE_ATTRACTION, \
     GRANITE_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL
-from patcher.helper.patttern_handler import compute_call_to_function_script, \
+from patcher.helper.patttern_handler import compute_call_instruction_fsb, \
     create_lstr_instruction_fsb, \
     get_attraction_id_from_dict, get_exit_zone_area_position_data, get_num_battle_count_from_dict_as_instruction, \
     parse_pattern_bytes
@@ -86,9 +86,9 @@ set_attraction_record = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data,
-                get_module
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                get_module.name
             ),
             new_instruction_readable="call get_module()"
         ),
@@ -321,8 +321,8 @@ init_gate_function = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_module
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_module.name
             ),
             new_instruction_readable="call get_module"
         ),
@@ -532,8 +532,8 @@ A06_Z01_INIT = PatchPattern(
         Patch(
             identifier=5,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, init_gate_function
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, init_gate_function.name
             ),
             new_instruction_readable="call init_gate_function"
         ),
@@ -647,8 +647,8 @@ get_salamence_friendship_location_state = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_module
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_module.name
             ),
             new_instruction_readable="call get_module"
         ),
@@ -812,8 +812,8 @@ get_absol_friendship_location_state = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_module
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_module.name
             ),
             new_instruction_readable="call get_module"
         ),
@@ -950,8 +950,8 @@ return_at01 = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_absol_friendship_location_state
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_absol_friendship_location_state.name
             ),
             new_instruction_readable="call get_absol_friendship_location_state"
         ),
@@ -1067,8 +1067,8 @@ return_at15 = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_salamence_friendship_location_state
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_salamence_friendship_location_state.name
             ),
             new_instruction_readable="call get_salamence_friendship_location_state"
         ),
@@ -1376,8 +1376,8 @@ drifloon_interaction = PatchPattern(
         Patch(
             identifier=7,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -1502,8 +1502,8 @@ taillow_interaction = PatchPattern(
         Patch(
             identifier=7,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -1598,8 +1598,8 @@ marowak_interaction = PatchPattern(
         Patch(
             identifier=7,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -1694,8 +1694,8 @@ baltoy_interaction = PatchPattern(
         Patch(
             identifier=7,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -1790,8 +1790,8 @@ claydol_interaction = PatchPattern(
         Patch(
             identifier=7,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -1921,8 +1921,8 @@ jirachi_interaction = PatchPattern(
         Patch(
             identifier=8,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ),
             new_instruction_readable="call set_attraction_record"
         ),
@@ -2401,6 +2401,7 @@ STAXIAREA = PatchPattern(
 )
 
 evAr06Zn01_Npc_Main_patterns = [
+    get_module,
     string_section_start,
     f0601TalkKamex,
     globalManager,

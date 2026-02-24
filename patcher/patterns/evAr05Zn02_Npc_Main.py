@@ -1,5 +1,5 @@
 from patcher.helper.entrance_exit_names import HAUNTED_ZONE_MANSION_AREA_DUSKNOIR_ATTRACTION
-from patcher.helper.patttern_handler import compute_call_to_function_script, create_jmp_instruction_script, \
+from patcher.helper.patttern_handler import compute_call_instruction_fsb, create_jmp_instruction_script, \
     create_lstr_instruction_fsb, \
     get_attraction_id_from_dict, get_num_battle_count_from_dict_as_instruction, parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
@@ -79,9 +79,9 @@ set_attraction_record = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data,
-                get_module
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                get_module.name
             ),
             new_instruction_readable="call get_module()"
         ),
@@ -297,8 +297,8 @@ get_dusknoir_friendship_location_state = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_module
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_module.name
             ),
             new_instruction_readable="call get_module"
         ),
@@ -453,8 +453,8 @@ return_at05 = PatchPattern(
         Patch(
             identifier=4,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_dusknoir_friendship_location_state
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_dusknoir_friendship_location_state.name
             ),
             new_instruction_readable="call get_dusknoir_friendship"
         ),
@@ -795,9 +795,9 @@ are_doors_unlocked = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data,
-                get_module
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                get_module.name
             ),
             new_instruction_readable="call get_module()"
         ),
@@ -928,8 +928,8 @@ prepare_chase_ai = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, are_doors_unlocked
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, are_doors_unlocked.name
             ),
             new_instruction_readable="call are_doors_unlocked"
         ),
@@ -1062,8 +1062,8 @@ abra_interaction = PatchPattern(
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -1268,8 +1268,8 @@ darkrai_interaction = PatchPattern(
         Patch(
             identifier=8,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_attraction_record
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ),
             new_instruction_readable="call set_attraction_record"
         ),
@@ -1309,6 +1309,7 @@ mismagius_interaction = PatchPattern(
 )
 
 evAr05Zn02_Npc_Main_patterns = [
+    get_module,
     string_section_start,
     f0502DoorA,
     globalManager,

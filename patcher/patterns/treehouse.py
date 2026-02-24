@@ -1,4 +1,4 @@
-from patcher.helper.patttern_handler import parse_pattern_bytes, compute_call_to_function_script
+from patcher.helper.patttern_handler import parse_pattern_bytes, compute_call_instruction_fsb
 from patcher.models.models import PatchPattern, Instruction, Patch
 
 wait1 = PatchPattern(
@@ -27,8 +27,8 @@ wait1 = PatchPattern(
         Patch(
             identifier=1,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, wait4
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, wait4.name
             ),
             new_instruction_readable="call Wait4"
         ),
@@ -36,7 +36,7 @@ wait1 = PatchPattern(
             identifier=2,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000006).to_bytes(
                 4, 'big'
-                ),
+            ),
             new_instruction_readable="ret 0x0"
         ),
 
@@ -68,8 +68,8 @@ wait2 = PatchPattern(
         Patch(
             identifier=1,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, wait4
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, wait4.name
             ),
             new_instruction_readable="call Wait4"
         ),
@@ -77,7 +77,7 @@ wait2 = PatchPattern(
             identifier=2,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000006).to_bytes(
                 4, 'big'
-                ),
+            ),
             new_instruction_readable="ret 0x0"
         ),
 
@@ -110,8 +110,8 @@ wait3 = PatchPattern(
         Patch(
             identifier=1,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, wait4
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, wait4.name
             ),
             new_instruction_readable="call Wait4"
         ),
@@ -119,7 +119,7 @@ wait3 = PatchPattern(
             identifier=2,
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000006).to_bytes(
                 4, 'big'
-                ),
+            ),
             new_instruction_readable="ret 0x0"
         ),
 
@@ -151,5 +151,6 @@ wait4 = PatchPattern(
 treehouse_pattern = [
     wait1,
     wait2,
-    wait3
+    wait3,
+    wait4
 ]

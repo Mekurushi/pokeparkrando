@@ -37,6 +37,7 @@
   ds f0301BippaFlag: 0x1b315 (1 match(es))
   set_chapter: 0x4a10 (1 match(es))
   get_friendship function: 0x473c (1 match(es))
+  get module: 0x44 (1 match(es))
   Overworld Pokemon Spawn Logic: 0xbef4 (1 match(es))
   Turtwig Friendship Logic: 0x11a3c (1 match(es))
   Turtwig dialog options logic: 0x11934 (1 match(es))
@@ -81,6 +82,7 @@
   Starly 5 Friendship Logic: 0x17d38 (1 match(es))
   Shinx 2 Friendship Logic: 0x18500 (1 match(es))
   Butterfree 2 Friendship Logic: 0x18eb4 (1 match(es))
+  set bestfriend_function: 0x4948 (1 match(es))
   Return Attraction: 0x19ec0 (1 match(es))
   f0101EventTE03 Logic: 0xcf24 (1 match(es))
   Torterra Starly Unlock after Venusaur Prisma Logic: 0xb67c (1 match(es))
@@ -138,6 +140,9 @@
   ds GlobalManager: 0x1b1ee (1 match(es))
   set_chapter: 0x4a10 (1 match(es))
   get_friendship function: 0x473c (1 match(es))
+  set_best_friend function: 0x4948 (1 match(es))
+  run interaction dialog: 0x1f9c (1 match(es))
+  get module: 0x44 (1 match(es))
   Close ar02Zn01 Gates depending on: 0xffd0 (1 match(es))
   Treehouse Pokemon Spawns: 0xc490 (1 match(es))
   Treehouse Pokemon Spawns 2: 0xfdc8 (1 match(es))
@@ -167,6 +172,7 @@
   Wait1: 0xb90 (1 match(es))
   Wait2: 0xbe8 (1 match(es))
   Wait3: 0xc40 (1 match(es))
+  Wait4: 0xc98 (1 match(es))
 
 [Ar03Zn01Dp00.rlb]
   Disposition Drifblim: 0x67c (1 match(es))
@@ -199,6 +205,7 @@
   ds ERROR: slFindModule: 0x225 (1 match(es))
 
 [evAr03Zn01_Npc_Main.fsb]
+  get module: 0x44 (1 match(es))
   string section start: 0x1a960 (1 match(es))
   ds GlobalManager: 0x1a9c6 (1 match(es))
   set_chapter: 0x4a10 (1 match(es))
@@ -213,6 +220,7 @@
   starly3 interaction beach zone: 0x17df8 (1 match(es))
   spearow interaction beach zone: 0x18388 (1 match(es))
   spearow2 interaction beach zone: 0x14530 (1 match(es))
+  set_bestfriend functopm: 0x4948 (1 match(es))
   pelipper return attraction event: 0x19e4c (1 match(es))
   gyarados return attraction event: 0x199b0 (1 match(es))
   pelipper interaction: 0x117a8 (1 match(es))
@@ -254,6 +262,7 @@
   0302Gate Close: 0xd0 (1 match(es))
 
 [evAr03Zn02_Npc_Main.fsb]
+  get module: 0x44 (1 match(es))
   string section start: 0x1be04 (1 match(es))
   ds GlobalManager: 0x1be6a (1 match(es))
   ds disposManager: 0x1be5c (1 match(es))
@@ -299,6 +308,7 @@
   Disposition Drifblim: 0x510 (1 match(es))
 
 [evAr04Zn01_Gimmic.fsb]
+  get module: 0x44 (1 match(es))
   string section start: 0xa380 (1 match(es))
   ds GlobalManager: 0xa3e4 (1 match(es))
   set_chapter: 0x4a10 (1 match(es))
@@ -317,6 +327,7 @@
   ds slFindModule:_module_not_found: 0xa392 (1 match(es))
 
 [evAr04Zn01_Npc_Main.fsb]
+  get module: 0x44 (1 match(es))
   string section start: 0x19ba0 (1 match(es))
   ds GlobalManager: 0x19c06 (1 match(es))
   set_chapter: 0x4a10 (1 match(es))
@@ -356,10 +367,12 @@
   Disposition Drifblim: 0x544 (1 match(es))
 
 [evAr04Zn02_Npc_Main.fsb]
+  get module: 0x44 (1 match(es))
   string section start: 0x15c44 (1 match(es))
   ds GlobalManager: 0x15caa (1 match(es))
   set_chapter: 0x4a10 (1 match(es))
   get_friendship function: 0x473c (1 match(es))
+  set_friendship: 0x48d8 (1 match(es))
   Trap Events: 0x152f8 (1 match(es))
   rhyperior interaction: 0xc160 (1 match(es))
   return at 11: 0x15384 (1 match(es))
@@ -407,6 +420,7 @@
   ds f0402FireWallB: 0x3d8 (1 match(es))
 
 [evAr04Zn02_Gimmic.fsb]
+  get module: 0x44 (1 match(es))
   string section start: 0xa2fc (1 match(es))
   ds f0402TrapKamonegi: 0xa528 (1 match(es))
   ds GlobalManager: 0xa360 (1 match(es))
@@ -462,6 +476,7 @@
   EMAPA05_Z02: 0x7e1c (1 match(es))
 
 [evAr05Zn02_Npc_Main.fsb]
+  get module: 0x44 (1 match(es))
   string section start: 0x17574 (1 match(es))
   ds f0502DoorA: 0x17c8e (1 match(es))
   ds GlobalManager: 0x175da (1 match(es))
@@ -489,6 +504,7 @@
   EMAPA05_Z03: 0x7f90 (1 match(es))
 
 [evAr05Zn01_Npc_Main.fsb]
+  get module: 0x44 (1 match(es))
   string section start: 0xd570 (1 match(es))
   ds GlobalManager: 0xd5d6 (1 match(es))
   set_chapter: 0x4a10 (1 match(es))
@@ -511,6 +527,7 @@
   EMAPA02_Z01: 0x7e10 (1 match(es))
 
 [evAr05Zn02_Gimmic.fsb]
+  get module: 0x44 (1 match(es))
   string section start: 0x8850 (1 match(es))
   ds GlobalManager: 0x88b4 (1 match(es))
   set_chapter: 0x4a10 (1 match(es))
@@ -520,6 +537,7 @@
   ds f0101FuwarideTaxiStop: 0x8953 (1 match(es))
 
 [evAr05Zn01_Gimmic.fsb]
+  get module: 0x44 (1 match(es))
   string section start: 0x9360 (1 match(es))
   ds GlobalManager: 0x93c4 (1 match(es))
   set_chapter: 0x4a10 (1 match(es))
@@ -559,6 +577,7 @@
   special_spawn_condtitions: 0x7e10 (1 match(es))
 
 [evAr06Zn01_Npc_Main.fsb]
+  get module: 0x44 (1 match(es))
   string section start: 0x13280 (1 match(es))
   f0601TalkKamex: 0x13925 (1 match(es))
   ds GlobalManager: 0x132e6 (1 match(es))
@@ -600,6 +619,8 @@
   flower zone taxi stop: 0x8574 (1 match(es))
 
 [evAr06Zn02_Npc_Main.fsb]
+  set items flower zone: 0x8108 (1 match(es))
+  get module: 0x44 (1 match(es))
   string section start: 0xed40 (1 match(es))
   ds GlobalManager: 0xeda6 (1 match(es))
   set_chapter: 0x4a10 (1 match(es))

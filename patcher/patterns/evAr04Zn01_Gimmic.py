@@ -1,4 +1,4 @@
-from patcher.helper.patttern_handler import compute_call_to_function_script, create_lstr_instruction_fsb, \
+from patcher.helper.patttern_handler import compute_call_instruction_fsb, create_lstr_instruction_fsb, \
     parse_pattern_bytes, \
     patch_taxi_stop
 from patcher.models.models import PatchPattern, Instruction, Patch
@@ -242,8 +242,8 @@ box_coil1 = PatchPattern(
         Patch(
             identifier=7,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_magnemite_location_function
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_magnemite_location_function.name
             ),
             new_instruction_readable="call set_magnemite_location"
         ),
@@ -314,8 +314,8 @@ box_coil2 = PatchPattern(
         Patch(
             identifier=7,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_magnemite2_location_function
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_magnemite2_location_function.name
             ),
             new_instruction_readable="call set_magnemite2_location"
         ),
@@ -386,8 +386,8 @@ box_coil3 = PatchPattern(
         Patch(
             identifier=7,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, set_magnemite3_location_function
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_magnemite3_location_function.name
             ),
             new_instruction_readable="call set_magnemite3_location"
         ),
@@ -463,8 +463,8 @@ set_magnemite_location_function = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_module
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_module.name
             ),
             new_instruction_readable="call get_module"
         ),
@@ -602,8 +602,8 @@ set_magnemite2_location_function = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_module
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_module.name
             ),
             new_instruction_readable="call get_module"
         ),
@@ -741,8 +741,8 @@ set_magnemite3_location_function = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_to_function_script(
-                offset, data, get_module
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_module.name
             ),
             new_instruction_readable="call get_module"
         ),
@@ -852,6 +852,7 @@ taxi_stop = PatchPattern(
 )
 
 evAr04Zn01_Gimmic_patterns = [
+    get_module,
     string_section_start,
     globalManager,
     set_chapter,
