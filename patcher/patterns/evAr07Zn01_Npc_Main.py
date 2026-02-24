@@ -1,5 +1,5 @@
 from patcher.helper.entrance_exit_names import SKYGARDEN_PIPLUP_SKYBALLOON
-from patcher.helper.patttern_handler import create_jmp_instruction_script, get_exit_zone_area_position_data, \
+from patcher.helper.patttern_handler import compute_jmp_instruction_fsb, get_exit_zone_area_position_data, \
     parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
 from patcher.patterns.general import get_friendship, set_chapter
@@ -37,7 +37,7 @@ mew_interaction = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 4, patch_patterns, pattern_name,
                 "jmp"
             ),
@@ -147,7 +147,7 @@ mew_power_competition = PatchPattern(
         Patch(
             identifier=4,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 5, patch_patterns, pattern_name,
                 "jmp"
             ),
@@ -156,7 +156,7 @@ mew_power_competition = PatchPattern(
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 7, patch_patterns, pattern_name,
                 "jmp"
             ),
@@ -189,7 +189,7 @@ spawn_conditions = PatchPattern(
         Patch(
             identifier=2,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 3, patch_patterns, pattern_name,
                 "jmp"
             ),

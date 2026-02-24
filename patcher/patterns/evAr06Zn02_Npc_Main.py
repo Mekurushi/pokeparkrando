@@ -5,7 +5,7 @@ from patcher.helper.entrance_exit_names import FLOWER_ZONE_MAIN_AREA_BEACH_DRIFB
     FLOWER_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL, \
     FLOWER_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL, \
     FLOWER_ZONE_MAIN_AREA_RAYQUAZA_ATTRACTION, FLOWER_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL
-from patcher.helper.patttern_handler import compute_call_instruction_fsb, create_jmp_instruction_script, \
+from patcher.helper.patttern_handler import compute_call_instruction_fsb, compute_jmp_instruction_fsb, \
     create_lstr_instruction_fsb, get_attraction_id_from_dict, get_exit_zone_area_position_data, parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
@@ -742,7 +742,7 @@ special_spawn_conditions = PatchPattern(
         Patch(
             identifier=5,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 6, patch_patterns, pattern_name,
                 "jmp"
             ),
@@ -798,7 +798,7 @@ special_spawn_conditions2 = PatchPattern(
         Patch(
             identifier=5,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 6, patch_patterns, pattern_name,
                 "jmp"
             ),
@@ -847,7 +847,7 @@ bellosom_interaction = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 4, patch_patterns, pattern_name,
                 "jmp"
             ),
@@ -972,7 +972,7 @@ mareep_interaction = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 4, patch_patterns, pattern_name,
                 "jmp"
             ),

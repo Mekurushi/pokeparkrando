@@ -1,5 +1,5 @@
 from patcher.helper.entrance_exit_names import HAUNTED_ZONE_ROTOM_AREA_ROTOM_ATTRACTION
-from patcher.helper.patttern_handler import create_jmp_instruction_script, get_attraction_id_from_dict, \
+from patcher.helper.patttern_handler import compute_jmp_instruction_fsb, get_attraction_id_from_dict, \
     parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
 from patcher.patterns.general import get_friendship, set_chapter
@@ -43,7 +43,7 @@ rotom_interaction = PatchPattern(
         Patch(
             identifier=3,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 4, patch_patterns, pattern_name,
                 "jmp"
             ),
@@ -52,7 +52,7 @@ rotom_interaction = PatchPattern(
         Patch(
             identifier=5,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 6, patch_patterns, pattern_name,
                 "jmp"
             ),

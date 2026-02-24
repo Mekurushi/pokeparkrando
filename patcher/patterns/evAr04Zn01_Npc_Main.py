@@ -9,7 +9,7 @@ from patcher.helper.patttern_handler import compute_call_instruction_fsb, create
     get_attraction_id_from_dict, \
     get_exit_zone_area_position_data, get_num_battle_count_from_dict_as_instruction, \
     parse_pattern_bytes, \
-    create_jmp_instruction_script
+    compute_jmp_instruction_fsb
 from patcher.models.models import PatchPattern, Instruction, Patch
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
 
@@ -196,7 +196,7 @@ special_spawn_conditions = PatchPattern(
         Patch(
             identifier=2,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 3, patch_patterns, pattern_name
             ),
             new_instruction_readable="jmp"
@@ -305,7 +305,7 @@ gimmic_spawn_conditions = PatchPattern(
         Patch(
             identifier=9,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 10,
                 patch_patterns, pattern_name
             ),
@@ -341,7 +341,7 @@ bastiodon_interaction = PatchPattern(
         Patch(
             identifier=2,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 3, patch_patterns, pattern_name,
                 "jmp"
             ),

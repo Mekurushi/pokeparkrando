@@ -1,4 +1,4 @@
-from patcher.helper.patttern_handler import compute_call_instruction_fsb, create_jmp_instruction_script, \
+from patcher.helper.patttern_handler import compute_call_instruction_fsb, compute_jmp_instruction_fsb, \
     create_lstr_instruction_fsb, parse_pattern_bytes, patch_taxi_stop
 from patcher.models.models import Instruction, Patch, PatchPattern
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
@@ -480,7 +480,7 @@ box_yajilon_patchMapPALNA = [
     ),
     Patch(
         identifier=5,
-        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_jmp_instruction_script(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_jmp_instruction_fsb(
             offset, 6, patch_patterns, pattern_name, "jmp"
         ),
         new_instruction_readable="jmp"

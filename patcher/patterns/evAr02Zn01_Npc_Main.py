@@ -8,7 +8,7 @@ from patcher.helper.entrance_exit_names import TREEHOUSE_BEACH_DRIFBLIM_FAST_TRA
 from patcher.helper.patttern_handler import get_exit_zone_area_position_data, \
     get_num_skygarden_prisma_count_from_dict_as_instruction, \
     parse_pattern_bytes, compute_call_instruction_fsb, create_lstr_instruction_fsb, \
-    create_jmp_instruction_script
+    compute_jmp_instruction_fsb
 from patcher.models.models import PatchPattern, Instruction, Patch
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
 
@@ -593,7 +593,7 @@ treehouse_additional_pokemon_spawn_conditions = PatchPattern(
         Patch(
             identifier=2,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 3, patch_patterns, pattern_name
             ),
             new_instruction_readable="jmp"
@@ -635,7 +635,7 @@ treehouse_additional_pokemon_spawn_conditions = PatchPattern(
         Patch(
             identifier=7,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 8, patch_patterns, pattern_name
             ),
             new_instruction_readable="jmp"  # skip all chapter based logic
@@ -735,7 +735,7 @@ treehouse_additional_pokemon_spawn_conditions2 = PatchPattern(
         Patch(
             identifier=2,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 3, patch_patterns, pattern_name
             ),
             new_instruction_readable="jmp"
@@ -776,7 +776,7 @@ treehouse_additional_pokemon_spawn_conditions2 = PatchPattern(
         Patch(
             identifier=7,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 8, patch_patterns, pattern_name
             ),
             new_instruction_readable="jmp"  # skip all chapter based logic
@@ -1000,7 +1000,7 @@ powerup_electabuzz_interaction = PatchPattern(
         Patch(
             identifier=11,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 12,
                 patch_patterns, pattern_name
             ),
@@ -1315,7 +1315,7 @@ powerup_bibarel_interaction = PatchPattern(
         Patch(
             identifier=11,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 12,
                 patch_patterns, pattern_name
             ),
@@ -1692,7 +1692,7 @@ powerup_ponyta_interaction = PatchPattern(
         Patch(
             identifier=11,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 12,
                 patch_patterns, pattern_name
             ),
@@ -2112,7 +2112,7 @@ powerup_primeape_interaction = PatchPattern(
         Patch(
             identifier=11,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 12,
                 patch_patterns, pattern_name
             ),
@@ -2367,7 +2367,7 @@ drifblim_interaction = PatchPattern(
         Patch(
             identifier=11,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 12,
                 patch_patterns, pattern_name
             ),
@@ -2801,7 +2801,7 @@ piplup_interaction = PatchPattern(
         Patch(
             identifier=6,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 11,
                 patch_patterns, pattern_name, "jz"
             ),
@@ -2832,7 +2832,7 @@ piplup_interaction = PatchPattern(
         Patch(
             identifier=10,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 56,
                 patch_patterns, pattern_name, "jmp"
             ),
@@ -2863,7 +2863,7 @@ piplup_interaction = PatchPattern(
         Patch(
             identifier=14,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 56,
                 patch_patterns, pattern_name, "jmp"
             ),

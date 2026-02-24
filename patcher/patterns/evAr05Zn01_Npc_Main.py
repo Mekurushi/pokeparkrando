@@ -6,7 +6,7 @@ from patcher.helper.entrance_exit_names import HAUNTED_ZONE_MAIN_AREA_BEACH_DRIF
     HAUNTED_ZONE_MAIN_AREA_TANGROWTH_ATTRACTION, HAUNTED_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL
 from patcher.helper.patttern_handler import compute_call_instruction_fsb, create_lstr_instruction_fsb, \
     get_attraction_id_from_dict, get_exit_zone_area_position_data, parse_pattern_bytes, \
-    create_jmp_instruction_script
+    compute_jmp_instruction_fsb
 from patcher.models.models import PatchPattern, Instruction, Patch
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
 
@@ -214,7 +214,7 @@ trap_gate = PatchPattern(
         Patch(
             identifier=2,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 3, patch_patterns, pattern_name
             ),
             new_instruction_readable="jmp"
@@ -265,7 +265,7 @@ tangrowth_interaction = PatchPattern(
         Patch(
             identifier=4,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 5,
                 patch_patterns, pattern_name, "jmp"
             ),
@@ -552,7 +552,7 @@ special_spawn_conditions = PatchPattern(
         Patch(
             identifier=5,
             patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: create_jmp_instruction_script(
+                                  pattern_name: compute_jmp_instruction_fsb(
                 offset, 6, patch_patterns, pattern_name,
                 "jmp"
             ),
