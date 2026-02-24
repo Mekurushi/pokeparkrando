@@ -14,7 +14,8 @@ f0601FireWallB = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (0x663036303154616c6b4b616d657800).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
+                0x663036303154616c6b4b616d657800).to_bytes(
                 15,
                 'big'
             ),

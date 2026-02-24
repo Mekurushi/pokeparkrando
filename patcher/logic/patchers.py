@@ -1,4 +1,6 @@
+import io
 import shutil
+import sys
 import traceback
 from abc import ABC, abstractmethod
 from pathlib import Path
@@ -8,17 +10,21 @@ import libWiiPy
 import nlzss11
 
 from patcher.helper.patttern_handler import search_all_pattern
+from patcher.models.DOL import DOL
 from patcher.models.models import FilePatchConfig, ProgressCallback, FileProcessingType
+
+IS_DEV = not getattr(sys, 'frozen', False)
 
 
 class BasePatcher(ABC):
     """Abstract base class for different file patchers"""
 
-    def __init__(self, config: FilePatchConfig, work_dir: Path, plando_dict):
+    def __init__(self, config: FilePatchConfig, work_dir: Path, plando_dict, maker_id: str | None):
         self.config = config
         self.work_dir = work_dir
         self.plando_dict = plando_dict
         self.backup_files = []
+        self.maker_id = maker_id
 
     @abstractmethod
     def process_file(self, extract_dir: Path, progress_callback: ProgressCallback) -> bool:
@@ -47,10 +53,33 @@ class BasePatcher(ABC):
                 file_data = bytearray(f.read())
 
             # find all patterns
+            pattern_results = []
             for patchpattern in self.config.patch_patterns:
                 search_all_pattern(file_data, patchpattern)
                 matches = patchpattern.get_matches()
-                print(f"Found {len(matches)} match(es) for pattern: {patchpattern.name}")
+                if isinstance(self, MainDolPatcher):
+                    dol = DOL()
+                    stream = io.BytesIO(file_data)
+                    dol.read(stream)
+                    found_address = hex(dol.convert_offset_to_address(matches[0].base_address)) if matches else "N/A"
+                else:
+                    found_address = hex(matches[0].base_address) if matches else "N/A"
+
+                pattern_results.append(
+                    {
+                        "name": patchpattern.name,
+                        "address": found_address,
+                        "matches": len(matches)
+                    }
+                )
+                print(
+                    f"Found {len(matches)} match(es) for pattern: {patchpattern.name}, address: "
+                    f"{found_address}"
+                )
+
+            # writing debug logs:
+            if IS_DEV and self.maker_id:
+                self._write_pattern_log(file_path, pattern_results)
 
             # patch all found matches
             for patchpattern in self.config.patch_patterns:
@@ -65,7 +94,10 @@ class BasePatcher(ABC):
 
                     offset = mem_data.address
                     old_bytes = mem_data.value
-                    new_bytes = patch.patch_function(offset, file_data, self.plando_dict, match)
+                    new_bytes = patch.patch_function(
+                        offset, file_data, self.plando_dict, self.config.patch_patterns,
+                        patchpattern.name
+                    )
 
                     if new_bytes is None:
                         continue
@@ -100,9 +132,22 @@ class BasePatcher(ABC):
             print(traceback.format_exc())
             return False
 
+    def _write_pattern_log(self, file_path: Path, pattern_results: list[dict]):
+        """Write found patterns and addresses to a log file named after maker_id"""
+        log_dir = Path("logs")
+        log_dir.mkdir(exist_ok=True)
+        log_path = log_dir / f"{self.maker_id}.txt"
+        existing_content = log_path.read_text() if log_path.exists() else ""
+
+        if f"[{file_path.name}]" not in existing_content:
+            with open(log_path, "a") as f:  # append so multiple files accumulate
+                f.write(f"[{file_path.name}]\n")
+                for result in pattern_results:
+                    f.write(f"  {result['name']}: {result['address']} ({result['matches']} match(es))\n")
+                f.write("\n")
+
 
 class NestedDacU8Patcher(BasePatcher):
-
     def process_file(self, extract_dir: Path, progress_callback: ProgressCallback) -> bool:
         progress_callback(f"Processing nested DAC/U8: {self.config.description}", 0)
         for index, (primary_file_path, nested_archive_path, target_file_path) in enumerate(self.config.file_group):
@@ -397,14 +442,14 @@ class DacCopyFilePatcher(BasePatcher):
 
 class PatcherFactory:
     @staticmethod
-    def create_patcher(config: FilePatchConfig, work_dir: Path, plando_dict) -> BasePatcher:
+    def create_patcher(config: FilePatchConfig, work_dir: Path, plando_dict, maker_id: str) -> BasePatcher:
         if config.processing_type == FileProcessingType.NESTED_DAC_U8:
-            return NestedDacU8Patcher(config, work_dir, plando_dict)
+            return NestedDacU8Patcher(config, work_dir, plando_dict, maker_id)
         elif config.processing_type == FileProcessingType.MAIN_DOL:
-            return MainDolPatcher(config, work_dir, plando_dict)
+            return MainDolPatcher(config, work_dir, plando_dict, maker_id)
         elif config.processing_type == FileProcessingType.DAC_U8:
-            return DacU8Patcher(config, work_dir, plando_dict)
+            return DacU8Patcher(config, work_dir, plando_dict, maker_id)
         elif config.processing_type == FileProcessingType.DacCopyFilePatcher:
-            return DacCopyFilePatcher(config, work_dir, plando_dict)
+            return DacCopyFilePatcher(config, work_dir, plando_dict, maker_id)
         else:
             raise ValueError(f"Unknown processing type: {config.processing_type}")

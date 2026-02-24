@@ -4,7 +4,7 @@ from patcher.helper.entrance_exit_names import ABSOL_S_HURDLE_BOUNCE_ATTRACTION_
     BASTIODON_S_PANEL_CRUSH_ATTRACTION_ATTRACTION_MENU, \
     BLAZIKEN_S_BOULDER_BASH_ATTRACTION_ATTRACTION_MENU, BULBASAUR_S_DARING_DASH_ATTRACTION_ATTRACTION_MENU, \
     DUSKNOIR_S_SPEED_SLAM_ATTRACTION_ATTRACTION_MENU, EMPOLEON_S_SNOW_SLIDE_ATTRACTION_ATTRACTION_MENU, \
-    GRANITE_ZONE_MAIN_AREA_TREEHOUSE_CONNECTION, GYARADOS_AQUA_DASH_ATTRACTION_ATTRACTION_MENU, \
+    GYARADOS_AQUA_DASH_ATTRACTION_ATTRACTION_MENU, \
     PELIPPER_S_CIRCLE_CIRCUIT_ATTRACTION_ATTRACTION_MENU, \
     RAYQUAZA_S_BALLOON_PANIC_ATTRACTION_ATTRACTION_MENU, RHYPERIOR_S_BUMPER_BURN_ATTRACTION_ATTRACTION_MENU, \
     ROTOM_S_SPOOKY_SHOOT_EM_UP_ATTRACTION_ATTRACTION_MENU, \
@@ -95,9 +95,9 @@ def search_all_pattern(data: bytearray, patch_def: PatchPattern):
     print(f"Pattern {patch_def.name} matched in region: {patch_def.get_matched_region()}")
 
 
-def compute_call_to_function_script(offset: int, data: bytearray, target_function_pattern: PatchPattern):
-    target_function_match = search_pattern(data, target_function_pattern.patternJP)
-    new_function_address = target_function_match[0].base_address
+def compute_call_instruction_fsb(offset: int, patch_patterns: list[PatchPattern], pattern_name: str):
+    target_pattern = find_pattern_by_name(patch_patterns, pattern_name)
+    new_function_address = target_pattern.base_address
     branch_offset = new_function_address - (offset + 0x4)
     operand = branch_offset // 4
 
@@ -181,41 +181,12 @@ def get_num_skygarden_prisma_count_from_dict_as_instruction(plando_dict):
     return prisma_count_instruction
 
 
-def fill_with_delay_instructions_script(start_offset: int, end_offset: int):
-    num_bytes = end_offset - start_offset
+def create_lstr_instruction_fsb(patch_patterns: list[PatchPattern], start_pattern_name: str,
+                                target_pattern_name: str):
+    start_pattern = find_pattern_by_name(patch_patterns, start_pattern_name)
+    target_pattern = find_pattern_by_name(patch_patterns, target_pattern_name)
 
-    if num_bytes % 4 != 0:
-        raise ValueError("The offset range must be a multiple of 4 bytes")
-
-    repeats = num_bytes // 4
-
-    byte_sequence = (0x00000002).to_bytes(4, 'big') * repeats
-
-    # Optional: Print or use the bytes
-    print(byte_sequence)
-    return byte_sequence
-
-
-def create_lstr_script(data: bytearray, start_string_section_pattern: PatchPattern,
-                       target_string_pattern: PatchPattern):
-    start_string_section_match = search_pattern(data, start_string_section_pattern.patternJP)
-    target_string_match = search_pattern(data, target_string_pattern.patternJP)
-    if not start_string_section_match or not target_string_match:
-        print(f"ERROR: No match found for pattern: {start_string_section_pattern.name} or {target_string_pattern.name}")
-        raise Exception(
-            f"ERROR: No match found for pattern: {start_string_section_pattern.name} or {target_string_pattern.name}"
-        )
-
-    if len(start_string_section_match) > 1 or len(target_string_match) > 1:
-        print(
-            f"ERROR: Ambiguous match ({len(start_string_section_match)}) for pattern: {start_string_section_pattern.name}"
-        )
-        print(f"ERROR: Ambiguous match ({len(target_string_match)}) for pattern: {target_string_pattern.name}")
-        raise Exception(
-            f"non unique pattern"
-        )
-
-    string_offset = target_string_match[0].base_address - start_string_section_match[0].base_address
+    string_offset = target_pattern.base_address - start_pattern.base_address
     string_offset_as_bytes = string_offset.to_bytes(3, "big")
     lstr_instruction = string_offset_as_bytes + b'\x13'
     print(f"writing lstr instruction: 0x{int.from_bytes(lstr_instruction, 'big'):08X}")
@@ -223,9 +194,22 @@ def create_lstr_script(data: bytearray, start_string_section_pattern: PatchPatte
     return lstr_instruction
 
 
-def create_jmp_instruction_script(offset: int, target_identifier: int, matches: dict[int, MemoryData],
-                                  condition: Literal["jmp"] | Literal["jnz"] | Literal["jz"] = "jmp"):
-    target_address = matches.get(target_identifier).address
+def find_pattern_by_name(patterns: list[PatchPattern], name: str):
+    matches = next((p for p in patterns if p.name == name), None).get_matches()
+    if len(matches) > 1:
+        raise ValueError("ambiguous match for pattern name: ", name)
+    if len(matches) == 0:
+        raise ValueError("no match found for pattern name: ", name)
+
+    return matches[0]
+
+
+def compute_jmp_instruction_fsb(offset: int, target_identifier: int, patch_patterns: list[PatchPattern],
+                                pattern_name: str,
+                                condition: Literal["jmp"] | Literal["jnz"] | Literal["jz"] = "jmp"):
+    pattern = find_pattern_by_name(patch_patterns, pattern_name)
+    target_address = pattern.matched_instructions.get(target_identifier).address
+
     branch_offset = target_address - (offset + 0x4)
     operand = branch_offset // 4
 

@@ -33,7 +33,9 @@ taxi_stop = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big') if
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
+                4, 'big'
+                ) if
             plando_dict["Options"][
                 "unlock_fast_travel_with_taxi_stop"] else None,
             new_instruction_readable="push 0x1"

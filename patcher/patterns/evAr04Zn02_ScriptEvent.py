@@ -32,7 +32,8 @@ EMAPA04_Z03 = PatchPattern(
 
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MAGMA_ZONE_MAGCARGO_AREA_BLAZIKEN_GATE, "zone"
             ),
@@ -40,7 +41,8 @@ EMAPA04_Z03 = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MAGMA_ZONE_MAGCARGO_AREA_BLAZIKEN_GATE, "area"
             ),
@@ -48,7 +50,8 @@ EMAPA04_Z03 = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MAGMA_ZONE_MAGCARGO_AREA_BLAZIKEN_GATE, "position"
             ),

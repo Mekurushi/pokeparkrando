@@ -17,7 +17,9 @@ disposition_drifblim_pattern = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffffffff).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffffffff).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="---"
         ),
 

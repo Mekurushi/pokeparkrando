@@ -4,6 +4,7 @@ from patcher.models.models import FilePatchConfig, FileProcessingType
 from patcher.patterns.ScriptList_Ar04Zn02 import ScriptList_Ar04Zn02_patterns
 from patcher.patterns.ScriptList_Ar06Zn01 import ScriptList_Ar06Zn01_patterns
 from patcher.patterns.ScriptList_Ar99Zn01 import ScriptList_Ar99Zn01_patterns
+from patcher.patterns.custom.custom_patches import custom_functions_pattern
 from patcher.patterns.disposition_drifblim import disposition_drifblim_patterns
 from patcher.patterns.evAr01Zn01_Gimmic import evAr01Zn01_Gimmic_patch_pattern
 from patcher.patterns.evAr01Zn01_Npc_Main import \
@@ -2367,6 +2368,7 @@ def get_misc_patches() -> List[FilePatchConfig]:
     )
     patches.append(start_menu_config)
 
+    main_dol_pattern.extend(custom_functions_pattern)
     main_dol = FilePatchConfig(
         file_id="main_dol",
         description="main dol",
