@@ -718,4 +718,5 @@
   mew power competition: 0xdfd0 (1 match(es))
   setup_npcs_and_player: 0xce14 (1 match(es))
   piplup interaction: 0x12734 (1 match(es))
+  start ending: 0x117ac (1 match(es))
 
