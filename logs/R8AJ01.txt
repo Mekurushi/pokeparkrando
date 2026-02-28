@@ -240,6 +240,7 @@
 
 [evAr03Zn02_Gimmic.fsb]
   ice zone taxi stop: 0x8efc (1 match(es))
+  special_spawn_conditions: 0x7e10 (1 match(es))
 
 [evAr03Zn03_Npc_Main.fsb]
   set_chapter: 0x4a10 (1 match(es))
