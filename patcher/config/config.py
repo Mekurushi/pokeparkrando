@@ -4,8 +4,8 @@ from patcher.models.models import FilePatchConfig, FileProcessingType
 from patcher.patterns.ScriptList_Ar04Zn02 import ScriptList_Ar04Zn02_patterns
 from patcher.patterns.ScriptList_Ar06Zn01 import ScriptList_Ar06Zn01_patterns
 from patcher.patterns.ScriptList_Ar99Zn01 import ScriptList_Ar99Zn01_patterns
-from patcher.patterns.custom.custom_patches import custom_functions_pattern
 from patcher.patterns.disposition_drifblim import disposition_drifblim_patterns
+from patcher.patterns.dol.original.original_functions import original_dol_pattern
 from patcher.patterns.evAr01Zn01_Gimmic import evAr01Zn01_Gimmic_patch_pattern
 from patcher.patterns.evAr01Zn01_Npc_Main import \
     evAr01Zn01_Npc_Main_patch_pattern
@@ -73,10 +73,9 @@ from patcher.patterns.gkRecycleSanbasiC import gkRecycleSanbasiC_pattern
 from patcher.patterns.gkRecycleSanbasiD import gkRecycleSanbasiD_pattern
 from patcher.patterns.gkRockB import gkRockB
 from patcher.patterns.gkWoodBoxKino import gkWoodBoxKinoPattern
-from patcher.patterns.main import main_dol_pattern
 from patcher.patterns.mnAttractionInfo import mnAttractionInfo_pattern
 from patcher.patterns.mnLobby import mnLobby_pattern
-from patcher.patterns.mnStartMenu import load_new_file_pattern, start_menu_pattern
+from patcher.patterns.mnStartMenu import start_menu_pattern
 from patcher.patterns.treehouse import treehouse_pattern
 
 
@@ -2368,13 +2367,12 @@ def get_misc_patches() -> List[FilePatchConfig]:
     )
     patches.append(start_menu_config)
 
-    main_dol_pattern.extend(custom_functions_pattern)
     main_dol = FilePatchConfig(
         file_id="main_dol",
         description="main dol",
         processing_type=FileProcessingType.MAIN_DOL,
         file_group=[("DATA/sys/main.dol", "", "")],
-        patch_patterns=main_dol_pattern
+        patch_patterns=original_dol_pattern
     )
 
     patches.append(main_dol)
@@ -2419,7 +2417,7 @@ def get_all_patches() -> List[FilePatchConfig]:
     patches.extend(get_haunted_zone_patches())
     patches.extend(get_granite_zone_patches())
     patches.extend(get_flower_zone_patches())
-    patches.extend(get_misc_patches())
     patches.extend(get_skygarden_patches())
+    patches.extend(get_misc_patches())
 
     return patches

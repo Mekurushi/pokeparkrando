@@ -1,4 +1,5 @@
 import io
+import os
 import shutil
 import sys
 import traceback
@@ -8,12 +9,45 @@ from typing import Optional
 
 import libWiiPy
 import nlzss11
+import yaml
 
+from asm.patcher import apply_dol_patch
 from patcher.helper.patttern_handler import search_all_pattern
 from patcher.models.DOL import DOL
-from patcher.models.models import FilePatchConfig, ProgressCallback, FileProcessingType
+from patcher.models.models import FilePatchConfig, MakerMetadata, ProgressCallback, FileProcessingType
+from path import RANDO_ROOT_PATH
 
 IS_DEV = not getattr(sys, 'frozen', False)
+
+MAKER_METADATA: dict[str, MakerMetadata] = {
+    "R8AJ01": MakerMetadata(
+        asm_dir="R8AJ",
+        original_dol_size=0x36C540,
+        original_free_space_ram_address=0x80486ba0,
+        pointer1_high=0x8020dde0, pointer1_low=0x8020ddec,
+        pointer2_high=0x8020dddc, pointer2_low=0x8020dde4,
+        pointer3_high=0x802049b8, pointer3_low=0x802049bc,
+        pointer4_high=0x80004234, pointer4_low=0x80004238,
+    ),
+    "R8AE01": MakerMetadata(
+        asm_dir="R8AE",
+        original_dol_size=0x36E9E0,
+        original_free_space_ram_address=0x8048a040,
+        pointer1_high=0x8020ff30, pointer1_low=0x8020ff3c,
+        pointer2_high=0x8020ff2c, pointer2_low=0x8020ff34,
+        pointer3_high=0x80206b08, pointer3_low=0x80206b0c,
+        pointer4_high=0x80004234, pointer4_low=0x80004238,
+    ),
+    "R8AP01": MakerMetadata(
+        asm_dir="R8AP",
+        original_dol_size=0x36EF40,
+        original_free_space_ram_address=0x8048a620,
+        pointer1_high=0x80210210, pointer1_low=0x8021021c,
+        pointer2_high=0x8021020c, pointer2_low=0x80210214,
+        pointer3_high=0x80206de8, pointer3_low=0x80206dec,
+        pointer4_high=0x80004234, pointer4_low=0x80004238,
+    ),
+}
 
 
 class BasePatcher(ABC):
@@ -25,6 +59,7 @@ class BasePatcher(ABC):
         self.plando_dict = plando_dict
         self.backup_files = []
         self.maker_id = maker_id
+        self.free_space_start_offsets = {}
 
     @abstractmethod
     def process_file(self, extract_dir: Path, progress_callback: ProgressCallback) -> bool:
@@ -319,6 +354,19 @@ class DacU8Patcher(BasePatcher):
 
 class MainDolPatcher(BasePatcher):
 
+    def __init__(self, config: FilePatchConfig, work_dir: Path, plando_dict, maker_id: str | None):
+        super().__init__(config, work_dir, plando_dict, maker_id)
+        self.pointer4_low = None
+        self.pointer4_high = None
+        self.pointer3_low = None
+        self.pointer3_high = None
+        self.pointer2_low = None
+        self.pointer2_high = None
+        self.pointer1_low = None
+        self.pointer1_high = None
+        self.ORIGINAL_FREE_SPACE_RAM_ADDRESS = None
+        self.ORIGINAL_DOL_SIZE = None
+
     def process_file(self, extract_dir: Path, progress_callback: ProgressCallback) -> bool:
         progress_callback(f"Processing DOL file: {self.config.description}", 0)
         first_entry = self.config.file_group[0] if self.config.file_group else None
@@ -348,6 +396,96 @@ class MainDolPatcher(BasePatcher):
             # Cleanup temp directory
             if temp_dir.exists():
                 shutil.rmtree(temp_dir, ignore_errors=True)
+
+    def _meta(self) -> MakerMetadata:
+        try:
+            return MAKER_METADATA[self.maker_id]
+        except KeyError:
+            raise ValueError(f"Unknown maker_id: {self.maker_id}")
+
+    def get_patch_diffs_path(self) -> Path:
+        return RANDO_ROOT_PATH / "asm" / self._meta().asm_dir / "patch_diffs"
+
+    def load_free_space_start_offsets(self):
+        path = RANDO_ROOT_PATH / "asm" / self._meta().asm_dir / "free_space_start_offsets.txt"
+        with open(path, "r") as f:
+            self.free_space_start_offsets = yaml.safe_load(f)
+
+    def fill_dol_metadata(self):
+        m = self._meta()
+        self.ORIGINAL_DOL_SIZE = m.original_dol_size
+        self.ORIGINAL_FREE_SPACE_RAM_ADDRESS = m.original_free_space_ram_address
+        self.pointer1_high = m.pointer1_high
+        self.pointer1_low = m.pointer1_low
+        self.pointer2_high = m.pointer2_high
+        self.pointer2_low = m.pointer2_low
+        self.pointer3_high = m.pointer3_high
+        self.pointer3_low = m.pointer3_low
+        self.pointer4_high = m.pointer4_high
+        self.pointer4_low = m.pointer4_low
+
+    def _apply_patch_operations(self, file_path: Path) -> bool:
+        """Apply pattern-based binary patches directly to the file"""
+
+        try:
+            with open(file_path, "rb") as f:
+                file_data = bytearray(f.read())
+
+            # create DOL object
+            dol = DOL()
+            stream = io.BytesIO(file_data)
+            dol.read(stream)
+
+            # find all patterns for logging purposes
+            pattern_results = []
+            for patchpattern in self.config.patch_patterns:
+                search_all_pattern(file_data, patchpattern)
+                matches = patchpattern.get_matches()
+                found_address = hex(dol.convert_offset_to_address(matches[0].base_address)) if matches else "N/A"
+                pattern_results.append(
+                    {
+                        "name": patchpattern.name,
+                        "address": found_address,
+                        "matches": len(matches)
+                    }
+                )
+                print(
+                    f"Found {len(matches)} match(es) for pattern: {patchpattern.name}, address: "
+                    f"{found_address}"
+                )
+
+            # writing debug logs:
+            if IS_DEV and self.maker_id:
+                self._write_pattern_log(file_path, pattern_results)
+
+            # patching based on asm
+
+            diffs_path = self.get_patch_diffs_path()
+            self.load_free_space_start_offsets()
+
+            self.fill_dol_metadata()
+
+            for diff_file in os.listdir(diffs_path):
+                with open(os.path.join(diffs_path, diff_file)) as f:
+                    diffs = yaml.safe_load(f.read())
+
+                if "main.dol" in diffs:
+                    apply_dol_patch(self, dol, diffs["main.dol"])
+
+            # Write back patched dol
+            dol.save_changes()
+
+            with open(file_path, "wb") as f:
+                f.write(dol.data.getvalue())
+            print(f"Patched file saved: {file_path}")
+            return True
+
+        except Exception as e:
+            print(f"Patch operation failed for {self.config.file_id}: {e}")
+            print(f"Error in patcher: {self.__class__.__name__}")
+            print("Full stack trace:")
+            print(traceback.format_exc())
+            return False
 
 
 class DacCopyFilePatcher(BasePatcher):

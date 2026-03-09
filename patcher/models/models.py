@@ -181,3 +181,18 @@ class PatchResult:
     success: bool
     output_path: Optional[str] = None
     error_message: Optional[str] = None
+
+
+@dataclass
+class MakerMetadata:
+    asm_dir: str  # e.g. "R8AJ"
+    original_dol_size: int
+    original_free_space_ram_address: int
+    pointer1_high: int
+    pointer1_low: int
+    pointer2_high: int
+    pointer2_low: int
+    pointer3_high: int
+    pointer3_low: int
+    pointer4_high: int
+    pointer4_low: int

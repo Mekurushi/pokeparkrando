@@ -1,9 +1,31 @@
 block_cipher = None
 
+import os
+import re
+import glob
+def build_datas_recursive(paths):
+  datas = []
+
+  for path in paths:
+    for filename in glob.iglob(path, recursive=True):
+      dest_dirname = os.path.dirname(filename)
+      if dest_dirname == "":
+        dest_dirname = "."
+
+      data_entry = (filename, dest_dirname)
+      datas.append(data_entry)
+      print(data_entry)
+
+  return datas
 a = Analysis(['pokeparkrando.py'],  # Your main script
              pathex=[],
              binaries=[],
-             datas=[],
+             datas=build_datas_recursive([
+              'asm/*/*.txt',
+              'asm/*/patch_diffs/*.txt',
+              'assets/**/*',
+
+              ]),
              hiddenimports=[
              ],
              hookspath=[],
@@ -27,4 +49,5 @@ exe = EXE(pyz,
           strip=False,
           upx=True,
           console=True,
-          runtime_tmpdir=None)
+          runtime_tmpdir=None,
+          icon="assets/icon.ico",)

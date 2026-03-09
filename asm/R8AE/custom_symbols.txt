@@ -1,0 +1,14 @@
+main.dol:
+  lookup_global_manager: 0x8048A040
+  lookup_mn_field_info: 0x8048A070
+  lookup_object_manager: 0x8048A0A4
+  lookup_scene_manager: 0x8048A0D8
+  get_item_detail: 0x8048A10C
+  give_item: 0x8048A150
+  give_death: 0x8048A640
+  print_archipelago_text: 0x8048A73C
+  main_routine: 0x8048B1D8
+  SCENE_NAMES: 0x8048B328
+  MODULE_NAMES: 0x8048B33D
+  ARCHIPELAGO_DATA_INTERFACE: 0x8048C73C
+  BACKGROUND_COLOR: 0x8048C9A4

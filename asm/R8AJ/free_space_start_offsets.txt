@@ -1,0 +1,1 @@
+main.dol: 0x80486ba0
