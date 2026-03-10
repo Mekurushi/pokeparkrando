@@ -1,9 +1,7 @@
 from patcher.helper.patttern_handler import parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
-from patcher.patterns.dol.pattern_helper import compute_b_instruction_from_identifier, compute_bl_to_function, \
-    compute_conditional_branch_instruction_from_identifier, get_enemy_ai_option, \
-    get_player_name_from_dict, li_upper_address_from_pattern, ori_lower_address_from_pattern, \
-    write_address_of_target_patch
+from patcher.patterns.dol.pattern_helper import compute_bl_to_function, \
+    get_enemy_ai_option
 
 custom_functions_cgu0_memcpy = PatchPattern(
     name=f"custom_functions_cgu0_memcpy",
@@ -7602,14 +7600,6 @@ global_manager_v_table = PatchPattern(
         ),
     ],
     patchMapJP=[
-        Patch(
-            identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: write_address_of_target_patch(
-                data, patch_patterns, custom_global_manager_syscall_handler_wrapper.name, 1
-            ),
-            new_instruction_readable="blr"
-        ),
     ]
 )
 
