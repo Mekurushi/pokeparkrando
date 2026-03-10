@@ -7,7 +7,6 @@ use crate::system::{
 
 // Background Color Saved
 #[link_section = "data"]
-#[no_mangle]
 static mut BACKGROUND_COLOR: [u32; 2] = [0x000000FF; 2];
 
 #[repr(C)]

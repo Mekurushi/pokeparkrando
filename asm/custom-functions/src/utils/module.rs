@@ -32,7 +32,6 @@ pub struct ModuleNames {
     pub object_manager: [u8; 14],
 }
 
-#[no_mangle]
 #[link_section = ".rodata"]
 static MODULE_NAMES: ModuleNames = ModuleNames {
     global_manager: *b"GlobalManager\0",

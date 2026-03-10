@@ -16,7 +16,7 @@ macro_rules! item {
     }};
 }
 unsafe impl Sync for GiveItemDetail {}
-
+#[link_section = "data"]
 #[no_mangle]
 static ITEM_DETAILS: &[(Itemflag, GiveItemDetail)] = &[
     item!(CHATOT_FRIENDSHIP, GlobalManager, 0x3C, 0x4),

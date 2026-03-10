@@ -17,19 +17,21 @@ mod rando;
 mod system;
 mod utils;
 
-use crate::rando::{give_death, give_item, print_archipelago_text, ARCHIPELAGO_DATA_INTERFACE};
+use crate::rando::{give_death, give_item, print_archipelago_text};
 
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
     // println!("{}", info);
     loop {}
 }
-
+#[no_mangle]
+#[link_section = "data"]
+pub static mut SHOULD_PRINT_AP_BUFFER: bool = false;
 #[no_mangle]
 fn main_routine(arg: u32) -> u32 {
     give_item();
     give_death();
-    if unsafe { ARCHIPELAGO_DATA_INTERFACE.should_print_ap_buffer != 0 } {
+    if unsafe { SHOULD_PRINT_AP_BUFFER } {
         print_archipelago_text();
     }
     arg

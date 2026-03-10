@@ -15,6 +15,7 @@ from asm.patcher import apply_dol_patch
 from patcher.helper.patttern_handler import search_all_pattern
 from patcher.models.DOL import DOL
 from patcher.models.models import FilePatchConfig, MakerMetadata, ProgressCallback, FileProcessingType
+from patcher.patterns.dol.pattern_helper import get_player_name_from_dict
 from path import RANDO_ROOT_PATH
 
 IS_DEV = not getattr(sys, 'frozen', False)
@@ -352,10 +353,16 @@ class DacU8Patcher(BasePatcher):
         return True
 
 
+def get_patcher_version_bytes():
+    from patcher.randomizer_service import VERSION
+    return VERSION[0].to_bytes(0x4, 'big') + VERSION[1].to_bytes(0x4, 'big') + VERSION[2].to_bytes(0x4, 'big')
+
+
 class MainDolPatcher(BasePatcher):
 
     def __init__(self, config: FilePatchConfig, work_dir: Path, plando_dict, maker_id: str | None):
         super().__init__(config, work_dir, plando_dict, maker_id)
+        self.custom_symbols = None
         self.pointer4_low = None
         self.pointer4_high = None
         self.pointer3_low = None
@@ -411,6 +418,11 @@ class MainDolPatcher(BasePatcher):
         with open(path, "r") as f:
             self.free_space_start_offsets = yaml.safe_load(f)
 
+    def load_symbols(self):
+        path = RANDO_ROOT_PATH / "asm" / self._meta().asm_dir / "custom_symbols.txt"
+        with open(path, "r") as f:
+            self.custom_symbols = yaml.safe_load(f)
+
     def fill_dol_metadata(self):
         m = self._meta()
         self.ORIGINAL_DOL_SIZE = m.original_dol_size
@@ -465,12 +477,17 @@ class MainDolPatcher(BasePatcher):
 
             self.fill_dol_metadata()
 
+            self.load_symbols()
+
             for diff_file in os.listdir(diffs_path):
                 with open(os.path.join(diffs_path, diff_file)) as f:
                     diffs = yaml.safe_load(f.read())
 
                 if "main.dol" in diffs:
                     apply_dol_patch(self, dol, diffs["main.dol"])
+
+            # additional patches
+            self.dol_data_patches(dol)
 
             # Write back patched dol
             dol.save_changes()
@@ -486,6 +503,16 @@ class MainDolPatcher(BasePatcher):
             print("Full stack trace:")
             print(traceback.format_exc())
             return False
+
+    def dol_data_patches(self, dol: DOL):
+        dol.write_data_bytes(
+            self.custom_symbols["main.dol"]["PLAYER_NAME"],
+            get_player_name_from_dict(self.plando_dict)
+        )
+        dol.write_data_bytes(
+            self.custom_symbols["main.dol"]["PATCHER_VERSION"],
+            get_patcher_version_bytes()
+        )
 
 
 class DacCopyFilePatcher(BasePatcher):

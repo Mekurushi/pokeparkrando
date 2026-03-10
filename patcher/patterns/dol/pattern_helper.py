@@ -3,7 +3,6 @@ import io
 from patcher.helper.patttern_handler import find_pattern_by_name
 from patcher.models.DOL import DOL
 from patcher.models.models import PatchPattern
-from patcher.randomizer_service import VERSION
 
 
 def get_bl_instruction_from_branch_offset(branch_offset: int):
@@ -203,18 +202,6 @@ def get_enemy_ai_option(plando_dict):
     raise ValueError(
         f"unknown option value for harder_enemy_ai value: {enemy_ai_option}"
     )
-
-
-def write_major_patcher_version():
-    return VERSION[0].to_bytes(4, 'big')
-
-
-def write_minor_patcher_version():
-    return VERSION[1].to_bytes(4, 'big')
-
-
-def write_patch_patcher_version():
-    return VERSION[2].to_bytes(4, 'big')
 
 
 def should_print_ap_buffer():

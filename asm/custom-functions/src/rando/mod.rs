@@ -10,40 +10,31 @@ use crate::utils::console::Console;
 use crate::utils::module::{lookup_module, ModuleName};
 use core::{fmt::Write, str::from_utf8};
 
-#[repr(C)]
-pub struct ArchipelagoDataInterface {
-    // constants
-    pub patcher_version_major: u32,
-    pub patcher_version_minor: u32,
-    pub patcher_version_patch: u32,
-    pub player_name:           [u8; 0x40],
-
-    // changeable by client
-    pub give_death:              u32,
-    pub give_item_array:         [u16; 10],
-    pub should_print_ap_buffer:  u32,
-    pub archipelago_text_buffer: [u8; 0x200],
-}
+#[link_section = "data"]
+#[no_mangle]
+pub static mut GIVE_ITEM_ARRAY: [u16; 10] = [0xFFFF; 10];
 
 #[link_section = "data"]
 #[no_mangle]
-pub static mut ARCHIPELAGO_DATA_INTERFACE: ArchipelagoDataInterface = ArchipelagoDataInterface {
-    patcher_version_major: 0,
-    patcher_version_minor: 0,
-    patcher_version_patch: 0,
-    player_name:           [0; 64],
+pub static mut PLAYER_NAME: [u8; 0x40] = [0xFF; 0x40];
 
-    give_death:              0xFFFFFFFF,
-    give_item_array:         [0xFFFF; 10],
-    should_print_ap_buffer:  0,
-    archipelago_text_buffer: [0; 0x200],
-};
+#[link_section = "data"]
+#[no_mangle]
+static mut ARCHIPELAGO_TEXT_BUFFER: [u8; 0x200] = [0; 0x200];
+
+#[link_section = "data"]
+#[no_mangle]
+static mut PATCHER_VERSION: [u32; 3] = [0; 3];
+
+#[link_section = "data"]
+#[no_mangle]
+static mut DEATH_TRIGGER: bool = false;
 
 #[no_mangle]
 pub fn give_item() -> u32 {
     unsafe {
         // buffer to safeguard against inconsistencies during processing
-        let buffer = ARCHIPELAGO_DATA_INTERFACE.give_item_array;
+        let buffer = GIVE_ITEM_ARRAY;
 
         for i in 0..buffer.len() {
             let item_id = buffer[i];
@@ -84,8 +75,8 @@ pub fn give_item() -> u32 {
                     syscall_handler(module, details.opcode, params);
                 }
                 // reset only processed items
-                if ARCHIPELAGO_DATA_INTERFACE.give_item_array[i] == item_id {
-                    ARCHIPELAGO_DATA_INTERFACE.give_item_array[i] = 0xFFFF;
+                if GIVE_ITEM_ARRAY[i] == item_id {
+                    GIVE_ITEM_ARRAY[i] = 0xFFFF;
                 }
             }
         }
@@ -98,7 +89,7 @@ pub fn give_death() -> u32 {
     unsafe {
         // TODO: Improve params usage
         // TODO: check Attraction logic
-        if ARCHIPELAGO_DATA_INTERFACE.give_death == 0x1 {
+        if DEATH_TRIGGER {
             let global_manager = lookup_global_manager();
             let global_manager_vtable = (*global_manager).vtable;
             let global_manager_syscall_handler = (*global_manager_vtable).syscall_handler;
@@ -119,14 +110,14 @@ pub fn give_death() -> u32 {
             // unused for that syscall
             scene_manager_syscall_handler(scene_manager, 0x3, params.as_ptr());
         }
-        ARCHIPELAGO_DATA_INTERFACE.give_death = 0xFFFFFFFF
+        DEATH_TRIGGER = false
     }
     1
 }
 
 #[no_mangle]
 pub fn print_archipelago_text() -> u32 {
-    let text_cstr = unsafe { ARCHIPELAGO_DATA_INTERFACE.archipelago_text_buffer };
+    let text_cstr = unsafe { ARCHIPELAGO_TEXT_BUFFER };
     if text_cstr[0] != 0 {
         let mut top_height = 430f32;
         for char in text_cstr.iter() {

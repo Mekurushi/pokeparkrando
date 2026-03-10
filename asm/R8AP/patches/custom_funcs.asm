@@ -1,4 +1,10 @@
 .open "main.dol"
 .org @NextFreeSpace
 .global main_routine
+.global GIVE_ITEM_ARRAY
+.global ARCHIPELAGO_TEXT_BUFFER
+.global PATCHER_VERSION
+.global DEATH_TRIGGER
+.global SHOULD_PRINT_AP_BUFFER
+.global PLAYER_NAME
 .close

@@ -78,7 +78,6 @@ pub struct SceneNames {
     pub challenge:   [u8; 10],
 }
 
-#[no_mangle]
 #[link_section = ".rodata"]
 static SCENE_NAMES: SceneNames = SceneNames {
     zone_change: *b"ZoneChange\0",
