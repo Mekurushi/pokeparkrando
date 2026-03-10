@@ -14,6 +14,8 @@ blr
 .long ARCHIPELAGO_TEXT_BUFFER
 .long DEATH_TRIGGER
 .long SHOULD_PRINT_AP_BUFFER
+.long 0x80486a00 ; MenuScriptStart pointer only active in title screen
+.long 0x80486d80 ; game initialized once up to title screen
 
 .org 0x80338ff8 ; globalManager vtable
 .long global_manager_syscall_wrapper
