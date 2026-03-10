@@ -41,3 +41,4 @@ main.dol:
 
     lookup_module: 0x802edba0
     main_loop_restore: 0x802f1d4c
+    global_manager_syscall_handler: 0x80180790

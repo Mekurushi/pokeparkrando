@@ -14,4 +14,6 @@ blr
 .long ARCHIPELAGO_TEXT_BUFFER
 .long DEATH_TRIGGER
 .long SHOULD_PRINT_AP_BUFFER
+.org 0x80338a60 ; globalManager vtable
+.long global_manager_syscall_wrapper
 .close

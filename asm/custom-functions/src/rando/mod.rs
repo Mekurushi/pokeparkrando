@@ -1,6 +1,8 @@
 mod items;
 
-use crate::game::global_manager::{lookup_global_manager, FlagName};
+use crate::game::global_manager::{
+    global_manager_syscall_handler, lookup_global_manager, FlagName, GlobalManagerModule,
+};
 use crate::game::scene_manager::{lookup_scene_manager, SceneName};
 use crate::rando::items::{
     get_dash_params, get_health_params, get_iron_tail_params, get_item_detail,
@@ -30,6 +32,8 @@ static mut PATCHER_VERSION: [u32; 3] = [0; 3];
 #[no_mangle]
 static mut DEATH_TRIGGER: bool = false;
 
+#[link_section = "data"]
+static mut FROM_RANDO: bool = false;
 #[no_mangle]
 pub fn give_item() -> u32 {
     unsafe {
@@ -71,8 +75,14 @@ pub fn give_item() -> u32 {
                         }
                     }
 
+                    // ensure that wrapper in vtable knows it's custom code
+                    FROM_RANDO = true;
+
                     // item execution
                     syscall_handler(module, details.opcode, params);
+
+                    // reset custom code indicator
+                    FROM_RANDO = false
                 }
                 // reset only processed items
                 if GIVE_ITEM_ARRAY[i] == item_id {
@@ -137,4 +147,24 @@ pub fn print_archipelago_text() -> u32 {
 
     // Return 1 to tell the game to continue running
     1
+}
+
+#[no_mangle]
+pub fn global_manager_syscall_wrapper(
+    global_manager: *mut GlobalManagerModule,
+    opcode: u32,
+    params: *const u32,
+) -> bool {
+    if unsafe { FROM_RANDO } {
+        return unsafe { global_manager_syscall_handler(global_manager, opcode, params) };
+    }
+    if opcode == 0x3C {
+        // convert set friendship calls from script to set bestfriend
+        return unsafe { global_manager_syscall_handler(global_manager, 0x4A, params) };
+    }
+    if opcode == 0x28 {
+        // remove pokemon unlock calls from script
+        return true;
+    }
+    unsafe { global_manager_syscall_handler(global_manager, opcode, params) }
 }

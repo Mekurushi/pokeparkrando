@@ -7,4 +7,5 @@
 .global DEATH_TRIGGER
 .global SHOULD_PRINT_AP_BUFFER
 .global PLAYER_NAME
+.global global_manager_syscall_wrapper
 .close
