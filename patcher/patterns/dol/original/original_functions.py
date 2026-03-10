@@ -7463,21 +7463,6 @@ stage_setup_new_file_pattern = PatchPattern(
         ),
     ],
     patchMapJP=[
-        Patch(
-            identifier=1,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x38a00002).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="push 0x2"
-        ),
-        Patch(
-            identifier=3,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x38000005).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="push 0x5"
-        ),
-
     ],
 )
 
@@ -7515,14 +7500,6 @@ load_file_spawn_position = PatchPattern(
         ),
     ],
     patchMapJP=[
-        Patch(
-            identifier=1,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xA01F5F02).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="lhz r0, 0x5F02 (r31)"
-        ),
-
     ],
 )
 
@@ -7686,21 +7663,6 @@ attraction_record_unlock = PatchPattern(
         ),
     ],
     patchMapJP=[
-        Patch(
-            identifier=7,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x2c1e00ff).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="cmpwi r30,0xff"
-        ),
-        Patch(
-            identifier=8,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x2c1e00ff).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="cmpwi r30,0xff"
-        )
-
     ],
 )
 
@@ -7837,57 +7799,6 @@ main_game_loop_iteration = PatchPattern(
         ),
     ],
     patchMapJP=[
-        Patch(
-            identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
-                offset, data, patch_patterns,
-                "custom_functions_cgu0_main_routine", 1
-            ),
-            new_instruction_readable="bl main_routine"
-        ),
-        Patch(
-            identifier=3,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x39610020).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="addi r11,r1,0x20"
-        ),
-        Patch(
-            identifier=4,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_bl_to_function(
-                offset, data, patch_patterns,
-                main_game_loop_iteration_restore.name, 1
-            ),
-            new_instruction_readable="bl main_game_loop_iteration_restore"
-        ),
-        Patch(
-            identifier=5,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x80010024).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="lwz r0,local_res4(r1)"
-        ),
-        Patch(
-            identifier=6,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x7c0803a6).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="mtspr LR,r0"
-        ),
-        Patch(
-            identifier=7,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x38210020).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="addi r1,r1,0x60"
-        ),
-        Patch(
-            identifier=8,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x4e800020).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="blr"
-        ),
     ]
 )
 
