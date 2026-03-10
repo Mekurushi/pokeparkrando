@@ -1,7 +1,5 @@
 from patcher.helper.patttern_handler import parse_pattern_bytes
-from patcher.models.models import Instruction, Patch, PatchPattern
-from patcher.patterns.dol.pattern_helper import compute_bl_to_function, \
-    get_enemy_ai_option
+from patcher.models.models import Instruction, PatchPattern
 
 custom_functions_cgu0_memcpy = PatchPattern(
     name=f"custom_functions_cgu0_memcpy",

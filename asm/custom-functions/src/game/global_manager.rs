@@ -82,6 +82,7 @@ pub struct GlobalFlagBase {
 #[repr(C)]
 pub struct GlobalManagerVTable {
     pub ptr_s_ns_delhi_ns_global_global_manager: u32,
+    pub empty: u32,
     /// 0x00
     pub fun0: u32,
 

@@ -94,33 +94,33 @@ pub fn give_item() -> u32 {
     1
 }
 
+// TODO: add the in attraction logic
 #[no_mangle]
 pub fn give_death() -> u32 {
     unsafe {
-        // TODO: Improve params usage
-        // TODO: check Attraction logic
         if DEATH_TRIGGER {
             let global_manager = lookup_global_manager();
             let global_manager_vtable = (*global_manager).vtable;
             let global_manager_syscall_handler = (*global_manager_vtable).syscall_handler;
-            let params: [u32; 3] = [
+
+            let global_params: [u32; 3] = [
                 (*global_manager).zone as u32,
                 (*global_manager).area as u32,
                 (*global_manager).position as u32,
             ];
-            global_manager_syscall_handler(global_manager, 0x78, params.as_ptr());
+            global_manager_syscall_handler(global_manager, 0x78, global_params.as_ptr());
 
             let scene_manager = lookup_scene_manager();
             let scene_manager_vtable = (*scene_manager).vtable;
             let scene_manager_syscall_handler = (*scene_manager_vtable).syscall_handler;
 
-            let params: [u32; 2] = [SceneName::ZoneChange.as_ptr() as u32, 0x1];
-            scene_manager_syscall_handler(scene_manager, 0x6, params.as_ptr());
-            // params just for typing
-            // unused for that syscall
-            scene_manager_syscall_handler(scene_manager, 0x3, params.as_ptr());
+            let scene_params: [u32; 2] = [SceneName::ZoneChange.as_ptr() as u32, 0x1];
+            scene_manager_syscall_handler(scene_manager, 0x6, scene_params.as_ptr());
+
+            // Syscall 0x3 ignores params
+            scene_manager_syscall_handler(scene_manager, 0x3, core::ptr::null());
+            DEATH_TRIGGER = false;
         }
-        DEATH_TRIGGER = false
     }
     1
 }
