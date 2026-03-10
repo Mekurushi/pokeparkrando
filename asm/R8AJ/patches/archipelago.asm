@@ -17,4 +17,9 @@ blr
 
 .org 0x803365e0 ; globalManager vtable
 .long global_manager_syscall_wrapper
+
+.org 0x8017aa24 ; attraction data setup cmpwi r30, 0x7
+cmpwi r30, 0xff
+.org 0x8017aa2c ; attraction data setup cmpwi r30, 0xd
+cmpwi r30, 0xff
 .close
