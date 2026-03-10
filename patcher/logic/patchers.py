@@ -15,7 +15,7 @@ from asm.patcher import apply_dol_patch
 from patcher.helper.patttern_handler import search_all_pattern
 from patcher.models.DOL import DOL
 from patcher.models.models import FilePatchConfig, MakerMetadata, ProgressCallback, FileProcessingType
-from patcher.patterns.dol.pattern_helper import get_player_name_from_dict
+from patcher.patterns.dol.pattern_helper import get_enemy_ai_option, get_player_name_from_dict
 from path import RANDO_ROOT_PATH
 
 IS_DEV = not getattr(sys, 'frozen', False)
@@ -362,6 +362,7 @@ class MainDolPatcher(BasePatcher):
 
     def __init__(self, config: FilePatchConfig, work_dir: Path, plando_dict, maker_id: str | None):
         super().__init__(config, work_dir, plando_dict, maker_id)
+        self.original_symbols = None
         self.custom_symbols = None
         self.pointer4_low = None
         self.pointer4_high = None
@@ -422,6 +423,10 @@ class MainDolPatcher(BasePatcher):
         path = RANDO_ROOT_PATH / "asm" / self._meta().asm_dir / "custom_symbols.txt"
         with open(path, "r") as f:
             self.custom_symbols = yaml.safe_load(f)
+
+        path = RANDO_ROOT_PATH / "asm" / self._meta().asm_dir / "original_symbols.txt"
+        with open(path, "r") as f:
+            self.original_symbols = yaml.safe_load(f)
 
     def fill_dol_metadata(self):
         m = self._meta()
@@ -509,10 +514,23 @@ class MainDolPatcher(BasePatcher):
             self.custom_symbols["main.dol"]["PLAYER_NAME"],
             get_player_name_from_dict(self.plando_dict)
         )
+        print(
+            f"Applied player name patch: {get_player_name_from_dict(self.plando_dict)} at address {hex(self.custom_symbols['main.dol']['PLAYER_NAME'])}"
+        )
         dol.write_data_bytes(
             self.custom_symbols["main.dol"]["PATCHER_VERSION"],
             get_patcher_version_bytes()
         )
+        print(
+            f"Applied patcher version patch: {get_patcher_version_bytes().hex()} at address {hex(self.custom_symbols['main.dol']['PATCHER_VERSION'])}"
+        )
+        dol.write_data_bytes(
+            self.original_symbols["main.dol"]["ai_difficulty_request"],
+            get_enemy_ai_option(self.plando_dict)
+        )
+        print(
+            f"Applied enemy AI difficulty patch: {get_enemy_ai_option(self.plando_dict).hex()} at address {hex(self.original_symbols['main.dol']['ai_difficulty_request'])}"
+            )
 
 
 class DacCopyFilePatcher(BasePatcher):

@@ -42,3 +42,4 @@ main.dol:
     lookup_module: 0x802eff20
     main_loop_restore: 0x802f40cc
     global_manager_syscall_handler: 0x801827c0
+    ai_difficulty_request: 0x80075b6c

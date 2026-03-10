@@ -7641,14 +7641,6 @@ ai_difficulty_logic = PatchPattern(
         ),
     ],
     patchMapJP=[
-        Patch(
-            identifier=7,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: get_enemy_ai_option(
-                plando_dict
-            ),
-            new_instruction_readable="li r3, 0|1"
-        )
-
     ],
 )
 
