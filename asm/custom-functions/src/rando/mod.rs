@@ -99,26 +99,36 @@ pub fn give_item() -> u32 {
 pub fn give_death() -> u32 {
     unsafe {
         if DEATH_TRIGGER {
-            let global_manager = lookup_global_manager();
-            let global_manager_vtable = (*global_manager).vtable;
-            let global_manager_syscall_handler = (*global_manager_vtable).syscall_handler;
+            let attraction = lookup_module(&ModuleName::MnAtInfo.as_ptr());
+            let mn_lobby = lookup_module(&ModuleName::MnLobby.as_ptr());
 
-            let global_params: [u32; 3] = [
-                (*global_manager).zone as u32,
-                (*global_manager).area as u32,
-                (*global_manager).position as u32,
-            ];
-            global_manager_syscall_handler(global_manager, 0x78, global_params.as_ptr());
+            if !attraction.is_null() {
+                let scene_manager = lookup_scene_manager();
+                let syscall = (*(*scene_manager).vtable).syscall_handler;
+                let params: [u32; 2] = [SceneName::ReturnToPark.as_ptr() as u32, 0x1];
+                syscall(scene_manager, 0x6, params.as_ptr());
+                syscall(scene_manager, 0x3, core::ptr::null());
+            } else if !mn_lobby.is_null() {
+                let syscall = (*(*mn_lobby).vtable).syscall_handler;
+                let params: [u32; 1] = [0x0];
+                syscall(mn_lobby, 0x3, params.as_ptr());
+                syscall(mn_lobby, 0x11, core::ptr::null());
+            } else {
+                let global_manager = lookup_global_manager();
+                let syscall = (*(*global_manager).vtable).syscall_handler;
+                let params: [u32; 3] = [
+                    (*global_manager).zone as u32,
+                    (*global_manager).area as u32,
+                    (*global_manager).position as u32,
+                ];
+                syscall(global_manager, 0x78, params.as_ptr());
 
-            let scene_manager = lookup_scene_manager();
-            let scene_manager_vtable = (*scene_manager).vtable;
-            let scene_manager_syscall_handler = (*scene_manager_vtable).syscall_handler;
-
-            let scene_params: [u32; 2] = [SceneName::ZoneChange.as_ptr() as u32, 0x1];
-            scene_manager_syscall_handler(scene_manager, 0x6, scene_params.as_ptr());
-
-            // Syscall 0x3 ignores params
-            scene_manager_syscall_handler(scene_manager, 0x3, core::ptr::null());
+                let scene_manager = lookup_scene_manager();
+                let syscall = (*(*scene_manager).vtable).syscall_handler;
+                let params: [u32; 2] = [SceneName::ZoneChange.as_ptr() as u32, 0x1];
+                syscall(scene_manager, 0x6, params.as_ptr());
+                syscall(scene_manager, 0x3, core::ptr::null());
+            }
             DEATH_TRIGGER = false;
         }
     }

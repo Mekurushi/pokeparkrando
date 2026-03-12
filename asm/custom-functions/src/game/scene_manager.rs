@@ -61,6 +61,7 @@ pub fn lookup_scene_manager() -> *mut SceneManagerModule {
 pub enum SceneName {
     ZoneChange,
     Challenge,
+    ReturnToPark,
 }
 
 impl SceneName {
@@ -68,18 +69,21 @@ impl SceneName {
         match self {
             Self::ZoneChange => SCENE_NAMES.zone_change.as_ptr(),
             Self::Challenge => SCENE_NAMES.challenge.as_ptr(),
+            Self::ReturnToPark => SCENE_NAMES.return_to_park.as_ptr(),
         }
     }
 }
 
 #[repr(C)]
 pub struct SceneNames {
-    pub zone_change: [u8; 11],
-    pub challenge:   [u8; 10],
+    pub zone_change:    [u8; 11],
+    pub challenge:      [u8; 10],
+    pub return_to_park: [u8; 13],
 }
 
 #[link_section = ".rodata"]
 static SCENE_NAMES: SceneNames = SceneNames {
-    zone_change: *b"ZoneChange\0",
-    challenge:   *b"Challenge\0",
+    zone_change:    *b"ZoneChange\0",
+    challenge:      *b"Challenge\0",
+    return_to_park: *b"ReturnToPark\0",
 };

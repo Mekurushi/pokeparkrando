@@ -9,6 +9,7 @@ pub enum ModuleName {
     MnFieldInfo,
     MnLobby,
     ObjectManager,
+    MnAtInfo,
 }
 
 impl ModuleName {
@@ -19,6 +20,7 @@ impl ModuleName {
             Self::MnFieldInfo => MODULE_NAMES.mn_field_info.as_ptr(),
             Self::MnLobby => MODULE_NAMES.mn_lobby.as_ptr(),
             Self::ObjectManager => MODULE_NAMES.object_manager.as_ptr(),
+            Self::MnAtInfo => MODULE_NAMES.mn_at_info.as_ptr(),
         }
     }
 }
@@ -30,6 +32,7 @@ pub struct ModuleNames {
     pub mn_field_info:  [u8; 12],
     pub mn_lobby:       [u8; 8],
     pub object_manager: [u8; 14],
+    pub mn_at_info:     [u8; 9],
 }
 
 #[link_section = ".rodata"]
@@ -39,6 +42,7 @@ static MODULE_NAMES: ModuleNames = ModuleNames {
     mn_field_info:  *b"mnFieldInfo\0",
     mn_lobby:       *b"mnLobby\0",
     object_manager: *b"ObjectManager\0",
+    mn_at_info:     *b"mnAtInfo\0",
 };
 
 #[repr(C)]
