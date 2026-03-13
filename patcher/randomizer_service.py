@@ -151,12 +151,8 @@ class PatcherService:
                 f"vs APWorld v{major}.{minor}.{patch}"
             )
 
-        if patch != patcher_patch:
-            print(
-                f"Warning: Patch version differs: Randomizer Patcher v{patcher_major}.{patcher_minor}.{patcher_patch} "
-                f"vs APWorld v{major}.{minor}.{patch} (safe to continue)"
-            )
-
+        print(f"used versions: Randomizer Patcher v{patcher_major}.{patcher_minor}.{patcher_patch} ")
+        print(f"APWorld v{major}.{minor}.{patch}")
         return major, minor, patch
 
     def _extract_iso(self, iso_path: str, progress_callback: ProgressCallback):
