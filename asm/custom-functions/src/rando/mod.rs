@@ -10,6 +10,7 @@ use crate::rando::items::{
 };
 use crate::utils::console::Console;
 use crate::utils::module::{lookup_module, ModuleName};
+use core::ffi::CStr;
 use core::{fmt::Write, str::from_utf8};
 
 #[link_section = "data"]
@@ -31,6 +32,10 @@ static mut PATCHER_VERSION: [u32; 3] = [0; 3];
 #[link_section = "data"]
 #[no_mangle]
 static mut DEATH_TRIGGER: bool = false;
+
+#[link_section = "data"]
+#[no_mangle]
+static mut IS_DEATH: bool = false;
 
 #[link_section = "data"]
 static mut FROM_RANDO: bool = false;
@@ -94,7 +99,6 @@ pub fn give_item() -> u32 {
     1
 }
 
-// TODO: add the in attraction logic
 #[no_mangle]
 pub fn give_death() -> u32 {
     unsafe {
@@ -175,6 +179,16 @@ pub fn global_manager_syscall_wrapper(
     if opcode == 0x28 {
         // remove pokemon unlock calls from script
         return true;
+    }
+    if opcode == 0x0 {
+        unsafe {
+            let name_ptr = *params as *const u8;
+            let flag = *params.add(1);
+            let name = CStr::from_ptr(name_ptr as *const i8);
+            if name.to_bytes_with_nul() == b"zfPowerComp\0" && flag == 0x0 {
+                IS_DEATH = true;
+            }
+        }
     }
     unsafe { global_manager_syscall_handler(global_manager, opcode, params) }
 }

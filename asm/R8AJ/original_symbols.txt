@@ -8,29 +8,29 @@ main.dol:
     get_font_data: 0x80106330
     CalcStringRect_TextWriterBase_WChar: 0x801fdc00
     C_MTXOrtho: 0x8021abd0
-    GXSetProjection: 0x802228dc
-    GXSetViewport: 0x80222cac
-    GXSetScissor: 0x80222cfc
+    GXSetProjection: 0x802228e0
+    GXSetViewport: 0x80222cb0
+    GXSetScissor: 0x80222d00
     GXLoadPosMtxImm: 0x802229e0
-    GXSetCurrentMtx: 0x80222afc
-    GXClearVtxDesc: 0x8021d96c
+    GXSetCurrentMtx: 0x80222b00
+    GXClearVtxDesc: 0x8021d970
     GXInvalidateVtxCache: 0x8021e040
     GXSetVtxDesc: 0x8021d360
     GXSetVtxAttrFmt: 0x8021d9b0
-    GXSetNumChans: 0x802201ec
+    GXSetNumChans: 0x802201f0
     GXSetChanMatColor: 0x80220110
     GXSetChanCtrl: 0x80220220
-    GXSetNumTexGens: 0x8021e29c
-    GXSetNumIndStages: 0x8022174c
-    __GXSetIndirectMask: 0x802217cc
-    GXSetNumTevStages: 0x80221ecc
+    GXSetNumTexGens: 0x8021e2a0
+    GXSetNumIndStages: 0x80221750
+    __GXSetIndirectMask: 0x802217d0
+    GXSetNumTevStages: 0x80221ed0
     GXSetTevOp: 0x80221830
     GXSetTevOrder: 0x80221d70
-    GXSetBlendMode: 0x8022239c
-    GXSetColorUpdate: 0x802223ec
-    GXSetAlphaUpdate: 0x8022241c
-    GXSetZMode: 0x8022244c
-    GXSetCullMode: 0x8021f0fc
+    GXSetBlendMode: 0x802223a0
+    GXSetColorUpdate: 0x802223f0
+    GXSetAlphaUpdate: 0x80222420
+    GXSetZMode: 0x80222450
+    GXSetCullMode: 0x8021f100
     GXBegin: 0x8021ee10
     CharWriter__SetupGX: 0x802b39f0
     GXSetAlphaCompare: 0x80221ca0

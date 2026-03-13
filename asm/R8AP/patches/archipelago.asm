@@ -11,11 +11,14 @@ blr
 .long PATCHER_VERSION
 .long PLAYER_NAME
 .long GIVE_ITEM_ARRAY
-.long ARCHIPELAGO_TEXT_BUFFER
-.long DEATH_TRIGGER
 .long SHOULD_PRINT_AP_BUFFER
+.long ARCHIPELAGO_TEXT_BUFFER
+.long IS_DEATH
+.long DEATH_TRIGGER
+.long 0x803789e8 ; GLobalManager Data space
 .long 0x80486a00 ; MenuScriptStart pointer only active in title screen
 .long 0x80486d80 ; game initialized once up to title screen
+.long 0x803A0460 ; attraction ID
 
 .org 0x80338ff8 ; globalManager vtable
 .long global_manager_syscall_wrapper
