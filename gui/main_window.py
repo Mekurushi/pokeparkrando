@@ -1,4 +1,5 @@
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QApplication,
     QFileDialog,
@@ -19,6 +20,7 @@ from gui.worker_thread import PatcherWorkerThread
 from patcher.config.config import get_all_patches
 from patcher.models.models import PatchRequest, PatchResult
 from patcher.randomizer_service import VERSION
+from path import RANDO_ROOT_PATH
 
 
 class RandoGUI(QMainWindow):
@@ -26,6 +28,8 @@ class RandoGUI(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle(f"PokéPark Randomizer Patcher v{VERSION[0]}.{VERSION[1]}.{VERSION[2]}")
+        self.setWindowIcon(QIcon(str(RANDO_ROOT_PATH / "assets" / "icon.ico")))
+
         self.setFixedSize(700, 450)
         self.patcher_thread = None
         self.iso_path = ""

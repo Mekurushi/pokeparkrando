@@ -1,0 +1,45 @@
+main.dol:
+    # --------------- C STUFFS --------------------------------
+    float_to_unsigned: 0x802f4238
+    memcpy: 0x80004364
+    memset: 0x800046b4
+    # --------------- MISC   STUFF ----------------------------
+    CharWriter__UpdateVertexColor: 0x801fc660
+    get_font_data: 0x80106c60
+    CalcStringRect_TextWriterBase_WChar: 0x80200030
+    C_MTXOrtho: 0x8021d000
+    GXSetProjection: 0x80224f40
+    GXSetViewport: 0x80225310
+    GXSetScissor: 0x80225360
+    GXLoadPosMtxImm: 0x80225040
+    GXSetCurrentMtx: 0x80225160
+    GXClearVtxDesc: 0x8021fda0
+    GXInvalidateVtxCache: 0x80220470
+    GXSetVtxDesc: 0x8021f790
+    GXSetVtxAttrFmt: 0x8021fde0
+    GXSetNumChans: 0x80222850
+    GXSetChanMatColor: 0x80222770
+    GXSetChanCtrl: 0x80222880
+    GXSetNumTexGens: 0x802206d0
+    GXSetNumIndStages: 0x80223db0
+    __GXSetIndirectMask: 0x80223e30
+    GXSetNumTevStages: 0x80224530
+    GXSetTevOp: 0x80223e90
+    GXSetTevOrder: 0x802243d0
+    GXSetBlendMode: 0x80224a00
+    GXSetColorUpdate: 0x80224a50
+    GXSetAlphaUpdate: 0x80224a80
+    GXSetZMode: 0x80224ab0
+    GXSetCullMode: 0x80221530
+    GXBegin: 0x80221240
+    CharWriter__SetupGX: 0x802b6050
+    GXSetAlphaCompare: 0x80224300
+    Print_TextWriterBase_WChar: 0x80200530
+    __ct__TextWriterBase_WChar: 0x801ff440
+    __dt__TextWriterBase_WChar: 0x802b8e00
+    CharWriter__GetFontWidth: 0x802b6db0
+
+    lookup_module: 0x802f0200
+    main_loop_restore: 0x802f43ac
+    global_manager_syscall_handler: 0x80182aa0
+    ai_difficulty_request: 0x80075cec
