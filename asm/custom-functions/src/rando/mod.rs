@@ -142,13 +142,17 @@ pub fn give_death() -> u32 {
 #[no_mangle]
 pub fn print_archipelago_text() -> u32 {
     let text_cstr = unsafe { ARCHIPELAGO_TEXT_BUFFER };
+    let mut last_char = 0;
     if text_cstr[0] != 0 {
         let mut top_height = 430f32;
         for char in text_cstr.iter() {
             // We want to move the text box up for each newline so it's bottom-justified
-            if *char == b'\n' {
+            // Ignore if last character was 0x02, as that means it's part of a tag
+            // processor control sequence
+            if *char == b'\n' && last_char != 0x02 {
                 top_height -= 14f32;
             }
+            last_char = *char;
         }
         let text = from_utf8(&text_cstr).unwrap();
         let mut console = Console::with_pos(0f32, top_height);
