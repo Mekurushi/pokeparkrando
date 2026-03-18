@@ -43,8 +43,6 @@ main.dol:
     __dt__15dTagProcessor_cFv: 0x802b8570
     process_tag_original: 0x802b8710
     process_tag_shortened_params_original: 0x802b85b0
-    process_color: 0x801fc380
-
 
     lookup_module: 0x802eff20
     main_loop_restore: 0x802f40cc

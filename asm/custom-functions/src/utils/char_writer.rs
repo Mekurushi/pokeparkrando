@@ -99,11 +99,11 @@ impl Default for TextWriterBase {
 
 #[repr(C)]
 pub struct PrintContextWChar {
-    writer: *mut TextWriterBase, // at 0x0
-    str:    *const u16,          // at 0x4
-    x:      f32,                 // at 0x8
-    y:      f32,                 // at 0xC
-    flags:  u32,                 // at 0x10
+    pub writer: *mut TextWriterBase, // at 0x0
+    pub str:    *const u16,          // at 0x4
+    x:          f32,                 // at 0x8
+    y:          f32,                 // at 0xC
+    flags:      u32,                 // at 0x10
 }
 
 #[repr(C)]
