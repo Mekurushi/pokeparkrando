@@ -3,11 +3,8 @@ use crate::utils::char_writer::{GradationMode, PrintContextWChar};
 #[repr(C)]
 pub struct TagProcessor {
     vtable:             *const TagProcessorVTable,
-    stuff0:             [u8; 0x908],
-    msg_window_subtype: u8,          // 0x90C
-    stuff1:             [u8; 0x5D4], // 0xEF4 - 0x90D
-    pub is_shadow_text: bool,        // 0xEE1
-    stuff2:             [u8; 0x12],  // 0xEF4 - 0xEE2
+    msg_window_subtype: u8,
+    pub is_shadow_text: bool,
 }
 impl TagProcessor {
     pub fn new() -> Self {
@@ -69,9 +66,6 @@ impl Default for TagProcessor {
             vtable:             core::ptr::null(),
             msg_window_subtype: 0,
             is_shadow_text:     false,
-            stuff0:             [0; 0x908],
-            stuff1:             [0; 0x5D4],
-            stuff2:             [0; 0x12],
         }
     }
 }
@@ -166,18 +160,18 @@ fn color_tag_processing(
 }
 
 #[no_mangle]
-fn fallback_color(ctx: *mut PrintContextWChar, param3: u8) {
-    let i_var3 = match param3 {
+fn fallback_color(ctx: *mut PrintContextWChar, msg_window_subtype: u8) {
+    let color_idx = match msg_window_subtype {
         2 => 0xB, // fallback white
         _ => 0xB,
     };
-    let base = unsafe { FONT_COLORS_2[i_var3] };
+    let base = unsafe { FONT_COLORS_2[color_idx] };
 
     let writer = unsafe { (*ctx).writer };
     unsafe { (*writer).set_gradation_mode(GradationMode::VERTICAL) };
     unsafe { (*writer).set_font_color(base, base) };
 }
-static mut FONT_COLORS_1: [u32; 49] = [
+static mut FONT_COLORS_1: [u32; 12] = [
     0x000000FF, // 0x00 - black
     0xEE0000FF, // 0x01 - red
     0xFF7700FF, // 0x02 - orange
@@ -190,15 +184,9 @@ static mut FONT_COLORS_1: [u32; 49] = [
     0xEE00EEFF, // 0x09 - magenta
     0x6D8BE8FF, // 0x0a - slateblue
     0xFFFFFFFF, // 0x0b - white (fallback for window_subtype 2 now)
-    // rest unused
-    0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-    0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-    0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-    0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-    0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
 ];
 
-static mut FONT_COLORS_2: [u32; 49] = [
+static mut FONT_COLORS_2: [u32; 12] = [
     0x000000FF, // 0x00 - black
     0xEE0000FF, // 0x01 - red
     0xFF7700FF, // 0x02 - orange
@@ -211,10 +199,4 @@ static mut FONT_COLORS_2: [u32; 49] = [
     0xEE00EEFF, // 0x09 - magenta
     0x6D8BE8FF, // 0x0a - slateblue
     0xFFFFFFFF, // 0x0b - white (fallback for window_subtype 2 now)
-    // rest unused
-    0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-    0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-    0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-    0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-    0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
 ];
