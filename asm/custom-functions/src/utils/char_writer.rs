@@ -129,7 +129,6 @@ impl TextWriterBase {
         text_writer.set_font_color(0x000000FF, 0x000000FF);
         text_writer.char_writer.color_mapping[0] = 0x00000000;
         text_writer.char_writer.color_mapping[1] = 0xFFFFFFFF;
-        text_writer.line_space = -4.0f32;
         text_writer
     }
 
@@ -398,4 +397,26 @@ pub fn write_to_screen(args: Arguments<'_>, posx: f32, posy: f32) {
     text_writer.set_position(posx, posy);
 
     writer.draw(&mut text_writer);
+}
+pub fn calculate_line_height_runtime(font_size: f32) -> f32 {
+    let single_line = [b'A' as u16, 0u16];
+    let mut writer = TextWriterBase::new();
+    writer.set_scale(font_size);
+    writer.set_font();
+    let mut rect = Rect {
+        left:   0.0,
+        top:    0.0,
+        right:  0.0,
+        bottom: 0.0,
+    };
+    unsafe {
+        CalcStringRect_TextWriterBase_WChar(&writer, &mut rect, single_line.as_ptr(), 1);
+    }
+    write_to_screen(
+        format_args!("line_height: {}", rect.bottom - rect.top),
+        100f32,
+        100f32,
+    );
+
+    rect.bottom - rect.top
 }
