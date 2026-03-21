@@ -4511,399 +4511,61 @@ bonsly_friendship_pattern = PatchPattern(
     patternJP=[
         Instruction(
             identifier=1, offset=0,
+            pattern=parse_pattern_bytes("00 0c 00 07"),
+            instruction_readable="grow_stack 0xc"
+        ),
+        # model id
+        Instruction(
+            identifier=2, offset=0x20,
             pattern=parse_pattern_bytes("00 12 00 10"),
             instruction_readable="push 0x12"
         ),
-
-        # remove hide and seek tutorial popup
-        #
+        # hide and seek flag result
         Instruction(
-            identifier=2, offset=0x144,
-            pattern=parse_pattern_bytes("?? ?? ?? 13"),
-            instruction_readable="lstr f0101HideAndSeek"
-        ),
-        Instruction(
-            identifier=3, offset=0x148,
-            pattern=parse_pattern_bytes("ff ff 00 0b"),
-            instruction_readable="load_arg -0x1"
-        ),
-        Instruction(
-            identifier=4, offset=0x14c,
-            pattern=parse_pattern_bytes("00 01 00 10"),
-            instruction_readable="push 0x01"
-        ),
-        Instruction(
-            identifier=5, offset=0x150,
-            pattern=parse_pattern_bytes("00 15 03 01"),
-            instruction_readable="SC3 0x0:0x15"
-        ),
-        Instruction(
-            identifier=6, offset=0x154,
+            identifier=3, offset=0x174,
             pattern=parse_pattern_bytes("00 00 00 12"),
             instruction_readable="push_result"
         ),
+        # set hide and seek flag
         Instruction(
-            identifier=7, offset=0x158,
-            pattern=parse_pattern_bytes("00 00 00 10"),
-            instruction_readable="push 0x0"
-        ),
-        Instruction(
-            identifier=8, offset=0x15c,
-            pattern=parse_pattern_bytes("00 0b 00 16"),
-            instruction_readable="eq"
-        ),
-        Instruction(
-            identifier=9, offset=0x160,
-            pattern=parse_pattern_bytes("00 03 02 08"),
-            instruction_readable="jz"
-        ),
-        Instruction(
-            identifier=10, offset=0x164,
-            pattern=parse_pattern_bytes("?? ?? ?? 13"),
-            instruction_readable="lstr 02_60100"
-        ),
-        Instruction(
-            identifier=11, offset=0x168,
-            pattern=parse_pattern_bytes("00 00 00 10"),
-            instruction_readable="push 0x0"
-        ),
-        Instruction(
-            identifier=12, offset=0x16c,
-            pattern=parse_pattern_bytes("?? ?? ?? 03"),
-            instruction_readable="call FUN_??????"
-        ),
-
-        # setting hide and seek popup flag
-        #
-        Instruction(
-            identifier=13, offset=0x248,
-            pattern=parse_pattern_bytes("?? ?? ?? 13"),
-            instruction_readable="lstr f0101HideAndSeek"
-        ),
-        Instruction(
-            identifier=14, offset=0x24c,
-            pattern=parse_pattern_bytes("ff f7 00 0b"),
-            instruction_readable="load_arg -0x9"
-        ),
-        Instruction(
-            identifier=15, offset=0x250,
-            pattern=parse_pattern_bytes("00 00 00 10"),
-            instruction_readable="push 0x0"
-        ),
-        Instruction(
-            identifier=16, offset=0x254,
+            identifier=4, offset=0x1c4,
             pattern=parse_pattern_bytes("00 15 04 01"),
             instruction_readable="SC4 0x0:0x15"
         ),
-
-        # replacing friendship flag with best friend
-        #
+        # set hide and seek flag
         Instruction(
-            identifier=17, offset=0x268,
-            pattern=parse_pattern_bytes("00 3d 00 10"),
-            instruction_readable="push 0x3d"
+            identifier=5, offset=0x274,
+            pattern=parse_pattern_bytes("00 15 04 01"),
+            instruction_readable="SC4 0x0:0x15"
         ),
-        Instruction(
-            identifier=18, offset=0x26c,
-            pattern=parse_pattern_bytes("00 15 03 01"),
-            instruction_readable="SC3 0x0:0x15"
-        ),
-        Instruction(
-            identifier=19, offset=0x270,
-            pattern=parse_pattern_bytes("00 00 00 12"),
-            instruction_readable="push_result"
-        ),
-        Instruction(
-            identifier=20, offset=0x274,
-            pattern=parse_pattern_bytes("ff f5 00 0c"),
-            instruction_readable="store_arg -0xb"
-        ),
-        Instruction(
-            identifier=21, offset=0x278,
-            pattern=parse_pattern_bytes("ff f5 00 0b"),
-            instruction_readable="load_arg -0xb"
-        ),
-        Instruction(
-            identifier=22, offset=0x27c,
-            pattern=parse_pattern_bytes("00 00 00 10"),
-            instruction_readable="push 0x0"
-        ),
-        Instruction(
-            identifier=23, offset=0x280,
-            pattern=parse_pattern_bytes("00 0b 00 16"),
-            instruction_readable="eq"
-        ),
-        Instruction(
-            identifier=24, offset=0x284,
-            pattern=parse_pattern_bytes("00 15 02 08"),
-            instruction_readable="jz"
-        ),
-        Instruction(
-            identifier=25, offset=0x288,
-            pattern=parse_pattern_bytes("?? ?? ?? 13"),
-            instruction_readable="lstr 11_11090"
-        ),
-        Instruction(
-            identifier=26, offset=0x28c,
-            pattern=parse_pattern_bytes("00 00 00 0b"),
-            instruction_readable="load_arg 0x0"
-        ),
-        Instruction(
-            identifier=27, offset=0x290,
-            pattern=parse_pattern_bytes("?? ?? ?? 03"),
-            instruction_readable="call FUN_??????"
-        ),
-        Instruction(
-            identifier=28, offset=0x294,
-            pattern=parse_pattern_bytes("ff fd 00 0b"),
-            instruction_readable="load_arg -0x3"
-        ),
-        Instruction(
-            identifier=29, offset=0x298,
-            pattern=parse_pattern_bytes("?? ?? ?? 03"),
-            instruction_readable="call set_friend(0x12)"
-        ),
-        Instruction(
-            identifier=30, offset=0x29c,
-            pattern=parse_pattern_bytes("?? ?? ?? 13"),
-            instruction_readable="lstr 11_00500"
-        ),
-        Instruction(
-            identifier=31, offset=0x2a0,
-            pattern=parse_pattern_bytes("?? ?? ?? 03"),
-            instruction_readable="call FUN_??????"
-        ),
-        Instruction(
-            identifier=32, offset=0x2a4,
-            pattern=parse_pattern_bytes("00 1d 00 10"),
-            instruction_readable="push 0x1d"
-        ),
-        Instruction(
-            identifier=33, offset=0x2a8,
-            pattern=parse_pattern_bytes("?? ?? ?? 03"),
-            instruction_readable="call unlock_pokemon(0x1d)"
-        ),
-
     ],
     patchMapJP=[
-        # removing unneeded code
-        #
-        Patch(
-            identifier=2,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=3,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=4,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=5,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=6,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=7,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=8,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=9,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=10,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=11,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=12,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=13,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=14,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=15,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=16,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-
-        # replacing friendship flag with best friend
-        #
-        Patch(
-            identifier=17,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=18,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=19,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=20,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=21,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=22,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=23,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=24,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
 
         Patch(
-            identifier=29,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, patch_patterns,
-                                  pattern_name: compute_call_instruction_fsb(
-                offset, patch_patterns,
-                set_bestfriend_function_pattern.name
+            identifier=3,  # skip hide and seek logic
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
+                4,
+                'big'
             ),
-            new_instruction_readable="call set_bestfriend(0x10)"
+            new_instruction_readable="push 0x1"
         ),
-
-        # removing unlock calls
-        #
         Patch(
-            identifier=31,  # removing friendship flag request
+            identifier=4,  # skip hide and seek logic
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
-            new_instruction_readable="delay(0)"
+            new_instruction_readable="delay 0x0"
         ),
         Patch(
-            identifier=32,  # removing friendship flag request
+            identifier=5,  # skip hide and seek logic
             patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
-            new_instruction_readable="delay(0)"
+            new_instruction_readable="delay 0x0"
         ),
+        # set friendship is automatically transformed to archipelago flag
     ]
 )
 
