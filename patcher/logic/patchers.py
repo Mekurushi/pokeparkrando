@@ -15,7 +15,7 @@ from asm.patcher import apply_dol_patch
 from patcher.helper.patttern_handler import search_all_pattern
 from patcher.models.DOL import DOL
 from patcher.models.models import FilePatchConfig, MakerMetadata, ProgressCallback, FileProcessingType
-from patcher.patterns.dol.pattern_helper import get_enemy_ai_option, get_player_name_from_dict
+from patcher.patterns.dol.pattern_helper import get_enemy_ai_option, get_player_name_from_dict, should_print_client_text
 from path import RANDO_ROOT_PATH
 
 IS_DEV = not getattr(sys, 'frozen', False)
@@ -530,7 +530,16 @@ class MainDolPatcher(BasePatcher):
         )
         print(
             f"Applied enemy AI difficulty patch: {get_enemy_ai_option(self.plando_dict).hex()} at address {hex(self.original_symbols['main.dol']['ai_difficulty_request'])}"
-            )
+        )
+
+        dol.write_data_bytes(
+            self.custom_symbols["main.dol"]["SHOULD_PRINT_AP_BUFFER"],
+            should_print_client_text(self.plando_dict)
+        )
+        print(
+            f"Applied show client text ingame patch: {should_print_client_text(self.plando_dict).hex()} at address"
+            f" {hex(self.custom_symbols['main.dol']['SHOULD_PRINT_AP_BUFFER'])}"
+        )
 
 
 class DacCopyFilePatcher(BasePatcher):

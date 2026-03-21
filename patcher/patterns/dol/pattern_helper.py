@@ -204,5 +204,10 @@ def get_enemy_ai_option(plando_dict):
     )
 
 
+def should_print_client_text(plando_dict):
+    should_print: int = plando_dict["Options"]["show_client_text_ingame"]
+    return should_print.to_bytes(1, 'big')
+
+
 def should_print_ap_buffer():
     return True.to_bytes(0x4, 'big')

@@ -8,6 +8,7 @@ use crate::rando::items::{
     get_dash_params, get_health_params, get_iron_tail_params, get_item_detail,
     get_thunderbolt_params, Itemflag,
 };
+
 use crate::utils::console::Console;
 use crate::utils::module::{lookup_module, ModuleName};
 use core::ffi::CStr;
@@ -139,28 +140,33 @@ pub fn give_death() -> u32 {
     1
 }
 
+const FONT_SIZE: f32 = 0.4f32;
 #[no_mangle]
-pub fn print_archipelago_text() -> u32 {
+pub fn print_archipelago_text() {
     let text_cstr = unsafe { ARCHIPELAGO_TEXT_BUFFER };
+    let mut last_char = 0;
     if text_cstr[0] != 0 {
-        let mut top_height = 430f32;
+        let mut top_height = 436f32;
         for char in text_cstr.iter() {
             // We want to move the text box up for each newline so it's bottom-justified
-            if *char == b'\n' {
-                top_height -= 14f32;
+            // Ignore if last character was 0x02, as that means it's part of a tag
+            // processor control sequence
+            if *char == b'\n' && last_char != 0x02 {
+                // JP line height 20.4f32 at font size 0.4f32
+                // PAL line height 20.4f32 at font size 0.4f32
+                // NA line height 20.4f32 at font size 0.4f32
+                top_height -= 20.4f32
             }
+            last_char = *char;
         }
         let text = from_utf8(&text_cstr).unwrap();
         let mut console = Console::with_pos(0f32, top_height);
         console.set_bg_color(0x00000055);
         console.set_font_color(0xFFFFFFFF);
-        console.set_font_size(0.35f32);
+        console.set_font_size(FONT_SIZE);
         let _ = console.write_str(text);
         console.draw(false);
     }
-
-    // Return 1 to tell the game to continue running
-    1
 }
 
 #[no_mangle]

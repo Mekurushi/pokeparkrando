@@ -38,6 +38,11 @@ main.dol:
     __ct__TextWriterBase_WChar: 0x801fc7c0
     __dt__TextWriterBase_WChar: 0x802b8b20
     CharWriter__GetFontWidth: 0x802b6ad0
+    CharWriter__SetGradationMode: 0x802b6710
+    __ct__15dTagProcessor_cFv: 0x802b8560
+    __dt__15dTagProcessor_cFv: 0x802b8570
+    process_tag_original: 0x802b8710
+    process_tag_shortened_params_original: 0x802b85b0
 
     lookup_module: 0x802eff20
     main_loop_restore: 0x802f40cc

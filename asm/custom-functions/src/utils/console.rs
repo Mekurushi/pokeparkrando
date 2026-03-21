@@ -1,6 +1,6 @@
-use core::fmt::Write;
-
 use crate::utils::char_writer::{CharWriter, TextWriterBase};
+use crate::BUFFER_TAG_PROCESSOR;
+use core::fmt::Write;
 
 pub struct Console {
     pos:          [f32; 2],
@@ -67,8 +67,9 @@ impl Console {
         } else {
             writer.set_font();
         }
-        // let tag_processor_ptr = unsafe { *(0x80575744 as *const u32) };
-        // writer.set_tag_processor(tag_processor_ptr);
+        if let Some(proc) = unsafe { &mut BUFFER_TAG_PROCESSOR } {
+            writer.set_tag_processor(proc);
+        }
         // Set size
         if self.dynamic_size {
             let rect = self.buffer.get_buff_rect(&mut writer);
