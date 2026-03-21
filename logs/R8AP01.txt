@@ -56,7 +56,7 @@
   Event Bidoof Friendship Logic: 0xf820 (1 match(es))
   Oddish Friendship Logic: 0x13ce0 (1 match(es))
   Shroomish Friendship Logic: 0x13f94 (1 match(es))
-  Bonsly Friendship Logic: 0x14238 (1 match(es))
+  Bonsly Friendship Logic: 0x14218 (1 match(es))
   Shinx Friendship Logic: 0x14560 (1 match(es))
   Aipom Tree Friendship Logic: 0x14af0 (1 match(es))
   Aipom Friendship Logic: 0x17348 (1 match(es))
