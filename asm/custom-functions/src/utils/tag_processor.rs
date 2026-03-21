@@ -89,7 +89,7 @@ extern "C" fn process_tag_shortened_params(
 
     if tag_type == 3 {
         if tag_processor.is_shadow_text == false {
-            color_tag_processing(tag_processor, print_context, color_index_ptr as *const u32);
+            color_tag_processing(tag_processor, print_context, color_index_ptr);
         }
     }
     unsafe {
@@ -116,7 +116,7 @@ pub extern "C" fn process_tag(
     let (tag_type, tag_length, color_index_ptr) = parse_tag_header(string_ptr);
     if tag_type == 3 {
         if tag_processor.is_shadow_text == false {
-            color_tag_processing(tag_processor, print_context, color_index_ptr as *const u32);
+            color_tag_processing(tag_processor, print_context, color_index_ptr);
         }
     }
     unsafe {
@@ -143,9 +143,9 @@ fn parse_tag_header(string_ptr: *const u16) -> (i32, u8, *const u16) {
 fn color_tag_processing(
     tag_processor: &mut TagProcessor,
     ctx: *mut PrintContextWChar,
-    color_index: *const u32,
+    color_index: *const u16,
 ) {
-    let color_idx: u16 = unsafe { *(color_index as *const u16) };
+    let color_idx: u16 = unsafe { *(color_index) };
     if color_idx == 0xFFFF {
         fallback_color(ctx, tag_processor.msg_window_subtype);
     } else {

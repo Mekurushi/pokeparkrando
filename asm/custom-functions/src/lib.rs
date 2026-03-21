@@ -35,7 +35,7 @@ pub static mut BUFFER_TAG_PROCESSOR: Option<TagProcessor> = None;
 fn main_routine(arg: u32) -> u32 {
     unsafe {
         if BUFFER_TAG_PROCESSOR.is_none() {
-            // Create our own tag processor; subtype 27 means text defaults to white
+            // Create our own tag processor; subtype 2 means text defaults to white
             BUFFER_TAG_PROCESSOR = Some(TagProcessor::with_window_subtype(2));
         }
     }
