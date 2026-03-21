@@ -1910,11 +1910,11 @@ spearow_interaction = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00050010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00080010).to_bytes(
                 4, 'big'
             ) if
             plando_dict["Options"]["each_zone"] else None,
-            new_instruction_readable="push 0x5"
+            new_instruction_readable="push 0x8"
         ),
         Patch(
             identifier=5,
@@ -2024,11 +2024,11 @@ spearow2_interaction = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00050010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00080010).to_bytes(
                 4, 'big'
             ) if
             plando_dict["Options"]["each_zone"] else None,
-            new_instruction_readable="push 0x5"
+            new_instruction_readable="push 0x8"
         ),
         Patch(
             identifier=5,
