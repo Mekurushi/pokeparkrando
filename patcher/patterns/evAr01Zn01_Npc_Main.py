@@ -4538,6 +4538,12 @@ bonsly_friendship_pattern = PatchPattern(
             pattern=parse_pattern_bytes("00 15 04 01"),
             instruction_readable="SC4 0x0:0x15"
         ),
+        # get friendship opcode
+        Instruction(
+            identifier=6, offset=0x288,
+            pattern=parse_pattern_bytes("00 3d 00 10"),
+            instruction_readable="push 0x3d"
+        ),
     ],
     patchMapJP=[
 
@@ -4564,6 +4570,14 @@ bonsly_friendship_pattern = PatchPattern(
                 'big'
             ),
             new_instruction_readable="delay 0x0"
+        ),
+        Patch(  # replacing is friend check with location flag check
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x004b0010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x4b"
         ),
         # set friendship is automatically transformed to archipelago flag
     ]
