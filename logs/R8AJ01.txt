@@ -523,6 +523,7 @@
   special_spawn_conditions: 0x8eb8 (1 match(es))
   set_attraction_record: 0x85a0 (1 match(es))
   STAXIAREA: 0x7adc (1 match(es))
+  drifloon interaction: 0xa024 (1 match(es))
 
 [evAr05Zn01_ScriptEvent.fsb]
   EMAPA02_Z01: 0x7e10 (1 match(es))
