@@ -1391,6 +1391,36 @@ STAXIAREA = PatchPattern(
     ]
 )
 
+drifloon_interaction = PatchPattern(
+    name="drifloon interaction",
+    description="removing unwanted behavior",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0e 00 07"),
+            instruction_readable="grow_stack 0xe"
+        ),
+
+        Instruction(
+            identifier=2, offset=0x30, pattern=parse_pattern_bytes("01 42 00 10"),
+            instruction_readable="push 0x142"
+        ),
+        Instruction(
+            identifier=3, offset=0x2c4, pattern=parse_pattern_bytes("00 3d 00 10"),
+            instruction_readable="push 0x3d"
+        ),
+
+    ],
+    patchMapJP=[
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x004b0010).to_bytes(
+                4, 'big'
+            ),
+            new_instruction_readable="push 0x4b"
+        ),
+    ]
+)
+
 evAr05Zn01_Npc_Main_patterns = [
     get_module,
     string_section_start,
@@ -1412,5 +1442,6 @@ evAr05Zn01_Npc_Main_patterns = [
     special_spawn_conditions,
     set_attraction_record,
 
-    STAXIAREA
+    STAXIAREA,
+    drifloon_interaction
 ]
