@@ -9,4 +9,6 @@
 .global SHOULD_PRINT_AP_BUFFER
 .global PLAYER_NAME
 .global global_manager_syscall_wrapper
+.global FPS_ENHANCEMENT
+.global set_frame_limit_wrapper
 .close

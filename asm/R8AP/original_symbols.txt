@@ -48,3 +48,5 @@ main.dol:
     main_loop_restore: 0x802f43ac
     global_manager_syscall_handler: 0x80182aa0
     ai_difficulty_request: 0x80075cec
+
+    set_frame_limit: 0x8000be20

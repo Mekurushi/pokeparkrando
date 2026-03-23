@@ -16,6 +16,7 @@ blr
 .long ARCHIPELAGO_TEXT_BUFFER
 .long IS_DEATH
 .long DEATH_TRIGGER
+.long FPS_ENHANCEMENT; fps enhancement trigger
 .long 0x80374fe0 ; GLobalManager Data space
 .long 0x80482fb8 ; MenuScriptStart pointer only active in title screen
 .long 0x80483338 ; game initialized once up to title screen
@@ -36,4 +37,11 @@ li r0, 0x5
 
 .org 0x80124f80 ; spawn load from savefile
 lhz r0, 0x5f02 (r31)
+
+.org 0x80169668 ; wrapping set_frame_limit
+bl set_frame_limit_wrapper
+
+.org 0x80169d80 ; wrapping set_frame_limit
+bl set_frame_limit_wrapper
+
 .close

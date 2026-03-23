@@ -11,8 +11,17 @@ use crate::rando::items::{
 
 use crate::utils::console::Console;
 use crate::utils::module::{lookup_module, ModuleName};
-use core::ffi::CStr;
+use core::ffi::{c_void, CStr};
 use core::{fmt::Write, str::from_utf8};
+
+extern "C" {
+    fn set_frame_limit(
+        param1: *mut [FrameLimitEntry; 2],
+        param2: u32,
+        param3: u32,
+        param4: u32,
+    ) -> c_void;
+}
 
 #[link_section = "data"]
 #[no_mangle]
@@ -37,6 +46,10 @@ static mut DEATH_TRIGGER: bool = false;
 #[link_section = "data"]
 #[no_mangle]
 static mut IS_DEATH: bool = false;
+
+#[link_section = "data"]
+#[no_mangle]
+static mut FPS_ENHANCEMENT: bool = false;
 
 #[link_section = "data"]
 static mut FROM_RANDO: bool = false;
@@ -197,4 +210,28 @@ pub fn global_manager_syscall_wrapper(
         }
     }
     unsafe { global_manager_syscall_handler(global_manager, opcode, params) }
+}
+#[repr(C)]
+pub struct FrameLimitEntry {
+    // 0x70 struct size
+    _pad0:          [u8; 0x40],
+    unknown_0x40:   u32,
+    frame_interval: u32,
+    _pad1:          [u8; 0x28],
+}
+
+#[no_mangle]
+pub fn set_frame_limit_wrapper(
+    frame_limit_array_ptr: *mut [FrameLimitEntry; 2],
+    index: u32,
+    param3: u32,
+    frame_limit: u32,
+) {
+    unsafe {
+        let new_frame_limit = match FPS_ENHANCEMENT {
+            true => 0x000F7708,
+            false => frame_limit,
+        };
+        set_frame_limit(frame_limit_array_ptr, index, param3, new_frame_limit);
+    }
 }
