@@ -209,5 +209,6 @@ def should_print_client_text(plando_dict):
     return should_print.to_bytes(1, 'big')
 
 
-def should_print_ap_buffer():
-    return True.to_bytes(0x4, 'big')
+def should_patch_frame_limit(plando_dict):
+    should_print: int = plando_dict["Options"]["fps_enhancement_patch"]
+    return should_print.to_bytes(1, 'big')
