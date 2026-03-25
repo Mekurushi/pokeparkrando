@@ -41,12 +41,16 @@ load_new_file_pattern = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="delay(0)"
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x001e0010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x001e0010).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="push 0x1e"
         ),
 
@@ -78,7 +82,9 @@ attraction_menu = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="push 0x0"
         ),
 

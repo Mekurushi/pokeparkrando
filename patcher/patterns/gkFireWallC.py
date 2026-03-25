@@ -25,7 +25,7 @@ run = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
                 4,
                 'big'
             ),

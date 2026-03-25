@@ -33,7 +33,7 @@ taxi_stop = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: patch_taxi_stop(plando_dict),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: patch_taxi_stop(plando_dict),
             new_instruction_readable="push 0x1"
         ),
 
@@ -61,13 +61,17 @@ recycle = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big') if
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
+                4, 'big'
+                ) if
             plando_dict["Options"]["remove_errand_power_comp_locations"] else None,
             new_instruction_readable="push 0x0"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00640010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00640010).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="push 0x64"
         ),
 

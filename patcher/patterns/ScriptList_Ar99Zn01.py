@@ -22,17 +22,23 @@ Ar99Zn01Init = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000001).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000001).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="---"
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000001).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000001).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="---"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x0000ffff).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x0000ffff).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="---"
         ),
     ],
@@ -59,17 +65,23 @@ enterZoneScriptListInit = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000001).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000001).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="---"
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000001).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000001).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="---"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000001).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000001).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="---"
         ),
     ],

@@ -5,20 +5,27 @@ gk_kabigon_wall_wait = PatchPattern(
     name="Kabigon Wall Wait",
     description="Modyfing Kabigon Wall spawn condition",
     patternJP=[
-        Instruction(identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 03 00 07"),
-                    instruction_readable="grow_stack 0x3"),
-        Instruction(identifier=2, offset=0x48, pattern=parse_pattern_bytes("?? ?? ?? 13"),
-                    instruction_readable="lstr Chapter"),
-        Instruction(identifier=3, offset=0x64, pattern=parse_pattern_bytes("00 03 02 08"),
-                    instruction_readable="jz"),
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 03 00 07"),
+            instruction_readable="grow_stack 0x3"
+        ),
+        Instruction(
+            identifier=2, offset=0x48, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr Chapter"
+        ),
+        Instruction(
+            identifier=3, offset=0x64, pattern=parse_pattern_bytes("00 03 02 08"),
+            instruction_readable="jz"
+        ),
 
     ],
     patchMapJP=[
 
-
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="delay(0)"
         ),
 

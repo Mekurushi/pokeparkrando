@@ -32,7 +32,8 @@ EMAPA01_Z01 = PatchPattern(
 
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_VENUSAUR_AREA_MEADOW_ZONE_MAIN_GATE, "zone"
             ),
@@ -40,7 +41,8 @@ EMAPA01_Z01 = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_VENUSAUR_AREA_MEADOW_ZONE_MAIN_GATE, "area"
             ),
@@ -48,7 +50,8 @@ EMAPA01_Z01 = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_VENUSAUR_AREA_MEADOW_ZONE_MAIN_GATE, "position"
             ),

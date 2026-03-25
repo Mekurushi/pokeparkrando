@@ -1,4 +1,4 @@
-from patcher.helper.patttern_handler import create_jmp_instruction_script, parse_pattern_bytes, patch_taxi_stop
+from patcher.helper.patttern_handler import compute_jmp_instruction_fsb, parse_pattern_bytes, patch_taxi_stop
 from patcher.models.models import Instruction, Patch, PatchPattern
 
 taxi_stop = PatchPattern(
@@ -33,7 +33,7 @@ taxi_stop = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: patch_taxi_stop(plando_dict),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: patch_taxi_stop(plando_dict),
             new_instruction_readable="push 0x1"
         ),
 
@@ -74,8 +74,9 @@ special_spawn_conditions = PatchPattern(
 
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
-                offset, 6, matches,
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_jmp_instruction_fsb(
+                offset, 6, patch_patterns, pattern_name,
                 "jmp"
             ),
             new_instruction_readable="jmp"

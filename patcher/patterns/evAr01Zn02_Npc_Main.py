@@ -90,51 +90,67 @@ NPC_Venusaur = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00020010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00020010).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="push 0x2"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00450008).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00450008).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="jmp"
         ),
         Patch(
             identifier=11,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00190008).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00190008).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="jmp"
         ),
         Patch(
             identifier=12,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="delay(0)"
         ),
         Patch(
             identifier=13,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="delay(0)"
         ),
 
         # removing regular friendship flag and only checking location when venusaur, empoleon, blaziken prisma is available
         Patch(
             identifier=14,
-            patch_function=lambda offset, data, plando_dict, matches: (0x000f0008).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x000f0008).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="jmp"
         ),
         # removing regular friendship flag in best friend path
         Patch(
             identifier=15,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00040008).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00040008).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="jmp"
         ),
         # removing prep prisma call
         Patch(
             identifier=16,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
+                4, 'big'
+                ),
             new_instruction_readable="delay(0)"
         ),
         Patch(
             identifier=17,
-            patch_function=lambda offset, data, plando_dict, matches: get_attraction_id_from_dict(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: get_attraction_id_from_dict(
                 plando_dict, MEADOW_ZONE_VENUSAUR_AREA_VENUSAUR_ATTRACTION
             ),
             new_instruction_readable="update attraction id"

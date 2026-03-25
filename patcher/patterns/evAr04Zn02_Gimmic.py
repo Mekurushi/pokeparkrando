@@ -1,5 +1,5 @@
-from patcher.helper.patttern_handler import compute_call_to_function_script, create_jmp_instruction_script, \
-    create_lstr_script, parse_pattern_bytes, patch_taxi_stop
+from patcher.helper.patttern_handler import compute_call_instruction_fsb, compute_jmp_instruction_fsb, \
+    create_lstr_instruction_fsb, parse_pattern_bytes, patch_taxi_stop
 from patcher.models.models import Instruction, Patch, PatchPattern
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
 
@@ -43,7 +43,7 @@ f0101FuwarideTaxiStop = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x6630343032436c656172446f7369646f6e00).to_bytes(18, 'big'),
             new_instruction_readable="ds f0402ClearDosidon"
         ),
@@ -73,7 +73,7 @@ drill_switch = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
                 4,
                 'big'
             ),
@@ -81,7 +81,7 @@ drill_switch = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
                 4,
                 'big'
             ),
@@ -142,7 +142,7 @@ set_golem_location_function = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010007).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010007).to_bytes(
                 4,
                 'big'
             ),
@@ -150,21 +150,22 @@ set_golem_location_function = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
-                data, string_section_start, globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, globalManager.name
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data, get_module
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_module.name
             ),
             new_instruction_readable="call get_module"
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000012).to_bytes(
                 4,
                 'big'
             ),
@@ -172,7 +173,7 @@ set_golem_location_function = PatchPattern(
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000c).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000c).to_bytes(
                 4,
                 'big'
             ),
@@ -180,7 +181,7 @@ set_golem_location_function = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
                 4,
                 'big'
             ),
@@ -188,14 +189,14 @@ set_golem_location_function = PatchPattern(
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
-                data, string_section_start, f0402TrapKamonegi
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, f0402TrapKamonegi.name
             ),
             new_instruction_readable="lstr f0402TrapKamonegi"
         ),
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000b).to_bytes(
                 4,
                 'big'
             ),
@@ -203,7 +204,7 @@ set_golem_location_function = PatchPattern(
         ),
         Patch(
             identifier=9,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
                 4,
                 'big'
             ),
@@ -211,7 +212,7 @@ set_golem_location_function = PatchPattern(
         ),
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00150401).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00150401).to_bytes(
                 4,
                 'big'
             ),
@@ -219,7 +220,7 @@ set_golem_location_function = PatchPattern(
         ),
         Patch(
             identifier=11,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00020006).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00020006).to_bytes(
                 4,
                 'big'
             ),
@@ -280,7 +281,7 @@ set_baltoy_location_function = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010007).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010007).to_bytes(
                 4,
                 'big'
             ),
@@ -288,21 +289,22 @@ set_baltoy_location_function = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
-                data, string_section_start, globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, globalManager.name
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data, get_module
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_module.name
             ),
             new_instruction_readable="call get_module"
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000012).to_bytes(
                 4,
                 'big'
             ),
@@ -310,7 +312,7 @@ set_baltoy_location_function = PatchPattern(
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000c).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000c).to_bytes(
                 4,
                 'big'
             ),
@@ -318,7 +320,7 @@ set_baltoy_location_function = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
                 4,
                 'big'
             ),
@@ -326,14 +328,14 @@ set_baltoy_location_function = PatchPattern(
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
-                data, string_section_start, f0101FuwarideTaxiStop
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, f0101FuwarideTaxiStop.name
             ),
             new_instruction_readable="lstr f0402ClearDosidon"
         ),
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000b).to_bytes(
                 4,
                 'big'
             ),
@@ -341,7 +343,7 @@ set_baltoy_location_function = PatchPattern(
         ),
         Patch(
             identifier=9,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
                 4,
                 'big'
             ),
@@ -349,7 +351,7 @@ set_baltoy_location_function = PatchPattern(
         ),
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00150401).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00150401).to_bytes(
                 4,
                 'big'
             ),
@@ -357,7 +359,7 @@ set_baltoy_location_function = PatchPattern(
         ),
         Patch(
             identifier=11,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00020006).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00020006).to_bytes(
                 4,
                 'big'
             ),
@@ -397,25 +399,30 @@ yokoro = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
-                data, string_section_start, f0402TrapKamonegi
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, f0402TrapKamonegi.name
             ),
             new_instruction_readable="lstr f0402TrapKamonegi"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push 0x1"  # flag request opcode
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="delay 0"
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data, set_golem_location_function
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_golem_location_function.name
             ),
             new_instruction_readable="call set_golem_location"
         ),
@@ -453,28 +460,28 @@ box_yajilon_patternPALNA = [
 box_yajilon_patchMapPALNA = [
     Patch(
         identifier=2,
-        patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
-            data, string_section_start, f0101FuwarideTaxiStop
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+            patch_patterns, string_section_start.name, f0101FuwarideTaxiStop.name
         ),
         new_instruction_readable="lstr f0402ClearDosidon"
     ),
     Patch(
         identifier=3,
-        patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(4, 'big'),
         new_instruction_readable="push 0x1"  # flag request opcode
     ),
 
     Patch(
         identifier=4,
-        patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-            offset, data, set_baltoy_location_function
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_call_instruction_fsb(
+            offset, patch_patterns, set_baltoy_location_function.name
         ),
         new_instruction_readable="call set_baltoy_location_function"
     ),
     Patch(
         identifier=5,
-        patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
-            offset, 6, matches, "jmp"
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_jmp_instruction_fsb(
+            offset, 6, patch_patterns, pattern_name, "jmp"
         ),
         new_instruction_readable="jmp"
     ),
@@ -508,21 +515,24 @@ box_yajilon = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
-                data, string_section_start, f0101FuwarideTaxiStop
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, f0101FuwarideTaxiStop.name
             ),
             new_instruction_readable="lstr f0402ClearDosidon"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push 0x1"  # flag request opcode
         ),
 
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data, set_baltoy_location_function
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_baltoy_location_function.name
             ),
             new_instruction_readable="call set_baltoy_location_function"
         ),
@@ -563,7 +573,7 @@ taxi_stop = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: patch_taxi_stop(plando_dict),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: patch_taxi_stop(plando_dict),
             new_instruction_readable="push 0x1"
         ),
 
@@ -595,7 +605,9 @@ FIRESWITCHA = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push 0x1"
         ),
 
@@ -629,7 +641,9 @@ special_spawn_conditions = PatchPattern(
 
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push 0x1"
         ),
 
@@ -637,6 +651,10 @@ special_spawn_conditions = PatchPattern(
 )
 
 evAr04Zn02_Gimmic_patterns = [
+    get_module,
+    string_section_start,
+    f0402TrapKamonegi,
+    globalManager,
     set_chapter,
     get_friendship,
     drill_switch,

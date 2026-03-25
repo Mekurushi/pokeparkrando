@@ -35,7 +35,9 @@ set_chapter = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00030006).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00030006).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="ret -0x3"
         ),
     ]
@@ -63,7 +65,9 @@ get_friendship = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (0x004b0010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x004b0010).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push 0x4b"  # best friend opcode
         ),
 
@@ -120,7 +124,7 @@ get_module = PatchPattern(
 
 set_friendship = PatchPattern(
     name="set_friendship",
-    description="set_friendship function for custom calls",
+    description="set_friendship function for custom-functions calls",
     patternJP=[
         Instruction(
             identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 03 00 07"),

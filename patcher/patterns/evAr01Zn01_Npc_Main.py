@@ -7,9 +7,9 @@ from patcher.helper.entrance_exit_names import MEADOW_ZONE_MAIN_AREA_BEACH_DRIFB
     MEADOW_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL, MEADOW_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL
 from patcher.helper.patttern_handler import get_attraction_id_from_dict, get_exit_zone_area_position_data, \
     parse_pattern_bytes, \
-    compute_call_to_function_script, \
-    get_num_battle_count_from_dict_as_instruction, create_lstr_script, \
-    create_jmp_instruction_script
+    compute_call_instruction_fsb, \
+    get_num_battle_count_from_dict_as_instruction, create_lstr_instruction_fsb, \
+    compute_jmp_instruction_fsb
 from patcher.models.models import PatchPattern, Instruction, Patch
 from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
 
@@ -28,7 +28,7 @@ string_section_start = PatchPattern(
 
 f0301BippaFlag = PatchPattern(
     name="ds f0301BippaFlag",
-    description="using f0301BippaFlag string for custom get_module calls",
+    description="using f0301BippaFlag string for custom-functions get_module calls",
     patternJP=[
         Instruction(
             identifier=1, offset=0x0,
@@ -91,20 +91,24 @@ overworld_pokemon_spawning_Ar01Zn01 = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
-                data, string_section_start,
-                f0101TalkOnisuzume
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name,
+                f0101TalkOnisuzume.name
             ),
             new_instruction_readable="lstr f0101TalkOnisuzume"
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push 0x1"
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00150006).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00150006).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="ret -0x15"
         ),
 
@@ -163,7 +167,7 @@ set_magikarp_location_function = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010007).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010007).to_bytes(
                 4,
                 'big'
             ),
@@ -171,21 +175,22 @@ set_magikarp_location_function = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
-                data, string_section_start, globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, globalManager.name
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data, get_module
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_module.name
             ),
             new_instruction_readable="call get_module"
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000012).to_bytes(
                 4,
                 'big'
             ),
@@ -193,7 +198,7 @@ set_magikarp_location_function = PatchPattern(
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000c).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000c).to_bytes(
                 4,
                 'big'
             ),
@@ -201,7 +206,7 @@ set_magikarp_location_function = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
                 4,
                 'big'
             ),
@@ -209,14 +214,14 @@ set_magikarp_location_function = PatchPattern(
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
-                data, string_section_start, f0101TalkOnisuzume
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, f0101TalkOnisuzume.name
             ),
             new_instruction_readable="lstr f0101TalkOnisuzume"
         ),
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000b).to_bytes(
                 4,
                 'big'
             ),
@@ -224,7 +229,7 @@ set_magikarp_location_function = PatchPattern(
         ),
         Patch(
             identifier=9,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
                 4,
                 'big'
             ),
@@ -232,7 +237,7 @@ set_magikarp_location_function = PatchPattern(
         ),
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00150401).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00150401).to_bytes(
                 4,
                 'big'
             ),
@@ -240,7 +245,7 @@ set_magikarp_location_function = PatchPattern(
         ),
         Patch(
             identifier=11,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00020006).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00020006).to_bytes(
                 4,
                 'big'
             ),
@@ -481,7 +486,7 @@ turtwig_friendship_pattern = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x000e0008).to_bytes(
                 4,
                 'big'
@@ -490,7 +495,7 @@ turtwig_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=15,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -499,7 +504,7 @@ turtwig_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=19,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -508,7 +513,7 @@ turtwig_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=21,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -592,7 +597,7 @@ turtwig_dialog_options_pattern = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -805,7 +810,7 @@ buneary_friendship_pattern = PatchPattern(
     [
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00180008).to_bytes(
                 4,
                 'big'
@@ -814,7 +819,7 @@ buneary_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=17,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -823,7 +828,7 @@ buneary_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=21,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -832,7 +837,7 @@ buneary_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=23,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -841,7 +846,7 @@ buneary_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=25,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -850,7 +855,7 @@ buneary_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=27,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -859,7 +864,7 @@ buneary_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=29,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -868,7 +873,7 @@ buneary_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=31,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -952,7 +957,7 @@ buneary_dialog_options_pattern = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -1086,7 +1091,7 @@ pachirisu1_friendship_pattern = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x000a0008).to_bytes(
                 4,  # always jump to set best friend flag
                 'big'
@@ -1095,7 +1100,7 @@ pachirisu1_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=15,  # removing the original set friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -1230,7 +1235,7 @@ pachirisu2_friendship_pattern = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # don't request friendship flag
                 'big'
@@ -1239,7 +1244,7 @@ pachirisu2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # don't request friendship flag
                 'big'
@@ -1248,7 +1253,7 @@ pachirisu2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # don't request friendship flag
                 'big'
@@ -1257,7 +1262,7 @@ pachirisu2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # only enter set_bestfriend path
                 'big'
@@ -1266,7 +1271,7 @@ pachirisu2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=23,  # removing the original set friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -1406,7 +1411,7 @@ munchlax_friendship_pattern = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00050008).to_bytes(
                 4,
                 'big'
@@ -1415,15 +1420,16 @@ munchlax_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=22,  # removing the pokemon unlock
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                set_bestfriend_function_pattern.name
             ),
             new_instruction_readable="delay(0)"
         ),
         Patch(
             identifier=24,  # removing the pokemon unlock
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -1563,7 +1569,7 @@ munchlax2_friendship_pattern = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00050008).to_bytes(
                 4,
                 'big'
@@ -1572,15 +1578,16 @@ munchlax2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=22,  # removing the pokemon unlock
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                set_bestfriend_function_pattern.name
             ),
             new_instruction_readable="delay(0)"
         ),
         Patch(
             identifier=24,  # removing the pokemon unlock
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -1732,7 +1739,7 @@ treecko_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=2,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -1740,7 +1747,7 @@ treecko_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -1748,7 +1755,7 @@ treecko_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -1756,7 +1763,7 @@ treecko_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=5,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -1764,7 +1771,7 @@ treecko_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=6,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -1772,7 +1779,7 @@ treecko_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=7,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -1780,7 +1787,7 @@ treecko_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=8,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -1791,7 +1798,7 @@ treecko_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=9,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -1799,7 +1806,7 @@ treecko_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -1807,7 +1814,7 @@ treecko_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=11,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -1818,7 +1825,7 @@ treecko_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=15,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000b).to_bytes(
                 4,
                 'big'
             ),
@@ -1826,9 +1833,10 @@ treecko_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                set_bestfriend_function_pattern.name
             ),
             new_instruction_readable="call set_bestfriend(0x9)"
         ),
@@ -1837,7 +1845,7 @@ treecko_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=17,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -1845,7 +1853,7 @@ treecko_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=18,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -1855,7 +1863,7 @@ treecko_friendship_pattern = PatchPattern(
         # removing original set best friend flag call
         Patch(
             identifier=25,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -1863,7 +1871,7 @@ treecko_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=26,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2014,7 +2022,7 @@ chimchar_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=2,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2022,7 +2030,7 @@ chimchar_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2030,7 +2038,7 @@ chimchar_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2038,7 +2046,7 @@ chimchar_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=5,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2046,7 +2054,7 @@ chimchar_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=6,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2054,7 +2062,7 @@ chimchar_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=7,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2062,7 +2070,7 @@ chimchar_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=8,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2073,7 +2081,7 @@ chimchar_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=9,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2081,7 +2089,7 @@ chimchar_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2089,7 +2097,7 @@ chimchar_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=11,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2100,7 +2108,7 @@ chimchar_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=15,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000b).to_bytes(
                 4,
                 'big'
             ),
@@ -2108,9 +2116,10 @@ chimchar_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                set_bestfriend_function_pattern.name
             ),
             new_instruction_readable="call set_bestfriend(0xa)"
         ),
@@ -2119,7 +2128,7 @@ chimchar_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=17,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2127,7 +2136,7 @@ chimchar_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=18,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2137,7 +2146,7 @@ chimchar_friendship_pattern = PatchPattern(
         # removing original set best friend flag call
         Patch(
             identifier=25,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2145,7 +2154,7 @@ chimchar_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=26,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2296,7 +2305,7 @@ magikarp_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=2,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2304,7 +2313,7 @@ magikarp_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2312,7 +2321,7 @@ magikarp_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2320,7 +2329,7 @@ magikarp_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=5,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2328,7 +2337,7 @@ magikarp_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=6,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2336,7 +2345,7 @@ magikarp_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=7,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2344,7 +2353,7 @@ magikarp_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=8,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2355,7 +2364,7 @@ magikarp_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=9,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2363,7 +2372,7 @@ magikarp_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2371,7 +2380,7 @@ magikarp_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=11,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2382,7 +2391,7 @@ magikarp_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=15,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000b).to_bytes(
                 4,
                 'big'
             ),
@@ -2390,9 +2399,10 @@ magikarp_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                set_bestfriend_function_pattern.name
             ),
             new_instruction_readable="call set_bestfriend(0xb)"
         ),
@@ -2401,7 +2411,7 @@ magikarp_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=17,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2409,7 +2419,7 @@ magikarp_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=18,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2419,7 +2429,7 @@ magikarp_friendship_pattern = PatchPattern(
         # removing original set best friend flag call
         Patch(
             identifier=25,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2427,7 +2437,7 @@ magikarp_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=26,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2578,7 +2588,7 @@ lotad1_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=2,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2586,7 +2596,7 @@ lotad1_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2594,7 +2604,7 @@ lotad1_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2602,7 +2612,7 @@ lotad1_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=5,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2610,7 +2620,7 @@ lotad1_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=6,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2618,7 +2628,7 @@ lotad1_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=7,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2626,7 +2636,7 @@ lotad1_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=8,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2637,7 +2647,7 @@ lotad1_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=9,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2645,7 +2655,7 @@ lotad1_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2653,7 +2663,7 @@ lotad1_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=11,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2664,7 +2674,7 @@ lotad1_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=15,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000b).to_bytes(
                 4,
                 'big'
             ),
@@ -2672,9 +2682,10 @@ lotad1_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                set_bestfriend_function_pattern.name
             ),
             new_instruction_readable="call set_bestfriend(0xc)"
         ),
@@ -2683,7 +2694,7 @@ lotad1_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=17,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2691,7 +2702,7 @@ lotad1_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=18,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2701,7 +2712,7 @@ lotad1_friendship_pattern = PatchPattern(
         # removing original set best friend flag call
         Patch(
             identifier=25,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2709,7 +2720,7 @@ lotad1_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=26,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2940,7 +2951,7 @@ caterpie_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=2,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2948,7 +2959,7 @@ caterpie_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2956,7 +2967,7 @@ caterpie_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2964,7 +2975,7 @@ caterpie_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=5,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2972,7 +2983,7 @@ caterpie_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=6,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2980,7 +2991,7 @@ caterpie_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=7,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2988,7 +2999,7 @@ caterpie_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=8,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -2999,7 +3010,7 @@ caterpie_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=9,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3007,7 +3018,7 @@ caterpie_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3015,7 +3026,7 @@ caterpie_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=11,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3026,7 +3037,7 @@ caterpie_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=15,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000b).to_bytes(
                 4,
                 'big'
             ),
@@ -3034,9 +3045,10 @@ caterpie_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                set_bestfriend_function_pattern.name
             ),
             new_instruction_readable="call set_bestfriend(0xc)"
         ),
@@ -3045,7 +3057,7 @@ caterpie_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=17,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3053,7 +3065,7 @@ caterpie_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=18,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3061,7 +3073,7 @@ caterpie_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=21,  # removing pokemon unlock
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3069,7 +3081,7 @@ caterpie_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=22,  # removing pokemon unlock
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3077,7 +3089,7 @@ caterpie_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=23,  # removing pokemon unlock
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3085,7 +3097,7 @@ caterpie_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=24,  # removing pokemon unlock
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3095,7 +3107,7 @@ caterpie_friendship_pattern = PatchPattern(
         # removing original set best friend flag call
         Patch(
             identifier=40,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3103,7 +3115,7 @@ caterpie_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=41,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3254,7 +3266,7 @@ weedle_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=2,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3262,7 +3274,7 @@ weedle_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3270,7 +3282,7 @@ weedle_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3278,7 +3290,7 @@ weedle_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=5,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3286,7 +3298,7 @@ weedle_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=6,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3294,7 +3306,7 @@ weedle_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=7,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3302,7 +3314,7 @@ weedle_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=8,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3313,7 +3325,7 @@ weedle_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=9,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3321,7 +3333,7 @@ weedle_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3329,7 +3341,7 @@ weedle_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=11,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3340,7 +3352,7 @@ weedle_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=15,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000b).to_bytes(
                 4,
                 'big'
             ),
@@ -3348,9 +3360,10 @@ weedle_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                set_bestfriend_function_pattern.name
             ),
             new_instruction_readable="call set_bestfriend(0xe)"
         ),
@@ -3359,7 +3372,7 @@ weedle_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=17,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3367,7 +3380,7 @@ weedle_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=18,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3377,7 +3390,7 @@ weedle_friendship_pattern = PatchPattern(
         # removing original set best friend flag call
         Patch(
             identifier=25,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3385,7 +3398,7 @@ weedle_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=26,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3612,7 +3625,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=2,  # removing world state content
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3620,7 +3633,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,  # removing world state content
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3628,7 +3641,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,  # removing world state content
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3636,7 +3649,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=5,  # removing world state content
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3644,7 +3657,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=6,  # removing world state content
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3652,7 +3665,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=7,  # removing world state content
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3660,7 +3673,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=8,  # removing world state content
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3668,7 +3681,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=9,  # removing world state content
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3676,7 +3689,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,  # removing world state content
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3684,7 +3697,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=11,  # removing world state content
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3692,7 +3705,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=12,  # removing world state content
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3700,7 +3713,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=13,  # removing world state content
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3708,7 +3721,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=14,  # removing world state content
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3716,7 +3729,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=15,  # removing world state content
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3724,7 +3737,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # removing world state content
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3733,7 +3746,7 @@ event_bidoof_friendship_pattern = PatchPattern(
 
         Patch(
             identifier=17,  # removing pokemon unlock
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3741,7 +3754,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=18,  # removing pokemon unlock
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3749,7 +3762,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=20,  # removing pokemon unlock
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3757,7 +3770,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=21,  # removing pokemon unlock
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3766,7 +3779,7 @@ event_bidoof_friendship_pattern = PatchPattern(
 
         Patch(
             identifier=23,  # removing pokemon unlock
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3774,7 +3787,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=24,  # removing pokemon unlock
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3785,7 +3798,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=27,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3793,7 +3806,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=28,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3801,7 +3814,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=29,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3809,7 +3822,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=30,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3817,7 +3830,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=31,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3825,7 +3838,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=32,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3833,7 +3846,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=33,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3841,7 +3854,7 @@ event_bidoof_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=34,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -3852,9 +3865,10 @@ event_bidoof_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=36,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                set_bestfriend_function_pattern.name
             ),
             new_instruction_readable="call set_bestfriend(0xe)"
         ),
@@ -3862,9 +3876,10 @@ event_bidoof_friendship_pattern = PatchPattern(
         # replacing getfriendship function
         Patch(
             identifier=99,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                get_mankey_friendship_function
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                get_mankey_friendship_function.name
             ),
             new_instruction_readable="call getMankeyFriendship"
         ),
@@ -4046,7 +4061,7 @@ oddish_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=2,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4054,7 +4069,7 @@ oddish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4062,7 +4077,7 @@ oddish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4070,7 +4085,7 @@ oddish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=5,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4078,7 +4093,7 @@ oddish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=6,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4086,7 +4101,7 @@ oddish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=7,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4094,7 +4109,7 @@ oddish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=8,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4102,7 +4117,7 @@ oddish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=9,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4110,7 +4125,7 @@ oddish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4118,7 +4133,7 @@ oddish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=11,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4126,7 +4141,7 @@ oddish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=12,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4134,7 +4149,7 @@ oddish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=13,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4142,7 +4157,7 @@ oddish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=14,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4150,7 +4165,7 @@ oddish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=15,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4158,7 +4173,7 @@ oddish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4169,7 +4184,7 @@ oddish_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=17,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4177,7 +4192,7 @@ oddish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=18,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4185,7 +4200,7 @@ oddish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=19,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4193,7 +4208,7 @@ oddish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=20,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4201,7 +4216,7 @@ oddish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=21,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4209,7 +4224,7 @@ oddish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=22,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4217,7 +4232,7 @@ oddish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=23,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4225,7 +4240,7 @@ oddish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=24,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4234,9 +4249,10 @@ oddish_friendship_pattern = PatchPattern(
 
         Patch(
             identifier=29,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                set_bestfriend_function_pattern.name
             ),
             new_instruction_readable="call set_bestfriend(0x10)"
         ),
@@ -4375,7 +4391,7 @@ shroomish_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=2,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4383,7 +4399,7 @@ shroomish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4391,7 +4407,7 @@ shroomish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4399,7 +4415,7 @@ shroomish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=5,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4407,7 +4423,7 @@ shroomish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=6,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4415,7 +4431,7 @@ shroomish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=7,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4423,7 +4439,7 @@ shroomish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=8,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4434,7 +4450,7 @@ shroomish_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=9,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4442,7 +4458,7 @@ shroomish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4450,7 +4466,7 @@ shroomish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=11,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4461,9 +4477,10 @@ shroomish_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                set_bestfriend_function_pattern.name
             ),
             new_instruction_readable="call set_bestfriend(0x11)"
         ),
@@ -4471,7 +4488,7 @@ shroomish_friendship_pattern = PatchPattern(
         # removing original set best friend flag call
         Patch(
             identifier=23,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4479,7 +4496,7 @@ shroomish_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=24,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -4494,398 +4511,75 @@ bonsly_friendship_pattern = PatchPattern(
     patternJP=[
         Instruction(
             identifier=1, offset=0,
+            pattern=parse_pattern_bytes("00 0c 00 07"),
+            instruction_readable="grow_stack 0xc"
+        ),
+        # model id
+        Instruction(
+            identifier=2, offset=0x20,
             pattern=parse_pattern_bytes("00 12 00 10"),
             instruction_readable="push 0x12"
         ),
-
-        # remove hide and seek tutorial popup
-        #
+        # hide and seek flag result
         Instruction(
-            identifier=2, offset=0x144,
-            pattern=parse_pattern_bytes("?? ?? ?? 13"),
-            instruction_readable="lstr f0101HideAndSeek"
-        ),
-        Instruction(
-            identifier=3, offset=0x148,
-            pattern=parse_pattern_bytes("ff ff 00 0b"),
-            instruction_readable="load_arg -0x1"
-        ),
-        Instruction(
-            identifier=4, offset=0x14c,
-            pattern=parse_pattern_bytes("00 01 00 10"),
-            instruction_readable="push 0x01"
-        ),
-        Instruction(
-            identifier=5, offset=0x150,
-            pattern=parse_pattern_bytes("00 15 03 01"),
-            instruction_readable="SC3 0x0:0x15"
-        ),
-        Instruction(
-            identifier=6, offset=0x154,
+            identifier=3, offset=0x174,
             pattern=parse_pattern_bytes("00 00 00 12"),
             instruction_readable="push_result"
         ),
+        # set hide and seek flag
         Instruction(
-            identifier=7, offset=0x158,
-            pattern=parse_pattern_bytes("00 00 00 10"),
-            instruction_readable="push 0x0"
-        ),
-        Instruction(
-            identifier=8, offset=0x15c,
-            pattern=parse_pattern_bytes("00 0b 00 16"),
-            instruction_readable="eq"
-        ),
-        Instruction(
-            identifier=9, offset=0x160,
-            pattern=parse_pattern_bytes("00 03 02 08"),
-            instruction_readable="jz"
-        ),
-        Instruction(
-            identifier=10, offset=0x164,
-            pattern=parse_pattern_bytes("?? ?? ?? 13"),
-            instruction_readable="lstr 02_60100"
-        ),
-        Instruction(
-            identifier=11, offset=0x168,
-            pattern=parse_pattern_bytes("00 00 00 10"),
-            instruction_readable="push 0x0"
-        ),
-        Instruction(
-            identifier=12, offset=0x16c,
-            pattern=parse_pattern_bytes("?? ?? ?? 03"),
-            instruction_readable="call FUN_??????"
-        ),
-
-        # setting hide and seek popup flag
-        #
-        Instruction(
-            identifier=13, offset=0x248,
-            pattern=parse_pattern_bytes("?? ?? ?? 13"),
-            instruction_readable="lstr f0101HideAndSeek"
-        ),
-        Instruction(
-            identifier=14, offset=0x24c,
-            pattern=parse_pattern_bytes("ff f7 00 0b"),
-            instruction_readable="load_arg -0x9"
-        ),
-        Instruction(
-            identifier=15, offset=0x250,
-            pattern=parse_pattern_bytes("00 00 00 10"),
-            instruction_readable="push 0x0"
-        ),
-        Instruction(
-            identifier=16, offset=0x254,
+            identifier=4, offset=0x1c4,
             pattern=parse_pattern_bytes("00 15 04 01"),
             instruction_readable="SC4 0x0:0x15"
         ),
-
-        # replacing friendship flag with best friend
-        #
+        # set hide and seek flag
         Instruction(
-            identifier=17, offset=0x268,
+            identifier=5, offset=0x274,
+            pattern=parse_pattern_bytes("00 15 04 01"),
+            instruction_readable="SC4 0x0:0x15"
+        ),
+        # get friendship opcode
+        Instruction(
+            identifier=6, offset=0x288,
             pattern=parse_pattern_bytes("00 3d 00 10"),
             instruction_readable="push 0x3d"
         ),
-        Instruction(
-            identifier=18, offset=0x26c,
-            pattern=parse_pattern_bytes("00 15 03 01"),
-            instruction_readable="SC3 0x0:0x15"
-        ),
-        Instruction(
-            identifier=19, offset=0x270,
-            pattern=parse_pattern_bytes("00 00 00 12"),
-            instruction_readable="push_result"
-        ),
-        Instruction(
-            identifier=20, offset=0x274,
-            pattern=parse_pattern_bytes("ff f5 00 0c"),
-            instruction_readable="store_arg -0xb"
-        ),
-        Instruction(
-            identifier=21, offset=0x278,
-            pattern=parse_pattern_bytes("ff f5 00 0b"),
-            instruction_readable="load_arg -0xb"
-        ),
-        Instruction(
-            identifier=22, offset=0x27c,
-            pattern=parse_pattern_bytes("00 00 00 10"),
-            instruction_readable="push 0x0"
-        ),
-        Instruction(
-            identifier=23, offset=0x280,
-            pattern=parse_pattern_bytes("00 0b 00 16"),
-            instruction_readable="eq"
-        ),
-        Instruction(
-            identifier=24, offset=0x284,
-            pattern=parse_pattern_bytes("00 15 02 08"),
-            instruction_readable="jz"
-        ),
-        Instruction(
-            identifier=25, offset=0x288,
-            pattern=parse_pattern_bytes("?? ?? ?? 13"),
-            instruction_readable="lstr 11_11090"
-        ),
-        Instruction(
-            identifier=26, offset=0x28c,
-            pattern=parse_pattern_bytes("00 00 00 0b"),
-            instruction_readable="load_arg 0x0"
-        ),
-        Instruction(
-            identifier=27, offset=0x290,
-            pattern=parse_pattern_bytes("?? ?? ?? 03"),
-            instruction_readable="call FUN_??????"
-        ),
-        Instruction(
-            identifier=28, offset=0x294,
-            pattern=parse_pattern_bytes("ff fd 00 0b"),
-            instruction_readable="load_arg -0x3"
-        ),
-        Instruction(
-            identifier=29, offset=0x298,
-            pattern=parse_pattern_bytes("?? ?? ?? 03"),
-            instruction_readable="call set_friend(0x12)"
-        ),
-        Instruction(
-            identifier=30, offset=0x29c,
-            pattern=parse_pattern_bytes("?? ?? ?? 13"),
-            instruction_readable="lstr 11_00500"
-        ),
-        Instruction(
-            identifier=31, offset=0x2a0,
-            pattern=parse_pattern_bytes("?? ?? ?? 03"),
-            instruction_readable="call FUN_??????"
-        ),
-        Instruction(
-            identifier=32, offset=0x2a4,
-            pattern=parse_pattern_bytes("00 1d 00 10"),
-            instruction_readable="push 0x1d"
-        ),
-        Instruction(
-            identifier=33, offset=0x2a8,
-            pattern=parse_pattern_bytes("?? ?? ?? 03"),
-            instruction_readable="call unlock_pokemon(0x1d)"
-        ),
-
     ],
     patchMapJP=[
-        # removing unneeded code
-        #
-        Patch(
-            identifier=2,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=3,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=4,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=5,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=6,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=7,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=8,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=9,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=10,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=11,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=12,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=13,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=14,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=15,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=16,  # removing tutorial popup
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-
-        # replacing friendship flag with best friend
-        #
-        Patch(
-            identifier=17,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=18,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=19,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=20,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=21,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=22,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=23,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=24,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
-                4,
-                'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
 
         Patch(
-            identifier=29,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
-            ),
-            new_instruction_readable="call set_bestfriend(0x10)"
-        ),
-
-        # removing unlock calls
-        #
-        Patch(
-            identifier=31,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            identifier=3,  # skip hide and seek logic
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
                 4,
                 'big'
             ),
-            new_instruction_readable="delay(0)"
+            new_instruction_readable="push 0x1"
         ),
         Patch(
-            identifier=32,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            identifier=4,  # skip hide and seek logic
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
-            new_instruction_readable="delay(0)"
+            new_instruction_readable="delay 0x0"
         ),
+        Patch(
+            identifier=5,  # skip hide and seek logic
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="delay 0x0"
+        ),
+        Patch(  # replacing is friend check with location flag check
+            identifier=6,
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x004b0010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x4b"
+        ),
+        # set friendship is automatically transformed to archipelago flag
     ]
 )
 
@@ -5031,7 +4725,7 @@ shinx_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=2,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5039,7 +4733,7 @@ shinx_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5047,7 +4741,7 @@ shinx_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5055,7 +4749,7 @@ shinx_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=5,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5063,7 +4757,7 @@ shinx_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=6,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5071,7 +4765,7 @@ shinx_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=7,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5079,7 +4773,7 @@ shinx_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=8,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5090,7 +4784,7 @@ shinx_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=9,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5098,7 +4792,7 @@ shinx_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5106,7 +4800,7 @@ shinx_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=11,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5117,7 +4811,7 @@ shinx_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=15,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000b).to_bytes(
                 4,
                 'big'
             ),
@@ -5125,9 +4819,10 @@ shinx_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                set_bestfriend_function_pattern.name
             ),
             new_instruction_readable="call set_bestfriend(0xa)"
         ),
@@ -5136,7 +4831,7 @@ shinx_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=17,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5144,7 +4839,7 @@ shinx_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=18,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5154,7 +4849,7 @@ shinx_friendship_pattern = PatchPattern(
         # removing original set best friend flag call
         Patch(
             identifier=25,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5162,7 +4857,7 @@ shinx_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=26,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5383,7 +5078,7 @@ aipom_tree_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=2,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5391,7 +5086,7 @@ aipom_tree_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5399,7 +5094,7 @@ aipom_tree_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5407,7 +5102,7 @@ aipom_tree_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=5,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5415,7 +5110,7 @@ aipom_tree_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=6,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5423,7 +5118,7 @@ aipom_tree_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=7,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5431,7 +5126,7 @@ aipom_tree_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=8,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5442,7 +5137,7 @@ aipom_tree_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=9,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5450,7 +5145,7 @@ aipom_tree_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5458,7 +5153,7 @@ aipom_tree_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=11,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5469,7 +5164,7 @@ aipom_tree_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=15,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000b).to_bytes(
                 4,
                 'big'
             ),
@@ -5477,9 +5172,10 @@ aipom_tree_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                set_bestfriend_function_pattern.name
             ),
             new_instruction_readable="call set_bestfriend(0xc)"
         ),
@@ -5488,7 +5184,7 @@ aipom_tree_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=17,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5496,7 +5192,7 @@ aipom_tree_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=18,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5504,7 +5200,7 @@ aipom_tree_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=21,  # removing pokemon unlock
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5512,7 +5208,7 @@ aipom_tree_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=22,  # removing pokemon unlock
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5522,7 +5218,7 @@ aipom_tree_friendship_pattern = PatchPattern(
         # removing original set best friend flag call
         Patch(
             identifier=38,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5530,7 +5226,7 @@ aipom_tree_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=39,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5681,7 +5377,7 @@ spearow_overworld_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=2,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5689,7 +5385,7 @@ spearow_overworld_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5697,7 +5393,7 @@ spearow_overworld_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5705,7 +5401,7 @@ spearow_overworld_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=5,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5713,7 +5409,7 @@ spearow_overworld_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=6,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5721,7 +5417,7 @@ spearow_overworld_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=7,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5729,7 +5425,7 @@ spearow_overworld_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=8,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5740,7 +5436,7 @@ spearow_overworld_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=9,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5748,7 +5444,7 @@ spearow_overworld_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5756,7 +5452,7 @@ spearow_overworld_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=11,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5767,7 +5463,7 @@ spearow_overworld_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=15,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000b).to_bytes(
                 4,
                 'big'
             ),
@@ -5775,9 +5471,10 @@ spearow_overworld_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                set_bestfriend_function_pattern.name
             ),
             new_instruction_readable="call set_bestfriend(0xa)"
         ),
@@ -5786,7 +5483,7 @@ spearow_overworld_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=17,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5794,7 +5491,7 @@ spearow_overworld_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=18,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5804,7 +5501,7 @@ spearow_overworld_friendship_pattern = PatchPattern(
         # removing original set best friend flag call
         Patch(
             identifier=25,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5812,7 +5509,7 @@ spearow_overworld_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=26,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5963,7 +5660,7 @@ torterra_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=2,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5971,7 +5668,7 @@ torterra_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5979,7 +5676,7 @@ torterra_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5987,7 +5684,7 @@ torterra_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=5,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -5995,7 +5692,7 @@ torterra_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=6,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6003,7 +5700,7 @@ torterra_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=7,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6011,7 +5708,7 @@ torterra_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=8,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6022,7 +5719,7 @@ torterra_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=9,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6030,7 +5727,7 @@ torterra_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6038,7 +5735,7 @@ torterra_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=11,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6049,7 +5746,7 @@ torterra_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=15,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000b).to_bytes(
                 4,
                 'big'
             ),
@@ -6057,9 +5754,10 @@ torterra_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                set_bestfriend_function_pattern.name
             ),
             new_instruction_readable="call set_bestfriend(0xa)"
         ),
@@ -6068,7 +5766,7 @@ torterra_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=17,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6076,7 +5774,7 @@ torterra_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=18,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6086,7 +5784,7 @@ torterra_friendship_pattern = PatchPattern(
         # removing original set best friend flag call
         Patch(
             identifier=25,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6094,7 +5792,7 @@ torterra_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=26,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6245,7 +5943,7 @@ starly_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=2,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6253,7 +5951,7 @@ starly_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6261,7 +5959,7 @@ starly_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6269,7 +5967,7 @@ starly_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=5,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6277,7 +5975,7 @@ starly_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=6,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6285,7 +5983,7 @@ starly_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=7,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6293,7 +5991,7 @@ starly_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=8,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6304,7 +6002,7 @@ starly_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=9,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6312,7 +6010,7 @@ starly_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6320,7 +6018,7 @@ starly_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=11,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6331,7 +6029,7 @@ starly_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=15,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000b).to_bytes(
                 4,
                 'big'
             ),
@@ -6339,9 +6037,10 @@ starly_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                set_bestfriend_function_pattern.name
             ),
             new_instruction_readable="call set_bestfriend(0xa)"
         ),
@@ -6350,7 +6049,7 @@ starly_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=17,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6358,7 +6057,7 @@ starly_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=18,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6368,7 +6067,7 @@ starly_friendship_pattern = PatchPattern(
         # removing original set best friend flag call
         Patch(
             identifier=25,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6376,7 +6075,7 @@ starly_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=26,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6527,7 +6226,7 @@ butterfree_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=2,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6535,7 +6234,7 @@ butterfree_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6543,7 +6242,7 @@ butterfree_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6551,7 +6250,7 @@ butterfree_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=5,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6559,7 +6258,7 @@ butterfree_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=6,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6567,7 +6266,7 @@ butterfree_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=7,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6575,7 +6274,7 @@ butterfree_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=8,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6586,7 +6285,7 @@ butterfree_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=9,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6594,7 +6293,7 @@ butterfree_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6602,7 +6301,7 @@ butterfree_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=11,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6613,7 +6312,7 @@ butterfree_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=15,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000b).to_bytes(
                 4,
                 'big'
             ),
@@ -6621,9 +6320,10 @@ butterfree_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                set_bestfriend_function_pattern.name
             ),
             new_instruction_readable="call set_bestfriend(0xa)"
         ),
@@ -6632,7 +6332,7 @@ butterfree_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=17,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6640,7 +6340,7 @@ butterfree_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=18,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6650,7 +6350,7 @@ butterfree_friendship_pattern = PatchPattern(
         # removing original set best friend flag call
         Patch(
             identifier=25,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6658,7 +6358,7 @@ butterfree_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=26,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -6787,7 +6487,7 @@ tropius_friendship_pattern = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,  # removing is friend calls
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -6796,7 +6496,7 @@ tropius_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,  # removing is friend calls
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -6805,7 +6505,7 @@ tropius_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,  # removing is friend calls
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -6814,7 +6514,7 @@ tropius_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=5,  # removing is friend calls
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -6823,7 +6523,7 @@ tropius_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=6,  # removing is friend calls
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -6834,7 +6534,7 @@ tropius_friendship_pattern = PatchPattern(
         # always enter path after winning
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00040008).to_bytes(
                 4,
                 'big'
@@ -6843,9 +6543,10 @@ tropius_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=22,  # set bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                set_bestfriend_function_pattern.name
             ),
             new_instruction_readable="delay(0)"
         ),
@@ -6994,7 +6695,7 @@ bibarel_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=2,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7002,7 +6703,7 @@ bibarel_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7010,7 +6711,7 @@ bibarel_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7018,7 +6719,7 @@ bibarel_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=5,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7026,7 +6727,7 @@ bibarel_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=6,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7034,7 +6735,7 @@ bibarel_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=7,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7042,7 +6743,7 @@ bibarel_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=8,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7053,7 +6754,7 @@ bibarel_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=9,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7061,7 +6762,7 @@ bibarel_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7069,7 +6770,7 @@ bibarel_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=11,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7080,7 +6781,7 @@ bibarel_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=15,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000b).to_bytes(
                 4,
                 'big'
             ),
@@ -7088,9 +6789,10 @@ bibarel_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                set_bestfriend_function_pattern.name
             ),
             new_instruction_readable="call set_bestfriend(0x1b)"
         ),
@@ -7099,7 +6801,7 @@ bibarel_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=17,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7107,7 +6809,7 @@ bibarel_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=18,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7117,7 +6819,7 @@ bibarel_friendship_pattern = PatchPattern(
         # removing original set best friend flag call
         Patch(
             identifier=25,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7125,7 +6827,7 @@ bibarel_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=26,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7276,7 +6978,7 @@ ambipom_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=2,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7284,7 +6986,7 @@ ambipom_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7292,7 +6994,7 @@ ambipom_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7300,7 +7002,7 @@ ambipom_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=5,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7308,7 +7010,7 @@ ambipom_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=6,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7316,7 +7018,7 @@ ambipom_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=7,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7324,7 +7026,7 @@ ambipom_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=8,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7335,7 +7037,7 @@ ambipom_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=9,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7343,7 +7045,7 @@ ambipom_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7351,7 +7053,7 @@ ambipom_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=11,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7362,7 +7064,7 @@ ambipom_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=15,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000b).to_bytes(
                 4,
                 'big'
             ),
@@ -7370,9 +7072,10 @@ ambipom_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                set_bestfriend_function_pattern.name
             ),
             new_instruction_readable="call set_bestfriend(0x1b)"
         ),
@@ -7381,7 +7084,7 @@ ambipom_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=17,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7389,7 +7092,7 @@ ambipom_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=18,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7399,7 +7102,7 @@ ambipom_friendship_pattern = PatchPattern(
         # removing original set best friend flag call
         Patch(
             identifier=25,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7407,7 +7110,7 @@ ambipom_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=26,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -7815,7 +7518,7 @@ sudowoodo_interaction_patchMapJP = [
     #
     Patch(
         identifier=2,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -7823,7 +7526,7 @@ sudowoodo_interaction_patchMapJP = [
     ),
     Patch(
         identifier=3,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -7831,7 +7534,7 @@ sudowoodo_interaction_patchMapJP = [
     ),
     Patch(
         identifier=4,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -7839,7 +7542,7 @@ sudowoodo_interaction_patchMapJP = [
     ),
     Patch(
         identifier=5,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -7847,7 +7550,7 @@ sudowoodo_interaction_patchMapJP = [
     ),
     Patch(
         identifier=6,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -7855,7 +7558,7 @@ sudowoodo_interaction_patchMapJP = [
     ),
     Patch(
         identifier=7,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -7863,7 +7566,7 @@ sudowoodo_interaction_patchMapJP = [
     ),
     Patch(
         identifier=8,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -7871,7 +7574,7 @@ sudowoodo_interaction_patchMapJP = [
     ),
     Patch(
         identifier=9,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -7879,7 +7582,7 @@ sudowoodo_interaction_patchMapJP = [
     ),
     Patch(
         identifier=10,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -7887,7 +7590,7 @@ sudowoodo_interaction_patchMapJP = [
     ),
     Patch(
         identifier=11,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -7895,7 +7598,7 @@ sudowoodo_interaction_patchMapJP = [
     ),
     Patch(
         identifier=12,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -7903,7 +7606,7 @@ sudowoodo_interaction_patchMapJP = [
     ),
     Patch(
         identifier=13,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -7911,7 +7614,7 @@ sudowoodo_interaction_patchMapJP = [
     ),
     Patch(
         identifier=14,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -7919,7 +7622,7 @@ sudowoodo_interaction_patchMapJP = [
     ),
     Patch(
         identifier=15,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -7927,7 +7630,7 @@ sudowoodo_interaction_patchMapJP = [
     ),
     Patch(
         identifier=16,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -7938,7 +7641,7 @@ sudowoodo_interaction_patchMapJP = [
     #
     Patch(
         identifier=17,  # removing friendship flag request
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -7946,7 +7649,7 @@ sudowoodo_interaction_patchMapJP = [
     ),
     Patch(
         identifier=18,  # removing friendship flag request
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -7954,7 +7657,7 @@ sudowoodo_interaction_patchMapJP = [
     ),
     Patch(
         identifier=19,  # removing friendship flag request
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -7962,7 +7665,7 @@ sudowoodo_interaction_patchMapJP = [
     ),
     Patch(
         identifier=20,  # removing friendship flag request
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -7970,7 +7673,7 @@ sudowoodo_interaction_patchMapJP = [
     ),
     Patch(
         identifier=21,  # removing friendship flag request
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -7978,7 +7681,7 @@ sudowoodo_interaction_patchMapJP = [
     ),
     Patch(
         identifier=22,  # removing friendship flag request
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -7986,7 +7689,7 @@ sudowoodo_interaction_patchMapJP = [
     ),
     Patch(
         identifier=23,  # removing friendship flag request
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -7994,7 +7697,7 @@ sudowoodo_interaction_patchMapJP = [
     ),
     Patch(
         identifier=24,  # removing friendship flag request
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8003,15 +7706,15 @@ sudowoodo_interaction_patchMapJP = [
 
     Patch(
         identifier=29,  # replace friendship flag with bestfriend flag
-        patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-            offset, data,
-            set_bestfriend_function_pattern
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_call_instruction_fsb(
+            offset, patch_patterns,
+            set_bestfriend_function_pattern.name
         ),
         new_instruction_readable="call set_bestfriend(0x10)"
     ),
     Patch(
         identifier=36,  # removing friendship flag request
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8019,7 +7722,7 @@ sudowoodo_interaction_patchMapJP = [
     ),
     Patch(
         identifier=37,  # removing friendship flag request
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8031,7 +7734,7 @@ sudowoodo_interaction_patchMapPAL = [
     #
     Patch(
         identifier=2,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8039,7 +7742,7 @@ sudowoodo_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=3,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8047,7 +7750,7 @@ sudowoodo_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=4,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8055,7 +7758,7 @@ sudowoodo_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=5,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8063,7 +7766,7 @@ sudowoodo_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=6,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8071,7 +7774,7 @@ sudowoodo_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=7,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8079,7 +7782,7 @@ sudowoodo_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=8,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8087,7 +7790,7 @@ sudowoodo_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=9,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8095,7 +7798,7 @@ sudowoodo_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=10,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8103,7 +7806,7 @@ sudowoodo_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=11,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8111,7 +7814,7 @@ sudowoodo_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=12,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8119,7 +7822,7 @@ sudowoodo_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=13,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8127,7 +7830,7 @@ sudowoodo_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=14,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8135,7 +7838,7 @@ sudowoodo_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=15,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8143,7 +7846,7 @@ sudowoodo_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=16,  # removing tutorial popup
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8154,7 +7857,7 @@ sudowoodo_interaction_patchMapPAL = [
     #
     Patch(
         identifier=17,  # removing friendship flag request
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8162,7 +7865,7 @@ sudowoodo_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=18,  # removing friendship flag request
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8170,7 +7873,7 @@ sudowoodo_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=19,  # removing friendship flag request
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8178,7 +7881,7 @@ sudowoodo_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=20,  # removing friendship flag request
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8186,7 +7889,7 @@ sudowoodo_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=21,  # removing friendship flag request
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8194,7 +7897,7 @@ sudowoodo_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=22,  # removing friendship flag request
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8202,7 +7905,7 @@ sudowoodo_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=23,  # removing friendship flag request
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8210,7 +7913,7 @@ sudowoodo_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=24,  # removing friendship flag request
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8219,15 +7922,15 @@ sudowoodo_interaction_patchMapPAL = [
 
     Patch(
         identifier=29,  # replace friendship flag with bestfriend flag
-        patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-            offset, data,
-            set_bestfriend_function_pattern
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_call_instruction_fsb(
+            offset, patch_patterns,
+            set_bestfriend_function_pattern.name
         ),
         new_instruction_readable="call set_bestfriend(0x10)"
     ),
     Patch(
         identifier=36,  # removing friendship flag request
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8235,7 +7938,7 @@ sudowoodo_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=37,  # removing friendship flag request
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -8418,14 +8121,16 @@ scyther_friendship_pattern = PatchPattern(
         # setting battle count to option value
         Patch(
             identifier=2,  # setting battle count with option value
-            patch_function=lambda offset, data, plando_dict, matches: get_num_battle_count_from_dict_as_instruction(
+            patch_function=lambda offset, data, plando_dict,
+                                  patch_patterns, pattern_name: get_num_battle_count_from_dict_as_instruction(
                 plando_dict
             ),
             new_instruction_readable="push $battlecount"
         ),
         Patch(
             identifier=4,  # setting battle count with option value
-            patch_function=lambda offset, data, plando_dict, matches: get_num_battle_count_from_dict_as_instruction(
+            patch_function=lambda offset, data, plando_dict,
+                                  patch_patterns, pattern_name: get_num_battle_count_from_dict_as_instruction(
                 plando_dict
             ),
             new_instruction_readable="push $battlecount"
@@ -8435,7 +8140,7 @@ scyther_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=6,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8443,7 +8148,7 @@ scyther_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=7,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8451,7 +8156,7 @@ scyther_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=8,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8459,7 +8164,7 @@ scyther_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=9,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8467,7 +8172,7 @@ scyther_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8475,7 +8180,7 @@ scyther_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=11,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8483,7 +8188,7 @@ scyther_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=12,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8491,7 +8196,7 @@ scyther_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=13,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8499,7 +8204,7 @@ scyther_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=14,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8507,7 +8212,7 @@ scyther_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=15,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8518,7 +8223,7 @@ scyther_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=19,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000b).to_bytes(
                 4,
                 'big'
             ),
@@ -8526,9 +8231,10 @@ scyther_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=20,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                set_bestfriend_function_pattern.name
             ),
             new_instruction_readable="call set_bestfriend(0x1b)"
         ),
@@ -8536,7 +8242,7 @@ scyther_friendship_pattern = PatchPattern(
         # removing unnnecessary friendship/bestfriend flag instruction
         Patch(
             identifier=21,  # removing friendship flag set
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8544,7 +8250,7 @@ scyther_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=22,  # removing friendship flag set
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8552,7 +8258,7 @@ scyther_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=29,  # removing bestfriend flag set
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8560,7 +8266,7 @@ scyther_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=30,  # removing bestfriend flag set
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8746,7 +8452,7 @@ leafeon_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=8,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8754,7 +8460,7 @@ leafeon_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=9,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8762,7 +8468,7 @@ leafeon_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8770,7 +8476,7 @@ leafeon_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=11,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8778,7 +8484,7 @@ leafeon_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=12,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8786,7 +8492,7 @@ leafeon_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=13,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8794,7 +8500,7 @@ leafeon_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=14,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8802,7 +8508,7 @@ leafeon_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=15,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8810,7 +8516,7 @@ leafeon_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8818,7 +8524,7 @@ leafeon_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=17,  # removing friendship flag request
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8829,7 +8535,7 @@ leafeon_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=21,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffd000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffd000b).to_bytes(
                 4,
                 'big'
             ),
@@ -8837,9 +8543,10 @@ leafeon_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=22,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                set_bestfriend_function_pattern.name
             ),
             new_instruction_readable="call set_bestfriend(0x1f)"
         ),
@@ -8847,7 +8554,7 @@ leafeon_friendship_pattern = PatchPattern(
         # removing unnnecessary friendship/bestfriend flag instruction
         Patch(
             identifier=23,  # removing friendship flag set
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8855,7 +8562,7 @@ leafeon_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=24,  # removing friendship flag set
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8863,7 +8570,7 @@ leafeon_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=31,  # removing bestfriend flag set
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -8871,7 +8578,7 @@ leafeon_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=32,  # removing bestfriend flag set
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -9241,7 +8948,7 @@ croagunk_interaction_patchMapJP = [
     #
     Patch(
         identifier=2,  # removing get_chapter call
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -9249,7 +8956,7 @@ croagunk_interaction_patchMapJP = [
     ),
     Patch(
         identifier=3,  # pushing instead of chapter 0x2af8 so no event is triggerable
-        patch_function=lambda offset, data, plando_dict, matches: (0x2af80010).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x2af80010).to_bytes(
             4,
             'big'
         ),
@@ -9260,7 +8967,7 @@ croagunk_interaction_patchMapJP = [
     #
     Patch(
         identifier=11,
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -9268,7 +8975,7 @@ croagunk_interaction_patchMapJP = [
     ),
     Patch(
         identifier=12,
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -9276,7 +8983,7 @@ croagunk_interaction_patchMapJP = [
     ),
     Patch(
         identifier=13,
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -9284,7 +8991,7 @@ croagunk_interaction_patchMapJP = [
     ),
     Patch(
         identifier=14,
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -9295,7 +9002,7 @@ croagunk_interaction_patchMapJP = [
     #
     Patch(
         identifier=18,  # replace friendship flag with bestfriend flag
-        patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000b).to_bytes(
             4,
             'big'
         ),
@@ -9303,9 +9010,9 @@ croagunk_interaction_patchMapJP = [
     ),
     Patch(
         identifier=19,  # replace friendship flag with bestfriend flag
-        patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-            offset, data,
-            set_bestfriend_function_pattern
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_call_instruction_fsb(
+            offset, patch_patterns,
+            set_bestfriend_function_pattern.name
         ),
         new_instruction_readable="call set_bestfriend(0x1b)"
     ),
@@ -9314,7 +9021,7 @@ croagunk_interaction_patchMapJP = [
     #
     Patch(
         identifier=20,  # removing set_bestfriend call
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -9322,7 +9029,7 @@ croagunk_interaction_patchMapJP = [
     ),
     Patch(
         identifier=21,  # removing set_bestfriend call
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -9333,7 +9040,7 @@ croagunk_interaction_patchMapJP = [
     #
     Patch(
         identifier=24,  # removing get_chapter call
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -9341,7 +9048,7 @@ croagunk_interaction_patchMapJP = [
     ),
     Patch(
         identifier=25,  # removing get_chapter call
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -9352,7 +9059,7 @@ croagunk_interaction_patchMapJP = [
     #
     Patch(
         identifier=30,  # removing get_chapter call
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -9360,7 +9067,7 @@ croagunk_interaction_patchMapJP = [
     ),
     Patch(
         identifier=31,  # removing get_chapter call
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -9371,7 +9078,7 @@ croagunk_interaction_patchMapJP = [
     #
     Patch(
         identifier=32,  # removing get_chapter call
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -9379,7 +9086,7 @@ croagunk_interaction_patchMapJP = [
     ),
     Patch(
         identifier=33,  # pushing instead of chapter 0x2af8 so no event is triggerable
-        patch_function=lambda offset, data, plando_dict, matches: (0x2af80010).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x2af80010).to_bytes(
             4,
             'big'
         ),
@@ -9391,7 +9098,7 @@ croagunk_interaction_patchMapPAL = [
     #
     Patch(
         identifier=2,  # removing get_chapter call
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -9399,7 +9106,7 @@ croagunk_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=3,  # pushing instead of chapter 0x2af8 so no event is triggerable
-        patch_function=lambda offset, data, plando_dict, matches: (0x2af80010).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x2af80010).to_bytes(
             4,
             'big'
         ),
@@ -9410,7 +9117,7 @@ croagunk_interaction_patchMapPAL = [
     #
     Patch(
         identifier=11,
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -9418,7 +9125,7 @@ croagunk_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=12,
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -9426,7 +9133,7 @@ croagunk_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=13,
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -9434,7 +9141,7 @@ croagunk_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=14,
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -9445,7 +9152,7 @@ croagunk_interaction_patchMapPAL = [
     #
     Patch(
         identifier=18,  # replace friendship flag with bestfriend flag
-        patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000b).to_bytes(
             4,
             'big'
         ),
@@ -9453,9 +9160,9 @@ croagunk_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=19,  # replace friendship flag with bestfriend flag
-        patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-            offset, data,
-            set_bestfriend_function_pattern
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_call_instruction_fsb(
+            offset, patch_patterns,
+            set_bestfriend_function_pattern.name
         ),
         new_instruction_readable="call set_bestfriend(0x1b)"
     ),
@@ -9464,7 +9171,7 @@ croagunk_interaction_patchMapPAL = [
     #
     Patch(
         identifier=20,  # removing set_bestfriend call
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -9472,7 +9179,7 @@ croagunk_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=21,  # removing set_bestfriend call
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -9483,7 +9190,7 @@ croagunk_interaction_patchMapPAL = [
     #
     Patch(
         identifier=24,  # removing get_chapter call
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -9491,7 +9198,7 @@ croagunk_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=25,  # removing get_chapter call
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -9502,7 +9209,7 @@ croagunk_interaction_patchMapPAL = [
     #
     Patch(
         identifier=30,  # removing get_chapter call
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -9510,7 +9217,7 @@ croagunk_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=31,  # removing get_chapter call
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -9521,7 +9228,7 @@ croagunk_interaction_patchMapPAL = [
     #
     Patch(
         identifier=32,  # removing get_chapter call
-        patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
             4,
             'big'
         ),
@@ -9529,7 +9236,7 @@ croagunk_interaction_patchMapPAL = [
     ),
     Patch(
         identifier=33,  # pushing instead of chapter 0x2af8 so no event is triggerable
-        patch_function=lambda offset, data, plando_dict, matches: (0x2af80010).to_bytes(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x2af80010).to_bytes(
             4,
             'big'
         ),
@@ -9747,7 +9454,7 @@ bulbasaur_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=9,  # removing get_chapter call
-            patch_function=lambda offset, data, plando_dict, matches: (0x00460208).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00460208).to_bytes(
                 4,
                 'big'
             ),
@@ -9755,7 +9462,7 @@ bulbasaur_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,  # removing get_chapter call
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -9763,7 +9470,7 @@ bulbasaur_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=5,  # removing get_chapter call
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -9771,7 +9478,7 @@ bulbasaur_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=11,  # removing get_chapter call
-            patch_function=lambda offset, data, plando_dict, matches: (0x2af80010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x2af80010).to_bytes(
                 4,
                 'big'
             ),
@@ -9781,7 +9488,7 @@ bulbasaur_friendship_pattern = PatchPattern(
         # skipping having not cleared minigame pre-dialog
         Patch(
             identifier=19,  # removing get_chapter call
-            patch_function=lambda offset, data, plando_dict, matches: (0x00040008).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00040008).to_bytes(
                 4,
                 'big'
             ),
@@ -9791,7 +9498,7 @@ bulbasaur_friendship_pattern = PatchPattern(
         # skipping beat venusaur dialog and berry costs
         Patch(
             identifier=27,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00060008).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00060008).to_bytes(
                 4,
                 'big'
             ),
@@ -9799,7 +9506,7 @@ bulbasaur_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=35,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -9807,7 +9514,7 @@ bulbasaur_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=36,
-            patch_function=lambda offset, data, plando_dict, matches: get_attraction_id_from_dict(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: get_attraction_id_from_dict(
                 plando_dict, MEADOW_ZONE_MAIN_AREA_BULBASAUR_ATTRACTION
             ),
             new_instruction_readable="delay"
@@ -9847,7 +9554,7 @@ drifblim_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=3,  # removing get_chapter call
-            patch_function=lambda offset, data, plando_dict, matches: (0x004a0010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x004a0010).to_bytes(
                 4,
                 'big'
             ),
@@ -9998,7 +9705,7 @@ starly2_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=2,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10006,7 +9713,7 @@ starly2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10014,7 +9721,7 @@ starly2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10022,7 +9729,7 @@ starly2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=5,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10030,7 +9737,7 @@ starly2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=6,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10038,7 +9745,7 @@ starly2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=7,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10046,7 +9753,7 @@ starly2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=8,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10057,7 +9764,7 @@ starly2_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=9,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10065,7 +9772,7 @@ starly2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10073,7 +9780,7 @@ starly2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=11,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10084,7 +9791,7 @@ starly2_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=15,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000b).to_bytes(
                 4,
                 'big'
             ),
@@ -10092,9 +9799,10 @@ starly2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                set_bestfriend_function_pattern.name
             ),
             new_instruction_readable="call set_bestfriend(0xa)"
         ),
@@ -10103,7 +9811,7 @@ starly2_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=17,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10111,7 +9819,7 @@ starly2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=18,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10121,7 +9829,7 @@ starly2_friendship_pattern = PatchPattern(
         # removing original set best friend flag call
         Patch(
             identifier=25,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10129,7 +9837,7 @@ starly2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=26,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10280,7 +9988,7 @@ starly3_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=2,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10288,7 +9996,7 @@ starly3_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10296,7 +10004,7 @@ starly3_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10304,7 +10012,7 @@ starly3_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=5,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10312,7 +10020,7 @@ starly3_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=6,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10320,7 +10028,7 @@ starly3_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=7,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10328,7 +10036,7 @@ starly3_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=8,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10339,7 +10047,7 @@ starly3_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=9,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10347,7 +10055,7 @@ starly3_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10355,7 +10063,7 @@ starly3_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=11,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10366,7 +10074,7 @@ starly3_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=15,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000b).to_bytes(
                 4,
                 'big'
             ),
@@ -10374,9 +10082,10 @@ starly3_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                set_bestfriend_function_pattern.name
             ),
             new_instruction_readable="call set_bestfriend(0x1b)"
         ),
@@ -10385,7 +10094,7 @@ starly3_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=17,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10393,7 +10102,7 @@ starly3_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=18,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10403,7 +10112,7 @@ starly3_friendship_pattern = PatchPattern(
         # removing original set best friend flag call
         Patch(
             identifier=25,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10411,7 +10120,7 @@ starly3_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=26,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10631,7 +10340,7 @@ aipom_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=2,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10639,7 +10348,7 @@ aipom_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10647,7 +10356,7 @@ aipom_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10655,7 +10364,7 @@ aipom_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=5,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10663,7 +10372,7 @@ aipom_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=6,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10671,7 +10380,7 @@ aipom_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=7,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10679,7 +10388,7 @@ aipom_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=8,  # not requesting friendship
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10690,7 +10399,7 @@ aipom_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=9,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10698,7 +10407,7 @@ aipom_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10706,7 +10415,7 @@ aipom_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=11,  # enter only one path after winning
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10717,7 +10426,7 @@ aipom_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=15,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000b).to_bytes(
                 4,
                 'big'
             ),
@@ -10725,9 +10434,10 @@ aipom_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=16,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                set_bestfriend_function_pattern.name
             ),
             new_instruction_readable="call set_bestfriend(0xc)"
         ),
@@ -10736,7 +10446,7 @@ aipom_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=17,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10744,7 +10454,7 @@ aipom_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=18,  # removing unnecessary prep for setting friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10752,7 +10462,7 @@ aipom_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=21,  # removing pokemon unlock
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10760,7 +10470,7 @@ aipom_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=22,  # removing pokemon unlock
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10770,7 +10480,7 @@ aipom_friendship_pattern = PatchPattern(
         # removing original set best friend flag call
         Patch(
             identifier=38,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10778,7 +10488,7 @@ aipom_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=39,  # removing setting original best friend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -10912,7 +10622,7 @@ starly4_friendship_pattern = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # don't request friendship flag
                 'big'
@@ -10921,7 +10631,7 @@ starly4_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # don't request friendship flag
                 'big'
@@ -10930,7 +10640,7 @@ starly4_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # don't request friendship flag
                 'big'
@@ -10939,7 +10649,7 @@ starly4_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # only enter set_bestfriend path
                 'big'
@@ -10948,7 +10658,7 @@ starly4_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=23,  # removing the original set friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -11167,7 +10877,7 @@ spearow_attraction_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=2,  # removing get_chapter call
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -11175,7 +10885,7 @@ spearow_attraction_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,  # pushing instead of chapter 0x2af8 so no event is triggerable
-            patch_function=lambda offset, data, plando_dict, matches: (0x2af80010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x2af80010).to_bytes(
                 4,
                 'big'
             ),
@@ -11186,7 +10896,7 @@ spearow_attraction_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=11,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -11194,7 +10904,7 @@ spearow_attraction_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=12,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -11202,7 +10912,7 @@ spearow_attraction_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=13,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -11210,7 +10920,7 @@ spearow_attraction_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=14,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -11221,7 +10931,7 @@ spearow_attraction_friendship_pattern = PatchPattern(
         #
         Patch(
             identifier=20,  # replace friendship flag with bestfriend flag
-            patch_function=lambda offset, data, plando_dict, matches: (0x004a0010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x004a0010).to_bytes(
                 4,
                 'big'
             ),
@@ -11355,7 +11065,7 @@ lotad2_friendship_pattern = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # don't request friendship flag
                 'big'
@@ -11364,7 +11074,7 @@ lotad2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # don't request friendship flag
                 'big'
@@ -11373,7 +11083,7 @@ lotad2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # don't request friendship flag
                 'big'
@@ -11382,7 +11092,7 @@ lotad2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # only enter set_bestfriend path
                 'big'
@@ -11391,7 +11101,7 @@ lotad2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=23,  # removing the original set friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -11526,7 +11236,7 @@ lotad3_friendship_pattern = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # don't request friendship flag
                 'big'
@@ -11535,7 +11245,7 @@ lotad3_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # don't request friendship flag
                 'big'
@@ -11544,7 +11254,7 @@ lotad3_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # don't request friendship flag
                 'big'
@@ -11553,7 +11263,7 @@ lotad3_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # only enter set_bestfriend path
                 'big'
@@ -11562,7 +11272,7 @@ lotad3_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=23,  # removing the original set friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -11697,7 +11407,7 @@ starly5_friendship_pattern = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # don't request friendship flag
                 'big'
@@ -11706,7 +11416,7 @@ starly5_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # don't request friendship flag
                 'big'
@@ -11715,7 +11425,7 @@ starly5_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # don't request friendship flag
                 'big'
@@ -11724,7 +11434,7 @@ starly5_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # only enter set_bestfriend path
                 'big'
@@ -11733,7 +11443,7 @@ starly5_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=23,  # removing the original set friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -11868,7 +11578,7 @@ shinx2_friendship_pattern = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # don't request friendship flag
                 'big'
@@ -11877,7 +11587,7 @@ shinx2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # don't request friendship flag
                 'big'
@@ -11886,7 +11596,7 @@ shinx2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # don't request friendship flag
                 'big'
@@ -11895,7 +11605,7 @@ shinx2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # only enter set_bestfriend path
                 'big'
@@ -11904,7 +11614,7 @@ shinx2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=23,  # removing the original set friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -12039,7 +11749,7 @@ butterfree2_friendship_pattern = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # don't request friendship flag
                 'big'
@@ -12048,7 +11758,7 @@ butterfree2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # don't request friendship flag
                 'big'
@@ -12057,7 +11767,7 @@ butterfree2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # don't request friendship flag
                 'big'
@@ -12066,7 +11776,7 @@ butterfree2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # only enter set_bestfriend path
                 'big'
@@ -12075,7 +11785,7 @@ butterfree2_friendship_pattern = PatchPattern(
         ),
         Patch(
             identifier=23,  # removing the original set friendship flag
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,
                 'big'
@@ -12172,7 +11882,7 @@ return_attraction_patternPAL = [
 return_attraction_patchMapJP = [
     Patch(
         identifier=2,
-        patch_function=lambda offset, data, plando_dict, matches: (
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
             0x00000002).to_bytes(
             4,  # don't request chapter
             'big'
@@ -12181,7 +11891,7 @@ return_attraction_patchMapJP = [
     ),
     Patch(
         identifier=3,
-        patch_function=lambda offset, data, plando_dict, matches: (
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
             0x2af80010).to_bytes(
             4,  # push 0x2af8 chapter so all events are skipped
             'big'
@@ -12190,7 +11900,7 @@ return_attraction_patchMapJP = [
     ),
     Patch(
         identifier=4,
-        patch_function=lambda offset, data, plando_dict, matches: (
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
             0x00390010).to_bytes(
             4,
             'big'
@@ -12199,7 +11909,7 @@ return_attraction_patchMapJP = [
     ),
     Patch(
         identifier=6,
-        patch_function=lambda offset, data, plando_dict, matches: (
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
             0x004b0010).to_bytes(
             4,
             'big'
@@ -12211,7 +11921,7 @@ return_attraction_patchMapJP = [
 return_attraction_patchMapPAL = [
     Patch(
         identifier=2,
-        patch_function=lambda offset, data, plando_dict, matches: (
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
             0x00000002).to_bytes(
             4,  # don't request chapter
             'big'
@@ -12220,7 +11930,7 @@ return_attraction_patchMapPAL = [
     ),
     Patch(
         identifier=3,
-        patch_function=lambda offset, data, plando_dict, matches: (
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
             0x2af80010).to_bytes(
             4,  # push 0x2af8 chapter so all events are skipped
             'big'
@@ -12229,7 +11939,7 @@ return_attraction_patchMapPAL = [
     ),
     Patch(
         identifier=4,
-        patch_function=lambda offset, data, plando_dict, matches: (
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
             0x00390010).to_bytes(
             4,
             'big'
@@ -12238,7 +11948,7 @@ return_attraction_patchMapPAL = [
     ),
     Patch(
         identifier=6,
-        patch_function=lambda offset, data, plando_dict, matches: (
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
             0x004b0010).to_bytes(
             4,
             'big'
@@ -12306,7 +12016,7 @@ eventTE03_logic = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # don't set event flag
                 'big'
@@ -12315,7 +12025,7 @@ eventTE03_logic = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # don't set event flag
                 'big'
@@ -12324,7 +12034,7 @@ eventTE03_logic = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # don't set event flag
                 'big'
@@ -12333,7 +12043,7 @@ eventTE03_logic = PatchPattern(
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # don't set event flag
                 'big'
@@ -12342,7 +12052,7 @@ eventTE03_logic = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x00000002).to_bytes(
                 4,  # don't set event flag
                 'big'
@@ -12352,9 +12062,10 @@ eventTE03_logic = PatchPattern(
 
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                set_bestfriend_function_pattern
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                set_bestfriend_function_pattern.name
             ),
             new_instruction_readable="set_bestfriend(0x21)"
         ),
@@ -12406,9 +12117,9 @@ torterra_starly_unlock_patternPAL = [
 torterra_starly_unlock_patchmapJP = [
     Patch(
         identifier=1,
-        patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_jmp_instruction_fsb(
             offset, 3,
-            matches
+            patch_patterns, pattern_name
         ),
         new_instruction_readable="jmp"
     ),  # skipping whole function
@@ -12417,9 +12128,9 @@ torterra_starly_unlock_patchmapJP = [
 torterra_starly_unlock_patchmapPAL = [
     Patch(
         identifier=1,
-        patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_jmp_instruction_fsb(
             offset, 3,
-            matches
+            patch_patterns, pattern_name
         ),
         new_instruction_readable="jmp"
     ),  # skipping whole function
@@ -12487,31 +12198,38 @@ unlock_beach_bidoof_interaction = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data, custom_check_f0301BippaFlag_funtion
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, custom_check_f0301BippaFlag_funtion.name
             ),
             new_instruction_readable="call get f0301BippaFlag"
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push 0x0"
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="delay(0)"
         ),
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="delay(0)"
         ),
     ]
 )
 
 custom_check_f0301BippaFlag_funtion = PatchPattern(
-    name="unused code space",
+    name="f0301BippaFlag check",
     description="using unused code space for f0301BippaFlag check",
     patternJP=[
         Instruction(
@@ -12562,65 +12280,82 @@ custom_check_f0301BippaFlag_funtion = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010007).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010007).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="grow_stack 0x1"
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
-                data, string_section_start,
-                globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name,
+                globalManager.name
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                get_module
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                get_module.name
             ),
             new_instruction_readable="call get_module()"
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000012).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push_result"
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000c).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000c).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="store_arg -0x1"
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
-                data, string_section_start, f0301BippaFlag
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, f0301BippaFlag.name
             ),
             new_instruction_readable="lstr f0301BippaFlag"
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000b).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="load_arg -0x1"
         ),
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push 0x1"
         ),
         Patch(
             identifier=9,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00150301).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00150301).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="SC3 0x0:0x15"
         ),
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000012).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push_result"
         ),
         Patch(
             identifier=11,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00020106).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00020106).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="retv -0x2"
         ),
 
@@ -12645,8 +12380,8 @@ thunderbolt_hit_magikarp_event_patternJP = [
 thunderbolt_hit_magikarp_event_patchMapJP = [
     Patch(
         identifier=5,
-        patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-            offset, data, set_magikarp_location_function
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_call_instruction_fsb(
+            offset, patch_patterns, set_magikarp_location_function.name
         ),
         new_instruction_readable="call set_magikarp_function"
     ),
@@ -12675,13 +12410,15 @@ thunderbolt_hit_magikarp_event_patternPAL = [
 thunderbolt_hit_magikarp_event_patchMapPAL = [
     Patch(
         identifier=2,
-        patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(offset, 3, matches),
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_jmp_instruction_fsb(
+            offset, 3, patch_patterns, pattern_name
+        ),
         new_instruction_readable="jmp"
     ),
     Patch(
         identifier=5,
-        patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-            offset, data, set_magikarp_location_function
+        patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: compute_call_instruction_fsb(
+            offset, patch_patterns, set_magikarp_location_function.name
         ),
         new_instruction_readable="call set_magikarp_function"
     ),
@@ -12699,7 +12436,7 @@ thunderbolt_hit_magikarp_event = PatchPattern(
 )
 
 get_mankey_friendship_function = PatchPattern(
-    name="unused code space",
+    name="get_mankey_friendship_function",
     description="get mankey friendship function",
     patternJP=[
         Instruction(
@@ -12751,63 +12488,82 @@ get_mankey_friendship_function = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010007).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010007).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="grow_stack 0x1"
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
-                data, string_section_start,
-                globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name,
+                globalManager.name
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                get_module
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                get_module.name
             ),
             new_instruction_readable="call get_module()"
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000012).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push_result"
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000c).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000c).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="store_arg -0x1"
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00210010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00210010).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push 0x21"
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000b).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="load_arg -0x1"
         ),
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (0x003d0010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x003d0010).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push 0x3d"
         ),
         Patch(
             identifier=9,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00150301).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00150301).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="SC3 0x0:0x15"
         ),
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000012).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push_result"
         ),
         Patch(
             identifier=11,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00020106).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00020106).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="retv -0x2"
         ),
 
@@ -12981,24 +12737,25 @@ STAXIAREA = PatchPattern(
         # meadow
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: None,
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: None,
             new_instruction_readable="update zone target based on exit"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: None,
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: None,
             new_instruction_readable="update area target based on exit"
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: None,
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: None,
             new_instruction_readable="update position target based on exit"
         ),
 
         # treehouse
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL, "zone"
             ),
@@ -13006,7 +12763,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL, "area"
             ),
@@ -13014,7 +12772,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL, "position"
             ),
@@ -13024,7 +12783,8 @@ STAXIAREA = PatchPattern(
         # beach
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_BEACH_DRIFBLIM_FAST_TRAVEL, "zone"
             ),
@@ -13032,7 +12792,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=9,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_BEACH_DRIFBLIM_FAST_TRAVEL, "area"
             ),
@@ -13040,7 +12801,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_BEACH_DRIFBLIM_FAST_TRAVEL, "position"
             ),
@@ -13050,7 +12812,8 @@ STAXIAREA = PatchPattern(
         # ice
         Patch(
             identifier=13,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL, "zone"
             ),
@@ -13058,7 +12821,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=12,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL, "area"
             ),
@@ -13066,7 +12830,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=11,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL, "position"
             ),
@@ -13076,7 +12841,8 @@ STAXIAREA = PatchPattern(
         # cavern
         Patch(
             identifier=16,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL, "zone"
             ),
@@ -13084,7 +12850,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=15,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL, "area"
             ),
@@ -13092,7 +12859,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=14,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL, "position"
             ),
@@ -13102,7 +12870,8 @@ STAXIAREA = PatchPattern(
         # magma
         Patch(
             identifier=19,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL, "zone"
             ),
@@ -13110,7 +12879,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=18,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL, "area"
             ),
@@ -13118,7 +12888,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=17,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL, "position"
             ),
@@ -13128,7 +12899,8 @@ STAXIAREA = PatchPattern(
         # haunted
         Patch(
             identifier=22,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_HAUNTED_DRIFBLIM_FAST_TRAVEL, "zone"
             ),
@@ -13136,7 +12908,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=21,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_HAUNTED_DRIFBLIM_FAST_TRAVEL, "area"
             ),
@@ -13144,7 +12917,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=20,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_HAUNTED_DRIFBLIM_FAST_TRAVEL, "position"
             ),
@@ -13154,7 +12928,8 @@ STAXIAREA = PatchPattern(
         # granite
         Patch(
             identifier=25,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL, "zone"
             ),
@@ -13162,7 +12937,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=24,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL, "area"
             ),
@@ -13170,7 +12946,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=23,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL, "position"
             ),
@@ -13180,7 +12957,8 @@ STAXIAREA = PatchPattern(
         # flower
         Patch(
             identifier=28,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL, "zone"
             ),
@@ -13188,7 +12966,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=27,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL, "area"
             ),
@@ -13196,7 +12975,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=26,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 MEADOW_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL, "position"
             ),
@@ -13206,8 +12986,14 @@ STAXIAREA = PatchPattern(
 )
 
 evAr01Zn01_Npc_Main_patch_pattern = [
+    string_section_start,
+    f0101TalkOnisuzume,
+    globalManager,
+    f0301BippaFlag,
+
     set_chapter,
     get_friendship,
+    get_module,
     overworld_pokemon_spawning_Ar01Zn01,
     turtwig_friendship_pattern,
     turtwig_dialog_options_pattern,
@@ -13253,12 +13039,13 @@ evAr01Zn01_Npc_Main_patch_pattern = [
     starly5_friendship_pattern,
     shinx2_friendship_pattern,
     butterfree2_friendship_pattern,
+    set_bestfriend_function_pattern,
 
     return_attraction_pattern,
     eventTE03_logic,
     torterra_starly_unlock,
 
-    # custom beach bidoof
+    # custom-functions beach bidoof
     unlock_beach_bidoof_interaction,
     custom_check_f0301BippaFlag_funtion,
 

@@ -1,4 +1,4 @@
-from patcher.helper.patttern_handler import parse_pattern_bytes, create_lstr_script
+from patcher.helper.patttern_handler import parse_pattern_bytes, create_lstr_instruction_fsb
 from patcher.models.models import PatchPattern, Instruction, Patch
 
 string_section_start = PatchPattern(
@@ -28,7 +28,7 @@ error_slFindModule = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (
                 0x663033303254616c6b5472656500).to_bytes(14, 'big'),
             new_instruction_readable="ds f0302TalkTree"
         ),
@@ -60,20 +60,24 @@ step01 = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
-                data, string_section_start,
-                error_slFindModule
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name,
+                error_slFindModule.name
             ),
             new_instruction_readable="lstr f0302TalkTree"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push 0x0"
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x000b0016).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x000b0016).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="eq"
         ),
     ],
@@ -81,6 +85,7 @@ step01 = PatchPattern(
 
 gkMammoo_patterns = [
     step01,
+    string_section_start,
 
     error_slFindModule
 ]

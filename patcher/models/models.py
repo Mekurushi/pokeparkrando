@@ -1,3 +1,4 @@
+from collections import Counter
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
@@ -15,7 +16,7 @@ class Instruction:
 @dataclass
 class Patch:
     identifier: int
-    patch_function: Callable[[[Any], [Any], [Any], [Any]], Optional[bytes]]
+    patch_function: Callable[[[int], [bytearray], [Any], [list["PatchPattern"]], [str]], Optional[bytes]]
     new_instruction_readable: str
 
 
@@ -78,7 +79,7 @@ class PatchPattern:
         # Ensure anchor pattern contains only integers (no None wildcards)
         if any(byte is None for byte in anchor_pattern.pattern):
             raise ValueError(
-                f"Anchor pattern (instruction '{anchor_pattern.identifier}') must contain only integers, no wildcards (None)"
+                f"Anchor pattern (instruction '{anchor_pattern.identifier}') must contain only integers,no wildcards (None)"
             )
 
     def get_patchmap(self):
@@ -160,6 +161,10 @@ class FilePatchConfig:
             self.patch_operations = []
         if self.file_group is None:
             self.file_group = []
+        if self.patch_patterns:
+            names = [obj.name for obj in self.patch_patterns]
+            duplicates = [name for name, count in Counter(names).items() if count > 1]
+            assert not duplicates, f"Duplicate name values found: {duplicates}"
 
 
 @dataclass
@@ -176,3 +181,18 @@ class PatchResult:
     success: bool
     output_path: Optional[str] = None
     error_message: Optional[str] = None
+
+
+@dataclass
+class MakerMetadata:
+    asm_dir: str  # e.g. "R8AJ"
+    original_dol_size: int
+    original_free_space_ram_address: int
+    pointer1_high: int
+    pointer1_low: int
+    pointer2_high: int
+    pointer2_low: int
+    pointer3_high: int
+    pointer3_low: int
+    pointer4_high: int
+    pointer4_low: int

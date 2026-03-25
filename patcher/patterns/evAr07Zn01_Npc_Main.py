@@ -1,5 +1,6 @@
 from patcher.helper.entrance_exit_names import SKYGARDEN_PIPLUP_SKYBALLOON
-from patcher.helper.patttern_handler import create_jmp_instruction_script, get_exit_zone_area_position_data, \
+from patcher.helper.patttern_handler import compute_call_instruction_fsb, compute_jmp_instruction_fsb, \
+    get_exit_zone_area_position_data, \
     parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
 from patcher.patterns.general import get_friendship, set_chapter
@@ -30,21 +31,25 @@ mew_interaction = PatchPattern(
             identifier=5, offset=0x16c, pattern=parse_pattern_bytes("00 00 00 12"),
             instruction_readable="push_result"
         ),
-
+        Instruction(
+            identifier=6, offset=0x294, pattern=parse_pattern_bytes("ff f2 00 0b"),
+            instruction_readable="load_arg -0xe"
+        ),
     ],
 
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
-                offset, 4, matches,
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_jmp_instruction_fsb(
+                offset, 4, patch_patterns, pattern_name,
                 "jmp"
             ),
             new_instruction_readable="jmp"
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00040010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00040010).to_bytes(
                 4,
                 'big'
             ) if plando_dict["Options"]["goal"] != 1 else None,
@@ -85,6 +90,10 @@ mew_power_competition_patternPALNA = [
         identifier=7, offset=0x2168, pattern=parse_pattern_bytes("00 0a 00 10"),
         instruction_readable="push 0xa"
     ),
+    Instruction(
+        identifier=8, offset=0x235c, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+        instruction_readable="bl set_chapter"
+    ),
 ]
 
 mew_power_competition = PatchPattern(
@@ -122,6 +131,11 @@ mew_power_competition = PatchPattern(
             identifier=7, offset=0x2138, pattern=parse_pattern_bytes("00 0a 00 10"),
             instruction_readable="push 0xa"
         ),
+
+        Instruction(
+            identifier=8, offset=0x232c, pattern=parse_pattern_bytes("?? ?? ?? 03"),
+            instruction_readable="bl set_chapter"
+        ),
     ],
     patternNA=mew_power_competition_patternPALNA,
     patternPAL=mew_power_competition_patternPALNA,
@@ -129,7 +143,7 @@ mew_power_competition = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
                 4,
                 'big'
             ),
@@ -137,7 +151,7 @@ mew_power_competition = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
                 4,
                 'big'
             ),
@@ -145,26 +159,73 @@ mew_power_competition = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
-                offset, 5, matches,
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_jmp_instruction_fsb(
+                offset, 5, patch_patterns, pattern_name,
                 "jmp"
             ),
             new_instruction_readable="jmp"
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
-                offset, 7, matches,
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_jmp_instruction_fsb(
+                offset, 7, patch_patterns, pattern_name,
                 "jmp"
             ),
             new_instruction_readable="jmp"
         ),
+        Patch(
+            identifier=8,
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, start_ending.name
+                ) if
+            plando_dict["Options"]["goal"] == 0 else None,
+            new_instruction_readable="call start_ending"
+        ),
     ]
 )
 
+start_ending_patternPALNA = [
+    Instruction(
+        identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0e 00 07"),
+        instruction_readable="grow_stack 0xe"
+    ),
+    Instruction(
+        identifier=2, offset=0x4, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+        instruction_readable="lstr mnFieldInfo"
+    ),
+    Instruction(
+        identifier=3, offset=0x148, pattern=parse_pattern_bytes("27 4c 00 10"),
+        instruction_readable="push 0x274c"
+    ),
+]
+
+start_ending = PatchPattern(
+    name="start ending",
+    description="original function that runs ending scene",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 0e 00 07"),
+            instruction_readable="grow_stack 0xe"
+        ),
+        Instruction(
+            identifier=2, offset=0x4, pattern=parse_pattern_bytes("?? ?? ?? 13"),
+            instruction_readable="lstr mnFieldInfo"
+        ),
+        Instruction(
+            identifier=3, offset=0x130, pattern=parse_pattern_bytes("27 4c 00 10"),
+            instruction_readable="push 0x274c"
+        ),
+    ],
+    patternNA=start_ending_patternPALNA,
+    patternPAL=start_ending_patternPALNA
+)
+
 spawn_conditions = PatchPattern(
-    name="mew interaction",
-    description="modify mew Power Competition logic to suit ap implementation",
+    name="setup_npcs_and_player",
+    description="modify spawn conditions for npcs and player",
     patternJP=[
         Instruction(
             identifier=1, offset=0x0, pattern=parse_pattern_bytes("00 05 00 07"),
@@ -185,8 +246,9 @@ spawn_conditions = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: create_jmp_instruction_script(
-                offset, 3, matches,
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_jmp_instruction_fsb(
+                offset, 3, patch_patterns, pattern_name,
                 "jmp"
             ),
             new_instruction_readable="jmp"
@@ -218,7 +280,7 @@ piplup_interaction = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
                 4,
                 'big'
             ),
@@ -257,7 +319,8 @@ EBALLOONAREA = PatchPattern(
 
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 SKYGARDEN_PIPLUP_SKYBALLOON, "zone"
             ),
@@ -265,7 +328,8 @@ EBALLOONAREA = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 SKYGARDEN_PIPLUP_SKYBALLOON, "area"
             ),
@@ -273,7 +337,8 @@ EBALLOONAREA = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 SKYGARDEN_PIPLUP_SKYBALLOON, "position"
             ),
@@ -288,5 +353,6 @@ evAr07Zn01_Npc_Main_patterns = [
     mew_interaction,
     mew_power_competition,
     spawn_conditions,
-    piplup_interaction
+    piplup_interaction,
+    start_ending
 ]

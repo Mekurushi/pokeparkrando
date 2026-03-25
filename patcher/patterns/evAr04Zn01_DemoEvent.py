@@ -32,7 +32,8 @@ ZONECHANGETR = PatchPattern(
 
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 CAVERN_ZONE_MAIN_AREA_MAGMA_ZONE_TRUCK, "zone"
             ),
@@ -40,7 +41,8 @@ ZONECHANGETR = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 CAVERN_ZONE_MAIN_AREA_MAGMA_ZONE_TRUCK, "area"
             ),
@@ -48,7 +50,8 @@ ZONECHANGETR = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 CAVERN_ZONE_MAIN_AREA_MAGMA_ZONE_TRUCK, "position"
             ),

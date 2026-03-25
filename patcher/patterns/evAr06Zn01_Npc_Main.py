@@ -5,8 +5,8 @@ from patcher.helper.entrance_exit_names import GRANITE_ZONE_MAIN_AREA_ABSOL_ATTR
     GRANITE_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL, GRANITE_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL, \
     GRANITE_ZONE_MAIN_AREA_SALAMENCE_ATTRACTION, \
     GRANITE_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL
-from patcher.helper.patttern_handler import compute_call_to_function_script, create_jmp_instruction_script, \
-    create_lstr_script, \
+from patcher.helper.patttern_handler import compute_call_instruction_fsb, \
+    create_lstr_instruction_fsb, \
     get_attraction_id_from_dict, get_exit_zone_area_position_data, get_num_battle_count_from_dict_as_instruction, \
     parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
@@ -70,68 +70,89 @@ set_attraction_record = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010007).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010007).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="grow_stack 0x1"
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
-                data, string_section_start,
-                globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name,
+                globalManager.name
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data,
-                get_module
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns,
+                get_module.name
             ),
             new_instruction_readable="call get_module()"
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000012).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push_result"
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000c).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000c).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="store_arg -0x1"
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push 0x1"
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: (0x0001000b).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x0001000b).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="load_arg 0x1"
         ),
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (0x0000000b).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x0000000b).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="load_arg 0x0"
         ),
         Patch(
             identifier=9,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000b).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="load_arg -0x1"
         ),
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (0x006d0010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x006d0010).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push 0x6d"
         ),
         Patch(
             identifier=11,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00150501).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00150501).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="SC5 0x0:0x15"
         ),
         Patch(
             identifier=12,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00020006).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00020006).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="ret -0x2"
         ),
     ]
@@ -284,7 +305,7 @@ init_gate_function = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010007).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010007).to_bytes(
                 4,
                 'big'
             ),
@@ -292,21 +313,22 @@ init_gate_function = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
-                data, string_section_start, globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, globalManager.name
             ),
             new_instruction_readable="lstr GlobalManager"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data, get_module
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_module.name
             ),
             new_instruction_readable="call get_module"
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000012).to_bytes(
                 4,
                 'big'
             ),
@@ -314,7 +336,7 @@ init_gate_function = PatchPattern(
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000c).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000c).to_bytes(
                 4,
                 'big'
             ),
@@ -322,7 +344,7 @@ init_gate_function = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
                 4,
                 'big'
             ),
@@ -330,14 +352,14 @@ init_gate_function = PatchPattern(
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
-                data, string_section_start, f0601FireWallB
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, f0601FireWallB.name
             ),
             new_instruction_readable="lstr f0601FireWallB"
         ),
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000b).to_bytes(
                 4,
                 'big'
             ),
@@ -345,7 +367,7 @@ init_gate_function = PatchPattern(
         ),
         Patch(
             identifier=9,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
                 4,
                 'big'
             ),
@@ -353,7 +375,7 @@ init_gate_function = PatchPattern(
         ),
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00150401).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00150401).to_bytes(
                 4,
                 'big'
             ),
@@ -361,7 +383,7 @@ init_gate_function = PatchPattern(
         ),
         Patch(
             identifier=11,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
                 4,
                 'big'
             ),
@@ -369,14 +391,14 @@ init_gate_function = PatchPattern(
         ),
         Patch(
             identifier=12,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
-                data, string_section_start, fRuinsGateKey
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, fRuinsGateKey.name
             ),
             new_instruction_readable="lstr fRuinsGateKey"
         ),
         Patch(
             identifier=13,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000b).to_bytes(
                 4,
                 'big'
             ),
@@ -384,7 +406,7 @@ init_gate_function = PatchPattern(
         ),
         Patch(
             identifier=14,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
                 4,
                 'big'
             ),
@@ -392,7 +414,7 @@ init_gate_function = PatchPattern(
         ),
         Patch(
             identifier=15,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00150401).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00150401).to_bytes(
                 4,
                 'big'
             ),
@@ -400,37 +422,49 @@ init_gate_function = PatchPattern(
         ),
         Patch(
             identifier=16,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00050010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00050010).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push 0x5"
         ),
         Patch(
             identifier=17,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push 0x1"
         ),
         Patch(
             identifier=18,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00060010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00060010).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push 0x6"
         ),
         Patch(
             identifier=19,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000b).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="load_arg -0x1"
         ),
         Patch(
             identifier=20,
-            patch_function=lambda offset, data, plando_dict, matches: (0x002d0010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x002d0010).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push 0x2d"
         ),
         Patch(
             identifier=21,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00150501).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00150501).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="SC5 0x0:0x15"
         ),
         Patch(
             identifier=22,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00020006).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00020006).to_bytes(
                 4,
                 'big'
             ),
@@ -497,8 +531,9 @@ A06_Z01_INIT = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data, init_gate_function
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, init_gate_function.name
             ),
             new_instruction_readable="call init_gate_function"
         ),
@@ -528,7 +563,7 @@ absol_interaction = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: get_attraction_id_from_dict(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: get_attraction_id_from_dict(
                 plando_dict, GRANITE_ZONE_MAIN_AREA_ABSOL_ATTRACTION
             ),
             new_instruction_readable="update attraction id"
@@ -596,7 +631,7 @@ get_salamence_friendship_location_state = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00020007).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00020007).to_bytes(
                 4,
                 'big'
             ),
@@ -604,21 +639,22 @@ get_salamence_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
-                data, string_section_start, globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, globalManager.name
             ),
             new_instruction_readable="lstr globalmanager"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data, get_module
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_module.name
             ),
             new_instruction_readable="call get_module"
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000012).to_bytes(
                 4,
                 'big'
             ),
@@ -626,7 +662,7 @@ get_salamence_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000c).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000c).to_bytes(
                 4,
                 'big'
             ),
@@ -634,7 +670,7 @@ get_salamence_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x009d0010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x009d0010).to_bytes(
                 4,
                 'big'
             ),
@@ -642,7 +678,7 @@ get_salamence_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000b).to_bytes(
                 4,
                 'big'
             ),
@@ -650,7 +686,7 @@ get_salamence_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (0x004b0010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x004b0010).to_bytes(
                 4,
                 'big'
             ),
@@ -658,7 +694,7 @@ get_salamence_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=9,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00150301).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00150301).to_bytes(
                 4,
                 'big'
             ),
@@ -666,7 +702,7 @@ get_salamence_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000012).to_bytes(
                 4,
                 'big'
             ),
@@ -674,7 +710,7 @@ get_salamence_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=11,
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000c).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000c).to_bytes(
                 4,
                 'big'
             ),
@@ -682,7 +718,7 @@ get_salamence_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=12,
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000b).to_bytes(
                 4,
                 'big'
             ),
@@ -690,7 +726,7 @@ get_salamence_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=13,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00020106).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00020106).to_bytes(
                 4,
                 'big'
             ),
@@ -760,7 +796,7 @@ get_absol_friendship_location_state = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=1,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00020007).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00020007).to_bytes(
                 4,
                 'big'
             ),
@@ -768,21 +804,22 @@ get_absol_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
-                data, string_section_start, globalManager
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name, globalManager.name
             ),
             new_instruction_readable="lstr globalmanager"
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data, get_module
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_module.name
             ),
             new_instruction_readable="call get_module"
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000012).to_bytes(
                 4,
                 'big'
             ),
@@ -790,7 +827,7 @@ get_absol_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000c).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000c).to_bytes(
                 4,
                 'big'
             ),
@@ -798,7 +835,7 @@ get_absol_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00460010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00460010).to_bytes(
                 4,
                 'big'
             ),
@@ -806,7 +843,7 @@ get_absol_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: (0xffff000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xffff000b).to_bytes(
                 4,
                 'big'
             ),
@@ -814,7 +851,7 @@ get_absol_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (0x004b0010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x004b0010).to_bytes(
                 4,
                 'big'
             ),
@@ -822,7 +859,7 @@ get_absol_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=9,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00150301).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00150301).to_bytes(
                 4,
                 'big'
             ),
@@ -830,7 +867,7 @@ get_absol_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000012).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000012).to_bytes(
                 4,
                 'big'
             ),
@@ -838,7 +875,7 @@ get_absol_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=11,
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000c).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000c).to_bytes(
                 4,
                 'big'
             ),
@@ -846,7 +883,7 @@ get_absol_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=12,
-            patch_function=lambda offset, data, plando_dict, matches: (0xfffe000b).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0xfffe000b).to_bytes(
                 4,
                 'big'
             ),
@@ -854,7 +891,7 @@ get_absol_friendship_location_state = PatchPattern(
         ),
         Patch(
             identifier=13,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00020106).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00020106).to_bytes(
                 4,
                 'big'
             ),
@@ -912,14 +949,15 @@ return_at01 = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data, get_absol_friendship_location_state
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_absol_friendship_location_state.name
             ),
             new_instruction_readable="call get_absol_friendship_location_state"
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
                 4,
                 'big'
             ),
@@ -971,7 +1009,7 @@ salamence_interaction = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: get_attraction_id_from_dict(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: get_attraction_id_from_dict(
                 plando_dict, GRANITE_ZONE_MAIN_AREA_SALAMENCE_ATTRACTION
             ),
             new_instruction_readable="update attraction id"
@@ -1028,14 +1066,15 @@ return_at15 = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data, get_salamence_friendship_location_state
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, get_salamence_friendship_location_state.name
             ),
             new_instruction_readable="call get_salamence_friendship_location_state"
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
                 4,
                 'big'
             ),
@@ -1091,7 +1130,7 @@ furret_interaction = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
                 4,
                 'big'
             ),
@@ -1099,7 +1138,7 @@ furret_interaction = PatchPattern(
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -1107,7 +1146,7 @@ furret_interaction = PatchPattern(
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -1115,7 +1154,7 @@ furret_interaction = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -1123,7 +1162,7 @@ furret_interaction = PatchPattern(
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -1131,7 +1170,7 @@ furret_interaction = PatchPattern(
         ),
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
                 4,
                 'big'
             ),
@@ -1140,7 +1179,7 @@ furret_interaction = PatchPattern(
 
         Patch(
             identifier=9,
-            patch_function=lambda offset, data, plando_dict, matches: (0x004b0010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x004b0010).to_bytes(
                 4,
                 'big'
             ),
@@ -1176,14 +1215,16 @@ arcanine_interaction = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: get_num_battle_count_from_dict_as_instruction(
+            patch_function=lambda offset, data, plando_dict,
+                                  patch_patterns, pattern_name: get_num_battle_count_from_dict_as_instruction(
                 plando_dict
             ),
             new_instruction_readable="push battlecounter"
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: get_num_battle_count_from_dict_as_instruction(
+            patch_function=lambda offset, data, plando_dict,
+                                  patch_patterns, pattern_name: get_num_battle_count_from_dict_as_instruction(
                 plando_dict
             ),
             new_instruction_readable="push battlecounter"
@@ -1242,7 +1283,7 @@ special_spawn_conditions = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=9,
-            patch_function=lambda offset, data, plando_dict, matches: (0x1f810010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x1f810010).to_bytes(
                 4,
                 'big'
             ),
@@ -1250,7 +1291,7 @@ special_spawn_conditions = PatchPattern(
         ),
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00040006).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00040006).to_bytes(
                 4,
                 'big'
             ),
@@ -1300,7 +1341,7 @@ drifloon_interaction = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x004b0010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x004b0010).to_bytes(
                 4,
                 'big'
             ),
@@ -1310,26 +1351,33 @@ drifloon_interaction = PatchPattern(
         # each zone option
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big') if
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
+                4, 'big'
+            ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="push 0x0"
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00170010).to_bytes(4, 'big') if
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00170010).to_bytes(
+                4, 'big'
+            ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="push 0x17"
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00070010).to_bytes(4, 'big') if
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00070010).to_bytes(
+                4, 'big'
+            ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="push 0x7"
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data, set_attraction_record
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
@@ -1365,9 +1413,9 @@ skorupi_interaction = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: create_lstr_script(
-                data, string_section_start,
-                f0601TalkKamex
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: create_lstr_instruction_fsb(
+                patch_patterns, string_section_start.name,
+                f0601TalkKamex.name
             ),
             new_instruction_readable="lstr f0601TalkKamex"
         ),
@@ -1419,7 +1467,7 @@ taillow_interaction = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x004b0010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x004b0010).to_bytes(
                 4,
                 'big'
             ),
@@ -1429,33 +1477,42 @@ taillow_interaction = PatchPattern(
         # each zone option
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big') if
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
+                4, 'big'
+            ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="push 0x0"
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00180010).to_bytes(4, 'big') if
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00180010).to_bytes(
+                4, 'big'
+            ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="push 0x18"
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00070010).to_bytes(4, 'big') if
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00070010).to_bytes(
+                4, 'big'
+            ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="push 0x7"
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data, set_attraction_record
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
         ),
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big') if
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
+                4, 'big'
+            ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="delay0"
         ),
@@ -1506,7 +1563,7 @@ marowak_interaction = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x004b0010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x004b0010).to_bytes(
                 4,
                 'big'
             ),
@@ -1516,33 +1573,42 @@ marowak_interaction = PatchPattern(
         # each zone option
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big') if
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
+                4, 'big'
+            ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="push 0x0"
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00190010).to_bytes(4, 'big') if
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00190010).to_bytes(
+                4, 'big'
+            ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="push 0x19"
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00070010).to_bytes(4, 'big') if
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00070010).to_bytes(
+                4, 'big'
+            ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="push 0x7"
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data, set_attraction_record
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
         ),
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big') if
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
+                4, 'big'
+            ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="delay0"
         ),
@@ -1593,7 +1659,7 @@ baltoy_interaction = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x004b0010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x004b0010).to_bytes(
                 4,
                 'big'
             ),
@@ -1603,33 +1669,42 @@ baltoy_interaction = PatchPattern(
         # each zone option
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big') if
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
+                4, 'big'
+            ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="push 0x0"
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big') if
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
+                4, 'big'
+            ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="push 0x0"
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x000d0010).to_bytes(4, 'big') if
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x000d0010).to_bytes(
+                4, 'big'
+            ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="push 0xd"
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data, set_attraction_record
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
         ),
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big') if
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
+                4, 'big'
+            ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="delay0"
         ),
@@ -1680,7 +1755,7 @@ claydol_interaction = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x004b0010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x004b0010).to_bytes(
                 4,
                 'big'
             ),
@@ -1690,33 +1765,42 @@ claydol_interaction = PatchPattern(
         # each zone option
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big') if
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
+                4, 'big'
+            ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="push 0x0"
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00040010).to_bytes(4, 'big') if
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00040010).to_bytes(
+                4, 'big'
+            ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="push 0x4"
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x000d0010).to_bytes(4, 'big') if
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x000d0010).to_bytes(
+                4, 'big'
+            ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="push 0xd"
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data, set_attraction_record
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="call set_attraction_record"
         ),
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big') if
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
+                4, 'big'
+            ) if
             plando_dict["Options"]["each_zone"] else None,
             new_instruction_readable="delay0"
         ),
@@ -1746,7 +1830,7 @@ togekiss_interaction = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x1f9a0010).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x1f9a0010).to_bytes(
                 4,
                 'big'
             ),
@@ -1799,35 +1883,46 @@ jirachi_interaction = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00010010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push 0x1"  # skip postgame check
         ),
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push 0x0"
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00000002).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="delay0"
         ),
 
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: (0x00070010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00070010).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push 0x7"
         ),
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: (0x000d0010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x000d0010).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push 0xd"
         ),
 
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: compute_call_to_function_script(
-                offset, data, set_attraction_record
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: compute_call_instruction_fsb(
+                offset, patch_patterns, set_attraction_record.name
             ),
             new_instruction_readable="call set_attraction_record"
         ),
@@ -1882,7 +1977,9 @@ porygon_z_quiz = PatchPattern(
     patchMapJP=[
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: (0x004b0010).to_bytes(4, 'big'),
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x004b0010).to_bytes(
+                4, 'big'
+            ),
             new_instruction_readable="push 0x4b"  # best friend opcode
         )
     ]
@@ -2055,7 +2152,8 @@ STAXIAREA = PatchPattern(
         # meadow
         Patch(
             identifier=4,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 GRANITE_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL, "zone"
             ),
@@ -2063,7 +2161,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=3,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 GRANITE_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL, "area"
             ),
@@ -2071,7 +2170,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=2,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 GRANITE_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL, "position"
             ),
@@ -2081,7 +2181,8 @@ STAXIAREA = PatchPattern(
         # treehouse
         Patch(
             identifier=7,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 GRANITE_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL, "zone"
             ),
@@ -2089,7 +2190,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 GRANITE_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL, "area"
             ),
@@ -2097,7 +2199,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=5,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 GRANITE_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL, "position"
             ),
@@ -2107,7 +2210,8 @@ STAXIAREA = PatchPattern(
         # beach
         Patch(
             identifier=10,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 GRANITE_ZONE_MAIN_AREA_BEACH_DRIFBLIM_FAST_TRAVEL, "zone"
             ),
@@ -2115,7 +2219,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=9,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 GRANITE_ZONE_MAIN_AREA_BEACH_DRIFBLIM_FAST_TRAVEL, "area"
             ),
@@ -2123,7 +2228,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=8,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 GRANITE_ZONE_MAIN_AREA_BEACH_DRIFBLIM_FAST_TRAVEL, "position"
             ),
@@ -2133,7 +2239,8 @@ STAXIAREA = PatchPattern(
         # ice
         Patch(
             identifier=13,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 GRANITE_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL, "zone"
             ),
@@ -2141,7 +2248,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=12,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 GRANITE_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL, "area"
             ),
@@ -2149,7 +2257,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=11,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 GRANITE_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL, "position"
             ),
@@ -2159,7 +2268,8 @@ STAXIAREA = PatchPattern(
         # cavern
         Patch(
             identifier=16,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 GRANITE_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL, "zone"
             ),
@@ -2167,7 +2277,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=15,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 GRANITE_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL, "area"
             ),
@@ -2175,7 +2286,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=14,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 GRANITE_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL, "position"
             ),
@@ -2185,7 +2297,8 @@ STAXIAREA = PatchPattern(
         # magma
         Patch(
             identifier=19,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 GRANITE_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL, "zone"
             ),
@@ -2193,7 +2306,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=18,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 GRANITE_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL, "area"
             ),
@@ -2201,7 +2315,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=17,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 GRANITE_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL, "position"
             ),
@@ -2211,7 +2326,8 @@ STAXIAREA = PatchPattern(
         # haunted
         Patch(
             identifier=22,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 GRANITE_ZONE_MAIN_AREA_HAUNTED_DRIFBLIM_FAST_TRAVEL, "zone"
             ),
@@ -2219,7 +2335,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=21,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 GRANITE_ZONE_MAIN_AREA_HAUNTED_DRIFBLIM_FAST_TRAVEL, "area"
             ),
@@ -2227,7 +2344,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=20,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 GRANITE_ZONE_MAIN_AREA_HAUNTED_DRIFBLIM_FAST_TRAVEL, "position"
             ),
@@ -2237,24 +2355,25 @@ STAXIAREA = PatchPattern(
         # granite
         Patch(
             identifier=25,
-            patch_function=lambda offset, data, plando_dict, matches: None,
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: None,
             new_instruction_readable="update zone target based on exit"
         ),
         Patch(
             identifier=24,
-            patch_function=lambda offset, data, plando_dict, matches: None,
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: None,
             new_instruction_readable="update area target based on exit"
         ),
         Patch(
             identifier=23,
-            patch_function=lambda offset, data, plando_dict, matches: None,
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: None,
             new_instruction_readable="update position target based on exit"
         ),
 
         # flower
         Patch(
             identifier=28,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 GRANITE_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL, "zone"
             ),
@@ -2262,7 +2381,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=27,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 GRANITE_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL, "area"
             ),
@@ -2270,7 +2390,8 @@ STAXIAREA = PatchPattern(
         ),
         Patch(
             identifier=26,
-            patch_function=lambda offset, data, plando_dict, matches: get_exit_zone_area_position_data(
+            patch_function=lambda offset, data, plando_dict, patch_patterns,
+                                  pattern_name: get_exit_zone_area_position_data(
                 plando_dict,
                 GRANITE_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL, "position"
             ),
@@ -2280,6 +2401,12 @@ STAXIAREA = PatchPattern(
 )
 
 evAr06Zn01_Npc_Main_patterns = [
+    get_module,
+    string_section_start,
+    f0601TalkKamex,
+    globalManager,
+    f0601FireWallB,
+    fRuinsGateKey,
     set_chapter,
     get_friendship,
     absol_interaction,

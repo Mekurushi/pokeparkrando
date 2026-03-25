@@ -1,5 +1,6 @@
 import os
 import shutil
+import sys
 import time
 import zipfile
 from base64 import b64decode
@@ -16,7 +17,8 @@ yaml_dumper = YAML(typ="rt")  # Use RoundTripDumper for pretty-formatted dumps.
 from patcher.logic.patchers import PatcherFactory
 from patcher.models.models import PatchRequest, ProgressCallback, PatchResult, FilePatchConfig
 
-VERSION = (1, 1, 2)
+VERSION = (1, 2, 0)
+IS_DEV = not getattr(sys, 'frozen', False)
 
 
 class PatcherService:
@@ -149,12 +151,8 @@ class PatcherService:
                 f"vs APWorld v{major}.{minor}.{patch}"
             )
 
-        if patch != patcher_patch:
-            print(
-                f"Warning: Patch version differs: Randomizer Patcher v{patcher_major}.{patcher_minor}.{patcher_patch} "
-                f"vs APWorld v{major}.{minor}.{patch} (safe to continue)"
-            )
-
+        print(f"used versions: Randomizer Patcher v{patcher_major}.{patcher_minor}.{patcher_patch} ")
+        print(f"APWorld v{major}.{minor}.{patch}")
         return major, minor, patch
 
     def _extract_iso(self, iso_path: str, progress_callback: ProgressCallback):
@@ -215,6 +213,8 @@ class PatcherService:
 
             progress_callback(f"Applying {total_configs} patch configurations...", 22)
 
+            maker_id = self._extract_maker_id()
+            self._setup_logging(maker_id)
             for i, config in enumerate(patch_configs):
                 if self._canceled:
                     return i
@@ -227,7 +227,7 @@ class PatcherService:
                     actual_progress = base_progress + (progress * (max_progress - base_progress) // 100)
                     progress_callback(f"[{i + 1}/{total_configs}] {message}", actual_progress)
 
-                patcher = PatcherFactory.create_patcher(config, self.patcher_work_dir, plando_dict)
+                patcher = PatcherFactory.create_patcher(config, self.patcher_work_dir, plando_dict, maker_id)
 
                 patch_progress(f"Starting {config.description}", 0)
 
@@ -243,6 +243,13 @@ class PatcherService:
 
         except Exception as e:
             raise Exception(f"Patch application failed: {e}")
+
+    def _setup_logging(self, maker_id):
+        if IS_DEV and maker_id:
+            log_dir = Path("logs")
+            log_path = log_dir / f"{maker_id}.txt"
+            if log_path.exists():
+                log_path.unlink()
 
     def _rebuild_iso(self, output_path: str, progress_callback: ProgressCallback) -> str:
         try:
@@ -346,7 +353,6 @@ class PatcherService:
     def _remove_unneeded_files(self):
         files_to_remove = [
             "DATA/files/Thp/Opening.thp",
-            "DATA/files/Thp/Ending.thp",
         ]
 
         try:
@@ -369,3 +375,10 @@ class PatcherService:
                 time.sleep(0.1)
         except Exception as e:
             print(f"Cleanup warning: {e}")
+
+    def _extract_maker_id(self):
+        file_path = self.extract_dir / "DATA/sys/boot.bin"
+        with open(file_path, "r+b") as f:
+            f.seek(0)
+            maker_id = f.read(6)
+        return maker_id.decode("utf-8")
