@@ -646,6 +646,11 @@
   EMAPA06_Z01: 0x84a4 (1 match(es))
 
 [evAr07Zn01_Npc_Main.fsb]
+  get module: 0x44 (1 match(es))
+  string section start: 0x14200 (1 match(es))
+  ending string: 0x14d13 (1 match(es))
+  SceneManager string: 0x143fa (1 match(es))
+  custom ending starter: 0x13784 (1 match(es))
   set_chapter: 0x4a18 (1 match(es))
   get_friendship function: 0x4744 (1 match(es))
   mew interaction: 0x11ed4 (1 match(es))
