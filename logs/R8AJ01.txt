@@ -92,6 +92,7 @@
   set_magikarp_location: 0xb624 (1 match(es))
   get_mankey_friendship_function: 0x3bec (1 match(es))
   STAXIAREA: 0x7adc (1 match(es))
+  battle_counter_handler: 0x0 (1 match(es))
 
 [evAr01Zn01_Gimmic.fsb]
   string section start: 0x9044 (1 match(es))
@@ -301,6 +302,7 @@
   unused code space: 0x4040 (1 match(es))
   ELAPLACEAREA: 0x121e0 (1 match(es))
   STAXIAREA: 0x7adc (1 match(es))
+  battle_counter_handler: 0x0 (1 match(es))
 
 [evAr03Zn02_ScriptEvent.fsb]
   EMAPA03_Z03: 0x7e10 (1 match(es))
@@ -354,6 +356,7 @@
   unused code space: 0x9494 (1 match(es))
   set_attraction_record: 0x4cfc (1 match(es))
   STAXIAREA: 0x7adc (1 match(es))
+  battle_counter_handler: 0x0 (1 match(es))
 
 [evAr04Zn01_ScriptEvent.fsb]
   EMAPA02_Z01: 0x7e10 (1 match(es))
@@ -395,6 +398,7 @@
   set_attraction_record: 0x91d0 (1 match(es))
   ZONECHANGETR: 0x7f44 (1 match(es))
   STAXIAREA: 0x7adc (1 match(es))
+  battle_counter_handler: 0x0 (1 match(es))
 
 [evAr04Zn02_ScriptEvent.fsb]
   EMAPA04_Z03: 0x7e10 (1 match(es))
@@ -499,6 +503,7 @@
   fix_chase_ai_haunted_zone: 0xb388 (1 match(es))
   unused code space: 0xa3f4 (1 match(es))
   set_attraction_record: 0xa3c4 (1 match(es))
+  battle_counter_handler: 0x0 (1 match(es))
 
 [evAr05Zn02_ScriptEvent.fsb]
   EMAPA05_Z01: 0x7e10 (1 match(es))
@@ -609,6 +614,7 @@
   set_attraction_record: 0x8664 (1 match(es))
   init gate and firewall function: 0x860c (1 match(es))
   STAXIAREA: 0x7adc (1 match(es))
+  battle_counter_handler: 0x0 (1 match(es))
 
 [evAr06Zn01_ScriptEvent.fsb]
   EMAPA02_Z01: 0x7e10 (1 match(es))
@@ -641,6 +647,7 @@
   ar06zn02_init: 0xe0c4 (1 match(es))
   set_attraction_record: 0x9130 (1 match(es))
   STAXIAREA: 0x7adc (1 match(es))
+  battle_counter_handler: 0x0 (1 match(es))
 
 [evAr06Zn02_ScriptEvent.fsb]
   EMAPA06_Z01: 0x7e10 (1 match(es))

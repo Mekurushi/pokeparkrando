@@ -9,7 +9,8 @@ from patcher.helper.patttern_handler import compute_call_instruction_fsb, create
     get_exit_zone_area_position_data, get_num_battle_count_from_dict_as_instruction, \
     parse_pattern_bytes, compute_jmp_instruction_fsb
 from patcher.models.models import PatchPattern, Instruction, Patch
-from patcher.patterns.general import disposManager, get_friendship, get_module, globalManager, set_chapter
+from patcher.patterns.general import battle_counter_handling, disposManager, get_friendship, get_module, globalManager, \
+    set_chapter
 
 string_section_start = PatchPattern(
     name="string section start",
@@ -2859,5 +2860,6 @@ evAr03Zn02_Npc_Main_patterns = [
     get_friendship_function,
 
     ELAPLACEAREA,
-    STAXIAREA
+    STAXIAREA,
+    battle_counter_handling
 ]

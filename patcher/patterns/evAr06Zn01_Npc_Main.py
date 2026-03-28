@@ -10,7 +10,7 @@ from patcher.helper.patttern_handler import compute_call_instruction_fsb, \
     get_attraction_id_from_dict, get_exit_zone_area_position_data, get_num_battle_count_from_dict_as_instruction, \
     parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
-from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
+from patcher.patterns.general import battle_counter_handling, get_friendship, get_module, globalManager, set_chapter
 
 set_attraction_record = PatchPattern(
     name="set_attraction_record",
@@ -2432,5 +2432,6 @@ evAr06Zn01_Npc_Main_patterns = [
     set_attraction_record,
     init_gate_function,
 
-    STAXIAREA
+    STAXIAREA,
+    battle_counter_handling
 ]

@@ -1,4 +1,4 @@
-from typing import Literal, Union
+from typing import Literal
 
 from patcher.helper.entrance_exit_names import ABSOL_S_HURDLE_BOUNCE_ATTRACTION_ATTRACTION_MENU, \
     BASTIODON_S_PANEL_CRUSH_ATTRACTION_ATTRACTION_MENU, \
@@ -11,7 +11,7 @@ from patcher.helper.entrance_exit_names import ABSOL_S_HURDLE_BOUNCE_ATTRACTION_
     SALAMENCE_S_SKY_RACE_ATTRACTION_ATTRACTION_MENU, TANGROWTH_S_SWING_ALONG_ATTRACTION_ATTRACTION_MENU, \
     VENUSAUR_S_VINE_SWING_ATTRACTION_ATTRACTION_MENU
 from patcher.helper.exit_to_zone_data import ZoneKey, exit_to_zone_data
-from patcher.models.models import Instruction, PatternMatch, MemoryData, PatchPattern
+from patcher.models.models import Instruction, MemoryData, PatchPattern, PatternMatch
 
 
 def parse_pattern_bytes(pattern_str: str):
@@ -71,7 +71,9 @@ def search_pattern(data: bytearray, pattern_def: list[Instruction]):
 
 
 def search_all_pattern(data: bytearray, patch_def: PatchPattern):
-    patch_def.matchesJP = search_pattern(data, patch_def.patternJP)
+    if len(patch_def.patternJP) > 0:
+        # only search when JP patterns are defined
+        patch_def.matchesJP = search_pattern(data, patch_def.patternJP)
     patch_def.matchesPAL = search_pattern(data, patch_def.patternPAL)
     patch_def.matchesNA = search_pattern(data, patch_def.patternNA)
 

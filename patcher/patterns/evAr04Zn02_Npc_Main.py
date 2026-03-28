@@ -12,7 +12,8 @@ from patcher.helper.patttern_handler import compute_call_instruction_fsb, create
     parse_pattern_bytes, \
     compute_jmp_instruction_fsb
 from patcher.models.models import PatchPattern, Instruction, Patch
-from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter, set_friendship
+from patcher.patterns.general import battle_counter_handling, get_friendship, get_module, globalManager, set_chapter, \
+    set_friendship
 
 string_section_start = PatchPattern(
     name="string section start",
@@ -2371,5 +2372,6 @@ evAr04Zn02_Npc_Main_patterns = [
     set_attraction_record,
 
     ZONECHANGETR,
-    STAXIAREA
+    STAXIAREA,
+    battle_counter_handling
 ]

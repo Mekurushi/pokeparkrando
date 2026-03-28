@@ -8,7 +8,7 @@ from patcher.helper.entrance_exit_names import FLOWER_ZONE_MAIN_AREA_BEACH_DRIFB
 from patcher.helper.patttern_handler import compute_call_instruction_fsb, compute_jmp_instruction_fsb, \
     create_lstr_instruction_fsb, get_attraction_id_from_dict, get_exit_zone_area_position_data, parse_pattern_bytes
 from patcher.models.models import Instruction, Patch, PatchPattern
-from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
+from patcher.patterns.general import battle_counter_handling, get_friendship, get_module, globalManager, set_chapter
 
 set_attraction_record = PatchPattern(
     name="set_attraction_record",
@@ -1622,5 +1622,6 @@ evAr06Zn02_Npc_Main_patterns = [
     ar06zn02_init,
     set_attraction_record,
 
-    STAXIAREA
+    STAXIAREA,
+    battle_counter_handling
 ]
