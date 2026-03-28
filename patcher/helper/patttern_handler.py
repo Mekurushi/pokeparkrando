@@ -72,7 +72,7 @@ def search_pattern(data: bytearray, pattern_def: list[Instruction]):
 
 def search_all_pattern(data: bytearray, patch_def: PatchPattern):
     if len(patch_def.patternJP) > 0:
-        # only search when KP patterns are defined
+        # only search when JP patterns are defined
         patch_def.matchesJP = search_pattern(data, patch_def.patternJP)
     patch_def.matchesPAL = search_pattern(data, patch_def.patternPAL)
     patch_def.matchesNA = search_pattern(data, patch_def.patternNA)
