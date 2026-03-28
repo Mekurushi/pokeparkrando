@@ -52,6 +52,12 @@ class PatchPattern:
             self.patternPAL = self.patternJP
         if not self.patternNA:
             self.patternNA = self.patternJP
+        if not self.patternJP:
+            # no defined pattern in JP version means it doesn't exist in the JP version
+            # filling with dummy match
+            print(f"No defined JP Patterns, filling with dummy match, name: {self.name}")
+            self.matchesJP = [PatternMatch(0x0, {})]
+            return
 
         if not self.patchMapPAL:
             self.patchMapPAL = self.patchMapJP

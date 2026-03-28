@@ -11,7 +11,7 @@ from patcher.helper.patttern_handler import compute_call_instruction_fsb, create
     parse_pattern_bytes, \
     compute_jmp_instruction_fsb
 from patcher.models.models import PatchPattern, Instruction, Patch
-from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
+from patcher.patterns.general import battle_counter_handling, get_friendship, get_module, globalManager, set_chapter
 
 set_attraction_record = PatchPattern(
     name="set_attraction_record",
@@ -1954,5 +1954,6 @@ evAr04Zn01_Npc_Main_patterns = [
 
     bastiodon_prisma_check_function,
     set_attraction_record,
-    STAXIAREA
+    STAXIAREA,
+    battle_counter_handling
 ]

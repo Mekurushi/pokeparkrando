@@ -11,7 +11,7 @@ from patcher.helper.patttern_handler import get_attraction_id_from_dict, get_exi
     get_num_battle_count_from_dict_as_instruction, create_lstr_instruction_fsb, \
     compute_jmp_instruction_fsb
 from patcher.models.models import PatchPattern, Instruction, Patch
-from patcher.patterns.general import get_friendship, get_module, globalManager, set_chapter
+from patcher.patterns.general import battle_counter_handling, get_friendship, get_module, globalManager, set_chapter
 
 string_section_start = PatchPattern(
     name="string section start",
@@ -13054,5 +13054,6 @@ evAr01Zn01_Npc_Main_patch_pattern = [
     set_magikarp_location_function,
     get_mankey_friendship_function,
 
-    STAXIAREA
+    STAXIAREA,
+    battle_counter_handling
 ]
