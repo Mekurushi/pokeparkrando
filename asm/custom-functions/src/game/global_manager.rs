@@ -203,7 +203,7 @@ pub const FLAG_NAMES: FlagNames = FlagNames {
     f0601fuwaride_taxi_stop: *b"f0601FuwarideTaxiStop\0",
     f0602fuwaride_taxi_stop: *b"f0602FuwarideTaxiStop\0",
     fmap0301bridge1build:    *b"fMap0301Bridge1Build\0",
-    fmap0301bridge3build:    *b"fMap0303Bridge1Build\0",
+    fmap0301bridge3build:    *b"fMap0301Bridge3Build\0",
     f0402fire_wall_a:        *b"f0402FireWallA\0",
     f0502door_a:             *b"f0502DoorA\0",
     fpond_freeze:            *b"fPondFreeze\0",
