@@ -932,40 +932,13 @@ powerup_electabuzz_interaction = PatchPattern(
     ],
     patchMapJP=[
         # removing f0201TalkEleboo flag request
-        Patch(
-            identifier=2,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=3,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=4,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
-        Patch(
-            identifier=5,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
-                4, 'big'
-            ),
-            new_instruction_readable="delay(0)"
-        ),
+        # skipping f0201TalkEleboo logic completely
         Patch(
             identifier=6,
-            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000002).to_bytes(
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00010010).to_bytes(
                 4, 'big'
             ),
-            new_instruction_readable="delay(0)"
+            new_instruction_readable="push 0x1"
         ),
         Patch(
             identifier=7,
