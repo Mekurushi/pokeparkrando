@@ -20,7 +20,7 @@ from gui.worker_thread import PatcherWorkerThread
 from patcher.config.config import get_all_patches
 from patcher.models.models import PatchRequest, PatchResult
 from patcher.randomizer_service import VERSION
-from path import RANDO_ROOT_PATH
+from path import RANDO_ROOT_PATH, ROOT
 
 
 class RandoGUI(QMainWindow):
@@ -34,7 +34,7 @@ class RandoGUI(QMainWindow):
         self.patcher_thread = None
         self.iso_path = ""
         self.appkprk_path = ""
-        self.output_path = str(Path.cwd())
+        self.output_path = str(ROOT)
         self.patch_configs = get_all_patches()
         self.setup_ui()
 
