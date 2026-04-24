@@ -73,7 +73,7 @@ from patcher.patterns.gkRecycleSanbasiC import gkRecycleSanbasiC_pattern
 from patcher.patterns.gkRecycleSanbasiD import gkRecycleSanbasiD_pattern
 from patcher.patterns.gkRockB import gkRockB
 from patcher.patterns.gkWoodBoxKino import gkWoodBoxKinoPattern
-from patcher.patterns.mnAttractionInfo import mnAttractionInfo_pattern
+from patcher.patterns.mnAttractionInfo import mnAttractionInfo_bulbasaur_pattern, mnAttractionInfo_pattern
 from patcher.patterns.mnLobby import mnLobby_pattern
 from patcher.patterns.mnStartMenu import start_menu_pattern
 from patcher.patterns.treehouse import treehouse_pattern
@@ -879,7 +879,7 @@ def get_attraction_patches() -> List[FilePatchConfig]:
                     ("DATA/files/Attraction/At016Dat_Sp.dac", "Temporary/PreAtArc/PreAt016Dat_Sp.dan",
                      "Script/mnAttractionInfo.fsb"),
                     ],
-        patch_patterns=mnAttractionInfo_pattern
+        patch_patterns=mnAttractionInfo_bulbasaur_pattern
     )
     patches.append(attraction16)
 
