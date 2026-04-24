@@ -3886,6 +3886,138 @@ event_bidoof_friendship_pattern = PatchPattern(
     ]
 )
 
+bidoof1 = PatchPattern(
+    name="meadow_bidoof1",
+    description="remove beach zone bidoof unlock",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0,
+            pattern=parse_pattern_bytes("00 05 00 07"),
+            instruction_readable="grow_stack 0x5"
+        ),
+        Instruction(
+            identifier=2, offset=0x10,
+            pattern=parse_pattern_bytes("00 23 00 10"),
+            instruction_readable="push 0x23"
+        ),
+        # condition
+        Instruction(
+            identifier=3, offset=0x54,
+            pattern=parse_pattern_bytes("ff fb 00 0b"),
+            instruction_readable="load_arg -0x5"
+        ),
+        Instruction(
+            identifier=4, offset=0x58,
+            pattern=parse_pattern_bytes("00 02 00 10"),
+            instruction_readable="push 0x2"
+        ),
+        Instruction(
+            identifier=5, offset=0x5c,
+            pattern=parse_pattern_bytes("00 0c 00 16"),
+            instruction_readable="neq"
+        ),
+    ],
+    patchMapJP=[
+        # making it always unequal so it skips the beach zone bidoof location trigger
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x0"
+        ),
+    ]
+)
+
+bidoof2 = PatchPattern(
+    name="meadow_bidoof2",
+    description="remove beach zone bidoof unlock",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0,
+            pattern=parse_pattern_bytes("00 05 00 07"),
+            instruction_readable="grow_stack 0x5"
+        ),
+        Instruction(
+            identifier=2, offset=0x10,
+            pattern=parse_pattern_bytes("00 24 00 10"),
+            instruction_readable="push 0x24"
+        ),
+        # condition
+        Instruction(
+            identifier=3, offset=0x54,
+            pattern=parse_pattern_bytes("ff fb 00 0b"),
+            instruction_readable="load_arg -0x5"
+        ),
+        Instruction(
+            identifier=4, offset=0x58,
+            pattern=parse_pattern_bytes("00 02 00 10"),
+            instruction_readable="push 0x2"
+        ),
+        Instruction(
+            identifier=5, offset=0x5c,
+            pattern=parse_pattern_bytes("00 0c 00 16"),
+            instruction_readable="neq"
+        ),
+    ],
+    patchMapJP=[
+        # making it always unequal so it skips the beach zone bidoof location trigger
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x0"
+        ),
+    ]
+)
+
+bidoof3 = PatchPattern(
+    name="meadow_bidoof3",
+    description="remove beach zone bidoof unlock",
+    patternJP=[
+        Instruction(
+            identifier=1, offset=0,
+            pattern=parse_pattern_bytes("00 05 00 07"),
+            instruction_readable="grow_stack 0x5"
+        ),
+        Instruction(
+            identifier=2, offset=0x10,
+            pattern=parse_pattern_bytes("00 25 00 10"),
+            instruction_readable="push 0x25"
+        ),
+        # condition
+        Instruction(
+            identifier=3, offset=0x54,
+            pattern=parse_pattern_bytes("ff fb 00 0b"),
+            instruction_readable="load_arg -0x5"
+        ),
+        Instruction(
+            identifier=4, offset=0x58,
+            pattern=parse_pattern_bytes("00 02 00 10"),
+            instruction_readable="push 0x2"
+        ),
+        Instruction(
+            identifier=5, offset=0x5c,
+            pattern=parse_pattern_bytes("00 0c 00 16"),
+            instruction_readable="neq"
+        ),
+    ],
+    patchMapJP=[
+        # making it always unequal so it skips the beach zone bidoof location trigger
+        Patch(
+            identifier=3,
+            patch_function=lambda offset, data, plando_dict, patch_patterns, pattern_name: (0x00000010).to_bytes(
+                4,
+                'big'
+            ),
+            new_instruction_readable="push 0x0"
+        ),
+    ]
+)
+
 oddish_friendship_pattern = PatchPattern(
     name="Oddish Friendship Logic",
     description="Winning against Oddish sets the Best Friend Flag instead of the friend flag, also removes the original unlocks and friendship",
@@ -13010,6 +13142,9 @@ evAr01Zn01_Npc_Main_patch_pattern = [
     caterpie_friendship_pattern,
     weedle_friendship_pattern,
     event_bidoof_friendship_pattern,
+    bidoof1,
+    bidoof2,
+    bidoof3,
     oddish_friendship_pattern,
     shroomish_friendship_pattern,
     bonsly_friendship_pattern,
