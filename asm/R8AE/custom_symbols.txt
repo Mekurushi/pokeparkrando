@@ -5,23 +5,24 @@ main.dol:
   lookup_scene_manager: 0x8048A0D8
   get_item_detail: 0x8048A10C
   give_item: 0x8048A150
-  give_death: 0x8048A654
-  print_archipelago_text: 0x8048A7E8
-  global_manager_syscall_wrapper: 0x8048B31C
-  set_frame_limit_wrapper: 0x8048B458
-  process_tag_shortened_params: 0x8048B498
-  process_tag: 0x8048B558
-  color_tag_processing: 0x8048B618
-  fallback_color: 0x8048B67C
-  main_routine: 0x8048B6B4
-  strlen: 0x8048B768
-  compiler_builtins::mem::strlen: 0x8048B788
-  GIVE_ITEM_ARRAY: 0x8048CBE0
-  PLAYER_NAME: 0x8048CBF4
-  ARCHIPELAGO_TEXT_BUFFER: 0x8048CC34
-  PATCHER_VERSION: 0x8048CE34
-  DEATH_TRIGGER: 0x8048CE40
-  IS_DEATH: 0x8048CE41
-  FPS_ENHANCEMENT: 0x8048CE42
-  SHOULD_PRINT_AP_BUFFER: 0x8048CE4C
-  BUFFER_TAG_PROCESSOR: 0x8048CE50
+  give_death: 0x8048A70C
+  print_archipelago_text: 0x8048A8A0
+  global_manager_syscall_wrapper: 0x8048B3D4
+  set_frame_limit_wrapper: 0x8048B510
+  process_tag_shortened_params: 0x8048B550
+  process_tag: 0x8048B610
+  color_tag_processing: 0x8048B6D0
+  fallback_color: 0x8048B734
+  main_routine: 0x8048B76C
+  strlen: 0x8048B820
+  compiler_builtins::mem::strlen: 0x8048B840
+  GIVE_ITEM_ARRAY: 0x8048CCB4
+  PLAYER_NAME: 0x8048CCC8
+  ARCHIPELAGO_TEXT_BUFFER: 0x8048CD08
+  PATCHER_VERSION: 0x8048CF08
+  DEATH_TRIGGER: 0x8048CF14
+  IS_DEATH: 0x8048CF15
+  FPS_ENHANCEMENT: 0x8048CF16
+  TRIGGER: 0x8048CF18
+  SHOULD_PRINT_AP_BUFFER: 0x8048CF24
+  BUFFER_TAG_PROCESSOR: 0x8048CF28

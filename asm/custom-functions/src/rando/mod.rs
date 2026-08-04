@@ -6,9 +6,10 @@ use crate::game::global_manager::{
 use crate::game::scene_manager::{lookup_scene_manager, SceneName};
 use crate::rando::items::{
     get_dash_params, get_health_params, get_iron_tail_params, get_item_detail,
-    get_thunderbolt_params, Itemflag,
+    get_thunderbolt_params, Itemflag, IMMEDIATE_POKEMON_SPAWN_RULES,
 };
 
+use crate::game::mn_field_info::lookup_mn_field_info;
 use crate::utils::console::Console;
 use crate::utils::module::{lookup_module, ModuleName};
 use core::ffi::{c_void, CStr};
@@ -53,6 +54,11 @@ static mut FPS_ENHANCEMENT: bool = false;
 
 #[link_section = "data"]
 static mut FROM_RANDO: bool = false;
+
+#[link_section = "data"]
+#[no_mangle]
+static mut TRIGGER: bool = false;
+
 #[no_mangle]
 pub fn give_item() -> u32 {
     unsafe {
@@ -99,6 +105,7 @@ pub fn give_item() -> u32 {
 
                     // item execution
                     syscall_handler(module, details.opcode, params);
+                    assert_pokemon_unlock_immediately(item_id);
 
                     // reset custom code indicator
                     FROM_RANDO = false
@@ -111,6 +118,28 @@ pub fn give_item() -> u32 {
         }
     }
     1
+}
+
+pub fn assert_pokemon_unlock_immediately(item_id: u16) {
+    let global_manager = lookup_global_manager();
+
+    for rule in IMMEDIATE_POKEMON_SPAWN_RULES {
+        if rule.item_id as u16 != item_id {
+            continue;
+        }
+        unsafe {
+            let mn_field = lookup_mn_field_info();
+            if (*global_manager).zone == rule.zone
+                && (*global_manager).area == rule.area
+                && !mn_field.is_null()
+            {
+                let disp = lookup_module(&ModuleName::DisposManager.as_ptr());
+                let syscall = (*(*disp).vtable).syscall_handler;
+                let params = [rule.pokemon_object_id];
+                syscall(disp, 0x11, params.as_ptr());
+            }
+        }
+    }
 }
 
 #[no_mangle]
