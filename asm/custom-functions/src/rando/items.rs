@@ -766,13 +766,13 @@ pub fn get_dash_params() -> *const u32 {
     let syscall_handler = unsafe { (*vtable).syscall_handler };
     let call = |arg: u32| unsafe { syscall_handler(module, 0xBA, [arg].as_ptr()) };
 
-    if !call(0x1) {
+    if call(0x1) == 0 {
         return [0x1, 0x1].as_ptr();
     }
-    if !call(0x4) {
+    if call(0x4) == 0 {
         return [0x4, 0x1].as_ptr();
     }
-    if !call(0x8) {
+    if call(0x8) == 0 {
         return [0x8, 0x1].as_ptr();
     }
     [0x4000, 0x1].as_ptr()
@@ -784,13 +784,13 @@ pub fn get_thunderbolt_params() -> *const u32 {
     let syscall_handler = unsafe { (*vtable).syscall_handler };
     let call = |arg: u32| unsafe { syscall_handler(module, 0xBA, [arg].as_ptr()) };
 
-    if !call(0x10) {
+    if call(0x10) == 0 {
         return [0x10, 0x1].as_ptr();
     }
-    if !call(0x20) {
+    if call(0x20) == 0 {
         return [0x20, 0x1].as_ptr();
     }
-    if !call(0x40) {
+    if call(0x40) == 0 {
         return [0x40, 0x1].as_ptr();
     }
     [0x80, 0x1].as_ptr()
@@ -802,10 +802,10 @@ pub fn get_health_params() -> *const u32 {
     let syscall_handler = unsafe { (*vtable).syscall_handler };
     let call = |arg: u32| unsafe { syscall_handler(module, 0xBA, [arg].as_ptr()) };
 
-    if !call(0x100) {
+    if call(0x100) == 0 {
         return [0x100, 0x1].as_ptr();
     }
-    if !call(0x200) {
+    if call(0x200) == 0 {
         return [0x200, 0x1].as_ptr();
     }
     [0x400, 0x1].as_ptr()
@@ -817,10 +817,10 @@ pub fn get_iron_tail_params() -> *const u32 {
     let syscall_handler = unsafe { (*vtable).syscall_handler };
     let call = |arg: u32| unsafe { syscall_handler(module, 0xBA, [arg].as_ptr()) };
 
-    if !call(0x800) {
+    if call(0x800) == 0 {
         return [0x800, 0x1].as_ptr();
     }
-    if !call(0x1000) {
+    if call(0x1000) == 0 {
         return [0x1000, 0x1].as_ptr();
     }
     [0x2000, 0x1].as_ptr()
@@ -1606,12 +1606,12 @@ pub const IMMEDIATE_POKEMON_SPAWN_RULES: &[ImmediatePokemonSpawnRule] = &[
         item_id:           Itemflag::RAYQUAZA_UNLOCK,
         zone:              0x6,
         area:              0x2,
-        pokemon_object_id: 0x1E8, // TODO: crash
+        pokemon_object_id: 0x1E8,
     },
     ImmediatePokemonSpawnRule {
         item_id:           Itemflag::CELEBI_UNLOCK,
         zone:              0x63,
         area:              0x1,
-        pokemon_object_id: 0x221, // TODO: crash
+        pokemon_object_id: 0x221,
     },
 ];

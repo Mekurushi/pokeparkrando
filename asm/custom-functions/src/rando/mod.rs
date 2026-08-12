@@ -10,6 +10,7 @@ use crate::rando::items::{
 };
 
 use crate::game::mn_field_info::lookup_mn_field_info;
+use crate::println;
 use crate::utils::console::Console;
 use crate::utils::module::{lookup_module, ModuleName};
 use core::ffi::{c_void, CStr};
@@ -133,9 +134,19 @@ pub fn assert_pokemon_unlock_immediately(item_id: u16) {
                 && (*global_manager).area == rule.area
                 && !mn_field.is_null()
             {
+                println!("executing immediate unlock for item: {}", item_id);
+                println!("spawning pokemon with id: {}", rule.pokemon_object_id);
                 let disp = lookup_module(&ModuleName::DisposManager.as_ptr());
                 let syscall = (*(*disp).vtable).syscall_handler;
                 let params = [rule.pokemon_object_id];
+
+                let obj_m = lookup_module(&ModuleName::ObjectManager.as_ptr());
+                let obj_syscall = (*(*obj_m).vtable).syscall_handler;
+                let spawned = obj_syscall(obj_m, 10, params.as_ptr());
+                if spawned != 0 {
+                    continue;
+                }
+
                 syscall(disp, 0x11, params.as_ptr());
             }
         }

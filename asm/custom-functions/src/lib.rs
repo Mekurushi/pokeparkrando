@@ -19,6 +19,23 @@ mod utils;
 
 use crate::rando::{give_death, give_item, print_archipelago_text};
 use crate::utils::tag_processor::TagProcessor;
+
+#[macro_export]
+macro_rules! print {
+    ($($arg:tt)*) => {{
+        $crate::utils::printf::debug_print(format_args!($($arg)*));
+    }};
+}
+
+#[macro_export]
+macro_rules! println {
+    () => {
+        $crate::print!("\n")
+    };
+    ($($arg:tt)*) => {{
+        $crate::utils::printf::debug_print(format_args_nl!($($arg)*));
+    }};
+}
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
     // println!("{}", info);

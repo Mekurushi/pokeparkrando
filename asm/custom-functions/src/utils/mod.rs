@@ -4,6 +4,7 @@ pub mod char_writer;
 pub mod console;
 pub mod graphics;
 pub mod module;
+pub mod printf;
 pub mod tag_processor;
 
 pub fn simple_rng(rng: &mut u32) -> u32 {

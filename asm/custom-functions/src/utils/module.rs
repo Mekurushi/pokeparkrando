@@ -97,7 +97,7 @@ pub struct SyscallVTable {
 
     /// 0x10
     pub syscall_handler:
-        unsafe extern "C" fn(this: *mut Module, opcode: u32, data: *const u32) -> bool,
+        unsafe extern "C" fn(this: *mut Module, opcode: u32, data: *const u32) -> i32,
 
     /// 0x14
     pub fun5: u32,
