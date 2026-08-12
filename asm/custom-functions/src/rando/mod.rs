@@ -6,7 +6,7 @@ use crate::game::global_manager::{
 use crate::game::scene_manager::{lookup_scene_manager, SceneName};
 use crate::rando::items::{
     get_dash_params, get_health_params, get_iron_tail_params, get_item_detail,
-    get_thunderbolt_params, Itemflag, IMMEDIATE_POKEMON_SPAWN_RULES,
+    get_thunderbolt_params, immediate_pokemon_spawn_data, Itemflag,
 };
 
 use crate::game::mn_field_info::lookup_mn_field_info;
@@ -122,33 +122,79 @@ pub fn give_item() -> u32 {
 }
 
 pub fn assert_pokemon_unlock_immediately(item_id: u16) {
-    let global_manager = lookup_global_manager();
+    let spawn_data = immediate_pokemon_spawn_data(item_id);
+    if spawn_data.is_empty() {
+        return;
+    }
 
-    for rule in IMMEDIATE_POKEMON_SPAWN_RULES {
-        if rule.item_id as u16 != item_id {
-            continue;
+    unsafe {
+        let global_manager = lookup_global_manager();
+        if global_manager.is_null() {
+            println!(
+                "immediate spawn skipped: global manager unavailable, item={}",
+                item_id
+            );
+            return;
         }
-        unsafe {
-            let mn_field = lookup_mn_field_info();
-            if (*global_manager).zone == rule.zone
-                && (*global_manager).area == rule.area
-                && !mn_field.is_null()
-            {
-                println!("executing immediate unlock for item: {}", item_id);
-                println!("spawning pokemon with id: {}", rule.pokemon_object_id);
-                let disp = lookup_module(&ModuleName::DisposManager.as_ptr());
-                let syscall = (*(*disp).vtable).syscall_handler;
-                let params = [rule.pokemon_object_id];
 
-                let obj_m = lookup_module(&ModuleName::ObjectManager.as_ptr());
-                let obj_syscall = (*(*obj_m).vtable).syscall_handler;
-                let spawned = obj_syscall(obj_m, 10, params.as_ptr());
-                if spawned != 0 {
-                    continue;
-                }
+        let mn_field = lookup_mn_field_info();
+        if mn_field.is_null() {
+            println!(
+                "immediate spawn skipped: mn_field unavailable, item={}",
+                item_id
+            );
+            return;
+        }
 
-                syscall(disp, 0x11, params.as_ptr());
+        let zone = (*global_manager).zone;
+        let area = (*global_manager).area;
+        let Some(spawn_group) = spawn_data
+            .iter()
+            .find(|group| zone == group.zone && area == group.area)
+        else {
+            println!(
+                "immediate spawn skipped: no spawn data match, item={}, zone={}, area={}",
+                item_id, zone, area
+            );
+            return;
+        };
+
+        let dispos_manager = lookup_module(&ModuleName::DisposManager.as_ptr());
+        if dispos_manager.is_null() {
+            println!(
+                "immediate spawn skipped: dispos manager unavailable, item={}",
+                item_id
+            );
+            return;
+        }
+
+        let object_manager = lookup_module(&ModuleName::ObjectManager.as_ptr());
+        if object_manager.is_null() {
+            println!(
+                "immediate spawn skipped: object manager unavailable, item={}",
+                item_id
+            );
+            return;
+        }
+
+        let spawn = (*(*dispos_manager).vtable).syscall_handler;
+        let find_object = (*(*object_manager).vtable).syscall_handler;
+
+        for &object_id in spawn_group.object_ids {
+            let params = [object_id];
+            if find_object(object_manager, 10, params.as_ptr()) != 0 {
+                println!(
+                    "immediate spawn skipped: object already exists, item={}, object={}",
+                    item_id, object_id
+                );
+                continue;
             }
+
+            println!(
+                "immediate spawn: item={}, zone={}, area={}, object={}",
+                item_id, zone, area, object_id
+            );
+            spawn(dispos_manager, 0x11, params.as_ptr());
         }
     }
 }
