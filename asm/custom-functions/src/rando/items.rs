@@ -826,6 +826,134 @@ pub fn get_iron_tail_params() -> *const u32 {
     [0x2000, 0x1].as_ptr()
 }
 
+pub struct ImmediateObjectStateChangeData {
+    pub zone:       u8,
+    pub area:       u8,
+    pub object_ids: &'static [u32],
+    // TODO: verify after including all, if there are deviating values and update the struct
+    // correspondingly
+    pub params:     &'static [u32],
+}
+
+pub struct ImmediateObjectSpawnData {
+    pub zone:       u8,
+    pub area:       u8,
+    pub object_ids: &'static [u32],
+    pub spawn_mode: u32,
+}
+
+/// State changes for gimmicks which are already present in the current field
+/// or have an explicit state change as spawn mechanism,
+/// like gates, beach zone bridges etc.
+pub fn immediate_object_state_change_data(
+    item_id: u16,
+) -> &'static [ImmediateObjectStateChangeData] {
+    match item_id {
+        x if x == Itemflag::BULBASAUR_PRISMA as u16 => {
+            // venusaur area gate
+            &[ImmediateObjectStateChangeData {
+                zone:       0x1,
+                area:       0x1,
+                object_ids: &[0x4E35],
+                params:     &[1],
+            }]
+        },
+        x if x == Itemflag::VENUSAUR_PRISMA as u16 => {
+            // beach zone gate
+            &[ImmediateObjectStateChangeData {
+                zone:       0x2,
+                area:       0x1,
+                object_ids: &[0x4E29],
+                params:     &[1],
+            }]
+        },
+        x if x == Itemflag::EMPOLEON_PRISMA as u16 => {
+            // cavern zone gate
+            &[ImmediateObjectStateChangeData {
+                zone:       0x2,
+                area:       0x1,
+                object_ids: &[0x4E2A],
+                params:     &[1],
+            }]
+        },
+        x if x == Itemflag::BLAZIKEN_PRISMA as u16 => {
+            // haunted zone gate
+            &[ImmediateObjectStateChangeData {
+                zone:       0x2,
+                area:       0x1,
+                object_ids: &[0x4E2B],
+                params:     &[1],
+            }]
+        },
+        x if x == Itemflag::ROTOM_PRISMA as u16 => {
+            // granite zone gate
+            &[ImmediateObjectStateChangeData {
+                zone:       0x2,
+                area:       0x1,
+                object_ids: &[0x4E2C],
+                params:     &[1],
+            }]
+        },
+        x if x == Itemflag::GYARADOS_PRISMA as u16 => {
+            // lapras area rock
+            &[ImmediateObjectStateChangeData {
+                zone:       0x3,
+                area:       0x1,
+                object_ids: &[0x4E3B],
+                params:     &[1],
+            }]
+        },
+        x if x == Itemflag::BEACH_BRIDGE_1_UNLOCK as u16 => {
+            // lapras area rock
+            &[ImmediateObjectStateChangeData {
+                zone:       0x3,
+                area:       0x1,
+                object_ids: &[0x4E2D],
+                params:     &[1],
+            }]
+        },
+        x if x == Itemflag::BEACH_BRIDGE_2_UNLOCK as u16 => {
+            // lapras area rock
+            &[ImmediateObjectStateChangeData {
+                zone:       0x3,
+                area:       0x1,
+                object_ids: &[0x4E2E, 0x4E2F, 0x4E30],
+                params:     &[1],
+            }]
+        },
+        _ => &[],
+    }
+}
+
+/// Gimmicks which do not exist in the field, like Munchlaxs crate.
+pub fn immediate_object_spawn_data(item_id: u16) -> &'static [ImmediateObjectSpawnData] {
+    match item_id {
+        x if x == Itemflag::BULBASAUR_PRISMA as u16 => {
+            &[
+                // munchlaxs crate
+                ImmediateObjectSpawnData {
+                    zone:       0x1,
+                    area:       0x1,
+                    object_ids: &[0x4E36],
+                    spawn_mode: 3,
+                },
+            ]
+        },
+        x if x == Itemflag::BASTIODON_PRISMA as u16 => {
+            &[
+                // Truck
+                ImmediateObjectSpawnData {
+                    zone:       0x4,
+                    area:       0x1,
+                    object_ids: &[0x4E39, 0x4E3A],
+                    spawn_mode: 3,
+                },
+            ]
+        },
+        _ => &[],
+    }
+}
+
 pub struct ImmediatePokemonSpawnData {
     pub zone:       u8,
     pub area:       u8,
@@ -1466,6 +1594,7 @@ pub fn immediate_pokemon_spawn_data(item_id: u16) -> &'static [ImmediatePokemonS
                 object_ids: &[0x221],
             }]
         },
+        // TODO: shop pokemon spawn
         _ => &[],
     }
 }

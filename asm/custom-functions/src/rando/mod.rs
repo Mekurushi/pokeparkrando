@@ -6,13 +6,14 @@ use crate::game::global_manager::{
 use crate::game::scene_manager::{lookup_scene_manager, SceneName};
 use crate::rando::items::{
     get_dash_params, get_health_params, get_iron_tail_params, get_item_detail,
-    get_thunderbolt_params, immediate_pokemon_spawn_data, Itemflag,
+    get_thunderbolt_params, immediate_object_spawn_data, immediate_object_state_change_data,
+    immediate_pokemon_spawn_data, Itemflag,
 };
 
 use crate::game::mn_field_info::lookup_mn_field_info;
 use crate::println;
 use crate::utils::console::Console;
-use crate::utils::module::{lookup_module, ModuleName};
+use crate::utils::module::{lookup_module, Module, ModuleName};
 use core::ffi::{c_void, CStr};
 use core::{fmt::Write, str::from_utf8};
 
@@ -106,7 +107,7 @@ pub fn give_item() -> u32 {
 
                     // item execution
                     syscall_handler(module, details.opcode, params);
-                    assert_pokemon_unlock_immediately(item_id);
+                    apply_immediate_overworld_unlocks(item_id);
 
                     // reset custom code indicator
                     FROM_RANDO = false
@@ -121,39 +122,142 @@ pub fn give_item() -> u32 {
     1
 }
 
-pub fn assert_pokemon_unlock_immediately(item_id: u16) {
+fn apply_immediate_overworld_unlocks(item_id: u16) {
+    apply_immediate_pokemon_unlocks(item_id);
+    apply_object_state_changes(item_id);
+    apply_object_spawn_unlocks(item_id);
+}
+
+fn current_field() -> Option<(u8, u8)> {
+    unsafe {
+        let global_manager = lookup_global_manager();
+        // mnFieldInfo only exists while the player is in the overworld.
+        if global_manager.is_null() || lookup_mn_field_info().is_null() {
+            return None;
+        }
+        Some(((*global_manager).zone, (*global_manager).area))
+    }
+}
+
+fn apply_object_state_changes(item_id: u16) {
+    let actions = immediate_object_state_change_data(item_id);
+    if actions.is_empty() {
+        return;
+    }
+    let Some((zone, area)) = current_field() else {
+        println!(
+            "immediate object update skipped: field unavailable, item={}",
+            item_id
+        );
+        return;
+    };
+
+    unsafe {
+        let object_manager = lookup_module(&ModuleName::ObjectManager.as_ptr());
+        if object_manager.is_null() || (*object_manager).vtable.is_null() {
+            println!(
+                "immediate object update skipped: object manager unavailable, item={}",
+                item_id
+            );
+            return;
+        }
+        let object_syscall = (*(*object_manager).vtable).syscall_handler;
+
+        for action in actions.iter().filter(|a| a.zone == zone && a.area == area) {
+            for &object_id in action.object_ids {
+                let object = object_syscall(object_manager, 4, [object_id].as_ptr());
+                if object == 0 {
+                    println!(
+                        "immediate object update skipped: object unavailable, item={}, object={}",
+                        item_id, object_id
+                    );
+                    continue;
+                }
+                let object_module =
+                    object_syscall(object_manager, 1, [object as u32].as_ptr()) as *mut Module;
+                if object_module.is_null() || (*object_module).vtable.is_null() {
+                    println!("immediate object update skipped: object module unavailable, item={}, object={}", item_id, object_id);
+                    continue;
+                }
+
+                ((*(*object_module).vtable).syscall_handler)(
+                    object_module,
+                    0,
+                    action.params.as_ptr(),
+                );
+                println!(
+                    "immediate object update: item={}, zone={}, area={}, object={}",
+                    item_id, zone, area, object_id
+                );
+            }
+        }
+    }
+}
+
+fn apply_object_spawn_unlocks(item_id: u16) {
+    let actions = immediate_object_spawn_data(item_id);
+    if actions.is_empty() {
+        return;
+    }
+    let Some((zone, area)) = current_field() else {
+        println!(
+            "immediate object spawn skipped: field unavailable, item={}",
+            item_id
+        );
+        return;
+    };
+
+    unsafe {
+        let object_manager = lookup_module(&ModuleName::ObjectManager.as_ptr());
+        if object_manager.is_null() || (*object_manager).vtable.is_null() {
+            println!(
+                "immediate object spawn skipped: object manager unavailable, item={}",
+                item_id
+            );
+            return;
+        }
+        let object_syscall = (*(*object_manager).vtable).syscall_handler;
+
+        for action in actions.iter().filter(|a| a.zone == zone && a.area == area) {
+            for &object_id in action.object_ids {
+                if object_syscall(object_manager, 10, [object_id].as_ptr()) != 0 {
+                    println!(
+                        "immediate object spawn skipped: object already exists, item={}, object={}",
+                        item_id, object_id
+                    );
+                    continue;
+                }
+                object_syscall(object_manager, 6, [object_id, action.spawn_mode].as_ptr());
+                println!(
+                    "immediate object spawn: item={}, zone={}, area={}, object={}",
+                    item_id, zone, area, object_id
+                );
+            }
+        }
+    }
+}
+
+fn apply_immediate_pokemon_unlocks(item_id: u16) {
     let spawn_data = immediate_pokemon_spawn_data(item_id);
     if spawn_data.is_empty() {
         return;
     }
 
+    let Some((zone, area)) = current_field() else {
+        println!(
+            "immediate Pokemon spawn skipped: player is not in the overworld, item={}",
+            item_id
+        );
+        return;
+    };
+
     unsafe {
-        let global_manager = lookup_global_manager();
-        if global_manager.is_null() {
-            println!(
-                "immediate spawn skipped: global manager unavailable, item={}",
-                item_id
-            );
-            return;
-        }
-
-        let mn_field = lookup_mn_field_info();
-        if mn_field.is_null() {
-            println!(
-                "immediate spawn skipped: mn_field unavailable, item={}",
-                item_id
-            );
-            return;
-        }
-
-        let zone = (*global_manager).zone;
-        let area = (*global_manager).area;
         let Some(spawn_group) = spawn_data
             .iter()
             .find(|group| zone == group.zone && area == group.area)
         else {
             println!(
-                "immediate spawn skipped: no spawn data match, item={}, zone={}, area={}",
+                "immediate Pokemon spawn skipped: no spawn data match, item={}, zone={}, area={}",
                 item_id, zone, area
             );
             return;
@@ -162,7 +266,7 @@ pub fn assert_pokemon_unlock_immediately(item_id: u16) {
         let dispos_manager = lookup_module(&ModuleName::DisposManager.as_ptr());
         if dispos_manager.is_null() {
             println!(
-                "immediate spawn skipped: dispos manager unavailable, item={}",
+                "immediate Pokemon spawn skipped: dispos manager unavailable, item={}",
                 item_id
             );
             return;
@@ -171,7 +275,7 @@ pub fn assert_pokemon_unlock_immediately(item_id: u16) {
         let object_manager = lookup_module(&ModuleName::ObjectManager.as_ptr());
         if object_manager.is_null() {
             println!(
-                "immediate spawn skipped: object manager unavailable, item={}",
+                "immediate Pokemon spawn skipped: object manager unavailable, item={}",
                 item_id
             );
             return;
@@ -184,14 +288,14 @@ pub fn assert_pokemon_unlock_immediately(item_id: u16) {
             let params = [object_id];
             if find_object(object_manager, 10, params.as_ptr()) != 0 {
                 println!(
-                    "immediate spawn skipped: object already exists, item={}, object={}",
+                    "immediate Pokemon spawn skipped: Pokemon object already exists, item={}, object={}",
                     item_id, object_id
                 );
                 continue;
             }
 
             println!(
-                "immediate spawn: item={}, zone={}, area={}, object={}",
+                "immediate Pokemon spawn: item={}, zone={}, area={}, object={}",
                 item_id, zone, area, object_id
             );
             spawn(dispos_manager, 0x11, params.as_ptr());
