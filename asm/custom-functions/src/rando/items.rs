@@ -830,9 +830,7 @@ pub struct ImmediateObjectStateChangeData {
     pub zone:       u8,
     pub area:       u8,
     pub object_ids: &'static [u32],
-    // TODO: verify after including all, if there are deviating values and update the struct
-    // correspondingly
-    pub params:     &'static [u32],
+    pub state:      u32,
 }
 
 pub struct ImmediateObjectSpawnData {
@@ -855,7 +853,7 @@ pub fn immediate_object_state_change_data(
                 zone:       0x1,
                 area:       0x1,
                 object_ids: &[0x4E35],
-                params:     &[1],
+                state:      1,
             }]
         },
         x if x == Itemflag::VENUSAUR_PRISMA as u16 => {
@@ -864,7 +862,7 @@ pub fn immediate_object_state_change_data(
                 zone:       0x2,
                 area:       0x1,
                 object_ids: &[0x4E29],
-                params:     &[1],
+                state:      1,
             }]
         },
         x if x == Itemflag::EMPOLEON_PRISMA as u16 => {
@@ -873,7 +871,7 @@ pub fn immediate_object_state_change_data(
                 zone:       0x2,
                 area:       0x1,
                 object_ids: &[0x4E2A],
-                params:     &[1],
+                state:      1,
             }]
         },
         x if x == Itemflag::BLAZIKEN_PRISMA as u16 => {
@@ -882,7 +880,7 @@ pub fn immediate_object_state_change_data(
                 zone:       0x2,
                 area:       0x1,
                 object_ids: &[0x4E2B],
-                params:     &[1],
+                state:      1,
             }]
         },
         x if x == Itemflag::ROTOM_PRISMA as u16 => {
@@ -891,34 +889,93 @@ pub fn immediate_object_state_change_data(
                 zone:       0x2,
                 area:       0x1,
                 object_ids: &[0x4E2C],
-                params:     &[1],
+                state:      1,
             }]
         },
         x if x == Itemflag::GYARADOS_PRISMA as u16 => {
-            // lapras area rock
-            &[ImmediateObjectStateChangeData {
-                zone:       0x3,
-                area:       0x1,
-                object_ids: &[0x4E3B],
-                params:     &[1],
-            }]
+            &[
+                // lapras area rock
+                ImmediateObjectStateChangeData {
+                    zone:       0x3,
+                    area:       0x1,
+                    object_ids: &[0x4E3B],
+                    state:      1,
+                },
+                // Empoleon Gate
+                ImmediateObjectStateChangeData {
+                    zone:       0x3,
+                    area:       0x2,
+                    object_ids: &[0x4E2B],
+                    state:      1,
+                },
+            ]
         },
         x if x == Itemflag::BEACH_BRIDGE_1_UNLOCK as u16 => {
-            // lapras area rock
             &[ImmediateObjectStateChangeData {
                 zone:       0x3,
                 area:       0x1,
                 object_ids: &[0x4E2D],
-                params:     &[1],
+                state:      1,
             }]
         },
         x if x == Itemflag::BEACH_BRIDGE_2_UNLOCK as u16 => {
-            // lapras area rock
             &[ImmediateObjectStateChangeData {
                 zone:       0x3,
                 area:       0x1,
                 object_ids: &[0x4E2E, 0x4E2F, 0x4E30],
-                params:     &[1],
+                state:      1,
+            }]
+        },
+        x if x == Itemflag::ICE_ZONE_FROZEN_LAKE_UNLOCK as u16 => {
+            &[ImmediateObjectStateChangeData {
+                zone:       0x3,
+                area:       0x2,
+                object_ids: &[0x4E33],
+                state:      1,
+            }]
+        },
+        x if x == Itemflag::ICE_ZONE_LIFT_UNLOCK as u16 => {
+            &[ImmediateObjectStateChangeData {
+                zone:       0x3,
+                area:       0x2,
+                object_ids: &[0x4E34],
+                state:      1,
+            }]
+        },
+        x if x == Itemflag::MAGMA_ZONE_FIRE_WALL_UNLOCK as u16 => {
+            &[ImmediateObjectStateChangeData {
+                zone:       0x4,
+                area:       0x2,
+                object_ids: &[0x4E38, 0x4E39],
+                state:      1,
+            }]
+        },
+        x if x == Itemflag::RHYPERIOR_PRISMA as u16 => {
+            // magcargo bridge
+            &[ImmediateObjectStateChangeData {
+                zone:       0x4,
+                area:       0x2,
+                object_ids: &[0x4E2D],
+                state:      1,
+            }]
+        },
+        x if x == Itemflag::HAUNTED_ZONE_MANSION_GEM_DOORS_UNLOCK as u16 => {
+            &[ImmediateObjectStateChangeData {
+                zone:       0x5,
+                area:       0x2,
+                object_ids: &[
+                    0x4E23, 0x4E24, 0x4E25, 0x4E26, 0x4E27, 0x4E28, 0x4E29, 0x4E2A, 0x4E2B,
+                ],
+                state:      1,
+            }]
+        },
+        x if x == Itemflag::DUSKNOIR_PRISMA as u16 => {
+            // Bookshelf
+            &[ImmediateObjectStateChangeData {
+                zone:       0x5,
+                area:       0x2,
+                object_ids: &[0x4E22],
+                state:      2,
             }]
         },
         _ => &[],
@@ -1594,7 +1651,28 @@ pub fn immediate_pokemon_spawn_data(item_id: u16) -> &'static [ImmediatePokemonS
                 object_ids: &[0x221],
             }]
         },
-        // TODO: shop pokemon spawn
+        // Power shop Pokemon
+        x if x == Itemflag::EMPOLEON_PRISMA as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x2,
+                area:       0x1,
+                object_ids: &[0x57],
+            }]
+        },
+        x if x == Itemflag::VENUSAUR_PRISMA as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x2,
+                area:       0x1,
+                object_ids: &[0x56],
+            }]
+        },
+        x if x == Itemflag::PELIPPER_PRISMA as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x2,
+                area:       0x1,
+                object_ids: &[0x55],
+            }]
+        },
         _ => &[],
     }
 }

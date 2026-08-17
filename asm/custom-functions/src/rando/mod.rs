@@ -173,18 +173,16 @@ fn apply_object_state_changes(item_id: u16) {
                     );
                     continue;
                 }
-                let object_module =
+                println!("object: {}", object);
+                let object_accessor =
                     object_syscall(object_manager, 1, [object as u32].as_ptr()) as *mut Module;
-                if object_module.is_null() || (*object_module).vtable.is_null() {
+                if object_accessor.is_null() || (*object_accessor).vtable.is_null() {
                     println!("immediate object update skipped: object module unavailable, item={}, object={}", item_id, object_id);
                     continue;
                 }
 
-                ((*(*object_module).vtable).syscall_handler)(
-                    object_module,
-                    0,
-                    action.params.as_ptr(),
-                );
+                let params = [action.state];
+                ((*(*object_accessor).vtable).syscall_handler)(object_accessor, 0, params.as_ptr());
                 println!(
                     "immediate object update: item={}, zone={}, area={}, object={}",
                     item_id, zone, area, object_id
