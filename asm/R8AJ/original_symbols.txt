@@ -44,7 +44,6 @@ main.dol:
     process_tag_original: 0x801f6210
     process_tag_shortened_params_original: 0x801f60e0
     lookup_module: 0x802edba0
-    main_loop_restore: 0x802f1d3c
     global_manager_syscall_handler: 0x80180790
     ai_difficulty_request: 0x8007558c
     set_frame_limit: 0x8000be20

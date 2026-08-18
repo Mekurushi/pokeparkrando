@@ -173,7 +173,6 @@ fn apply_object_state_changes(item_id: u16) {
                     );
                     continue;
                 }
-                println!("object: {}", object);
                 let object_accessor =
                     object_syscall(object_manager, 1, [object as u32].as_ptr()) as *mut Module;
                 if object_accessor.is_null() || (*object_accessor).vtable.is_null() {
