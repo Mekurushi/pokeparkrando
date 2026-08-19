@@ -766,13 +766,13 @@ pub fn get_dash_params() -> *const u32 {
     let syscall_handler = unsafe { (*vtable).syscall_handler };
     let call = |arg: u32| unsafe { syscall_handler(module, 0xBA, [arg].as_ptr()) };
 
-    if !call(0x1) {
+    if call(0x1) == 0 {
         return [0x1, 0x1].as_ptr();
     }
-    if !call(0x4) {
+    if call(0x4) == 0 {
         return [0x4, 0x1].as_ptr();
     }
-    if !call(0x8) {
+    if call(0x8) == 0 {
         return [0x8, 0x1].as_ptr();
     }
     [0x4000, 0x1].as_ptr()
@@ -784,13 +784,13 @@ pub fn get_thunderbolt_params() -> *const u32 {
     let syscall_handler = unsafe { (*vtable).syscall_handler };
     let call = |arg: u32| unsafe { syscall_handler(module, 0xBA, [arg].as_ptr()) };
 
-    if !call(0x10) {
+    if call(0x10) == 0 {
         return [0x10, 0x1].as_ptr();
     }
-    if !call(0x20) {
+    if call(0x20) == 0 {
         return [0x20, 0x1].as_ptr();
     }
-    if !call(0x40) {
+    if call(0x40) == 0 {
         return [0x40, 0x1].as_ptr();
     }
     [0x80, 0x1].as_ptr()
@@ -802,10 +802,10 @@ pub fn get_health_params() -> *const u32 {
     let syscall_handler = unsafe { (*vtable).syscall_handler };
     let call = |arg: u32| unsafe { syscall_handler(module, 0xBA, [arg].as_ptr()) };
 
-    if !call(0x100) {
+    if call(0x100) == 0 {
         return [0x100, 0x1].as_ptr();
     }
-    if !call(0x200) {
+    if call(0x200) == 0 {
         return [0x200, 0x1].as_ptr();
     }
     [0x400, 0x1].as_ptr()
@@ -817,11 +817,862 @@ pub fn get_iron_tail_params() -> *const u32 {
     let syscall_handler = unsafe { (*vtable).syscall_handler };
     let call = |arg: u32| unsafe { syscall_handler(module, 0xBA, [arg].as_ptr()) };
 
-    if !call(0x800) {
+    if call(0x800) == 0 {
         return [0x800, 0x1].as_ptr();
     }
-    if !call(0x1000) {
+    if call(0x1000) == 0 {
         return [0x1000, 0x1].as_ptr();
     }
     [0x2000, 0x1].as_ptr()
+}
+
+pub struct ImmediateObjectStateChangeData {
+    pub zone:       u8,
+    pub area:       u8,
+    pub object_ids: &'static [u32],
+    pub state:      u32,
+}
+
+pub struct ImmediateObjectSpawnData {
+    pub zone:       u8,
+    pub area:       u8,
+    pub object_ids: &'static [u32],
+    pub spawn_mode: u32,
+}
+
+/// State changes for gimmicks which are already present in the current field
+/// or have an explicit state change as spawn mechanism,
+/// like gates, beach zone bridges etc.
+pub fn immediate_object_state_change_data(
+    item_id: u16,
+) -> &'static [ImmediateObjectStateChangeData] {
+    match item_id {
+        x if x == Itemflag::BULBASAUR_PRISMA as u16 => {
+            // venusaur area gate
+            &[ImmediateObjectStateChangeData {
+                zone:       0x1,
+                area:       0x1,
+                object_ids: &[0x4E35],
+                state:      1,
+            }]
+        },
+        x if x == Itemflag::VENUSAUR_PRISMA as u16 => {
+            // beach zone gate
+            &[ImmediateObjectStateChangeData {
+                zone:       0x2,
+                area:       0x1,
+                object_ids: &[0x4E29],
+                state:      1,
+            }]
+        },
+        x if x == Itemflag::EMPOLEON_PRISMA as u16 => {
+            // cavern zone gate
+            &[ImmediateObjectStateChangeData {
+                zone:       0x2,
+                area:       0x1,
+                object_ids: &[0x4E2A],
+                state:      1,
+            }]
+        },
+        x if x == Itemflag::BLAZIKEN_PRISMA as u16 => {
+            // haunted zone gate
+            &[ImmediateObjectStateChangeData {
+                zone:       0x2,
+                area:       0x1,
+                object_ids: &[0x4E2B],
+                state:      1,
+            }]
+        },
+        x if x == Itemflag::ROTOM_PRISMA as u16 => {
+            // granite zone gate
+            &[ImmediateObjectStateChangeData {
+                zone:       0x2,
+                area:       0x1,
+                object_ids: &[0x4E2C],
+                state:      1,
+            }]
+        },
+        x if x == Itemflag::GYARADOS_PRISMA as u16 => {
+            &[
+                // lapras area rock
+                ImmediateObjectStateChangeData {
+                    zone:       0x3,
+                    area:       0x1,
+                    object_ids: &[0x4E3B],
+                    state:      1,
+                },
+                // Empoleon Gate
+                ImmediateObjectStateChangeData {
+                    zone:       0x3,
+                    area:       0x2,
+                    object_ids: &[0x4E2B],
+                    state:      1,
+                },
+            ]
+        },
+        x if x == Itemflag::BEACH_BRIDGE_1_UNLOCK as u16 => {
+            &[ImmediateObjectStateChangeData {
+                zone:       0x3,
+                area:       0x1,
+                object_ids: &[0x4E2D],
+                state:      1,
+            }]
+        },
+        x if x == Itemflag::BEACH_BRIDGE_2_UNLOCK as u16 => {
+            &[ImmediateObjectStateChangeData {
+                zone:       0x3,
+                area:       0x1,
+                object_ids: &[0x4E2E, 0x4E2F, 0x4E30],
+                state:      1,
+            }]
+        },
+        x if x == Itemflag::ICE_ZONE_FROZEN_LAKE_UNLOCK as u16 => {
+            &[ImmediateObjectStateChangeData {
+                zone:       0x3,
+                area:       0x2,
+                object_ids: &[0x4E33],
+                state:      1,
+            }]
+        },
+        x if x == Itemflag::ICE_ZONE_LIFT_UNLOCK as u16 => {
+            &[ImmediateObjectStateChangeData {
+                zone:       0x3,
+                area:       0x2,
+                object_ids: &[0x4E34],
+                state:      1,
+            }]
+        },
+        x if x == Itemflag::MAGMA_ZONE_FIRE_WALL_UNLOCK as u16 => {
+            &[ImmediateObjectStateChangeData {
+                zone:       0x4,
+                area:       0x2,
+                object_ids: &[0x4E38, 0x4E39],
+                state:      1,
+            }]
+        },
+        x if x == Itemflag::RHYPERIOR_PRISMA as u16 => {
+            // magcargo bridge
+            &[ImmediateObjectStateChangeData {
+                zone:       0x4,
+                area:       0x2,
+                object_ids: &[0x4E2D],
+                state:      1,
+            }]
+        },
+        x if x == Itemflag::HAUNTED_ZONE_MANSION_GEM_DOORS_UNLOCK as u16 => {
+            &[ImmediateObjectStateChangeData {
+                zone:       0x5,
+                area:       0x2,
+                object_ids: &[
+                    0x4E23, 0x4E24, 0x4E25, 0x4E26, 0x4E27, 0x4E28, 0x4E29, 0x4E2A, 0x4E2B,
+                ],
+                state:      1,
+            }]
+        },
+        x if x == Itemflag::DUSKNOIR_PRISMA as u16 => {
+            // Bookshelf
+            &[ImmediateObjectStateChangeData {
+                zone:       0x5,
+                area:       0x2,
+                object_ids: &[0x4E22],
+                state:      2,
+            }]
+        },
+        _ => &[],
+    }
+}
+
+/// Gimmicks which do not exist in the field, like Munchlaxs crate.
+pub fn immediate_object_spawn_data(item_id: u16) -> &'static [ImmediateObjectSpawnData] {
+    match item_id {
+        x if x == Itemflag::BULBASAUR_PRISMA as u16 => {
+            &[
+                // munchlaxs crate
+                ImmediateObjectSpawnData {
+                    zone:       0x1,
+                    area:       0x1,
+                    object_ids: &[0x4E36],
+                    spawn_mode: 3,
+                },
+            ]
+        },
+        x if x == Itemflag::BASTIODON_PRISMA as u16 => {
+            &[
+                // Truck
+                ImmediateObjectSpawnData {
+                    zone:       0x4,
+                    area:       0x1,
+                    object_ids: &[0x4E39, 0x4E3A],
+                    spawn_mode: 3,
+                },
+            ]
+        },
+        _ => &[],
+    }
+}
+
+pub struct ImmediatePokemonSpawnData {
+    pub zone:       u8,
+    pub area:       u8,
+    pub object_ids: &'static [u32],
+}
+
+pub fn immediate_pokemon_spawn_data(item_id: u16) -> &'static [ImmediatePokemonSpawnData] {
+    match item_id {
+        x if x == Itemflag::TROPIUS_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x1,
+                area:       0x1,
+                object_ids: &[0x1A],
+            }]
+        },
+        x if x == Itemflag::PACHIRISU_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x1,
+                area:       0x1,
+                object_ids: &[0x7, 0x34],
+            }]
+        },
+        x if x == Itemflag::BONSLY_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x1,
+                area:       0x1,
+                object_ids: &[0x12],
+            }]
+        },
+        x if x == Itemflag::SUDOWOODO_UNLOCK as u16 => {
+            &[
+                ImmediatePokemonSpawnData {
+                    zone:       0x1,
+                    area:       0x1,
+                    object_ids: &[0x1D],
+                },
+                ImmediatePokemonSpawnData {
+                    zone:       0x4,
+                    area:       0x1,
+                    object_ids: &[0xEB],
+                },
+            ]
+        },
+        x if x == Itemflag::LOTAD_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x1,
+                area:       0x1,
+                object_ids: &[0xC, 0x2B, 0x2C],
+            }]
+        },
+        x if x == Itemflag::SHINX_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x1,
+                area:       0x1,
+                object_ids: &[0x13, 0x2F],
+            }]
+        },
+        x if x == Itemflag::SCYTHER_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x1,
+                area:       0x1,
+                object_ids: &[0x1E],
+            }]
+        },
+        x if x == Itemflag::CATERPIE_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x1,
+                area:       0x1,
+                object_ids: &[0xD, 0x33],
+            }]
+        },
+        x if x == Itemflag::BUTTERFREE_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x1,
+                area:       0x1,
+                object_ids: &[0x19, 0x31],
+            }]
+        },
+        x if x == Itemflag::CHIMCHAR_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x1,
+                area:       0x1,
+                object_ids: &[0xA],
+            }]
+        },
+        x if x == Itemflag::AMBIPOM_UNLOCK as u16 => {
+            &[
+                ImmediatePokemonSpawnData {
+                    zone:       0x1,
+                    area:       0x1,
+                    object_ids: &[0x1C],
+                },
+                ImmediatePokemonSpawnData {
+                    zone:       0x5,
+                    area:       0x1,
+                    object_ids: &[0x13C],
+                },
+            ]
+        },
+        x if x == Itemflag::WEEDLE_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x1,
+                area:       0x1,
+                object_ids: &[0xE],
+            }]
+        },
+        x if x == Itemflag::SHROOMISH_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x1,
+                area:       0x1,
+                object_ids: &[0x11],
+            }]
+        },
+        x if x == Itemflag::MAGIKARP_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x1,
+                area:       0x1,
+                object_ids: &[0xB],
+            }]
+        },
+        x if x == Itemflag::BIDOOF_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x1,
+                area:       0x1,
+                object_ids: &[0x23],
+            }]
+        },
+        x if x == Itemflag::BIDOOF_2_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x1,
+                area:       0x1,
+                object_ids: &[0x24],
+            }]
+        },
+        x if x == Itemflag::BIDOOF_3_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x1,
+                area:       0x1,
+                object_ids: &[0x25],
+            }]
+        },
+        x if x == Itemflag::BIBAREL_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x1,
+                area:       0x1,
+                object_ids: &[0x1B],
+            }]
+        },
+        x if x == Itemflag::STARLY_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x1,
+                area:       0x1,
+                object_ids: &[0x18, 0x26, 0x27],
+            }]
+        },
+        x if x == Itemflag::STARLY_2_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x1,
+                area:       0x1,
+                object_ids: &[0x29, 0x2D],
+            }]
+        },
+        x if x == Itemflag::TORTERRA_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x1,
+                area:       0x1,
+                object_ids: &[0x17],
+            }]
+        },
+        x if x == Itemflag::BEACH_BIDOOF_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x3,
+                area:       0x1,
+                object_ids: &[0x84],
+            }]
+        },
+        x if x == Itemflag::FLOATZEL_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x3,
+                area:       0x1,
+                object_ids: &[0x80],
+            }]
+        },
+        x if x == Itemflag::MUDKIP_UNLOCK as u16 => {
+            &[
+                ImmediatePokemonSpawnData {
+                    zone:       0x3,
+                    area:       0x1,
+                    object_ids: &[0x77],
+                },
+                ImmediatePokemonSpawnData {
+                    zone:       0x3,
+                    area:       0x2,
+                    object_ids: &[0xA0],
+                },
+            ]
+        },
+        x if x == Itemflag::TOTODILE_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x3,
+                area:       0x1,
+                object_ids: &[0x76],
+            }]
+        },
+        x if x == Itemflag::GOLDUCK_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x3,
+                area:       0x1,
+                object_ids: &[0x7F],
+            }]
+        },
+        x if x == Itemflag::KRABBY_UNLOCK as u16 => {
+            &[
+                ImmediatePokemonSpawnData {
+                    zone:       0x3,
+                    area:       0x1,
+                    object_ids: &[0x75, 0x8A, 0x96, 0x97],
+                },
+                ImmediatePokemonSpawnData {
+                    zone:       0x3,
+                    area:       0x2,
+                    object_ids: &[0xA1, 0xC9, 0xCA],
+                },
+            ]
+        },
+        x if x == Itemflag::CORPHISH_UNLOCK as u16 => {
+            &[
+                ImmediatePokemonSpawnData {
+                    zone:       0x3,
+                    area:       0x1,
+                    object_ids: &[0x78, 0x98, 0x99],
+                },
+                ImmediatePokemonSpawnData {
+                    zone:       0x3,
+                    area:       0x2,
+                    object_ids: &[0xA2, 0xBF, 0xC0],
+                },
+            ]
+        },
+        x if x == Itemflag::BLASTOISE_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x3,
+                area:       0x1,
+                object_ids: &[0x83],
+            }]
+        },
+        x if x == Itemflag::DELIBIRD_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x3,
+                area:       0x2,
+                object_ids: &[0xA5],
+            }]
+        },
+        x if x == Itemflag::SQUIRTLE_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x3,
+                area:       0x2,
+                object_ids: &[0xA9],
+            }]
+        },
+        x if x == Itemflag::SMOOCHUM_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x3,
+                area:       0x2,
+                object_ids: &[0xA8, 0xCD, 0xCE],
+            }]
+        },
+        x if x == Itemflag::SNEASEL_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x3,
+                area:       0x2,
+                object_ids: &[0x9E, 0xBD],
+            }]
+        },
+        x if x == Itemflag::MAMOSWINE_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x3,
+                area:       0x2,
+                object_ids: &[0xB6],
+            }]
+        },
+        x if x == Itemflag::GLALIE_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x3,
+                area:       0x2,
+                object_ids: &[0xB2],
+            }]
+        },
+        x if x == Itemflag::PRIMEAPE_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x3,
+                area:       0x2,
+                object_ids: &[0xAF],
+            }]
+        },
+        x if x == Itemflag::URSARING_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x3,
+                area:       0x2,
+                object_ids: &[0xB0],
+            }]
+        },
+        x if x == Itemflag::MAGNEMITE_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x4,
+                area:       0x1,
+                object_ids: &[0xD7],
+            }]
+        },
+        x if x == Itemflag::MAGNEMITE_2_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x4,
+                area:       0x1,
+                object_ids: &[0xF9],
+            }]
+        },
+        x if x == Itemflag::MAGNEMITE_3_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x4,
+                area:       0x1,
+                object_ids: &[0xFA],
+            }]
+        },
+        x if x == Itemflag::MACHAMP_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x4,
+                area:       0x1,
+                object_ids: &[0x100],
+            }]
+        },
+        x if x == Itemflag::DIGLETT_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x4,
+                area:       0x1,
+                object_ids: &[0xE4],
+            }]
+        },
+        x if x == Itemflag::MAGNEZONE_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x4,
+                area:       0x1,
+                object_ids: &[0xEE],
+            }]
+        },
+        x if x == Itemflag::PHANPY_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x4,
+                area:       0x1,
+                object_ids: &[0xFF, 0xDA],
+            }]
+        },
+        x if x == Itemflag::RAICHU_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x4,
+                area:       0x1,
+                object_ids: &[0xE1],
+            }]
+        },
+        x if x == Itemflag::HITMONLEE_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x4,
+                area:       0x1,
+                object_ids: &[0xE2],
+            }]
+        },
+        x if x == Itemflag::ELECTIVIRE_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x4,
+                area:       0x1,
+                object_ids: &[0xE3],
+            }]
+        },
+        x if x == Itemflag::INFERNAPE_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x4,
+                area:       0x2,
+                object_ids: &[0x116],
+            }]
+        },
+        x if x == Itemflag::NINETALES_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x4,
+                area:       0x2,
+                object_ids: &[0x112],
+            }]
+        },
+        x if x == Itemflag::PONYTA_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x4,
+                area:       0x2,
+                object_ids: &[0x11E],
+            }]
+        },
+        x if x == Itemflag::TORKOAL_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x4,
+                area:       0x2,
+                object_ids: &[0x12C, 0x12B, 0x12A, 0x129, 0x128, 0x127, 0x126, 0x109],
+            }]
+        },
+        x if x == Itemflag::GOLEM_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x4,
+                area:       0x2,
+                object_ids: &[0x117],
+            }]
+        },
+        x if x == Itemflag::BALTOY_UNLOCK as u16 => {
+            &[
+                ImmediatePokemonSpawnData {
+                    zone:       0x4,
+                    area:       0x2,
+                    object_ids: &[0x108],
+                },
+                ImmediatePokemonSpawnData {
+                    zone:       0x6,
+                    area:       0x1,
+                    object_ids: &[0x1A7],
+                },
+            ]
+        },
+        x if x == Itemflag::CLAYDOL_UNLOCK as u16 => {
+            &[
+                ImmediatePokemonSpawnData {
+                    zone:       0x4,
+                    area:       0x2,
+                    object_ids: &[0x10B],
+                },
+                ImmediatePokemonSpawnData {
+                    zone:       0x6,
+                    area:       0x1,
+                    object_ids: &[0x1A4],
+                },
+            ]
+        },
+        x if x == Itemflag::HITMONCHAN_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x4,
+                area:       0x2,
+                object_ids: &[0x114],
+            }]
+        },
+        x if x == Itemflag::MAGMORTAR_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x4,
+                area:       0x2,
+                object_ids: &[0x12F],
+            }]
+        },
+        x if x == Itemflag::GROUDON_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x4,
+                area:       0x2,
+                object_ids: &[0x120],
+            }]
+        },
+        x if x == Itemflag::HONCHKROW_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x5,
+                area:       0x1,
+                object_ids: &[0x14D],
+            }]
+        },
+        x if x == Itemflag::METAPOD_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x5,
+                area:       0x1,
+                object_ids: &[0x146],
+            }]
+        },
+        x if x == Itemflag::KAKUNA_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x5,
+                area:       0x1,
+                object_ids: &[0x145],
+            }]
+        },
+        x if x == Itemflag::VOLTORB_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x5,
+                area:       0x2,
+                object_ids: &[0x16E],
+            }]
+        },
+        x if x == Itemflag::ELEKID_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x5,
+                area:       0x2,
+                object_ids: &[0x172],
+            }]
+        },
+        x if x == Itemflag::ELECTABUZZ_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x5,
+                area:       0x2,
+                object_ids: &[0x186],
+            }]
+        },
+        x if x == Itemflag::LUXRAY_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x5,
+                area:       0x2,
+                object_ids: &[0x17D],
+            }]
+        },
+        x if x == Itemflag::STUNKY_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x5,
+                area:       0x2,
+                object_ids: &[0x16D],
+            }]
+        },
+        x if x == Itemflag::SKUNTANK_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x5,
+                area:       0x2,
+                object_ids: &[0x17B],
+            }]
+        },
+        x if x == Itemflag::BRELOOM_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x5,
+                area:       0x2,
+                object_ids: &[0x185],
+            }]
+        },
+        x if x == Itemflag::MISMAGIUS_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x5,
+                area:       0x2,
+                object_ids: &[0x17C],
+            }]
+        },
+        x if x == Itemflag::ELECTRODE_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x5,
+                area:       0x2,
+                object_ids: &[0x178],
+            }]
+        },
+        x if x == Itemflag::HAUNTER_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x5,
+                area:       0x2,
+                object_ids: &[0x192, 0x191, 0x174],
+            }]
+        },
+        x if x == Itemflag::GASTLY_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x5,
+                area:       0x2,
+                object_ids: &[0x170],
+            }]
+        },
+        x if x == Itemflag::GASTLY_2_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x5,
+                area:       0x2,
+                object_ids: &[
+                    0x190, 0x18F, 0x18E, 0x18D, 0x18C, 0x18B, 0x18A, 0x189, 0x188, 0x187,
+                ],
+            }]
+        },
+        x if x == Itemflag::DUSKNOIR_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x5,
+                area:       0x2,
+                object_ids: &[0x181],
+            }]
+        },
+        x if x == Itemflag::ESPEON_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x5,
+                area:       0x2,
+                object_ids: &[0x17E],
+            }]
+        },
+        x if x == Itemflag::GENGAR_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x5,
+                area:       0x2,
+                object_ids: &[0x17F],
+            }]
+        },
+        x if x == Itemflag::DARKRAI_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x5,
+                area:       0x2,
+                object_ids: &[0x182],
+            }]
+        },
+        x if x == Itemflag::JOLTEON_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x6,
+                area:       0x1,
+                object_ids: &[0x1B4],
+            }]
+        },
+        x if x == Itemflag::AERODACTYL_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x6,
+                area:       0x1,
+                object_ids: &[0x1A9],
+            }]
+        },
+        x if x == Itemflag::TYRANITAR_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x6,
+                area:       0x1,
+                object_ids: &[0x1A6],
+            }]
+        },
+        x if x == Itemflag::GARCHOMP_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x6,
+                area:       0x1,
+                object_ids: &[0x1A5],
+            }]
+        },
+        x if x == Itemflag::JIRACHI_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x6,
+                area:       0x1,
+                object_ids: &[0x1BB],
+            }]
+        },
+        x if x == Itemflag::RAYQUAZA_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x6,
+                area:       0x2,
+                object_ids: &[0x1E8],
+            }]
+        },
+        x if x == Itemflag::CELEBI_UNLOCK as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x63,
+                area:       0x1,
+                object_ids: &[0x221],
+            }]
+        },
+        // Power shop Pokemon
+        x if x == Itemflag::EMPOLEON_PRISMA as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x2,
+                area:       0x1,
+                object_ids: &[0x57],
+            }]
+        },
+        x if x == Itemflag::VENUSAUR_PRISMA as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x2,
+                area:       0x1,
+                object_ids: &[0x56],
+            }]
+        },
+        x if x == Itemflag::PELIPPER_PRISMA as u16 => {
+            &[ImmediatePokemonSpawnData {
+                zone:       0x2,
+                area:       0x1,
+                object_ids: &[0x55],
+            }]
+        },
+        _ => &[],
+    }
 }

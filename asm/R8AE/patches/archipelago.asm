@@ -1,11 +1,10 @@
 .open "main.dol"
-.org 0x80031174 ; called every frame
+.org 0x80034640 ; called every frame
 bl main_routine
-addi r11, sp, 0x20
-bl main_loop_restore
-lwz r0, 0x24 (sp)
+lwz r31, 0xc (sp)
+lwz r0, 0x14 (sp)
 mtlr r0
-addi sp, sp, 0x20
+addi sp, sp, 0x10
 blr
 
 .org 0x80366348 ; free space for pointers

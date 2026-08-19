@@ -10,6 +10,8 @@ pub enum ModuleName {
     MnLobby,
     ObjectManager,
     MnAtInfo,
+    EventScript,
+    DisposManager,
 }
 
 impl ModuleName {
@@ -21,6 +23,8 @@ impl ModuleName {
             Self::MnLobby => MODULE_NAMES.mn_lobby.as_ptr(),
             Self::ObjectManager => MODULE_NAMES.object_manager.as_ptr(),
             Self::MnAtInfo => MODULE_NAMES.mn_at_info.as_ptr(),
+            Self::EventScript => MODULE_NAMES.event_script.as_ptr(),
+            Self::DisposManager => MODULE_NAMES.dispos_manager.as_ptr(),
         }
     }
 }
@@ -33,6 +37,8 @@ pub struct ModuleNames {
     pub mn_lobby:       [u8; 8],
     pub object_manager: [u8; 14],
     pub mn_at_info:     [u8; 9],
+    pub event_script:   [u8; 12],
+    pub dispos_manager: [u8; 14],
 }
 
 #[link_section = ".rodata"]
@@ -43,6 +49,8 @@ static MODULE_NAMES: ModuleNames = ModuleNames {
     mn_lobby:       *b"mnLobby\0",
     object_manager: *b"ObjectManager\0",
     mn_at_info:     *b"mnAtInfo\0",
+    event_script:   *b"EventScript\0",
+    dispos_manager: *b"DisposManager\0",
 };
 
 #[repr(C)]
@@ -89,7 +97,7 @@ pub struct SyscallVTable {
 
     /// 0x10
     pub syscall_handler:
-        unsafe extern "C" fn(this: *mut Module, opcode: u32, data: *const u32) -> bool,
+        unsafe extern "C" fn(this: *mut Module, opcode: u32, data: *const u32) -> i32,
 
     /// 0x14
     pub fun5: u32,

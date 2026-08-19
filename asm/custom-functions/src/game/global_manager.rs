@@ -133,6 +133,7 @@ pub enum FlagName {
     F0502DoorA            = 11,
     FPondFreeze           = 12,
     F0302Lift             = 13,
+    ZfWandCheck           = 14,
 }
 
 impl FlagName {
@@ -152,6 +153,7 @@ impl FlagName {
             Self::F0502DoorA => FLAG_NAMES.f0502door_a.as_ptr(),
             Self::FPondFreeze => FLAG_NAMES.fpond_freeze.as_ptr(),
             Self::F0302Lift => FLAG_NAMES.f0302lift.as_ptr(),
+            Self::ZfWandCheck => FLAG_NAMES.zf_wand_check.as_ptr(),
         }
     }
     pub fn from_u32(val: u32) -> Option<Self> {
@@ -191,6 +193,7 @@ pub struct FlagNames {
     pub f0502door_a:             [u8; 11],
     pub fpond_freeze:            [u8; 12],
     pub f0302lift:               [u8; 10],
+    pub zf_wand_check:           [u8; 12],
 }
 
 pub const FLAG_NAMES: FlagNames = FlagNames {
@@ -208,6 +211,7 @@ pub const FLAG_NAMES: FlagNames = FlagNames {
     f0502door_a:             *b"f0502DoorA\0",
     fpond_freeze:            *b"fPondFreeze\0",
     f0302lift:               *b"f0302Lift\0",
+    zf_wand_check:           *b"zfWandCheck\0",
 };
 
 pub mod global_flag_save_flag_table {
