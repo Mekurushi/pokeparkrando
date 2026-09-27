@@ -1,0 +1,9 @@
+[PLAYER_NAME]
+encoding = "string"
+size = 64
+
+[SHOULD_PRINT_AP_BUFFER]
+encoding = "bool"
+
+[FPS_ENHANCEMENT]
+encoding = "bool"

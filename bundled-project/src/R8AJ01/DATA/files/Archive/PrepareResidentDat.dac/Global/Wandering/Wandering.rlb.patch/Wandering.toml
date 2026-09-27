@@ -1,0 +1,20 @@
+[[edits]]
+table = "WanderingDataTable"
+row = 0
+
+[edits.set]
+enabled = { value = true }
+
+[[edits]]
+table = "WanderingDataTable"
+row = 1
+
+[edits.set]
+enabled = { value = true }
+
+[[edits]]
+table = "WanderingDataTable"
+row = 3
+
+[edits.set]
+enabled = { value = false }

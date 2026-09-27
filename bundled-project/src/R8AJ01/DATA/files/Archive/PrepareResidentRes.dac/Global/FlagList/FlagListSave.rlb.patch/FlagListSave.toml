@@ -1,0 +1,19 @@
+[[edits]]
+table = "FlagTable"
+row = 172
+
+[edits.set]
+flag_name = { value = "MagikarpRescued" }
+
+[[edits]]
+table = "FlagTable"
+row = 192
+
+[edits.set]
+flag_name = { value = "f0101BattleCounter" }
+
+[[appends]]
+table = "FlagTable"
+[appends.row]
+flag_name = { value = "f0101BattleCounterNum" }
+bit_width = { value = 4 }

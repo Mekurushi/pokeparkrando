@@ -1,0 +1,6 @@
+[[edits]]
+table = "pokemonDispositionData"
+row = 30
+
+[edits.set]
+unlock_id = { value = 0xFFFFFFFF }

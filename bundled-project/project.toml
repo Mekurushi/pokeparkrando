@@ -1,0 +1,6 @@
+[project]
+name = "PokePark Archipelago"
+version = "0.1.0"
+
+[games.R8AJ01]
+display-name = "PokePark Wii (Japan)"

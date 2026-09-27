@@ -1,0 +1,1106 @@
+extern int get_module(string name);
+extern int configure_npc_and_get_accessor(int obj_id);
+extern void despawn(int obj_id);
+
+extern int show_yes_no_question(int param1, string dialog_id);
+
+extern int get_object_accessor(int param1, int object_id, int param3);
+extern void fade_in(int arg0, int arg1, int arg2, int arg3);
+extern void show_npc_dialog(int param1, string dialog_id);
+extern void give_berries(int value);
+extern void complete_event();
+extern int freeze_player();
+extern void face_player_and_npc(int object_id, int param2);
+
+extern void end_event_script(int param1);
+
+extern void friendship_banner(string banner_id);
+extern void unlock_pokemon(int pokemon_id);
+extern void set_bestfriend(int object_id);
+
+extern int get_held_item_kind();
+extern int is_friend(int object_id);
+extern void remove_held_item();
+extern void FUN_00054494();
+extern void FUN_00051f1c(int param_1, int param_2, int param_3, int param_4);
+extern void FUN_0005acbc(int param_1);
+extern void FUN_00051500(int param_1);
+extern void FUN_00051e9c(int param_1, int param_2, int param_3, int param_4);
+extern void FUN_000500c8(int param_1, int param_2, int param_3, int param_4);
+extern void FUN_00050124(int param_1, int param_2, int param_3, int param_4);
+extern void EA01_Z01_D04(int param_1);
+extern void EA01_Z01_D05(int param_1);
+extern void EA01_Z01_D06(int param_1);
+extern void EA01_Z01_D07(int param_1);
+
+// =====================================================================
+// original power competition implementation
+// =====================================================================
+
+extern void begin_power_competition();
+extern int create_power_competition_player();
+extern void prepare_power_competition_camera();
+extern void wait_frames(int frames);
+extern int run_power_competition(int competition_id, int object_id);
+extern void despawn_player_object();
+extern void spawn_player_object();
+extern void respawn_field();
+extern void face_object_accessors(int player_accessor, int object_accessor, int immediate);
+extern void finish_power_competition(int object_id);
+
+config int BATTLE_COUNT;
+
+void special_spawn_condition(int param1){
+
+    int global_manager = get_module("GlobalManager");
+    int disp_manager = get_module("DisposManager");
+    int spawn_gimmick_magikarp = SysCall(0, 0x15, 0x1, global_manager, "MagikarpRescued");
+
+    if(spawn_gimmick_magikarp == 0) {
+        int obj_manager = get_module("ObjectManager");
+        int is_gimmick_magikarp_spawned = SysCall(0,0x15,10,obj_manager,0x36);
+        if (is_gimmick_magikarp_spawned == 0) {
+            SysCall(0,0x15,0x11,obj_manager,0x36);
+        }
+        int gimmick_magikarp_obj = configure_npc_and_get_accessor(0x36);
+        SysCall(0,0x15,0x2714,gimmick_magikarp_obj,1);
+        SysCall(0,0x15,0x15,gimmick_magikarp_obj,0);
+    }
+    else{
+        despawn(0x36);
+    }
+    return;
+}
+
+void turtwig_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x5,
+        0x9aa,
+        "11_10040",
+        "11_10050",
+        "11_10070",
+        "11_10090",
+        "11_10080"
+    );
+}
+
+void buneary_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x6,
+        0x9b9,
+        "11_10140",
+        "11_10050",
+        "11_10170",
+        "11_10190",
+        "11_10180"
+    );
+}
+
+void pachirisu_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x7,
+        0x9c8,
+        "11_10240",
+        "11_10250",
+        "11_10270",
+        "11_10290",
+        "11_10280"
+    );
+}
+
+void munchlax_dialog(int param_1){
+    errand_dialog(param_1,0x8,0xa4f, "11_10340", "11_10370","11_00420","11_10360", "11_10350");
+}
+
+void treecko_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x9,
+        0xc7a,
+        "11_10440",
+        "11_10450",
+        "11_10470",
+        "11_10490",
+        "11_10480"
+    );
+}
+
+void chimchar_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0xa,
+        0x99b,
+        "11_10540",
+        "11_10550",
+        "11_10570",
+        "11_10590",
+        "11_10580"
+    );
+}
+
+void magikarp_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0xb,
+        0xbb7,
+        "11_10640",
+        "11_10650",
+        "11_10670",
+        "11_10690",
+        "11_10680"
+    );
+}
+
+void lotad_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0xc,
+        0xaa9,
+        "11_10740",
+        "11_10750",
+        "11_10770",
+        "11_10790",
+        "11_10780"
+    );
+}
+
+void caterpie_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0xd,
+        0xb7b,
+        "11_10840",
+        "11_10850",
+        "11_10870",
+        "11_10890",
+        "11_10880"
+    );
+}
+
+void weedle_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0xe,
+        0xb8a,
+        "11_10940",
+        "11_10950",
+        "11_10970",
+        "11_10990",
+        "11_10980"
+    );
+}
+
+void event_bidoof_dialog(int param_1){
+    int object_id = 0xf;
+    int player = freeze_player();
+    int object_accessor = configure_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    int global_manager = get_module("GlobalManager");
+    int event_script = get_module("EventScript");
+    SysCall(0,0x15,0x28,object_accessor,0xa40,0,0x3f800000,0x3f800000);
+
+    if (is_friend(0x14) == 0){
+    // if mankey is not befriended abort dialog
+        show_npc_dialog(param_1,"11_90100");
+        end_event_script(param_1);
+    }
+    // vec3 commented out until supported
+
+    //vec3 object_position;
+    //vec3 object_rotation;
+    //SysCall(0,0x15,0x13,object_accessor,SysCall(3,1,object_position));
+    //SysCall(0,0x15,0x16,object_accessor,SysCall(3,1,object_rotation));
+
+    //TODO: beach_bidoof unlock
+    
+    int gf0004 = SysCall(0,0x15,1,global_manager,"GF0004");
+    if(gf0004 > 3){
+        show_npc_dialog(param_1,"11_90091");
+        end_event_script(param_1);
+    }
+    
+    int gf0005 = SysCall(0,0x15,1,global_manager,"GF0005");
+    if (gf0005 == 0){
+        show_npc_dialog(param_1,"11_90000");
+        SysCall(0,0x15,0,global_manager,"GF0005",1);
+    }
+
+    int item_kind = get_held_item_kind();
+    if(item_kind == 1){
+        if (gf0004 == 0){
+            show_npc_dialog(param_1,"11_90020");
+        }
+        else if (gf0004 == 1){
+            show_npc_dialog(param_1,"11_90040");
+        }
+        else if (gf0004 == 2){
+            show_npc_dialog(param_1,"11_90060");
+        }
+        else if (gf0004 == 3){
+            show_npc_dialog(param_1,"11_90080");
+        }
+        else{
+            show_npc_dialog(param_1,"01_00001");
+        }
+    }
+    else {
+        if (gf0004 == 0){
+            show_npc_dialog(param_1,"11_90010");
+        }
+        else if (gf0004 == 1){
+            show_npc_dialog(param_1,"11_90030");
+        }
+        else if (gf0004 == 2){
+            show_npc_dialog(param_1,"11_90050");
+        }
+        else if (gf0004 == 3){
+            show_npc_dialog(param_1,"11_90070");
+        }
+        else{
+            show_npc_dialog(param_1,"01_00001");
+        }
+        end_event_script(param_1);
+    }
+    FUN_00051500(0x3c);
+    FUN_00051e9c(0,0,0,0x3c);
+    int increased_gf0004 = gf0004 + 1;
+    SysCall(0,0x15,0,global_manager,"GF0004", increased_gf0004);
+    SysCall(0,0x15,0xca,event_script,0);
+
+    //vec3 player_position;
+    //vec3 player_rotation;
+    //SysCall(0,0x15,0x13,player,SysCall(3,1,player_position));
+    //SysCall(0,0x15,0x16,player,SysCall(3,1,player_rotation));
+
+    remove_held_item();
+    despawn_player_object();
+    spawn_player_object();
+    freeze_player();
+
+    if(increased_gf0004 == 1){
+        EA01_Z01_D04(param_1);
+    } else if(increased_gf0004 == 2){
+        EA01_Z01_D05(param_1);
+    } else if(increased_gf0004 == 3){
+        EA01_Z01_D06(param_1);
+    } else if(increased_gf0004 == 4){
+        EA01_Z01_D07(param_1);
+    }
+    remove_held_item();
+    player = freeze_player();
+    //SysCall(0,0x15,1,player,0);
+    //SysCall(0,0x15,7,player,player_position.x,player_position.y,player_position.z);
+    //SysCall(0,0x15,8,player,player_position.x,player_position.y,player_position.z);
+    //SysCall(0,0x15,0x22,player,player_position.x,player_position.y,player_position.z,1);
+    //SysCall(0,0x15,9,player,player_rotation.x,player_rotation.y,player_rotation.z);
+
+    int updated_gf0004 = SysCall(0,0x15,1,global_manager,"GF0004");
+
+    //TODO: replace with location checks
+    if(updated_gf0004==1){
+        unlock_pokemon(0x23);
+    } else if(updated_gf0004==2){
+        unlock_pokemon(0x24);
+    } else if(updated_gf0004==3){
+        unlock_pokemon(0x25);
+    }
+    respawn_field();
+    special_spawn_condition(param_1);
+    object_accessor = configure_npc_and_get_accessor(object_id);
+    //SysCall(0,0x15,7,object_accessor,object_position.x,object_position.y,object_position.z);
+    //SysCall(0,0x15,9,object_accessor,object_rotation.x,object_rotation.y,object_rotation.z);
+
+    face_object_accessors(player,object_accessor,1);
+    FUN_00051500(0x3c);
+    FUN_000500c8(0,0,0,0x3c);
+    SysCall(0,0x15,0x28,object_accessor,0xa40,0,0x3f800000,0x3f800000);
+
+    if (updated_gf0004 == 1) {
+    show_npc_dialog(param_1,"11_90030");
+  }
+  else if (updated_gf0004 == 2) {
+    show_npc_dialog(param_1,"11_90050");
+  }
+  else if (updated_gf0004 == 3) {
+    show_npc_dialog(param_1,"11_90070");
+  }
+  else if (updated_gf0004 == 4) {
+    show_npc_dialog(param_1,"11_90090");
+    unlock_pokemon(0x1b);
+    SysCall(0,0x15,0,global_manager,"f0101BippaFlag",1);
+  }
+  else {
+    show_npc_dialog(param_1,"01_00001");
+  }
+
+  if (3 < updated_gf0004) {
+  //TODO: check friendship location
+    friendship_banner("11_00490");
+
+    SysCall(0,0x15,0x14,global_manager,100);
+    FUN_00050124(0,0,0,0x3c);
+    complete_event();
+  }
+  end_event_script(param_1);
+    return;
+}
+
+void oddish_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x10,
+        0xb30,
+        "11_11040",
+        "11_11050",
+        "11_11070",
+        "11_11090",
+        "11_11080"
+    );
+}
+
+void shroomish_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x11,
+        0xb6c,
+        "11_11140",
+        "11_11150",
+        "11_11170",
+        "11_11190",
+        "11_11180"
+    );
+}
+
+void bonsly_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x12,
+        0xa22,
+        "11_11240",
+        "11_11250",
+        "11_11270",
+        "11_11290",
+        "11_11280"
+    );
+}
+
+void shinx_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x13,
+        0x1364,
+        "11_11340",
+        "11_11350",
+        "11_11370",
+        "11_11390",
+        "11_11380"
+    );
+}
+
+void mankey_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x14,
+        0xb21,
+        "11_11440",
+        "11_11450",
+        "11_11470",
+        "11_11480",
+        "11_11480"
+    );
+}
+
+void aipom_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x15,
+        0xa13,
+        "11_11540",
+        "11_11550",
+        "11_11570",
+        "11_11590",
+        "11_11580"
+    );
+}
+
+void spearow_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x16,
+        0x1193,
+        "11_11640",
+        "11_11650",
+        "11_11670",
+        "11_11690",
+        "11_11680"
+    );
+}
+
+void torterra_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x17,
+        0xbd5,
+        "11_11740",
+        "11_11750",
+        "11_11770",
+        "11_11790",
+        "11_11780"
+    );
+}
+
+void starly_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x18,
+        0xbe4,
+        "11_11840",
+        "11_11850",
+        "11_11870",
+        "11_11890",
+        "11_11880"
+    );
+}
+
+void butterfree_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x19,
+        0x1184,
+        "11_11940",
+        "11_11950",
+        "11_11970",
+        "11_11990",
+        "11_11980"
+    );
+}
+
+void tropius_dialog(int param_1){
+    errand_dialog(param_1,0x1a, 0xb99, "11_12040", "11_12070","11_00600","11_12060", "11_12050");
+}
+
+void bibarel_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x1b,
+        0xbf3,
+        "11_12140",
+        "11_12150",
+        "11_12170",
+        "11_12190",
+        "11_12180"
+    );
+}
+
+void ambipom_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x1c,
+        0xa04,
+        "11_12240",
+        "11_12250",
+        "11_12270",
+        "11_12290",
+        "11_12280"
+    );
+}
+
+void sudowoodo_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x1d,
+        0xf77,
+        "11_12340",
+        "11_12350",
+        "11_12370",
+        "11_12390",
+        "11_12380"
+    );
+}
+
+void scyther_dialog(int param_1){
+    power_competition_dialog_with_win_count_check(
+        param_1,
+        0x1e,
+        0xd3d,
+        "11_12440",
+        "11_12450",
+        "11_12470",
+        "11_12490",
+        "11_12480",
+        "11_12401",
+        "11_12400"
+    );
+}
+
+void leafeon_dialog(int param_1){
+    power_competition_dialog_with_friendship_count_check(
+        param_1,
+        0x1f,
+        0xde2,
+        0x14,
+        "11_12540",
+        "11_12550",
+        "11_12570",
+        "11_12590",
+        "11_12580",
+        "11_12501",
+        "11_12500"
+    );
+}
+
+void bidoof_dialog(int param_1){
+    int object_id = 0x23;
+    freeze_player();
+    int object_accessor = configure_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    SysCall(0,0x15,0x28,object_accessor,0xa42,0,0x3f800000,0x3f800000);
+    show_npc_dialog(param_1,"11_12720");
+    end_event_script(param_1);
+}
+
+void bidoof2_dialog(int param_1){
+    int object_id = 0x24;
+    freeze_player();
+    int object_accessor = configure_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    SysCall(0,0x15,0x28,object_accessor,0xa42,0,0x3f800000,0x3f800000);
+    show_npc_dialog(param_1,"11_12820");
+    end_event_script(param_1);
+}
+
+void bidoof3_dialog(int param_1){
+    int object_id = 0x25;
+    freeze_player();
+    int object_accessor = configure_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    SysCall(0,0x15,0x28,object_accessor,0xa42,0,0x3f800000,0x3f800000);
+    show_npc_dialog(param_1,"11_12920");
+    end_event_script(param_1);
+}
+
+void starly2_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x26,
+        0xbe4,
+        "11_13240",
+        "11_13250",
+        "11_13270",
+        "11_13290",
+        "11_13280"
+    );
+}
+
+void starly3_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x27,
+        0xbe4,
+        "11_13340",
+        "11_13350",
+        "11_13370",
+        "11_13390",
+        "11_13380"
+    );
+}
+
+void aipom2_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x28,
+        0xa13,
+        "11_13440",
+        "11_13450",
+        "11_13470",
+        "11_13490",
+        "11_13480"
+    );
+}
+
+void starly4_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x29,
+        0xbe4,
+        "11_13540",
+        "11_13550",
+        "11_13570",
+        "11_13590",
+        "11_13580"
+    );
+}
+
+void athletic_spearow_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x2a,
+        0x1193,
+        "11_13640",
+        "11_13650",
+        "11_13670",
+        "11_13690",
+        "11_13680"
+    );}
+
+void lotad2_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x2b,
+        0xaa9,
+        "11_13740",
+        "11_13750",
+        "11_13770",
+        "11_13790",
+        "11_13780"
+    );
+}
+
+void lotad3_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x2c,
+        0xaa9,
+        "11_13840",
+        "11_13850",
+        "11_13870",
+        "11_13890",
+        "11_13880"
+    );
+}
+
+void starly5_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x2d,
+        0xbe4,
+        "11_13940",
+        "11_13950",
+        "11_13970",
+        "11_13990",
+        "11_13980"
+    );
+}
+
+void buneary2_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x2e,
+        0x9b9,
+        "11_10140",
+        "11_10150",
+        "11_10170",
+        "11_10190",
+        "11_10180"
+    );
+}
+
+void shinx2_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x2f,
+        0x1364,
+        "11_14140",
+        "11_14150",
+        "11_14170",
+        "11_14190",
+        "11_14180"
+    );
+}
+
+void turtwig2_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x30,
+        0x9aa,
+        "11_10040",
+        "11_10050",
+        "11_10070",
+        "11_10090",
+        "11_10080"
+    );
+}
+
+void butterfree2_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x31,
+        0x1184,
+        "11_14340",
+        "11_14350",
+        "11_14370",
+        "11_14390",
+        "11_14380"
+    );
+}
+
+void munchlax2_dialog(int param_1){
+    errand_dialog(param_1,0x32,0xa4f, "11_10340", "11_10370","11_00420","11_10360", "11_10350");
+}
+
+void caterpie2_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x33,
+        0xb7b,
+        "11_14540",
+        "11_14550",
+        "11_14570",
+        "11_14590",
+        "11_14580"
+    );
+}
+
+void pachirisu2_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x34,
+        0x9c8,
+        "11_14640",
+        "11_14650",
+        "11_14670",
+        "11_14690",
+        "11_14680"
+    );
+}
+
+// =====================================================================
+// randomizer helpers
+// =====================================================================
+
+void power_competition_dialog(
+    int param_1,
+    int object_id,
+    int sound_id,
+    string question_dialog_id,
+    string decline_dialog_id,
+    string loss_dialog_id,
+    string first_win_dialog_id,
+    string repeat_win_dialog_id
+){
+    freeze_player();
+    configure_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    int response = show_yes_no_question(param_1,question_dialog_id);
+    if (response == 1) {
+        int hasWon = start_power_competition(param_1,0x0,object_id);
+        special_spawn_condition(param_1);
+        int object_accessor = get_object_accessor(param_1,object_id,1);
+        fade_in(0,0,0,0x3c);
+        SysCall(0,0x15,0x28,object_accessor,sound_id,0,0x3f800000,0x3f800000);
+        if (hasWon == -1) {
+            show_npc_dialog(param_1,loss_dialog_id);
+        }
+        else{
+            give_berries(hasWon);
+            if(is_location_checked(object_id) == false){
+              show_npc_dialog(param_1,first_win_dialog_id);
+              friendship_banner("11_00390");
+              check_location(object_id);
+            }
+            else{
+                show_npc_dialog(param_1,repeat_win_dialog_id);
+            }
+        }
+        complete_event();
+    }
+    else{
+        show_npc_dialog(param_1,decline_dialog_id);
+    }
+    end_event_script(param_1);
+    return;
+}
+
+void power_competition_dialog_with_win_count_check(
+    int param_1,
+    int object_id,
+    int sound_id,
+    string question_dialog_id,
+    string decline_dialog_id,
+    string loss_dialog_id,
+    string first_win_dialog_id,
+    string repeat_win_dialog_id,
+    string win_count_met_dialog_id,
+    string win_count_not_met_dialog_id
+){
+    freeze_player();
+    configure_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    int global_manager = get_module("GlobalManager");
+    int has_required_num = SysCall(0,0x15,1,global_manager,"f0101BattleCounter");
+    if(has_required_num == 1){
+        show_npc_dialog(param_1,win_count_met_dialog_id);
+        int response = show_yes_no_question(param_1,question_dialog_id);
+        if (response == 1) {
+            int hasWon = start_power_competition(param_1,0,object_id);
+            special_spawn_condition(param_1);
+            int object_accessor = get_object_accessor(param_1,object_id,1);
+            fade_in(0,0,0,0x3c);
+            SysCall(0,0x15,0x28,object_accessor,sound_id,0,0x3f800000,0x3f800000);
+            if (hasWon == -1) {
+                show_npc_dialog(param_1,loss_dialog_id);
+            }
+            else{
+                give_berries(hasWon);
+                if(is_location_checked(object_id) == false){
+                  show_npc_dialog(param_1,first_win_dialog_id);
+                  friendship_banner("11_00390");
+                  check_location(object_id);
+                }
+                else{
+                    show_npc_dialog(param_1,repeat_win_dialog_id);
+                }
+            }
+            complete_event();
+        }
+        else{
+            show_npc_dialog(param_1,decline_dialog_id);
+        }
+    }
+    else{
+        show_npc_dialog(param_1,win_count_not_met_dialog_id);
+    }
+    end_event_script(param_1);
+    return;
+}
+
+void power_competition_dialog_with_friendship_count_check(
+    int param_1,
+    int object_id,
+    int sound_id,
+    int friendship_count,
+    string question_dialog_id,
+    string decline_dialog_id,
+    string loss_dialog_id,
+    string first_win_dialog_id,
+    string repeat_win_dialog_id,
+    string friendship_count_met_dialog_id,
+    string friendship_count_not_met_dialog_id
+){
+    freeze_player();
+    configure_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    int global_manager = get_module("GlobalManager");
+    int friendship_num = SysCall(0,0x15,0x42,global_manager);
+    if(friendship_num >= friendship_count){
+        show_npc_dialog(param_1,friendship_count_met_dialog_id);
+        int response = show_yes_no_question(param_1,question_dialog_id);
+        if (response == 1) {
+            int hasWon = start_power_competition(param_1,0,object_id);
+            special_spawn_condition(param_1);
+            int object_accessor = get_object_accessor(param_1,object_id,1);
+            fade_in(0,0,0,0x3c);
+            SysCall(0,0x15,0x28,object_accessor,sound_id,0,0x3f800000,0x3f800000);
+            if (hasWon == -1) {
+                show_npc_dialog(param_1,loss_dialog_id);
+            }
+            else{
+                give_berries(hasWon);
+                if(is_location_checked(object_id) == false){
+                  show_npc_dialog(param_1,first_win_dialog_id);
+                  friendship_banner("11_00390");
+                  check_location(object_id);
+                }
+                else{
+                    show_npc_dialog(param_1,repeat_win_dialog_id);
+                }
+            }
+            complete_event();
+        }
+        else{
+            show_npc_dialog(param_1,decline_dialog_id);
+        }
+    }
+    else{
+        show_npc_dialog(param_1,friendship_count_not_met_dialog_id);
+    }
+    end_event_script(param_1);
+    return;
+}
+
+void errand_dialog(
+    int param_1,
+    int object_id,
+    int sound_id,
+    string no_hold_item_dialog_id,
+    string befriend_dialog_id,
+    string friendship_banner_id,
+    string already_befriended_id,
+    string wrong_item_id
+) {
+    freeze_player();
+    int object_accessor = configure_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    int global_manager = get_module("GlobalManager");
+    SysCall(0,0x15,0x28,object_accessor,sound_id,0,0x3f800000,0x3f800000);
+    int item_kind = get_held_item_kind();
+    if(item_kind == -1){
+        show_npc_dialog(param_1, no_hold_item_dialog_id);
+    }
+    else if (item_kind == 0x15){
+        if(is_location_checked(object_id) == false){
+            remove_held_item();
+            show_npc_dialog(param_1,befriend_dialog_id);
+            friendship_banner(friendship_banner_id);
+            check_location(object_id);
+        }
+        else {
+            show_npc_dialog(param_1,already_befriended_id);
+            remove_held_item();
+        }
+        give_berries(0x32);
+        complete_event();
+    } 
+    else {
+        show_npc_dialog(param_1, wrong_item_id);
+    }
+    end_event_script(param_1);
+    return;
+}
+
+
+int start_power_competition(int event_context, int competition_id, int object_id){
+    begin_power_competition();
+
+    int global_manager = get_module("GlobalManager");
+    int event_script = get_module("EventScript");
+    int dispos_manager = get_module("DisposManager");
+    int object_accessor = get_object_accessor(event_context,object_id,1);
+    int player_event_accessor = create_power_competition_player();
+
+    //vec3 object_position;
+    //vec3 player_position;
+
+    prepare_power_competition_camera();
+    //SysCall(0,0x15,0x13,object_accessor,SysCall(3,1,object_position));
+    //SysCall(0,0x15,0x13,player_event_accessor,SysCall(3,1,player_position));
+    SysCall(0,0x15,0xca,event_script,0x1e);
+    wait_frames(0x1e);
+
+    int dispos_id = SysCall(0,0x15,0xc,dispos_manager,object_id);
+    int result = run_power_competition(competition_id,object_id);
+    if (result == -1) {
+        reset_win_counter();
+    }
+    else{
+        SysCall(0,0x15,0x93,global_manager,dispos_id);
+        increment_win_counter();
+    }
+
+    despawn_player_object();
+    spawn_player_object();
+
+    int player_accessor = freeze_player();
+    //SysCall(0,0x15,7,player_accessor,player_position.x,player_position.y,player_position.z);
+    //SysCall(0,0x15,8,player_accessor,player_position.x,player_position.y,player_position.z);
+    //SysCall(0,0x15,0x22,player_accessor,player_position.x,player_position.y,player_position.z,1);
+    int player_state = SysCall(0,0x15,0x30,player_accessor);
+    if (player_state == 0) {
+        SysCall(0,0x15,2,player_accessor,0,0);
+    }
+    SysCall(0,0x15,0,player_accessor,0);
+    SysCall(0,0x15,0x8e,global_manager,dispos_id);
+
+    respawn_field();
+    configure_npc_and_get_accessor(object_id);
+    object_accessor = get_object_accessor(event_context,object_id,1);
+    //SysCall(0,0x15,7,object_accessor,object_position.x,object_position.y,object_position.z);
+    //SysCall(0,0x15,8,object_accessor,object_position.x,object_position.y,object_position.z);
+    //SysCall(0,0x15,0x22,object_accessor,object_position.x,object_position.y,object_position.z,1);
+
+    int object_state = SysCall(0,0x15,0x10,dispos_manager,object_id);
+    if (object_state == 0) {
+        SysCall(0,0x15,0x2a,object_accessor,5);
+    }
+    else{
+        SysCall(0,0x15,0x2a,object_accessor,10);
+        SysCall(0,0x15,0x2b,object_accessor,4);
+    }
+
+    face_object_accessors(player_accessor,object_accessor,1);
+    SysCall(0,0x15,0xca,event_script,-1);
+    SysCall(0,0x15,0xd7,event_script,object_id);
+    finish_power_competition(object_id);
+
+    return result;
+}
+
+void reset_win_counter(){
+    int global_manager = get_module("GlobalManager");
+    int counter_num = SysCall(0,0x15,0,global_manager,"f0101BattleCounterNum",0);
+    return;
+}
+
+void increment_win_counter(){
+    int global_manager = get_module("GlobalManager");
+    int counter_num = SysCall(0,0x15,1,global_manager,"f0101BattleCounterNum");
+    int increased_counter = counter_num + 1;
+
+    SysCall(0,0x15,0,global_manager,"f0101BattleCounterNum",increased_counter);
+    if (increased_counter >= BATTLE_COUNT) {
+        SysCall(0,6,increased_counter);
+        SysCall(0,6,BATTLE_COUNT);
+        SysCall(0,0x15,0,global_manager,"f0101BattleCounter",1);
+    }
+    return;
+}
+
+// there is an almost unused flag in each Pokemon Node that can be used instead of bestfriend checks
+// TODO: research and update for next breaking release
+bool is_location_checked(int obj_id){
+    return is_bestfriend(obj_id);
+}
+
+void check_location(int obj_id){
+    set_bestfriend(obj_id);
+    return;
+}
+
+bool is_bestfriend(int obj_id){
+    int global_manager = get_module("GlobalManager");
+    int disp_manager = get_module("DisposManager");
+    int friend_id = SysCall(0,0x15,0xe,disp_manager,obj_id);
+    int is_best_friend = SysCall(0,0x15,0x4b,global_manager,friend_id);
+    return is_best_friend == 1;
+}
+
+void AR01ZN01_INI(int param_1){
+    // activate logs
+    SysCall(0,7,1);
+
+    unlock_pokemon(0x24);
+
+    int event_script = get_module("EventScript");
+    SysCall(0,0x15,0x65,event_script,0,0,0,1);
+    FUN_0005acbc(0x4e23);
+    freeze_player();
+    FUN_00054494();
+    //SETGIMMICK();
+    //FUN_0005b6d8(param_1);
+    special_spawn_condition(param_1);
+    //FUN_0005c550(param_1);
+    FUN_00051f1c(0,0,0,0x1e);
+    //FUN_00054b44();
+    end_event_script(param_1);
+    return;
+}
+
+void AR01ZN01_DEF(int param_1){
+    // activate logs
+    SysCall(0,7,1);
+
+    FUN_0005acbc(0x4e23);
+    freeze_player();
+    FUN_00054494();
+    //SETGIMMICK();
+    //FUN_0005b6d8(param_1);
+    special_spawn_condition(param_1);
+    //FUN_0005c550(param_1);
+    FUN_00051f1c(0,0,0,0x1e);
+    //FUN_00054b44();
+    end_event_script(param_1);
+    return;
+}

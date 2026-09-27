@@ -1,0 +1,237 @@
+  [[tables]]
+  label = "AttractionRanking"
+
+  [[tables.rows]]
+  friendship_id = { value = 0 }
+  record_target = { value = 0x58c }
+  bonus_record_target = { value = 0x3CA }
+  unknown_0x0c = { value = 0x2 }
+  unknown_0x10 = { value = 0x64 }
+  unknown_0x14 = { value = 0 }
+  unknown_0x18 = { value = 0xB }
+
+  [[tables.rows]]
+  friendship_id = { value = 0 }
+  record_target = { value = 0x58c }
+  bonus_record_target = { value = 0x3CA }
+  unknown_0x0c = { value = 0x2 }
+  unknown_0x10 = { value = 0x64 }
+  unknown_0x14 = { value = 0 }
+  unknown_0x18 = { value = 0xB }
+
+  [[tables.rows]]
+  friendship_id = { value = 0 }
+  record_target = { value = 0x58c }
+  bonus_record_target = { value = 0x3CA }
+  unknown_0x0c = { value = 0x2 }
+  unknown_0x10 = { value = 0x64 }
+  unknown_0x14 = { value = 0 }
+  unknown_0x18 = { value = 0xB }
+
+  [[tables.rows]]
+  friendship_id = { value = 0 }
+  record_target = { value = 0x58c }
+  bonus_record_target = { value = 0x3CA }
+  unknown_0x0c = { value = 0x2 }
+  unknown_0x10 = { value = 0x64 }
+  unknown_0x14 = { value = 0 }
+  unknown_0x18 = { value = 0xB }
+
+  [[tables.rows]]
+  friendship_id = { value = 0 }
+  record_target = { value = 0x58c }
+  bonus_record_target = { value = 0x3CA }
+  unknown_0x0c = { value = 0x2 }
+  unknown_0x10 = { value = 0x64 }
+  unknown_0x14 = { value = 0 }
+  unknown_0x18 = { value = 0xB }
+
+  [[tables.rows]]
+  friendship_id = { value = 0 }
+  record_target = { value = 0x58c }
+  bonus_record_target = { value = 0x3CA }
+  unknown_0x0c = { value = 0x2 }
+  unknown_0x10 = { value = 0x64 }
+  unknown_0x14 = { value = 0 }
+  unknown_0x18 = { value = 0xB }
+  
+  [[tables.rows]]
+  friendship_id = { value = 0 }
+  record_target = { value = 0x58c }
+  bonus_record_target = { value = 0x3CA }
+  unknown_0x0c = { value = 0x2 }
+  unknown_0x10 = { value = 0x64 }
+  unknown_0x14 = { value = 0 }
+  unknown_0x18 = { value = 0xB }
+
+  [[tables.rows]]
+  friendship_id = { value = 0 }
+  record_target = { value = 0x58c }
+  bonus_record_target = { value = 0x3CA }
+  unknown_0x0c = { value = 0x2 }
+  unknown_0x10 = { value = 0x64 }
+  unknown_0x14 = { value = 0 }
+  unknown_0x18 = { value = 0xB }
+  
+  [[tables.rows]]
+  friendship_id = { value = 0 }
+  record_target = { value = 0x58c }
+  bonus_record_target = { value = 0x3CA }
+  unknown_0x0c = { value = 0x2 }
+  unknown_0x10 = { value = 0x64 }
+  unknown_0x14 = { value = 0 }
+  unknown_0x18 = { value = 0xB }
+
+  [[tables.rows]]
+  friendship_id = { value = 0 }
+  record_target = { value = 0x58c }
+  bonus_record_target = { value = 0x3CA }
+  unknown_0x0c = { value = 0x2 }
+  unknown_0x10 = { value = 0x64 }
+  unknown_0x14 = { value = 0 }
+  unknown_0x18 = { value = 0xB }
+  
+  [[tables.rows]]
+  friendship_id = { value = 0 }
+  record_target = { value = 0x58c }
+  bonus_record_target = { value = 0x3CA }
+  unknown_0x0c = { value = 0x2 }
+  unknown_0x10 = { value = 0x64 }
+  unknown_0x14 = { value = 0 }
+  unknown_0x18 = { value = 0xB }
+
+  [[tables.rows]]
+  friendship_id = { value = 0 }
+  record_target = { value = 0x58c }
+  bonus_record_target = { value = 0x3CA }
+  unknown_0x0c = { value = 0x2 }
+  unknown_0x10 = { value = 0x64 }
+  unknown_0x14 = { value = 0 }
+  unknown_0x18 = { value = 0xB }
+  
+  [[tables.rows]]
+  friendship_id = { value = 0 }
+  record_target = { value = 0x58c }
+  bonus_record_target = { value = 0x3CA }
+  unknown_0x0c = { value = 0x2 }
+  unknown_0x10 = { value = 0x64 }
+  unknown_0x14 = { value = 0 }
+  unknown_0x18 = { value = 0xB }
+
+  [[tables.rows]]
+  friendship_id = { value = 0 }
+  record_target = { value = 0x58c }
+  bonus_record_target = { value = 0x3CA }
+  unknown_0x0c = { value = 0x2 }
+  unknown_0x10 = { value = 0x64 }
+  unknown_0x14 = { value = 0 }
+  unknown_0x18 = { value = 0xB }
+  
+  [[tables.rows]]
+  friendship_id = { value = 0 }
+  record_target = { value = 0x58c }
+  bonus_record_target = { value = 0x3CA }
+  unknown_0x0c = { value = 0x2 }
+  unknown_0x10 = { value = 0x64 }
+  unknown_0x14 = { value = 0 }
+  unknown_0x18 = { value = 0xB }
+
+  [[tables.rows]]
+  friendship_id = { value = 0 }
+  record_target = { value = 0x58c }
+  bonus_record_target = { value = 0x3CA }
+  unknown_0x0c = { value = 0x2 }
+  unknown_0x10 = { value = 0x64 }
+  unknown_0x14 = { value = 0 }
+  unknown_0x18 = { value = 0xB }
+  
+  [[tables.rows]]
+  friendship_id = { value = 0 }
+  record_target = { value = 0x58c }
+  bonus_record_target = { value = 0x3CA }
+  unknown_0x0c = { value = 0x2 }
+  unknown_0x10 = { value = 0x64 }
+  unknown_0x14 = { value = 0 }
+  unknown_0x18 = { value = 0xB }
+
+  [[tables.rows]]
+  friendship_id = { value = 0 }
+  record_target = { value = 0x58c }
+  bonus_record_target = { value = 0x3CA }
+  unknown_0x0c = { value = 0x2 }
+  unknown_0x10 = { value = 0x64 }
+  unknown_0x14 = { value = 0 }
+  unknown_0x18 = { value = 0xB }
+  
+  [[tables.rows]]
+  friendship_id = { value = 0 }
+  record_target = { value = 0x58c }
+  bonus_record_target = { value = 0x3CA }
+  unknown_0x0c = { value = 0x2 }
+  unknown_0x10 = { value = 0x64 }
+  unknown_0x14 = { value = 0 }
+  unknown_0x18 = { value = 0xB }
+
+  [[tables.rows]]
+  friendship_id = { value = 0 }
+  record_target = { value = 0x58c }
+  bonus_record_target = { value = 0x3CA }
+  unknown_0x0c = { value = 0x2 }
+  unknown_0x10 = { value = 0x64 }
+  unknown_0x14 = { value = 0 }
+  unknown_0x18 = { value = 0xB }
+  
+  [[tables.rows]]
+  friendship_id = { value = 0 }
+  record_target = { value = 0x58c }
+  bonus_record_target = { value = 0x3CA }
+  unknown_0x0c = { value = 0x2 }
+  unknown_0x10 = { value = 0x64 }
+  unknown_0x14 = { value = 0 }
+  unknown_0x18 = { value = 0xB }
+
+  [[tables.rows]]
+  friendship_id = { value = 0 }
+  record_target = { value = 0x58c }
+  bonus_record_target = { value = 0x3CA }
+  unknown_0x0c = { value = 0x2 }
+  unknown_0x10 = { value = 0x64 }
+  unknown_0x14 = { value = 0 }
+  unknown_0x18 = { value = 0xB }
+  
+  [[tables.rows]]
+  friendship_id = { value = 0 }
+  record_target = { value = 0x58c }
+  bonus_record_target = { value = 0x3CA }
+  unknown_0x0c = { value = 0x2 }
+  unknown_0x10 = { value = 0x64 }
+  unknown_0x14 = { value = 0 }
+  unknown_0x18 = { value = 0xB }
+
+  [[tables.rows]]
+  friendship_id = { value = 0 }
+  record_target = { value = 0x58c }
+  bonus_record_target = { value = 0x3CA }
+  unknown_0x0c = { value = 0x2 }
+  unknown_0x10 = { value = 0x64 }
+  unknown_0x14 = { value = 0 }
+  unknown_0x18 = { value = 0xB }
+
+    [[tables.rows]]
+  friendship_id = { value = 0 }
+  record_target = { value = 0x58c }
+  bonus_record_target = { value = 0x3CA }
+  unknown_0x0c = { value = 0x2 }
+  unknown_0x10 = { value = 0x64 }
+  unknown_0x14 = { value = 0 }
+  unknown_0x18 = { value = 0xB }
+
+  [[tables.rows]]
+  friendship_id = { value = 0 }
+  record_target = { value = 0x58c }
+  bonus_record_target = { value = 0x3CA }
+  unknown_0x0c = { value = 0x2 }
+  unknown_0x10 = { value = 0x64 }
+  unknown_0x14 = { value = 0 }
+  unknown_0x18 = { value = 0xB }
+  

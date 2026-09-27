@@ -1,0 +1,30 @@
+[[removes]]
+table = "EnterZoneScriptList"
+row = 0
+[[removes]]
+table = "EnterZoneScriptList"
+row = 1
+[[removes]]
+table = "EnterZoneScriptList"
+row = 3
+
+[[edits]]
+table = "EnterZoneScriptList"
+row = 2
+
+[edits.set]
+medium_chapter = { value = 0x0 }
+
+[[edits]]
+table = "ReplaceScriptList"
+row = 0
+
+[edits.set]
+medium_chapter = { value = 0xffff }
+
+[[removes]]
+table = "ReplaceScriptList"
+row = 1
+[[removes]]
+table = "ReplaceScriptList"
+row = 2

@@ -22,6 +22,19 @@ jobs:
       - name: Check formatting
         run: cargo fmt --all --check
 
+  project:
+    name: Bundled project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7.0.1
+
+      - name: Stage validation configuration
+        run: cp ci/project-check-config.toml bundled-project/config.toml
+
+      - name: Check bundled project
+        run: cargo run --locked -p pokeparkrando-core --example check_bundled_project
+
   test:
     name: Test (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
