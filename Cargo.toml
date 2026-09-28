@@ -11,7 +11,7 @@ edition = "2024"
 rust-version = "1.98"
 
 [workspace.dependencies]
-parkforge = { git = "https://github.com/Mekurushi/parkforge.git", rev = "f3df5c23036d31388cb2c6c44f2d75d7a8c6dde5" }
+parkforge = { git = "https://github.com/Mekurushi/parkforge.git", rev = "702cc81245bfe60317ea18bc23b0b838150ecb4e" }
 
 [workspace.lints.rust]
 let_underscore_drop = "deny"

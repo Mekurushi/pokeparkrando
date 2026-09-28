@@ -459,12 +459,13 @@ checksum = "13c45bb4a6ae1280ec0803b1ef9d3455eb50f01efbbe1447ab020f1d54fba9d8"
 [[package]]
 name = "parkforge"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/parkforge.git?rev=f3df5c23036d31388cb2c6c44f2d75d7a8c6dde5#f3df5c23036d31388cb2c6c44f2d75d7a8c6dde5"
+source = "git+https://github.com/Mekurushi/parkforge.git?rev=702cc81245bfe60317ea18bc23b0b838150ecb4e#702cc81245bfe60317ea18bc23b0b838150ecb4e"
 dependencies = [
  "parkforge-build",
  "parkforge-game-tree",
  "parkforge-project",
  "parkforge-types",
+ "parkforge-wii-disc",
  "tempfile",
  "thiserror 2.0.21",
 ]
@@ -472,16 +473,16 @@ dependencies = [
 [[package]]
 name = "parkforge-build"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/parkforge.git?rev=f3df5c23036d31388cb2c6c44f2d75d7a8c6dde5#f3df5c23036d31388cb2c6c44f2d75d7a8c6dde5"
+source = "git+https://github.com/Mekurushi/parkforge.git?rev=702cc81245bfe60317ea18bc23b0b838150ecb4e#702cc81245bfe60317ea18bc23b0b838150ecb4e"
 dependencies = [
  "fsc_compiler",
  "fsc_diagnostics",
  "fsc_patcher",
+ "parkforge-staging",
  "parkforge-types",
  "rlb-domain",
  "serde",
  "serde_yaml_ng",
- "tempfile",
  "thiserror 2.0.21",
  "toml",
  "walkdir",
@@ -490,9 +491,10 @@ dependencies = [
 [[package]]
 name = "parkforge-game-tree"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/parkforge.git?rev=f3df5c23036d31388cb2c6c44f2d75d7a8c6dde5#f3df5c23036d31388cb2c6c44f2d75d7a8c6dde5"
+source = "git+https://github.com/Mekurushi/parkforge.git?rev=702cc81245bfe60317ea18bc23b0b838150ecb4e#702cc81245bfe60317ea18bc23b0b838150ecb4e"
 dependencies = [
  "nlzss11",
+ "parkforge-staging",
  "parkforge-wii-disc",
  "tempfile",
  "thiserror 2.0.21",
@@ -503,7 +505,7 @@ dependencies = [
 [[package]]
 name = "parkforge-project"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/parkforge.git?rev=f3df5c23036d31388cb2c6c44f2d75d7a8c6dde5#f3df5c23036d31388cb2c6c44f2d75d7a8c6dde5"
+source = "git+https://github.com/Mekurushi/parkforge.git?rev=702cc81245bfe60317ea18bc23b0b838150ecb4e#702cc81245bfe60317ea18bc23b0b838150ecb4e"
 dependencies = [
  "parkforge-types",
  "serde",
@@ -513,9 +515,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "parkforge-staging"
+version = "0.1.0"
+source = "git+https://github.com/Mekurushi/parkforge.git?rev=702cc81245bfe60317ea18bc23b0b838150ecb4e#702cc81245bfe60317ea18bc23b0b838150ecb4e"
+dependencies = [
+ "tempfile",
+ "thiserror 2.0.21",
+]
+
+[[package]]
 name = "parkforge-types"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/parkforge.git?rev=f3df5c23036d31388cb2c6c44f2d75d7a8c6dde5#f3df5c23036d31388cb2c6c44f2d75d7a8c6dde5"
+source = "git+https://github.com/Mekurushi/parkforge.git?rev=702cc81245bfe60317ea18bc23b0b838150ecb4e#702cc81245bfe60317ea18bc23b0b838150ecb4e"
 dependencies = [
  "relative-path",
  "serde",
@@ -525,7 +536,7 @@ dependencies = [
 [[package]]
 name = "parkforge-wii-disc"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/parkforge.git?rev=f3df5c23036d31388cb2c6c44f2d75d7a8c6dde5#f3df5c23036d31388cb2c6c44f2d75d7a8c6dde5"
+source = "git+https://github.com/Mekurushi/parkforge.git?rev=702cc81245bfe60317ea18bc23b0b838150ecb4e#702cc81245bfe60317ea18bc23b0b838150ecb4e"
 dependencies = [
  "binrw 0.14.2",
  "disc_riider",

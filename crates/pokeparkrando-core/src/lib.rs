@@ -1,3 +1,3 @@
 mod parkforge;
 
-pub use parkforge::check_project;
+pub use parkforge::{BuildConfig, BuildConfigValue, check_project};

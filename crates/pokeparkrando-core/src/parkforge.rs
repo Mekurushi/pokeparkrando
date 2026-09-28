@@ -1,11 +1,14 @@
 use std::path::Path;
 
+pub use parkforge::{BuildConfig, BuildConfigValue};
+
 pub fn check_project<D>(
     project_root: &Path,
+    config: &BuildConfig,
     diagnostics: D,
 ) -> parkforge::Result<parkforge::ProjectCheckReport>
 where
     D: for<'a> FnMut(&parkforge::GameId, parkforge::BuildDiagnostic<'a>),
 {
-    parkforge::check(project_root, diagnostics)
+    parkforge::check_with_config(project_root, config, diagnostics)
 }
