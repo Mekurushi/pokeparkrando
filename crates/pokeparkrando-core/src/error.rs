@@ -5,6 +5,15 @@ use thiserror::Error;
 use crate::parkforge::{self, GameId};
 
 #[derive(Debug, Error)]
+pub enum BundledProjectError {
+    #[error("embedded project configuration is invalid: {source}")]
+    ParseConfig {
+        #[source]
+        source: Box<parkforge::ProjectError>,
+    },
+}
+
+#[derive(Debug, Error)]
 pub enum ImportOriginalError {
     #[error("failed to identify ISO {}: {source}", input.display())]
     Identify {

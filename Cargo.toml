@@ -11,7 +11,7 @@ edition = "2024"
 rust-version = "1.98"
 
 [workspace.dependencies]
-parkforge = { git = "https://github.com/Mekurushi/parkforge.git", rev = "702cc81245bfe60317ea18bc23b0b838150ecb4e" }
+parkforge = { git = "https://github.com/Mekurushi/parkforge.git", rev = "680281123c3bb4afd96ee69aafa160fd0bb78eb6" }
 thiserror = "2.0.18"
 
 [workspace.lints.rust]

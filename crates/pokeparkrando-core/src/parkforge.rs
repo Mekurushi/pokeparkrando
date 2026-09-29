@@ -1,7 +1,7 @@
 use std::path::Path;
 
 pub use parkforge::{BuildConfig, BuildConfigValue, GameId};
-pub(crate) use parkforge::{Error, ExtractionProgress};
+pub(crate) use parkforge::{Error, ExtractionProgress, ProjectConfig, ProjectError};
 
 pub fn check_project<D>(
     project_root: &Path,
