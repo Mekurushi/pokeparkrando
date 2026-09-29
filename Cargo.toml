@@ -12,11 +12,7 @@ edition = "2024"
 rust-version = "1.98"
 
 [workspace.dependencies]
-eframe = "0.36.2"
-egui_extras = "0.36.2"
-parkforge = { git = "https://github.com/Mekurushi/parkforge.git", rev = "680281123c3bb4afd96ee69aafa160fd0bb78eb6" }
 pokeparkrando-core = { path = "crates/pokeparkrando-core" }
-rfd = "0.17.2"
 thiserror = "2.0.18"
 
 [workspace.lints.rust]

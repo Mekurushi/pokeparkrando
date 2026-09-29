@@ -5,7 +5,7 @@ edition.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-parkforge.workspace = true
+parkforge = { git = "https://github.com/Mekurushi/parkforge.git", rev = "680281123c3bb4afd96ee69aafa160fd0bb78eb6" }
 thiserror.workspace = true
 
 [lints]

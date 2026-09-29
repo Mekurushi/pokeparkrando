@@ -5,7 +5,9 @@ edition.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-eframe.workspace = true
+eframe = { version = "0.36.2", features = ["persistence"] }
+rfd = "0.17.2"
+thiserror.workspace = true
 
 [lints]
 workspace = true
