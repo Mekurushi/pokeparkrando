@@ -4,6 +4,8 @@ use eframe::{CreationContext, Storage, egui};
 use rfd::FileDialog;
 
 use crate::APP_NAME;
+use crate::patcher_state::PatcherState;
+use crate::patcher_view;
 use crate::workspace::Workspace;
 use crate::workspace_state::WorkspaceState;
 use crate::workspace_view::{self, WorkspaceAction};
@@ -12,6 +14,7 @@ const WORKSPACE_KEY: &str = "workspace";
 
 pub(crate) struct PokeparkRandoApp {
     workspace_state: WorkspaceState,
+    patcher_state: PatcherState,
 }
 
 impl PokeparkRandoApp {
@@ -28,7 +31,13 @@ impl PokeparkRandoApp {
             },
             None => WorkspaceState::required(executable_directory(), None),
         };
-        Self { workspace_state }
+        let patcher_state = workspace_state
+            .workspace()
+            .map_or(PatcherState::Unavailable, PatcherState::load);
+        Self {
+            workspace_state,
+            patcher_state,
+        }
     }
 
     fn handle_workspace_action(&mut self, action: WorkspaceAction, frame: &mut eframe::Frame) {
@@ -68,6 +77,7 @@ impl PokeparkRandoApp {
             }
         };
 
+        self.patcher_state = PatcherState::load(&workspace);
         self.workspace_state = WorkspaceState::ready(workspace);
         if let Some(storage) = frame.storage_mut() {
             store_workspace(storage, self.persisted_workspace());
@@ -82,8 +92,11 @@ impl PokeparkRandoApp {
 
 impl eframe::App for PokeparkRandoApp {
     fn ui(&mut self, ui: &mut egui::Ui, frame: &mut eframe::Frame) {
-        let workspace = egui::Panel::top("workspace")
-            .show(ui, |ui| workspace_view::show(ui, &self.workspace_state));
+        let workspace = egui::Panel::top("workspace").show(ui, |ui| {
+            let action = workspace_view::show(ui, &self.workspace_state);
+            patcher_view::show_readiness(ui, &self.patcher_state);
+            action
+        });
         if let Some(action) = workspace.inner {
             self.handle_workspace_action(action, frame);
         }
@@ -92,8 +105,12 @@ impl eframe::App for PokeparkRandoApp {
             let _heading = ui.heading(egui::RichText::new(APP_NAME).strong().size(19.0));
             let _label = if self.workspace_state.workspace().is_none() {
                 ui.label(egui::RichText::new("Choose a Workspace to continue").size(16.0))
-            } else {
+            } else if let Some(error) = self.patcher_state.error() {
+                ui.colored_label(ui.visuals().error_fg_color, error)
+            } else if self.patcher_state.patcher().is_some() {
                 ui.label("Import prototype WIP")
+            } else {
+                ui.label("Patcher unavailable")
             };
         });
     }

@@ -21,4 +21,11 @@ impl BundledProject {
     pub fn game_ids(&self) -> impl Iterator<Item = &GameId> {
         self.config.game_ids()
     }
+
+    pub(crate) fn game_display_name(&self, game_id: &GameId) -> Option<&str> {
+        self.config
+            .games
+            .get(game_id)
+            .and_then(|game| game.display_name.as_deref())
+    }
 }

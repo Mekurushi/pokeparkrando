@@ -4,3 +4,9 @@ version = "0.1.0"
 
 [games.R8AJ01]
 display-name = "PokePark Wii (Japan)"
+
+[games.R8AE01]
+display-name = "PokePark Wii (NA)"
+
+[games.R8AP01]
+display-name = "PokePark Wii (PAL)"

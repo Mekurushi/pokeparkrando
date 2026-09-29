@@ -26,6 +26,10 @@ impl Patcher {
         self.project.game_ids()
     }
 
+    pub fn game_display_name(&self, game_id: &GameId) -> Option<&str> {
+        self.project.game_display_name(game_id)
+    }
+
     pub fn original_readiness(&self, game_id: &GameId) -> io::Result<OriginalReadiness> {
         original_readiness(&self.workspace_root, game_id)
     }
