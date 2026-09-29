@@ -1,19 +1,9 @@
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use eframe::egui;
 
 use crate::workspace::Workspace;
-
-pub(crate) enum WorkspaceState {
-    Required {
-        suggested: Option<PathBuf>,
-        error: Option<String>,
-    },
-    Ready {
-        workspace: Workspace,
-        error: Option<String>,
-    },
-}
+use crate::workspace_state::WorkspaceState;
 
 #[derive(Clone, Copy)]
 pub(crate) enum WorkspaceAction {
@@ -21,52 +11,12 @@ pub(crate) enum WorkspaceAction {
     ChooseDirectory,
 }
 
-impl WorkspaceState {
-    pub(crate) fn required(suggested: Option<PathBuf>, error: Option<String>) -> Self {
-        Self::Required { suggested, error }
-    }
-
-    pub(crate) fn ready(workspace: Workspace) -> Self {
-        Self::Ready {
-            workspace,
-            error: None,
+pub(crate) fn show(ui: &mut egui::Ui, state: &WorkspaceState) -> Option<WorkspaceAction> {
+    match state {
+        WorkspaceState::Required { suggested, error } => {
+            show_required(ui, suggested.as_deref(), error.as_deref())
         }
-    }
-
-    pub(crate) fn show(&self, ui: &mut egui::Ui) -> Option<WorkspaceAction> {
-        match self {
-            Self::Required { suggested, error } => {
-                show_required(ui, suggested.as_deref(), error.as_deref())
-            }
-            Self::Ready { workspace, error } => show_ready(ui, workspace, error.as_deref()),
-        }
-    }
-
-    pub(crate) fn workspace(&self) -> Option<&Workspace> {
-        match self {
-            Self::Required { .. } => None,
-            Self::Ready { workspace, .. } => Some(workspace),
-        }
-    }
-
-    pub(crate) fn suggested(&self) -> Option<&Path> {
-        match self {
-            Self::Required { suggested, .. } => suggested.as_deref(),
-            Self::Ready { .. } => None,
-        }
-    }
-
-    pub(crate) fn browse_directory(&self) -> Option<&Path> {
-        match self {
-            Self::Required { suggested, .. } => suggested.as_deref(),
-            Self::Ready { workspace, .. } => Some(workspace.root()),
-        }
-    }
-
-    pub(crate) fn set_error(&mut self, message: String) {
-        match self {
-            Self::Required { error, .. } | Self::Ready { error, .. } => *error = Some(message),
-        }
+        WorkspaceState::Ready { workspace, error } => show_ready(ui, workspace, error.as_deref()),
     }
 }
 
