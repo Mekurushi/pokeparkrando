@@ -2,8 +2,7 @@ use std::path::Path;
 
 use eframe::egui;
 
-use crate::workspace::Workspace;
-use crate::workspace_state::WorkspaceState;
+use super::{Workspace, WorkspaceState};
 
 #[derive(Clone, Copy)]
 pub(crate) enum WorkspaceAction {

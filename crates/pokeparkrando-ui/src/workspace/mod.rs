@@ -2,6 +2,12 @@ use std::path::{Path, PathBuf};
 
 use thiserror::Error;
 
+mod state;
+mod view;
+
+pub(crate) use state::WorkspaceState;
+pub(crate) use view::{WorkspaceAction, WorkspaceView};
+
 #[derive(Debug, Clone)]
 pub(crate) struct Workspace {
     root: PathBuf,

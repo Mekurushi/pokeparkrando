@@ -1,7 +1,7 @@
 use eframe::egui;
 use pokeparkrando_core::OriginalReadiness;
 
-use crate::patcher_state::PatcherState;
+use super::PatcherState;
 
 pub(crate) struct PatcherView<'a> {
     state: &'a PatcherState,

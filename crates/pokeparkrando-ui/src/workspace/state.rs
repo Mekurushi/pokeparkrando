@@ -1,6 +1,6 @@
 use std::path::{Path, PathBuf};
 
-use crate::workspace::Workspace;
+use super::Workspace;
 
 pub(crate) enum WorkspaceState {
     Required {

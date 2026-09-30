@@ -1,11 +1,8 @@
 use eframe::egui;
 
 mod app;
-mod patcher_state;
-mod patcher_view;
+mod patcher;
 mod workspace;
-mod workspace_state;
-mod workspace_view;
 
 use app::PokeparkRandoApp;
 

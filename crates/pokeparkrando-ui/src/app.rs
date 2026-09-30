@@ -4,11 +4,8 @@ use eframe::{CreationContext, Storage, egui};
 use rfd::FileDialog;
 
 use crate::APP_NAME;
-use crate::patcher_state::PatcherState;
-use crate::patcher_view::PatcherView;
-use crate::workspace::Workspace;
-use crate::workspace_state::WorkspaceState;
-use crate::workspace_view::{WorkspaceAction, WorkspaceView};
+use crate::patcher::{PatcherState, PatcherView};
+use crate::workspace::{Workspace, WorkspaceAction, WorkspaceState, WorkspaceView};
 
 const WORKSPACE_KEY: &str = "workspace";
 
