@@ -25,6 +25,13 @@ pub enum ImportOriginalError {
     #[error("game revision {game_id} is not supported")]
     UnsupportedGame { game_id: GameId },
 
+    #[error("failed to create original directory {}: {source}", path.display())]
+    CreateOriginalDirectory {
+        path: PathBuf,
+        #[source]
+        source: std::io::Error,
+    },
+
     #[error(
         "failed to extract ISO {} to {}: {source}",
         input.display(),

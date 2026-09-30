@@ -5,10 +5,10 @@ use rfd::FileDialog;
 
 use crate::APP_NAME;
 use crate::patcher_state::PatcherState;
-use crate::patcher_view;
+use crate::patcher_view::PatcherView;
 use crate::workspace::Workspace;
 use crate::workspace_state::WorkspaceState;
-use crate::workspace_view::{self, WorkspaceAction};
+use crate::workspace_view::{WorkspaceAction, WorkspaceView};
 
 const WORKSPACE_KEY: &str = "workspace";
 
@@ -93,8 +93,8 @@ impl PokeparkRandoApp {
 impl eframe::App for PokeparkRandoApp {
     fn ui(&mut self, ui: &mut egui::Ui, frame: &mut eframe::Frame) {
         let workspace = egui::Panel::top("workspace").show(ui, |ui| {
-            let action = workspace_view::show(ui, &self.workspace_state);
-            patcher_view::show_readiness(ui, &self.patcher_state);
+            let action = WorkspaceView::new(&self.workspace_state, true).show(ui);
+            PatcherView::new(&self.patcher_state).show(ui);
             action
         });
         if let Some(action) = workspace.inner {

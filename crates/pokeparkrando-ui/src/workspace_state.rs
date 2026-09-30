@@ -51,4 +51,10 @@ impl WorkspaceState {
             Self::Required { error, .. } | Self::Ready { error, .. } => *error = Some(message),
         }
     }
+
+    pub(crate) fn error(&self) -> Option<&str> {
+        match self {
+            Self::Required { error, .. } | Self::Ready { error, .. } => error.as_deref(),
+        }
+    }
 }

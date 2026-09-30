@@ -50,7 +50,14 @@ where
         return Err(ImportOriginalError::UnsupportedGame { game_id });
     }
 
-    let destination = workspace_root.join("original").join(game_id.as_str());
+    let original_root = workspace_root.join("original");
+    fs::create_dir_all(&original_root).map_err(|source| {
+        ImportOriginalError::CreateOriginalDirectory {
+            path: original_root.clone(),
+            source,
+        }
+    })?;
+    let destination = original_root.join(game_id.as_str());
     parkforge::extract_to(input_iso, &destination, |event| {
         progress(map_extraction_progress(event));
     })
