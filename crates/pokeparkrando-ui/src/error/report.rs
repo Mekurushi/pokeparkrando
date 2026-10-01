@@ -1,3 +1,7 @@
+use pokeparkrando_core::ImportOriginalError;
+
+use super::AppError;
+use crate::patcher::PatcherError;
 use crate::workspace::WorkspaceError;
 
 pub(super) struct ErrorReport {
@@ -6,14 +10,88 @@ pub(super) struct ErrorReport {
     pub(super) details: Option<String>,
 }
 
-impl From<WorkspaceError> for ErrorReport {
-    fn from(error: WorkspaceError) -> Self {
+impl From<AppError> for ErrorReport {
+    fn from(error: AppError) -> Self {
+        match error {
+            AppError::Workspace(error) => Self::from_workspace(error),
+            AppError::Patcher(error) => Self::from_patcher(error),
+        }
+    }
+}
+
+impl ErrorReport {
+    fn from_workspace(error: WorkspaceError) -> Self {
         match error {
             WorkspaceError::NotDirectory { path } => Self {
                 title: "Workspace unavailable".to_owned(),
-                message: "The selected workspace is not an existing directory.".to_owned(),
+                message: "The selected workspace is not an existing directory".to_owned(),
                 details: Some(format!("Workspace: {}", path.display())),
             },
+        }
+    }
+
+    fn from_patcher(error: PatcherError) -> Self {
+        match error {
+            PatcherError::Load(error) => Self {
+                title: "Patcher unavailable".to_owned(),
+                message: "The patch data could not be loaded".to_owned(),
+                details: Some(error.to_string()),
+            },
+            PatcherError::Readiness { game_id, source } => Self {
+                title: "Could not check original game".to_owned(),
+                message: format!(
+                    "The original files for game revision {game_id} could not be checked"
+                ),
+                details: Some(source.to_string()),
+            },
+            PatcherError::Import(error) => Self::from_import(error),
+            PatcherError::StartImport(error) => Self {
+                title: "Could not start import".to_owned(),
+                message: "The original ISO import worker could not be started".to_owned(),
+                details: Some(error.to_string()),
+            },
+            PatcherError::ImportStopped => Self {
+                title: "Import stopped unexpectedly".to_owned(),
+                message: "The original ISO import ended before successfully finishing".to_owned(),
+                details: None,
+            },
+        }
+    }
+
+    fn from_import(error: ImportOriginalError) -> Self {
+        match error {
+            ImportOriginalError::UnsupportedNkitIso { input } => Self {
+                title: "Unsupported disc image".to_owned(),
+                message: "NKit images are not supported. Use a clean standard Wii ISO instead"
+                    .to_owned(),
+                details: Some(format!("ISO: {}", input.display())),
+            },
+            ImportOriginalError::InvalidGameId { input, raw } => Self {
+                title: "Invalid disc image".to_owned(),
+                message: "The selected ISO does not contain a valid Wii game ID".to_owned(),
+                details: Some(format!("ISO: {}\nRaw game ID: {raw:?}", input.display())),
+            },
+            ImportOriginalError::UnsupportedGame { game_id } => Self {
+                title: "Unsupported game revision".to_owned(),
+                message: format!("Game revision {game_id} is not supported"),
+                details: None,
+            },
+            ImportOriginalError::CreateOriginalDirectory { path, source } => Self {
+                title: "Could not prepare workspace".to_owned(),
+                message: format!(
+                    "The original game data directory could not be created at {}",
+                    path.display()
+                ),
+                details: Some(source.to_string()),
+            },
+            error
+            @ (ImportOriginalError::Identify { .. } | ImportOriginalError::Extract { .. }) => {
+                Self {
+                    title: "Could not import original ISO".to_owned(),
+                    message: "The selected ISO could not be imported".to_owned(),
+                    details: Some(error.to_string()),
+                }
+            }
         }
     }
 }

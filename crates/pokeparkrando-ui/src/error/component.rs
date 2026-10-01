@@ -2,8 +2,8 @@ use std::collections::VecDeque;
 
 use eframe::egui;
 
+use super::AppError;
 use super::report::ErrorReport;
-use crate::workspace::WorkspaceError;
 
 #[derive(Default)]
 pub(crate) struct ErrorComponent {
@@ -11,8 +11,8 @@ pub(crate) struct ErrorComponent {
 }
 
 impl ErrorComponent {
-    pub(crate) fn push(&mut self, error: WorkspaceError) {
-        self.reports.push_back(ErrorReport::from(error));
+    pub(crate) fn push(&mut self, error: impl Into<AppError>) {
+        self.reports.push_back(ErrorReport::from(error.into()));
     }
 
     pub(crate) fn show(&mut self, context: &egui::Context) {

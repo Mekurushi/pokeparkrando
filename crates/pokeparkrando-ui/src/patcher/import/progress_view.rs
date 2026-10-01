@@ -43,9 +43,5 @@ impl<'a> ImportProgressView<'a> {
                 let _status = ui.label("Preparing import...");
             });
         }
-
-        if let Some(error) = self.state.error() {
-            let _error = ui.colored_label(ui.visuals().error_fg_color, error);
-        }
     }
 }

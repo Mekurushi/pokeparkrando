@@ -1,6 +1,6 @@
 use std::sync::mpsc::{Receiver, TryRecvError};
 
-use pokeparkrando_core::{GameId, ImportOriginalProgress};
+use pokeparkrando_core::{GameId, ImportOriginalError, ImportOriginalProgress};
 
 #[derive(Default)]
 pub(in crate::patcher) enum ImportState {
@@ -10,17 +10,21 @@ pub(in crate::patcher) enum ImportState {
         receiver: Receiver<ImportEvent>,
         progress: Option<ImportOriginalProgress>,
     },
-    Failed(String),
 }
 
 pub(in crate::patcher) enum ImportEvent {
     Progress(ImportOriginalProgress),
-    Finished(Result<GameId, String>),
+    Finished(Result<GameId, ImportOriginalError>),
 }
 
 pub(in crate::patcher) enum ImportOutcome {
     Imported(GameId),
-    Failed,
+    Failed(ImportFailure),
+}
+
+pub(in crate::patcher) enum ImportFailure {
+    Import(ImportOriginalError),
+    Disconnected,
 }
 
 impl ImportState {
@@ -51,19 +55,15 @@ impl ImportState {
                 Some(ImportOutcome::Imported(game_id))
             }
             (Some(Err(error)), _) => {
-                *self = Self::Failed(error);
-                Some(ImportOutcome::Failed)
+                *self = Self::Idle;
+                Some(ImportOutcome::Failed(ImportFailure::Import(error)))
             }
             (None, true) => {
-                *self = Self::Failed("original import stopped unexpectedly".to_owned());
-                Some(ImportOutcome::Failed)
+                *self = Self::Idle;
+                Some(ImportOutcome::Failed(ImportFailure::Disconnected))
             }
             (None, false) => None,
         }
-    }
-
-    pub(in crate::patcher) fn fail(&mut self, error: String) {
-        *self = Self::Failed(error);
     }
 
     pub(in crate::patcher) fn is_importing(&self) -> bool {
@@ -73,14 +73,7 @@ impl ImportState {
     pub(in crate::patcher) fn progress(&self) -> Option<ImportOriginalProgress> {
         match self {
             Self::Importing { progress, .. } => *progress,
-            Self::Idle | Self::Failed(_) => None,
-        }
-    }
-
-    pub(in crate::patcher) fn error(&self) -> Option<&str> {
-        match self {
-            Self::Failed(error) => Some(error),
-            Self::Idle | Self::Importing { .. } => None,
+            Self::Idle => None,
         }
     }
 }

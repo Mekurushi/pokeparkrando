@@ -1,7 +1,7 @@
 use eframe::egui;
 use pokeparkrando_core::OriginalReadiness;
 
-use super::state::PatcherState;
+use super::state::{OriginalStatusReadiness, PatcherState};
 
 #[derive(Clone, Copy)]
 pub(super) enum PatcherAction {
@@ -48,17 +48,18 @@ impl<'a> PatcherView<'a> {
                         .map_or_else(|| game_id.to_owned(), |name| format!("{name} ({game_id})"));
                     let _game = ui.label(name);
                     match original.readiness() {
-                        Ok(OriginalReadiness::Ready) => {
+                        OriginalStatusReadiness::Available(OriginalReadiness::Ready) => {
                             let _status = ui.label("Ready");
                         }
-                        Ok(OriginalReadiness::Missing) => {
+                        OriginalStatusReadiness::Available(OriginalReadiness::Missing) => {
                             let _status = ui.weak("Missing");
                         }
-                        Ok(OriginalReadiness::Invalid) => {
+                        OriginalStatusReadiness::Available(OriginalReadiness::Invalid) => {
                             let _status = ui.colored_label(ui.visuals().error_fg_color, "Invalid");
                         }
-                        Err(error) => {
-                            let _status = ui.colored_label(ui.visuals().error_fg_color, error);
+                        OriginalStatusReadiness::Unavailable => {
+                            let _status =
+                                ui.colored_label(ui.visuals().error_fg_color, "Unavailable");
                         }
                     }
                     ui.end_row();
@@ -68,8 +69,9 @@ impl<'a> PatcherView<'a> {
     }
 
     pub(super) fn show_content(&self, ui: &mut egui::Ui) {
-        if let Some(error) = self.state.error() {
-            let _error = ui.colored_label(ui.visuals().error_fg_color, error);
+        // TODO: unify show logic for patcher
+        if self.state.is_failed() {
+            let _error = ui.colored_label(ui.visuals().error_fg_color, "Patcher unavailable");
         }
     }
 }

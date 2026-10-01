@@ -2,7 +2,7 @@ use eframe::{CreationContext, Storage, egui};
 
 use crate::APP_NAME;
 use crate::error::ErrorComponent;
-use crate::patcher::PatcherComponent;
+use crate::patcher::{PatcherComponent, PatcherEvent};
 use crate::workspace::{WorkspaceComponent, WorkspaceEvent};
 
 pub(crate) struct PokeparkRandoApp {
@@ -30,6 +30,12 @@ impl PokeparkRandoApp {
             WorkspaceEvent::Error(error) => self.errors.push(error),
         }
     }
+
+    fn handle_patcher_event(&mut self, event: PatcherEvent) {
+        match event {
+            PatcherEvent::Error(error) => self.errors.push(error),
+        }
+    }
 }
 
 impl eframe::App for PokeparkRandoApp {
@@ -50,7 +56,9 @@ impl eframe::App for PokeparkRandoApp {
         } else {
             let _panel = egui::CentralPanel::default().show(ui, |ui| {
                 let _heading = ui.heading(egui::RichText::new(APP_NAME).strong().size(19.0));
-                self.patcher.show_readiness(ui);
+                if let Some(event) = self.patcher.show_readiness(ui) {
+                    self.handle_patcher_event(event);
+                }
                 self.patcher.show_content(ui);
             });
         }
