@@ -50,19 +50,17 @@ impl PatcherComponent {
         self.import.is_importing()
     }
 
-    pub(crate) fn show_readiness(&mut self, ui: &mut egui::Ui) -> Option<PatcherEvent> {
+    pub(crate) fn show(&mut self, ui: &mut egui::Ui) -> Option<PatcherEvent> {
         let event = self
             .pending_errors
             .pop_front()
             .map(PatcherEvent::Error)
             .or_else(|| self.poll_import());
-        let action = PatcherView::new(&self.state).show_readiness(ui, !self.is_busy());
+        let action = PatcherView::new(&self.state).show(ui, !self.is_busy());
+        if self.state.is_ready() {
+            ImportProgressView::new(&self.import).show(ui);
+        }
         event.or_else(|| action.and_then(|action| self.handle_action(action, ui.ctx())))
-    }
-
-    pub(crate) fn show_content(&self, ui: &mut egui::Ui) {
-        PatcherView::new(&self.state).show_content(ui);
-        ImportProgressView::new(&self.import).show(ui);
     }
 
     fn handle_action(

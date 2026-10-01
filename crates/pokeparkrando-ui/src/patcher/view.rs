@@ -17,11 +17,18 @@ impl<'a> PatcherView<'a> {
         Self { state }
     }
 
-    pub(super) fn show_readiness(
-        &self,
-        ui: &mut egui::Ui,
-        actions_enabled: bool,
-    ) -> Option<PatcherAction> {
+    pub(super) fn show(&self, ui: &mut egui::Ui, actions_enabled: bool) -> Option<PatcherAction> {
+        match self.state {
+            PatcherState::Unavailable => None,
+            PatcherState::Ready { .. } => self.show_readiness(ui, actions_enabled),
+            PatcherState::Failed => {
+                Self::show_failed(ui);
+                None
+            }
+        }
+    }
+
+    fn show_readiness(&self, ui: &mut egui::Ui, actions_enabled: bool) -> Option<PatcherAction> {
         let originals = self.state.originals()?;
 
         let mut action = None;
@@ -68,10 +75,17 @@ impl<'a> PatcherView<'a> {
         action
     }
 
-    pub(super) fn show_content(&self, ui: &mut egui::Ui) {
-        // TODO: unify show logic for patcher
-        if self.state.is_failed() {
-            let _error = ui.colored_label(ui.visuals().error_fg_color, "Patcher unavailable");
-        }
+    fn show_failed(ui: &mut egui::Ui) {
+        let _failure = ui.group(|ui| {
+            let _heading = ui.heading(
+                egui::RichText::new("Patcher unavailable")
+                    .color(ui.visuals().error_fg_color)
+                    .size(16.0),
+            );
+            let _description = ui.label(
+                "Patch data could not be loaded. Patching is disabled. \
+            Try reinstalling or contact the creator",
+            );
+        });
     }
 }

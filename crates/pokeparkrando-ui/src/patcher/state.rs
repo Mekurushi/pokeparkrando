@@ -83,8 +83,8 @@ impl PatcherState {
         }
     }
 
-    pub(super) fn is_failed(&self) -> bool {
-        matches!(self, Self::Failed)
+    pub(super) fn is_ready(&self) -> bool {
+        matches!(self, Self::Ready { .. })
     }
 }
 

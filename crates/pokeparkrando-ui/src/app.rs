@@ -56,10 +56,9 @@ impl eframe::App for PokeparkRandoApp {
         } else {
             let _panel = egui::CentralPanel::default().show(ui, |ui| {
                 let _heading = ui.heading(egui::RichText::new(APP_NAME).strong().size(19.0));
-                if let Some(event) = self.patcher.show_readiness(ui) {
+                if let Some(event) = self.patcher.show(ui) {
                     self.handle_patcher_event(event);
                 }
-                self.patcher.show_content(ui);
             });
         }
 
