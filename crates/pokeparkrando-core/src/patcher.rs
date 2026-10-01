@@ -1,12 +1,13 @@
 use std::io;
 use std::path::{Path, PathBuf};
 
+use crate::Appkprk;
 use crate::bundled_project::BundledProject;
 use crate::error::{BundledProjectError, ImportOriginalError};
 use crate::original::{
     ImportOriginalProgress, OriginalReadiness, import_original, original_readiness,
 };
-use crate::parkforge::GameId;
+use crate::parkforge::{BuildConfig, BuildConfigValue, GameId};
 
 #[derive(Debug)]
 pub struct Patcher {
@@ -15,6 +16,27 @@ pub struct Patcher {
 }
 
 impl Patcher {
+    pub fn build_config(appkprk: &Appkprk) -> BuildConfig {
+        BuildConfig::from_iter([
+            (
+                "PLAYER_NAME".to_owned(),
+                BuildConfigValue::String(appkprk.player_name().to_owned()),
+            ),
+            (
+                "BATTLE_COUNT".to_owned(),
+                BuildConfigValue::Integer(appkprk.options().required_battle_count().cast_signed()),
+            ),
+            (
+                "SHOULD_PRINT_AP_BUFFER".to_owned(),
+                BuildConfigValue::Boolean(appkprk.options().show_client_text_ingame()),
+            ),
+            (
+                "FPS_ENHANCEMENT".to_owned(),
+                BuildConfigValue::Boolean(appkprk.options().fps_enhancement_patch()),
+            ),
+        ])
+    }
+
     pub fn load(workspace_root: impl Into<PathBuf>) -> Result<Self, BundledProjectError> {
         Ok(Self {
             workspace_root: workspace_root.into(),

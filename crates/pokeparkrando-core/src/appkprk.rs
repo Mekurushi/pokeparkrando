@@ -41,8 +41,8 @@ pub enum Goal {
 #[allow(clippy::struct_excessive_bools)]
 pub struct PatchOptions {
     goal: Goal,
-    required_battle_count: u64,
-    required_prisma_count: u64,
+    required_battle_count: u32,
+    required_prisma_count: u32,
     remove_errand_power_comp_locations: bool,
     harder_enemy_ai: bool,
     each_zone: bool,
@@ -56,11 +56,11 @@ impl PatchOptions {
         self.goal
     }
 
-    pub fn required_battle_count(&self) -> u64 {
+    pub fn required_battle_count(&self) -> u32 {
         self.required_battle_count
     }
 
-    pub fn required_prisma_count(&self) -> u64 {
+    pub fn required_prisma_count(&self) -> u32 {
         self.required_prisma_count
     }
 
@@ -190,8 +190,8 @@ struct RawAppkprk {
 #[derive(Deserialize)]
 struct RawPatchOptions {
     goal: u64,
-    num_required_battle_count: u64,
-    num_required_prisma_count_skygarden: u64,
+    num_required_battle_count: u32,
+    num_required_prisma_count_skygarden: u32,
     remove_errand_power_comp_locations: u64,
     harder_enemy_ai: u64,
     each_zone: u64,
