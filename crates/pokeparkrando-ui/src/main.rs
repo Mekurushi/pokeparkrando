@@ -2,6 +2,7 @@ use eframe::egui;
 
 mod app;
 mod patcher;
+mod ui;
 mod workspace;
 
 use app::PokeparkRandoApp;

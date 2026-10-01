@@ -3,6 +3,11 @@ use pokeparkrando_core::OriginalReadiness;
 
 use super::state::PatcherState;
 
+#[derive(Clone, Copy)]
+pub(super) enum PatcherAction {
+    ImportOriginal,
+}
+
 pub(super) struct PatcherView<'a> {
     state: &'a PatcherState,
 }
@@ -12,16 +17,27 @@ impl<'a> PatcherView<'a> {
         Self { state }
     }
 
-    pub(super) fn show_readiness(&self, ui: &mut egui::Ui) {
-        let Some(originals) = self.state.originals() else {
-            return;
-        };
+    pub(super) fn show_readiness(
+        &self,
+        ui: &mut egui::Ui,
+        actions_enabled: bool,
+    ) -> Option<PatcherAction> {
+        let originals = self.state.originals()?;
 
-        let _heading = ui.label(
-            egui::RichText::new("Supported originals")
-                .strong()
-                .size(15.0),
-        );
+        let mut action = None;
+        let _header = ui.horizontal(|ui| {
+            let _heading = ui.label(
+                egui::RichText::new("Supported originals")
+                    .strong()
+                    .size(15.0),
+            );
+            if ui
+                .add_enabled(actions_enabled, egui::Button::new("Import original ISO..."))
+                .clicked()
+            {
+                action = Some(PatcherAction::ImportOriginal);
+            }
+        });
         let _statuses = egui::Grid::new("original-readiness")
             .num_columns(2)
             .show(ui, |ui| {
@@ -48,13 +64,12 @@ impl<'a> PatcherView<'a> {
                     ui.end_row();
                 }
             });
+        action
     }
 
     pub(super) fn show_content(&self, ui: &mut egui::Ui) {
         if let Some(error) = self.state.error() {
             let _error = ui.colored_label(ui.visuals().error_fg_color, error);
-        } else if self.state.patcher().is_some() {
-            let _status = ui.label("Patcher stub");
         }
     }
 }

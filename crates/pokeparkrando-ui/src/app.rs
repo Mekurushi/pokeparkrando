@@ -27,9 +27,10 @@ impl PokeparkRandoApp {
 
 impl eframe::App for PokeparkRandoApp {
     fn ui(&mut self, ui: &mut egui::Ui, frame: &mut eframe::Frame) {
+        let workspace_actions_enabled = !self.patcher.is_busy();
         let workspace = egui::Panel::top("workspace").show(ui, |ui| {
-            let event = self.workspace.show_header(ui, frame, true);
-            event
+            self.workspace
+                .show_header(ui, frame, workspace_actions_enabled)
         });
         if let Some(event) = workspace.inner {
             self.handle_workspace_event(event);
