@@ -15,11 +15,17 @@ pub enum BundledProjectError {
 
 #[derive(Debug, Error)]
 pub enum ImportOriginalError {
+    #[error("NKit ISO {} is not supported", input.display())]
+    UnsupportedNkitIso { input: PathBuf },
+
+    #[error("ISO {} contains an invalid Wii game ID: {raw:?}", input.display())]
+    InvalidGameId { input: PathBuf, raw: [u8; 6] },
+
     #[error("failed to identify ISO {}: {source}", input.display())]
     Identify {
         input: PathBuf,
         #[source]
-        source: Box<parkforge::Error>,
+        source: Box<parkforge::IdentifyError>,
     },
 
     #[error("game revision {game_id} is not supported")]
@@ -41,6 +47,6 @@ pub enum ImportOriginalError {
         input: PathBuf,
         destination: PathBuf,
         #[source]
-        source: Box<parkforge::Error>,
+        source: Box<parkforge::ExtractError>,
     },
 }

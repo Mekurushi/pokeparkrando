@@ -41,10 +41,7 @@ where
     F: FnMut(ImportOriginalProgress),
 {
     let game_id =
-        parkforge::identify(input_iso).map_err(|source| ImportOriginalError::Identify {
-            input: input_iso.to_path_buf(),
-            source: Box::new(source),
-        })?;
+        parkforge::identify(input_iso).map_err(|source| map_identify_error(input_iso, source))?;
 
     if !supported_game_ids.contains(&game_id) {
         return Err(ImportOriginalError::UnsupportedGame { game_id });
@@ -61,11 +58,37 @@ where
     parkforge::extract_to(input_iso, &destination, |event| {
         progress(map_extraction_progress(event));
     })
-    .map_err(|source| ImportOriginalError::Extract {
-        input: input_iso.to_path_buf(),
-        destination,
-        source: Box::new(source),
-    })
+    .map_err(|source| map_extract_error(input_iso, destination, source))
+}
+
+fn map_identify_error(input_iso: &Path, source: parkforge::IdentifyError) -> ImportOriginalError {
+    match source {
+        parkforge::IdentifyError::UnsupportedNkitIso { input } => {
+            ImportOriginalError::UnsupportedNkitIso { input }
+        }
+        parkforge::IdentifyError::InvalidGameId { input, raw } => {
+            ImportOriginalError::InvalidGameId { input, raw }
+        }
+        source @ parkforge::IdentifyError::ReadGameId { .. } => ImportOriginalError::Identify {
+            input: input_iso.to_path_buf(),
+            source: Box::new(source),
+        },
+    }
+}
+
+fn map_extract_error(
+    input_iso: &Path,
+    destination: std::path::PathBuf,
+    source: parkforge::ExtractError,
+) -> ImportOriginalError {
+    match source {
+        parkforge::ExtractError::Identify(source) => map_identify_error(input_iso, source),
+        source => ImportOriginalError::Extract {
+            input: input_iso.to_path_buf(),
+            destination,
+            source: Box::new(source),
+        },
+    }
 }
 
 fn map_extraction_progress(progress: ExtractionProgress) -> ImportOriginalProgress {
