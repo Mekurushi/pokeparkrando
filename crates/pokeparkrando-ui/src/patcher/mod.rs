@@ -1,5 +1,5 @@
+mod component;
 mod state;
 mod view;
 
-pub(crate) use state::PatcherState;
-pub(crate) use view::PatcherView;
+pub(crate) use component::PatcherComponent;

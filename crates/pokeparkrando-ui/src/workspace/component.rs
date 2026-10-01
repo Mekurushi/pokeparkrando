@@ -38,6 +38,10 @@ impl WorkspaceComponent {
         self.state.workspace()
     }
 
+    pub(crate) fn root(&self) -> Option<&Path> {
+        self.workspace().map(Workspace::root)
+    }
+
     pub(crate) fn requires_selection(&self) -> bool {
         self.workspace().is_none()
     }

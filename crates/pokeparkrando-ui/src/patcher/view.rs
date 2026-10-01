@@ -1,18 +1,18 @@
 use eframe::egui;
 use pokeparkrando_core::OriginalReadiness;
 
-use super::PatcherState;
+use super::state::PatcherState;
 
-pub(crate) struct PatcherView<'a> {
+pub(super) struct PatcherView<'a> {
     state: &'a PatcherState,
 }
 
 impl<'a> PatcherView<'a> {
-    pub(crate) fn new(state: &'a PatcherState) -> Self {
+    pub(super) fn new(state: &'a PatcherState) -> Self {
         Self { state }
     }
 
-    pub(crate) fn show(&self, ui: &mut egui::Ui) {
+    pub(super) fn show_readiness(&self, ui: &mut egui::Ui) {
         let Some(originals) = self.state.originals() else {
             return;
         };
@@ -48,5 +48,13 @@ impl<'a> PatcherView<'a> {
                     ui.end_row();
                 }
             });
+    }
+
+    pub(super) fn show_content(&self, ui: &mut egui::Ui) {
+        if let Some(error) = self.state.error() {
+            let _error = ui.colored_label(ui.visuals().error_fg_color, error);
+        } else if self.state.patcher().is_some() {
+            let _status = ui.label("Patcher stub");
+        }
     }
 }
