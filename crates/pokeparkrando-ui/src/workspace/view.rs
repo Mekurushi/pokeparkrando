@@ -61,8 +61,6 @@ impl<'a> WorkspaceView<'a> {
                 let _path = ui.strong(suggested.display().to_string());
             });
         }
-        Self::show_error(ui, self.state.error());
-
         let mut action = None;
         let _actions = ui.horizontal(|ui| {
             let use_suggested = ui.add_enabled(
@@ -95,13 +93,6 @@ impl<'a> WorkspaceView<'a> {
                 action = Some(WorkspaceAction::ChooseDirectory);
             }
         });
-        Self::show_error(ui, self.state.error());
         action
-    }
-
-    fn show_error(ui: &mut egui::Ui, error: Option<&str>) {
-        if let Some(error) = error {
-            let _error = ui.colored_label(ui.visuals().error_fg_color, error);
-        }
     }
 }

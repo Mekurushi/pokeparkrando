@@ -3,32 +3,23 @@ use std::path::{Path, PathBuf};
 use super::model::Workspace;
 
 pub(super) enum WorkspaceState {
-    Required {
-        suggested: Option<PathBuf>,
-        error: Option<String>,
-    },
-    Ready {
-        workspace: Workspace,
-        error: Option<String>,
-    },
+    Required { suggested: Option<PathBuf> },
+    Ready { workspace: Workspace },
 }
 
 impl WorkspaceState {
-    pub(super) fn required(suggested: Option<PathBuf>, error: Option<String>) -> Self {
-        Self::Required { suggested, error }
+    pub(super) fn required(suggested: Option<PathBuf>) -> Self {
+        Self::Required { suggested }
     }
 
     pub(super) fn ready(workspace: Workspace) -> Self {
-        Self::Ready {
-            workspace,
-            error: None,
-        }
+        Self::Ready { workspace }
     }
 
     pub(super) fn workspace(&self) -> Option<&Workspace> {
         match self {
             Self::Required { .. } => None,
-            Self::Ready { workspace, .. } => Some(workspace),
+            Self::Ready { workspace } => Some(workspace),
         }
     }
 
@@ -42,19 +33,7 @@ impl WorkspaceState {
     pub(super) fn browse_directory(&self) -> Option<&Path> {
         match self {
             Self::Required { suggested, .. } => suggested.as_deref(),
-            Self::Ready { workspace, .. } => Some(workspace.root()),
-        }
-    }
-
-    pub(super) fn set_error(&mut self, message: String) {
-        match self {
-            Self::Required { error, .. } | Self::Ready { error, .. } => *error = Some(message),
-        }
-    }
-
-    pub(super) fn error(&self) -> Option<&str> {
-        match self {
-            Self::Required { error, .. } | Self::Ready { error, .. } => error.as_deref(),
+            Self::Ready { workspace } => Some(workspace.root()),
         }
     }
 }

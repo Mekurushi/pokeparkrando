@@ -1,19 +1,25 @@
 use eframe::{CreationContext, Storage, egui};
 
 use crate::APP_NAME;
+use crate::error::ErrorComponent;
 use crate::patcher::PatcherComponent;
 use crate::workspace::{WorkspaceComponent, WorkspaceEvent};
 
 pub(crate) struct PokeparkRandoApp {
     workspace: WorkspaceComponent,
     patcher: PatcherComponent,
+    errors: ErrorComponent,
 }
 
 impl PokeparkRandoApp {
     pub(crate) fn new(context: &CreationContext<'_>) -> Self {
         let workspace = WorkspaceComponent::restore(context.storage);
         let patcher = PatcherComponent::new(workspace.root());
-        Self { workspace, patcher }
+        Self {
+            workspace,
+            patcher,
+            errors: ErrorComponent::default(),
+        }
     }
 
     fn handle_workspace_event(&mut self, event: WorkspaceEvent) {
@@ -21,6 +27,7 @@ impl PokeparkRandoApp {
             WorkspaceEvent::Activated => {
                 self.patcher.load(self.workspace.root());
             }
+            WorkspaceEvent::Error(error) => self.errors.push(error),
         }
     }
 }
@@ -47,6 +54,8 @@ impl eframe::App for PokeparkRandoApp {
                 self.patcher.show_content(ui);
             });
         }
+
+        self.errors.show(ui.ctx());
     }
 
     fn save(&mut self, storage: &mut dyn Storage) {

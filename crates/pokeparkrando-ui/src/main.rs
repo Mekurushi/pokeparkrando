@@ -1,6 +1,7 @@
 use eframe::egui;
 
 mod app;
+mod error;
 mod patcher;
 mod ui;
 mod workspace;
