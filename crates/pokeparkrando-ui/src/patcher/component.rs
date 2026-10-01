@@ -7,12 +7,14 @@ use eframe::egui;
 use rfd::FileDialog;
 
 use super::import::{ImportEvent, ImportFailure, ImportOutcome, ImportProgressView, ImportState};
+use super::patch_file::PatchFileState;
 use super::state::{PatcherState, ReadinessFailure};
 use super::view::{PatcherAction, PatcherView};
 
 pub(crate) struct PatcherComponent {
     state: PatcherState,
     import: ImportState,
+    patch_file: Option<PatchFileState>,
     pending_errors: VecDeque<PatcherError>,
 }
 
@@ -27,6 +29,7 @@ pub(crate) enum PatcherError {
         source: std::io::Error,
     },
     Import(pokeparkrando_core::ImportOriginalError),
+    ReadPatchFile(pokeparkrando_core::ReadAppkprkError),
     StartImport(std::io::Error),
     ImportStopped,
 }
@@ -37,6 +40,7 @@ impl PatcherComponent {
         Self {
             state,
             import: ImportState::default(),
+            patch_file: None,
             pending_errors,
         }
     }
@@ -56,7 +60,8 @@ impl PatcherComponent {
             .pop_front()
             .map(PatcherEvent::Error)
             .or_else(|| self.poll_import());
-        let action = PatcherView::new(&self.state).show(ui, !self.is_busy());
+        let action =
+            PatcherView::new(&self.state, self.patch_file.as_ref()).show(ui, !self.is_busy());
         if self.state.is_ready() {
             ImportProgressView::new(&self.import).show(ui);
         }
@@ -70,6 +75,21 @@ impl PatcherComponent {
     ) -> Option<PatcherEvent> {
         match action {
             PatcherAction::ImportOriginal => self.choose_original(context),
+            PatcherAction::SelectPatchFile => self.choose_patch_file(),
+        }
+    }
+
+    fn choose_patch_file(&mut self) -> Option<PatcherEvent> {
+        let path = FileDialog::new()
+            .set_title("Select patch file")
+            .add_filter("PokePark patch file", &["appkprk"])
+            .pick_file()?;
+        match PatchFileState::read(path) {
+            Ok(patch_file) => {
+                self.patch_file = Some(patch_file);
+                None
+            }
+            Err(error) => Some(PatcherEvent::Error(PatcherError::ReadPatchFile(error))),
         }
     }
 

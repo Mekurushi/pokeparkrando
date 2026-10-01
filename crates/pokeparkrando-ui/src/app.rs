@@ -1,4 +1,5 @@
 use eframe::{CreationContext, Storage, egui};
+use pokeparkrando_core::PATCHER_VERSION;
 
 use crate::APP_NAME;
 use crate::error::ErrorComponent;
@@ -55,7 +56,10 @@ impl eframe::App for PokeparkRandoApp {
             });
         } else {
             let _panel = egui::CentralPanel::default().show(ui, |ui| {
-                let _heading = ui.heading(egui::RichText::new(APP_NAME).strong().size(19.0));
+                let _heading = ui.horizontal(|ui| {
+                    let _name = ui.heading(egui::RichText::new(APP_NAME).strong().size(19.0));
+                    let _version = ui.label(format!("Version {PATCHER_VERSION}"));
+                });
                 if let Some(event) = self.patcher.show(ui) {
                     self.handle_patcher_event(event);
                 }

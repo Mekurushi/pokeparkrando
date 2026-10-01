@@ -1,4 +1,4 @@
-use pokeparkrando_core::ImportOriginalError;
+use pokeparkrando_core::{ImportOriginalError, ReadAppkprkError};
 
 use super::AppError;
 use crate::patcher::PatcherError;
@@ -45,6 +45,7 @@ impl ErrorReport {
                 details: Some(source.to_string()),
             },
             PatcherError::Import(error) => Self::from_import(error),
+            PatcherError::ReadPatchFile(error) => Self::from_patch_file(error),
             PatcherError::StartImport(error) => Self {
                 title: "Could not start import".to_owned(),
                 message: "The original ISO import worker could not be started".to_owned(),
@@ -92,6 +93,22 @@ impl ErrorReport {
                     details: Some(error.to_string()),
                 }
             }
+        }
+    }
+
+    fn from_patch_file(error: ReadAppkprkError) -> Self {
+        match error {
+            error @ ReadAppkprkError::UnsupportedVersion { .. } => Self {
+                title: "Incompatible patch file".to_owned(),
+                message: "The selected patch file was created for a different patcher version"
+                    .to_owned(),
+                details: Some(error.to_string()),
+            },
+            error => Self {
+                title: "Invalid patch file".to_owned(),
+                message: "The selected file could not be read as a PokePark patch file".to_owned(),
+                details: Some(error.to_string()),
+            },
         }
     }
 }

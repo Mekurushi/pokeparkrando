@@ -5,6 +5,68 @@ use thiserror::Error;
 use crate::parkforge::{self, GameId};
 
 #[derive(Debug, Error)]
+pub enum ReadAppkprkError {
+    #[error("failed to open .appkprk file {}: {source}", path.display())]
+    Open {
+        path: PathBuf,
+        #[source]
+        source: std::io::Error,
+    },
+
+    #[error("{} is not a valid .appkprk archive: {source}", path.display())]
+    InvalidArchive {
+        path: PathBuf,
+        #[source]
+        source: zip::result::ZipError,
+    },
+
+    #[error(".appkprk archive {} does not contain a plando entry", path.display())]
+    MissingPlando { path: PathBuf },
+
+    #[error("failed to read the plando entry from {}: {source}", path.display())]
+    ReadPlando {
+        path: PathBuf,
+        #[source]
+        source: std::io::Error,
+    },
+
+    #[error("plando entry in {} is not valid Base64: {source}", path.display())]
+    DecodePlando {
+        path: PathBuf,
+        #[source]
+        source: base64::DecodeError,
+    },
+
+    #[error("decoded plando entry in {} is not valid YAML: {source}", path.display())]
+    ParsePlando {
+        path: PathBuf,
+        #[source]
+        source: serde_yaml_ng::Error,
+    },
+
+    #[error(".appkprk version must contain exactly three components, found {found}")]
+    InvalidVersionLength { found: usize },
+
+    #[error(
+        "unsupported .appkprk version {major}.{minor}.{patch}; supported format is {supported_major}.{supported_minor}.x"
+    )]
+    UnsupportedVersion {
+        major: u64,
+        minor: u64,
+        patch: u64,
+        supported_major: &'static str,
+        supported_minor: &'static str,
+    },
+
+    #[error("invalid value {value} for option {option}; expected {expected}")]
+    InvalidOptionValue {
+        option: &'static str,
+        value: u64,
+        expected: &'static str,
+    },
+}
+
+#[derive(Debug, Error)]
 pub enum BundledProjectError {
     #[error("embedded project configuration is invalid: {source}")]
     ParseConfig {

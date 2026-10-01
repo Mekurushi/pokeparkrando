@@ -1,31 +1,66 @@
 use eframe::egui;
 use pokeparkrando_core::OriginalReadiness;
 
+use super::patch_file::PatchFileState;
 use super::state::{OriginalStatusReadiness, PatcherState};
 
 #[derive(Clone, Copy)]
 pub(super) enum PatcherAction {
     ImportOriginal,
+    SelectPatchFile,
 }
 
 pub(super) struct PatcherView<'a> {
     state: &'a PatcherState,
+    patch_file: Option<&'a PatchFileState>,
 }
 
 impl<'a> PatcherView<'a> {
-    pub(super) fn new(state: &'a PatcherState) -> Self {
-        Self { state }
+    pub(super) fn new(state: &'a PatcherState, patch_file: Option<&'a PatchFileState>) -> Self {
+        Self { state, patch_file }
     }
 
     pub(super) fn show(&self, ui: &mut egui::Ui, actions_enabled: bool) -> Option<PatcherAction> {
         match self.state {
             PatcherState::Unavailable => None,
-            PatcherState::Ready { .. } => self.show_readiness(ui, actions_enabled),
+            PatcherState::Ready { .. } => {
+                let readiness_action = self.show_readiness(ui, actions_enabled);
+                let patch_file_action = self.show_patch_file(ui, actions_enabled);
+                patch_file_action.or(readiness_action)
+            }
             PatcherState::Failed => {
                 Self::show_failed(ui);
                 None
             }
         }
+    }
+
+    fn show_patch_file(&self, ui: &mut egui::Ui, actions_enabled: bool) -> Option<PatcherAction> {
+        let mut action = None;
+        let _header = ui.horizontal(|ui| {
+            let _heading = ui.label(egui::RichText::new("Patch file").strong().size(15.0));
+            if ui
+                .add_enabled(actions_enabled, egui::Button::new("Select .appkprk..."))
+                .clicked()
+            {
+                action = Some(PatcherAction::SelectPatchFile);
+            }
+        });
+        match self.patch_file {
+            Some(patch_file) => {
+                let _path = ui.label(patch_file.path().display().to_string());
+                let contents = patch_file.contents();
+                let _summary = ui.label(format!(
+                    "Player: {}  -  Seed: {}",
+                    contents.player_name(),
+                    contents.seed()
+                ));
+            }
+            None => {
+                let _missing = ui.weak("No patch file selected");
+            }
+        }
+        action
     }
 
     fn show_readiness(&self, ui: &mut egui::Ui, actions_enabled: bool) -> Option<PatcherAction> {
@@ -72,6 +107,7 @@ impl<'a> PatcherView<'a> {
                     ui.end_row();
                 }
             });
+        let _separator = ui.separator();
         action
     }
 
