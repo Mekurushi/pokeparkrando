@@ -1,134 +1,68 @@
-use std::path::{Path, PathBuf};
-
 use eframe::{CreationContext, Storage, egui};
-use rfd::FileDialog;
 
 use crate::APP_NAME;
 use crate::patcher::{PatcherState, PatcherView};
-use crate::workspace::{Workspace, WorkspaceAction, WorkspaceState, WorkspaceView};
-
-const WORKSPACE_KEY: &str = "workspace";
+use crate::workspace::{WorkspaceComponent, WorkspaceEvent};
 
 pub(crate) struct PokeparkRandoApp {
-    workspace_state: WorkspaceState,
+    workspace: WorkspaceComponent,
     patcher_state: PatcherState,
 }
 
 impl PokeparkRandoApp {
     pub(crate) fn new(context: &CreationContext<'_>) -> Self {
-        let saved = context
-            .storage
-            .and_then(|storage| eframe::get_value::<PathBuf>(storage, WORKSPACE_KEY));
-        let workspace_state = match saved {
-            Some(root) => match Workspace::open(root) {
-                Ok(workspace) => WorkspaceState::ready(workspace),
-                Err(error) => {
-                    WorkspaceState::required(executable_directory(), Some(error.to_string()))
-                }
-            },
-            None => WorkspaceState::required(executable_directory(), None),
-        };
-        let patcher_state = workspace_state
+        let workspace = WorkspaceComponent::restore(context.storage);
+        let patcher_state = workspace
             .workspace()
             .map_or(PatcherState::Unavailable, PatcherState::load);
         Self {
-            workspace_state,
+            workspace,
             patcher_state,
         }
     }
 
-    fn handle_workspace_action(&mut self, action: WorkspaceAction, frame: &mut eframe::Frame) {
-        match action {
-            WorkspaceAction::UseSuggested => self.use_suggested_workspace(frame),
-            WorkspaceAction::ChooseDirectory => self.choose_workspace(frame),
-        }
-    }
-
-    fn use_suggested_workspace(&mut self, frame: &mut eframe::Frame) {
-        let Some(root) = self.workspace_state.suggested().map(Path::to_path_buf) else {
-            return;
-        };
-        self.activate_workspace(root, frame);
-    }
-
-    fn choose_workspace(&mut self, frame: &mut eframe::Frame) {
-        let mut dialog = FileDialog::new().set_title("Select workspace");
-        if let Some(root) = self
-            .workspace_state
-            .browse_directory()
-            .filter(|root| root.is_dir())
-        {
-            dialog = dialog.set_directory(root);
-        }
-        if let Some(root) = dialog.pick_folder() {
-            self.activate_workspace(root, frame);
-        }
-    }
-
-    fn activate_workspace(&mut self, root: PathBuf, frame: &mut eframe::Frame) {
-        let workspace = match Workspace::open(root) {
-            Ok(workspace) => workspace,
-            Err(error) => {
-                self.workspace_state.set_error(error.to_string());
-                return;
+    fn handle_workspace_event(&mut self, event: WorkspaceEvent) {
+        match event {
+            WorkspaceEvent::Activated => {
+                self.patcher_state = self
+                    .workspace
+                    .workspace()
+                    .map_or(PatcherState::Unavailable, PatcherState::load);
             }
-        };
-
-        self.patcher_state = PatcherState::load(&workspace);
-        self.workspace_state = WorkspaceState::ready(workspace);
-        if let Some(storage) = frame.storage_mut() {
-            store_workspace(storage, self.persisted_workspace());
-            storage.flush();
         }
-    }
-
-    fn persisted_workspace(&self) -> Option<&Workspace> {
-        self.workspace_state.workspace()
     }
 }
 
 impl eframe::App for PokeparkRandoApp {
     fn ui(&mut self, ui: &mut egui::Ui, frame: &mut eframe::Frame) {
         let workspace = egui::Panel::top("workspace").show(ui, |ui| {
-            let action = WorkspaceView::new(&self.workspace_state, true).show(ui);
+            let event = self.workspace.show_header(ui, frame, true);
             PatcherView::new(&self.patcher_state).show(ui);
-            action
+            event
         });
-        if let Some(action) = workspace.inner {
-            self.handle_workspace_action(action, frame);
+        if let Some(event) = workspace.inner {
+            self.handle_workspace_event(event);
         }
 
-        let _panel = egui::CentralPanel::default().show(ui, |ui| {
-            let _heading = ui.heading(egui::RichText::new(APP_NAME).strong().size(19.0));
-            let _label = if self.workspace_state.workspace().is_none() {
-                ui.label(egui::RichText::new("Choose a Workspace to continue").size(16.0))
-            } else if let Some(error) = self.patcher_state.error() {
-                ui.colored_label(ui.visuals().error_fg_color, error)
-            } else if self.patcher_state.patcher().is_some() {
-                ui.label("Import prototype WIP")
-            } else {
-                ui.label("Patcher unavailable")
-            };
-        });
+        if self.workspace.requires_selection() {
+            let _panel = egui::CentralPanel::default().show(ui, |ui| {
+                self.workspace.show_required_content(ui);
+            });
+        } else {
+            let _panel = egui::CentralPanel::default().show(ui, |ui| {
+                let _heading = ui.heading(egui::RichText::new(APP_NAME).strong().size(19.0));
+                if let Some(error) = self.patcher_state.error() {
+                    let _error = ui.colored_label(ui.visuals().error_fg_color, error);
+                } else if self.patcher_state.patcher().is_some() {
+                    let _status = ui.label("Patcher stub");
+                } else {
+                    let _status = ui.label("Patcher unavailable");
+                }
+            });
+        }
     }
 
     fn save(&mut self, storage: &mut dyn Storage) {
-        store_workspace(storage, self.persisted_workspace());
-    }
-}
-
-fn executable_directory() -> Option<PathBuf> {
-    std::env::current_exe()
-        .ok()?
-        .parent()
-        .map(Path::to_path_buf)
-}
-
-fn store_workspace(storage: &mut dyn Storage, workspace: Option<&Workspace>) {
-    match workspace {
-        Some(workspace) => {
-            eframe::set_value(storage, WORKSPACE_KEY, &workspace.root().to_path_buf());
-        }
-        None => storage.remove_string(WORKSPACE_KEY),
+        self.workspace.save(storage);
     }
 }

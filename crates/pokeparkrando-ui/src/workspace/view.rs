@@ -2,34 +2,39 @@ use std::path::Path;
 
 use eframe::egui;
 
-use super::{Workspace, WorkspaceState};
+use super::model::Workspace;
+use super::state::WorkspaceState;
 
 #[derive(Clone, Copy)]
-pub(crate) enum WorkspaceAction {
+pub(super) enum WorkspaceAction {
     UseSuggested,
     ChooseDirectory,
 }
 
-pub(crate) struct WorkspaceView<'a> {
+pub(super) struct WorkspaceView<'a> {
     state: &'a WorkspaceState,
     actions_enabled: bool,
 }
 
 impl<'a> WorkspaceView<'a> {
-    pub(crate) fn new(state: &'a WorkspaceState, actions_enabled: bool) -> Self {
+    pub(super) fn new(state: &'a WorkspaceState, actions_enabled: bool) -> Self {
         Self {
             state,
             actions_enabled,
         }
     }
 
-    pub(crate) fn show(&self, ui: &mut egui::Ui) -> Option<WorkspaceAction> {
+    pub(super) fn show(&self, ui: &mut egui::Ui) -> Option<WorkspaceAction> {
         match self.state {
             WorkspaceState::Required { suggested, .. } => {
                 self.show_required(ui, suggested.as_deref())
             }
             WorkspaceState::Ready { workspace, .. } => self.show_ready(ui, workspace),
         }
+    }
+
+    pub(super) fn show_required_content(ui: &mut egui::Ui) {
+        let _message = ui.label(egui::RichText::new("Choose a Workspace to continue").size(16.0));
     }
 
     fn show_required(
