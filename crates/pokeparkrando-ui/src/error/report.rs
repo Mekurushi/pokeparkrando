@@ -45,15 +45,30 @@ impl ErrorReport {
                 details: Some(source.to_string()),
             },
             PatcherError::Import(error) => Self::from_import(error),
+            PatcherError::Patch(error) => Self {
+                title: "Could not create patched ISO".to_owned(),
+                message: "The patch operation failed".to_owned(),
+                details: Some(error.to_string()),
+            },
             PatcherError::ReadPatchFile(error) => Self::from_patch_file(error),
             PatcherError::StartImport(error) => Self {
                 title: "Could not start import".to_owned(),
                 message: "The original ISO import worker could not be started".to_owned(),
                 details: Some(error.to_string()),
             },
+            PatcherError::StartPatch(error) => Self {
+                title: "Could not start patch".to_owned(),
+                message: "The ISO patch worker could not be started".to_owned(),
+                details: Some(error.to_string()),
+            },
             PatcherError::ImportStopped => Self {
                 title: "Import stopped unexpectedly".to_owned(),
                 message: "The original ISO import ended before successfully finishing".to_owned(),
+                details: None,
+            },
+            PatcherError::PatchStopped => Self {
+                title: "Patch stopped unexpectedly".to_owned(),
+                message: "The ISO patch operation ended before successfully finishing".to_owned(),
                 details: None,
             },
         }

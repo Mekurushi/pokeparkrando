@@ -4,10 +4,10 @@ use pokeparkrando_core::OriginalReadiness;
 use super::patch_file::PatchFileState;
 use super::state::{OriginalStatusReadiness, PatcherState};
 
-#[derive(Clone, Copy)]
 pub(super) enum PatcherAction {
     ImportOriginal,
     SelectPatchFile,
+    Patch(pokeparkrando_core::GameId),
 }
 
 pub(super) struct PatcherView<'a> {
@@ -24,8 +24,8 @@ impl<'a> PatcherView<'a> {
         match self.state {
             PatcherState::Unavailable => None,
             PatcherState::Ready { .. } => {
-                let readiness_action = self.show_readiness(ui, actions_enabled);
                 let patch_file_action = self.show_patch_file(ui, actions_enabled);
+                let readiness_action = self.show_readiness(ui, actions_enabled);
                 patch_file_action.or(readiness_action)
             }
             PatcherState::Failed => {
@@ -60,6 +60,7 @@ impl<'a> PatcherView<'a> {
                 let _missing = ui.weak("No patch file selected");
             }
         }
+        let _separator = ui.separator();
         action
     }
 
@@ -81,7 +82,7 @@ impl<'a> PatcherView<'a> {
             }
         });
         let _statuses = egui::Grid::new("original-readiness")
-            .num_columns(2)
+            .num_columns(3)
             .show(ui, |ui| {
                 for original in originals {
                     let game_id = original.game_id().as_str();
@@ -103,6 +104,19 @@ impl<'a> PatcherView<'a> {
                             let _status =
                                 ui.colored_label(ui.visuals().error_fg_color, "Unavailable");
                         }
+                    }
+                    //TODO: centralized actions_enabled source
+                    let can_patch = actions_enabled
+                        && self.patch_file.is_some()
+                        && matches!(
+                            original.readiness(),
+                            OriginalStatusReadiness::Available(OriginalReadiness::Ready)
+                        );
+                    if ui
+                        .add_enabled(can_patch, egui::Button::new("Patch..."))
+                        .clicked()
+                    {
+                        action = Some(PatcherAction::Patch(original.game_id().clone()));
                     }
                     ui.end_row();
                 }

@@ -7,6 +7,7 @@ use eframe::egui;
 use rfd::FileDialog;
 
 use super::import::{ImportEvent, ImportFailure, ImportOutcome, ImportProgressView, ImportState};
+use super::patch::{PatchEvent, PatchFailure, PatchOutcome, PatchProgressView, PatchState};
 use super::patch_file::PatchFileState;
 use super::state::{PatcherState, ReadinessFailure};
 use super::view::{PatcherAction, PatcherView};
@@ -14,6 +15,7 @@ use super::view::{PatcherAction, PatcherView};
 pub(crate) struct PatcherComponent {
     state: PatcherState,
     import: ImportState,
+    patch: PatchState,
     patch_file: Option<PatchFileState>,
     pending_errors: VecDeque<PatcherError>,
 }
@@ -29,9 +31,12 @@ pub(crate) enum PatcherError {
         source: std::io::Error,
     },
     Import(pokeparkrando_core::ImportOriginalError),
+    Patch(pokeparkrando_core::BuildPatchError),
     ReadPatchFile(pokeparkrando_core::ReadAppkprkError),
     StartImport(std::io::Error),
+    StartPatch(std::io::Error),
     ImportStopped,
+    PatchStopped,
 }
 
 impl PatcherComponent {
@@ -40,6 +45,7 @@ impl PatcherComponent {
         Self {
             state,
             import: ImportState::default(),
+            patch: PatchState::default(),
             patch_file: None,
             pending_errors,
         }
@@ -48,10 +54,11 @@ impl PatcherComponent {
     pub(crate) fn load(&mut self, workspace_root: Option<&Path>) {
         (self.state, self.pending_errors) = Self::load_state(workspace_root);
         self.import = ImportState::default();
+        self.patch = PatchState::default();
     }
 
     pub(crate) fn is_busy(&self) -> bool {
-        self.import.is_importing()
+        self.import.is_importing() || self.patch.is_patching()
     }
 
     pub(crate) fn show(&mut self, ui: &mut egui::Ui) -> Option<PatcherEvent> {
@@ -59,11 +66,13 @@ impl PatcherComponent {
             .pending_errors
             .pop_front()
             .map(PatcherEvent::Error)
-            .or_else(|| self.poll_import());
+            .or_else(|| self.poll_import())
+            .or_else(|| self.poll_patch());
         let action =
             PatcherView::new(&self.state, self.patch_file.as_ref()).show(ui, !self.is_busy());
         if self.state.is_ready() {
             ImportProgressView::new(&self.import).show(ui);
+            PatchProgressView::new(&self.patch).show(ui);
         }
         event.or_else(|| action.and_then(|action| self.handle_action(action, ui.ctx())))
     }
@@ -76,6 +85,67 @@ impl PatcherComponent {
         match action {
             PatcherAction::ImportOriginal => self.choose_original(context),
             PatcherAction::SelectPatchFile => self.choose_patch_file(),
+            PatcherAction::Patch(game_id) => self.choose_patch_destination(game_id, context),
+        }
+    }
+
+    fn choose_patch_destination(
+        &mut self,
+        game_id: pokeparkrando_core::GameId,
+        context: &egui::Context,
+    ) -> Option<PatcherEvent> {
+        let patch_file = self.patch_file.as_ref()?;
+        let patcher = self.state.patcher_handle()?;
+        let stem = patch_file.path().file_stem().map_or_else(
+            || "Pokepark".to_owned(),
+            |stem| stem.to_string_lossy().into_owned(),
+        );
+        let iso_name = format!("Pokepark {stem}.iso");
+        let dialog = FileDialog::new()
+            .set_title("Save patched ISO")
+            .add_filter("Wii disc image", &["iso"])
+            .set_file_name(iso_name)
+            .set_directory(patcher.workspace_root());
+        let destination = dialog.save_file()?;
+
+        self.start_patch(game_id, destination, context)
+    }
+
+    fn start_patch(
+        &mut self,
+        game_id: pokeparkrando_core::GameId,
+        destination: std::path::PathBuf,
+        context: &egui::Context,
+    ) -> Option<PatcherEvent> {
+        let patcher = self.state.patcher_handle()?;
+        let appkprk = self.patch_file.as_ref()?.contents().clone();
+        let (sender, receiver) = mpsc::channel();
+        let context = context.clone();
+        let worker = thread::Builder::new()
+            .name("iso-patch".to_owned())
+            .spawn(move || {
+                let progress_sender = sender.clone();
+                let result = patcher.patch_to_iso(
+                    &game_id,
+                    &appkprk,
+                    &destination,
+                    |progress| {
+                        let _sent = progress_sender.send(PatchEvent::Progress(progress));
+                        context.request_repaint();
+                    },
+                    |_diagnostic| {},
+                );
+                let _sent = sender.send(PatchEvent::Finished(result));
+                context.request_repaint();
+            });
+
+        match worker {
+            Ok(worker) => {
+                self.patch.begin(receiver);
+                drop(worker);
+                None
+            }
+            Err(error) => Some(PatcherEvent::Error(PatcherError::StartPatch(error))),
         }
     }
 
@@ -137,6 +207,19 @@ impl PatcherComponent {
             }
             Some(ImportOutcome::Failed(ImportFailure::Disconnected)) => {
                 Some(PatcherEvent::Error(PatcherError::ImportStopped))
+            }
+            None => None,
+        }
+    }
+
+    fn poll_patch(&mut self) -> Option<PatcherEvent> {
+        match self.patch.poll() {
+            Some(PatchOutcome::Patched(_destination)) => None,
+            Some(PatchOutcome::Failed(PatchFailure::Patch(error))) => {
+                Some(PatcherEvent::Error(PatcherError::Patch(error)))
+            }
+            Some(PatchOutcome::Failed(PatchFailure::Disconnected)) => {
+                Some(PatcherEvent::Error(PatcherError::PatchStopped))
             }
             None => None,
         }

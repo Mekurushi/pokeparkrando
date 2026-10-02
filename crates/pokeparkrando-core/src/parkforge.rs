@@ -1,10 +1,12 @@
 use std::path::Path;
 
 use parkforge::RebuildPaths;
-pub use parkforge::{BuildConfig, BuildConfigValue, BuildDiagnostic, BuildProgress, GameId};
+pub use parkforge::{
+    BuildConfig, BuildConfigValue, BuildDiagnostic, BuildProgress, GameId, RebuildProgress,
+};
 pub(crate) use parkforge::{
     BuildError, BuildPaths, CheckError, ExtractError, ExtractionProgress, IdentifyError,
-    ProjectConfig, ProjectError, RebuildError, RebuildProgress,
+    ProjectConfig, ProjectError, RebuildError,
 };
 
 pub(crate) fn build_with_paths<P, D>(

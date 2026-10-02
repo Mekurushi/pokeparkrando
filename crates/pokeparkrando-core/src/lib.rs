@@ -12,7 +12,8 @@ pub use original::{
     ImportOriginalProgress, OriginalReadiness, import_original, original_readiness,
 };
 pub use parkforge::{
-    BuildConfig, BuildConfigValue, BuildDiagnostic, BuildProgress, GameId, check_project,
+    BuildConfig, BuildConfigValue, BuildDiagnostic, BuildProgress, GameId, RebuildProgress,
+    check_project,
 };
 pub use patcher::{PatchProgress, Patcher};
 pub const PATCHER_VERSION: &str = env!("CARGO_PKG_VERSION");

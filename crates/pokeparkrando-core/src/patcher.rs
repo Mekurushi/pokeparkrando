@@ -56,6 +56,10 @@ impl Patcher {
         self.project.game_ids()
     }
 
+    pub fn workspace_root(&self) -> &Path {
+        &self.workspace_root
+    }
+
     pub fn game_display_name(&self, game_id: &GameId) -> Option<&str> {
         self.project.game_display_name(game_id)
     }
