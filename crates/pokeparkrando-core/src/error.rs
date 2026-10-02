@@ -73,6 +73,19 @@ pub enum BundledProjectError {
         #[source]
         source: Box<parkforge::ProjectError>,
     },
+
+    #[error("failed to create a temporary directory for bundled project sources: {0}")]
+    CreateTemporarySources(#[source] std::io::Error),
+
+    #[error("failed to extract bundled project sources: {0}")]
+    ExtractSources(#[source] std::io::Error),
+
+    #[error("failed to create shared source directory {}: {source}", path.display())]
+    CreateSharedSources {
+        path: PathBuf,
+        #[source]
+        source: std::io::Error,
+    },
 }
 
 #[derive(Debug, Error)]
@@ -110,5 +123,32 @@ pub enum ImportOriginalError {
         destination: PathBuf,
         #[source]
         source: Box<parkforge::ExtractError>,
+    },
+}
+
+#[derive(Debug, Error)]
+pub enum BuildPatchError {
+    #[error("failed to prepare bundled patch sources: {source}")]
+    PrepareSources {
+        #[source]
+        source: BundledProjectError,
+    },
+
+    #[error("failed to create a temporary directory for build data: {0}")]
+    CreateTemporaryBuild(#[source] std::io::Error),
+
+    #[error("failed to build game revision {game_id} at {}: {source}", destination.display())]
+    Build {
+        game_id: GameId,
+        destination: PathBuf,
+        #[source]
+        source: Box<parkforge::BuildError>,
+    },
+
+    #[error("failed to rebuild patched ISO at {}: {source}", destination.display())]
+    Rebuild {
+        destination: PathBuf,
+        #[source]
+        source: Box<parkforge::RebuildError>,
     },
 }

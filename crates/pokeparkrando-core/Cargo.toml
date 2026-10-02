@@ -6,10 +6,12 @@ rust-version.workspace = true
 
 [dependencies]
 base64 = "0.22.1"
+include_dir = "0.7.4"
 parkforge = { git = "https://github.com/Mekurushi/parkforge.git", rev = "2ce703106862199b53a8bdd46b5371d3b7e2c31c" }
 serde = { version = "1.0.229", features = ["derive"] }
 serde_yaml_ng = "0.10.0"
 thiserror.workspace = true
+tempfile = "3.23.0"
 zip = { version = "8.6.0", default-features = false, features = ["deflate"] }
 
 [lints]
