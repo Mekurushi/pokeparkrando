@@ -1,10 +1,8 @@
-use eframe::{CreationContext, Storage, egui};
-use pokeparkrando_core::PATCHER_VERSION;
-
-use crate::APP_NAME;
+use crate::APP_TITLE;
 use crate::error::ErrorComponent;
 use crate::patcher::{PatcherComponent, PatcherEvent};
 use crate::workspace::{WorkspaceComponent, WorkspaceEvent};
+use eframe::{CreationContext, Storage, egui};
 
 pub(crate) struct PokeparkRandoApp {
     workspace: WorkspaceComponent,
@@ -43,6 +41,10 @@ impl eframe::App for PokeparkRandoApp {
     fn ui(&mut self, ui: &mut egui::Ui, frame: &mut eframe::Frame) {
         let workspace_actions_enabled = !self.patcher.is_busy();
         let workspace = egui::Panel::top("workspace").show(ui, |ui| {
+            let _title = ui.vertical_centered(|ui| {
+                let _heading = ui.heading(egui::RichText::new(APP_TITLE).strong().size(19.0));
+            });
+            ui.add_space(10.0);
             self.workspace
                 .show_header(ui, frame, workspace_actions_enabled)
         });
@@ -56,10 +58,6 @@ impl eframe::App for PokeparkRandoApp {
             });
         } else {
             let _panel = egui::CentralPanel::default().show(ui, |ui| {
-                let _heading = ui.horizontal(|ui| {
-                    let _name = ui.heading(egui::RichText::new(APP_NAME).strong().size(19.0));
-                    let _version = ui.label(format!("Version {PATCHER_VERSION}"));
-                });
                 if let Some(event) = self.patcher.show(ui) {
                     self.handle_patcher_event(event);
                 }
