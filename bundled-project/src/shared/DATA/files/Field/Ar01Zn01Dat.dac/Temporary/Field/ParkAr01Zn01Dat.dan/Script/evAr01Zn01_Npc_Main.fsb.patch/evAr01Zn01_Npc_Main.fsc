@@ -54,9 +54,9 @@ void special_spawn_condition(int param1){
 
     int global_manager = get_module("GlobalManager");
     int disp_manager = get_module("DisposManager");
-    int spawn_gimmick_magikarp = SysCall(0, 0x15, 0x1, global_manager, "MagikarpRescued");
+    bool spawn_gimmick_magikarp = is_location_checked(0x36);
 
-    if(spawn_gimmick_magikarp == 0) {
+    if(spawn_gimmick_magikarp == false) {
         int obj_manager = get_module("ObjectManager");
         int is_gimmick_magikarp_spawned = SysCall(0,0x15,10,obj_manager,0x36);
         if (is_gimmick_magikarp_spawned == 0) {
@@ -572,6 +572,20 @@ void leafeon_dialog(int param_1){
         "11_12580",
         "11_12501",
         "11_12500"
+    );
+}
+
+void croagunk_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x20,
+        0x9d7,
+        "11_00660",
+        "11_12640",
+        "11_12650",
+        "11_12670",
+        "11_12690",
+        "11_12680"
     );
 }
 
@@ -1091,10 +1105,20 @@ void increment_win_counter(){
 // there is an almost unused flag in each Pokemon Node that can be used instead of bestfriend checks
 // TODO: research and update for next breaking release
 bool is_location_checked(int obj_id){
+    int global_manager = get_module("GlobalManager");
+
+    // rescue magikarp location uses 0x36 as object_id
+    if(obj_id == 0x36){
+        return SysCall(0, 0x15, 0x1, global_manager, "MagikarpRescued") == 1;
+    }
     return is_bestfriend(obj_id);
 }
 
 void check_location(int obj_id){
+    // rescue magikarp location uses 0x36 as object_id
+    if(obj_id == 0x36){
+    
+    }
     set_bestfriend(obj_id);
     return;
 }

@@ -32,6 +32,7 @@ ambipom_dialog = 0x65854
 sudowoodo_dialog = 0x65b00
 scyther_dialog = 0x65db4
 leafeon_dialog = 0x6616c
+croagunk_dialog = 0x5f9f8
 bidoof_dialog = 0x6648c
 bidoof2_dialog = 0x665dc
 bidoof3_dialog = 0x6672c

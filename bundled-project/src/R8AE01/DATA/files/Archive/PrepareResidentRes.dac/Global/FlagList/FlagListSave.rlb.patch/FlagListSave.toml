@@ -1,0 +1,20 @@
+[[edits]]
+table = "FlagTable"
+row = 172
+
+[edits.set]
+flag_name = { value = "MagikarpRescued" }
+
+[[edits]]
+table = "FlagTable"
+row = 192
+
+[edits.set]
+flag_name = { value = "f0101BattleCounter" }
+
+[[edits]]
+table = "FlagTable"
+row = 200
+
+[edits.set]
+flag_name = { value = "f0101BattleCounterNum" }
