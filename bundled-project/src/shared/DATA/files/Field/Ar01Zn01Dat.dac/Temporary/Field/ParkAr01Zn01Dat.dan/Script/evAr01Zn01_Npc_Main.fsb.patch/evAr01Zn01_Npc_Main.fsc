@@ -77,6 +77,7 @@ void turtwig_dialog(int param_1){
         param_1,
         0x5,
         0x9aa,
+        "11_00390",
         "11_10040",
         "11_10050",
         "11_10070",
@@ -90,6 +91,7 @@ void buneary_dialog(int param_1){
         param_1,
         0x6,
         0x9b9,
+        "11_00400",
         "11_10140",
         "11_10050",
         "11_10170",
@@ -103,6 +105,7 @@ void pachirisu_dialog(int param_1){
         param_1,
         0x7,
         0x9c8,
+        "11_00410",
         "11_10240",
         "11_10250",
         "11_10270",
@@ -120,6 +123,7 @@ void treecko_dialog(int param_1){
         param_1,
         0x9,
         0xc7a,
+        "11_00430",
         "11_10440",
         "11_10450",
         "11_10470",
@@ -133,6 +137,7 @@ void chimchar_dialog(int param_1){
         param_1,
         0xa,
         0x99b,
+        "11_00440",
         "11_10540",
         "11_10550",
         "11_10570",
@@ -146,6 +151,7 @@ void magikarp_dialog(int param_1){
         param_1,
         0xb,
         0xbb7,
+        "11_00450",
         "11_10640",
         "11_10650",
         "11_10670",
@@ -159,6 +165,7 @@ void lotad_dialog(int param_1){
         param_1,
         0xc,
         0xaa9,
+        "11_00460",
         "11_10740",
         "11_10750",
         "11_10770",
@@ -172,6 +179,7 @@ void caterpie_dialog(int param_1){
         param_1,
         0xd,
         0xb7b,
+        "11_00470",
         "11_10840",
         "11_10850",
         "11_10870",
@@ -185,6 +193,7 @@ void weedle_dialog(int param_1){
         param_1,
         0xe,
         0xb8a,
+        "11_00480",
         "11_10940",
         "11_10950",
         "11_10970",
@@ -352,6 +361,7 @@ void oddish_dialog(int param_1){
         param_1,
         0x10,
         0xb30,
+        "11_00500",
         "11_11040",
         "11_11050",
         "11_11070",
@@ -365,6 +375,7 @@ void shroomish_dialog(int param_1){
         param_1,
         0x11,
         0xb6c,
+        "11_00510",
         "11_11140",
         "11_11150",
         "11_11170",
@@ -378,6 +389,7 @@ void bonsly_dialog(int param_1){
         param_1,
         0x12,
         0xa22,
+        "11_00520",
         "11_11240",
         "11_11250",
         "11_11270",
@@ -391,6 +403,7 @@ void shinx_dialog(int param_1){
         param_1,
         0x13,
         0x1364,
+        "11_00530",
         "11_11340",
         "11_11350",
         "11_11370",
@@ -404,6 +417,7 @@ void mankey_dialog(int param_1){
         param_1,
         0x14,
         0xb21,
+        "11_00540",
         "11_11440",
         "11_11450",
         "11_11470",
@@ -417,6 +431,7 @@ void aipom_dialog(int param_1){
         param_1,
         0x15,
         0xa13,
+        "11_00550",
         "11_11540",
         "11_11550",
         "11_11570",
@@ -430,6 +445,7 @@ void spearow_dialog(int param_1){
         param_1,
         0x16,
         0x1193,
+        "11_00560",
         "11_11640",
         "11_11650",
         "11_11670",
@@ -443,6 +459,7 @@ void torterra_dialog(int param_1){
         param_1,
         0x17,
         0xbd5,
+        "11_00570",
         "11_11740",
         "11_11750",
         "11_11770",
@@ -456,6 +473,7 @@ void starly_dialog(int param_1){
         param_1,
         0x18,
         0xbe4,
+        "11_00580",
         "11_11840",
         "11_11850",
         "11_11870",
@@ -469,6 +487,7 @@ void butterfree_dialog(int param_1){
         param_1,
         0x19,
         0x1184,
+        "11_00590",
         "11_11940",
         "11_11950",
         "11_11970",
@@ -486,6 +505,7 @@ void bibarel_dialog(int param_1){
         param_1,
         0x1b,
         0xbf3,
+        "11_00610",
         "11_12140",
         "11_12150",
         "11_12170",
@@ -499,6 +519,7 @@ void ambipom_dialog(int param_1){
         param_1,
         0x1c,
         0xa04,
+        "11_00620",
         "11_12240",
         "11_12250",
         "11_12270",
@@ -512,6 +533,7 @@ void sudowoodo_dialog(int param_1){
         param_1,
         0x1d,
         0xf77,
+        "11_00630",
         "11_12340",
         "11_12350",
         "11_12370",
@@ -525,6 +547,7 @@ void scyther_dialog(int param_1){
         param_1,
         0x1e,
         0xd3d,
+        "11_00640",
         "11_12440",
         "11_12450",
         "11_12470",
@@ -540,6 +563,7 @@ void leafeon_dialog(int param_1){
         param_1,
         0x1f,
         0xde2,
+        "11_00650",
         0x14,
         "11_12540",
         "11_12550",
@@ -586,6 +610,7 @@ void starly2_dialog(int param_1){
         param_1,
         0x26,
         0xbe4,
+        "11_00580",
         "11_13240",
         "11_13250",
         "11_13270",
@@ -599,6 +624,7 @@ void starly3_dialog(int param_1){
         param_1,
         0x27,
         0xbe4,
+        "11_00580",
         "11_13340",
         "11_13350",
         "11_13370",
@@ -612,6 +638,7 @@ void aipom2_dialog(int param_1){
         param_1,
         0x28,
         0xa13,
+        "11_00550",
         "11_13440",
         "11_13450",
         "11_13470",
@@ -625,6 +652,7 @@ void starly4_dialog(int param_1){
         param_1,
         0x29,
         0xbe4,
+        "11_00580",
         "11_13540",
         "11_13550",
         "11_13570",
@@ -638,6 +666,7 @@ void athletic_spearow_dialog(int param_1){
         param_1,
         0x2a,
         0x1193,
+        "11_00560",
         "11_13640",
         "11_13650",
         "11_13670",
@@ -650,6 +679,7 @@ void lotad2_dialog(int param_1){
         param_1,
         0x2b,
         0xaa9,
+        "11_00460",
         "11_13740",
         "11_13750",
         "11_13770",
@@ -663,6 +693,7 @@ void lotad3_dialog(int param_1){
         param_1,
         0x2c,
         0xaa9,
+        "11_00460",
         "11_13840",
         "11_13850",
         "11_13870",
@@ -676,6 +707,7 @@ void starly5_dialog(int param_1){
         param_1,
         0x2d,
         0xbe4,
+        "11_00580",
         "11_13940",
         "11_13950",
         "11_13970",
@@ -689,6 +721,7 @@ void buneary2_dialog(int param_1){
         param_1,
         0x2e,
         0x9b9,
+        "11_00400",
         "11_10140",
         "11_10150",
         "11_10170",
@@ -702,6 +735,7 @@ void shinx2_dialog(int param_1){
         param_1,
         0x2f,
         0x1364,
+        "11_00530",
         "11_14140",
         "11_14150",
         "11_14170",
@@ -715,6 +749,7 @@ void turtwig2_dialog(int param_1){
         param_1,
         0x30,
         0x9aa,
+        "11_00390",
         "11_10040",
         "11_10050",
         "11_10070",
@@ -728,6 +763,7 @@ void butterfree2_dialog(int param_1){
         param_1,
         0x31,
         0x1184,
+        "11_00590",
         "11_14340",
         "11_14350",
         "11_14370",
@@ -745,6 +781,7 @@ void caterpie2_dialog(int param_1){
         param_1,
         0x33,
         0xb7b,
+        "11_00470",
         "11_14540",
         "11_14550",
         "11_14570",
@@ -758,6 +795,7 @@ void pachirisu2_dialog(int param_1){
         param_1,
         0x34,
         0x9c8,
+        "11_00410",
         "11_14640",
         "11_14650",
         "11_14670",
@@ -774,6 +812,7 @@ void power_competition_dialog(
     int param_1,
     int object_id,
     int sound_id,
+    string friendship_banner_id,
     string question_dialog_id,
     string decline_dialog_id,
     string loss_dialog_id,
@@ -797,7 +836,7 @@ void power_competition_dialog(
             give_berries(hasWon);
             if(is_location_checked(object_id) == false){
               show_npc_dialog(param_1,first_win_dialog_id);
-              friendship_banner("11_00390");
+              friendship_banner(friendship_banner_id);
               check_location(object_id);
             }
             else{
@@ -817,6 +856,7 @@ void power_competition_dialog_with_win_count_check(
     int param_1,
     int object_id,
     int sound_id,
+    string friendship_banner_id,
     string question_dialog_id,
     string decline_dialog_id,
     string loss_dialog_id,
@@ -846,7 +886,7 @@ void power_competition_dialog_with_win_count_check(
                 give_berries(hasWon);
                 if(is_location_checked(object_id) == false){
                   show_npc_dialog(param_1,first_win_dialog_id);
-                  friendship_banner("11_00390");
+                  friendship_banner(friendship_banner_id);
                   check_location(object_id);
                 }
                 else{
@@ -870,6 +910,7 @@ void power_competition_dialog_with_friendship_count_check(
     int param_1,
     int object_id,
     int sound_id,
+    string friendship_banner_id,
     int friendship_count,
     string question_dialog_id,
     string decline_dialog_id,
@@ -900,7 +941,7 @@ void power_competition_dialog_with_friendship_count_check(
                 give_berries(hasWon);
                 if(is_location_checked(object_id) == false){
                   show_npc_dialog(param_1,first_win_dialog_id);
-                  friendship_banner("11_00390");
+                  friendship_banner(friendship_banner_id);
                   check_location(object_id);
                 }
                 else{
@@ -1069,9 +1110,6 @@ bool is_bestfriend(int obj_id){
 void AR01ZN01_INI(int param_1){
     // activate logs
     SysCall(0,7,1);
-
-    unlock_pokemon(0x24);
-
     int event_script = get_module("EventScript");
     SysCall(0,0x15,0x65,event_script,0,0,0,1);
     FUN_0005acbc(0x4e23);
