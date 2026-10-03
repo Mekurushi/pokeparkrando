@@ -207,12 +207,11 @@ void event_bidoof_dialog(int param_1){
         show_npc_dialog(param_1,"11_90100");
         end_event_script(param_1);
     }
-    // vec3 commented out until supported
 
-    //vec3 object_position;
-    //vec3 object_rotation;
-    //SysCall(0,0x15,0x13,object_accessor,SysCall(3,1,object_position));
-    //SysCall(0,0x15,0x16,object_accessor,SysCall(3,1,object_rotation));
+    vec3 object_position;
+    vec3 object_rotation;
+    SysCall(0,0x15,0x13,object_accessor,SysCall(3,1,object_position));
+    SysCall(0,0x15,0x16,object_accessor,SysCall(3,1,object_rotation));
 
     //TODO: beach_bidoof unlock
     
@@ -270,10 +269,10 @@ void event_bidoof_dialog(int param_1){
     SysCall(0,0x15,0,global_manager,"GF0004", increased_gf0004);
     SysCall(0,0x15,0xca,event_script,0);
 
-    //vec3 player_position;
-    //vec3 player_rotation;
-    //SysCall(0,0x15,0x13,player,SysCall(3,1,player_position));
-    //SysCall(0,0x15,0x16,player,SysCall(3,1,player_rotation));
+    vec3 player_position;
+    vec3 player_rotation;
+    SysCall(0,0x15,0x13,player,SysCall(3,1,player_position));
+    SysCall(0,0x15,0x16,player,SysCall(3,1,player_rotation));
 
     remove_held_item();
     despawn_player_object();
@@ -291,11 +290,11 @@ void event_bidoof_dialog(int param_1){
     }
     remove_held_item();
     player = freeze_player();
-    //SysCall(0,0x15,1,player,0);
-    //SysCall(0,0x15,7,player,player_position.x,player_position.y,player_position.z);
-    //SysCall(0,0x15,8,player,player_position.x,player_position.y,player_position.z);
-    //SysCall(0,0x15,0x22,player,player_position.x,player_position.y,player_position.z,1);
-    //SysCall(0,0x15,9,player,player_rotation.x,player_rotation.y,player_rotation.z);
+    SysCall(0,0x15,1,player,0);
+    SysCall(0,0x15,7,player,player_position.x,player_position.y,player_position.z);
+    SysCall(0,0x15,8,player,player_position.x,player_position.y,player_position.z);
+    SysCall(0,0x15,0x22,player,player_position.x,player_position.y,player_position.z,1);
+    SysCall(0,0x15,9,player,player_rotation.x,player_rotation.y,player_rotation.z);
 
     int updated_gf0004 = SysCall(0,0x15,1,global_manager,"GF0004");
 
@@ -310,8 +309,8 @@ void event_bidoof_dialog(int param_1){
     respawn_field();
     special_spawn_condition(param_1);
     object_accessor = configure_npc_and_get_accessor(object_id);
-    //SysCall(0,0x15,7,object_accessor,object_position.x,object_position.y,object_position.z);
-    //SysCall(0,0x15,9,object_accessor,object_rotation.x,object_rotation.y,object_rotation.z);
+    SysCall(0,0x15,7,object_accessor,object_position.x,object_position.y,object_position.z);
+    SysCall(0,0x15,9,object_accessor,object_rotation.x,object_rotation.y,object_rotation.z);
 
     face_object_accessors(player,object_accessor,1);
     FUN_00051500(0x3c);
@@ -971,12 +970,12 @@ int start_power_competition(int event_context, int competition_id, int object_id
     int object_accessor = get_object_accessor(event_context,object_id,1);
     int player_event_accessor = create_power_competition_player();
 
-    //vec3 object_position;
-    //vec3 player_position;
+    vec3 object_position;
+    vec3 player_position;
 
     prepare_power_competition_camera();
-    //SysCall(0,0x15,0x13,object_accessor,SysCall(3,1,object_position));
-    //SysCall(0,0x15,0x13,player_event_accessor,SysCall(3,1,player_position));
+    SysCall(0,0x15,0x13,object_accessor,SysCall(3,1,object_position));
+    SysCall(0,0x15,0x13,player_event_accessor,SysCall(3,1,player_position));
     SysCall(0,0x15,0xca,event_script,0x1e);
     wait_frames(0x1e);
 
@@ -994,9 +993,9 @@ int start_power_competition(int event_context, int competition_id, int object_id
     spawn_player_object();
 
     int player_accessor = freeze_player();
-    //SysCall(0,0x15,7,player_accessor,player_position.x,player_position.y,player_position.z);
-    //SysCall(0,0x15,8,player_accessor,player_position.x,player_position.y,player_position.z);
-    //SysCall(0,0x15,0x22,player_accessor,player_position.x,player_position.y,player_position.z,1);
+    SysCall(0,0x15,7,player_accessor,player_position.x,player_position.y,player_position.z);
+    SysCall(0,0x15,8,player_accessor,player_position.x,player_position.y,player_position.z);
+    SysCall(0,0x15,0x22,player_accessor,player_position.x,player_position.y,player_position.z,1);
     int player_state = SysCall(0,0x15,0x30,player_accessor);
     if (player_state == 0) {
         SysCall(0,0x15,2,player_accessor,0,0);
@@ -1007,9 +1006,9 @@ int start_power_competition(int event_context, int competition_id, int object_id
     respawn_field();
     configure_npc_and_get_accessor(object_id);
     object_accessor = get_object_accessor(event_context,object_id,1);
-    //SysCall(0,0x15,7,object_accessor,object_position.x,object_position.y,object_position.z);
-    //SysCall(0,0x15,8,object_accessor,object_position.x,object_position.y,object_position.z);
-    //SysCall(0,0x15,0x22,object_accessor,object_position.x,object_position.y,object_position.z,1);
+    SysCall(0,0x15,7,object_accessor,object_position.x,object_position.y,object_position.z);
+    SysCall(0,0x15,8,object_accessor,object_position.x,object_position.y,object_position.z);
+    SysCall(0,0x15,0x22,object_accessor,object_position.x,object_position.y,object_position.z,1);
 
     int object_state = SysCall(0,0x15,0x10,dispos_manager,object_id);
     if (object_state == 0) {
