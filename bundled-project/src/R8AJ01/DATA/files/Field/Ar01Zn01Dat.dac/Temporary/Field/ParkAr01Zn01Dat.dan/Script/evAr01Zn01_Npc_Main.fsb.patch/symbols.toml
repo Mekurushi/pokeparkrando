@@ -2,8 +2,9 @@ base_address = 0x50000
 
 [functions]
 special_spawn_condition = 0x5bef4
+rescue_magikarp_cutscene = 0x5c808
 get_module = 0x50044
-configure_npc_and_get_accessor = 0x511b4
+lock_npc_and_get_accessor = 0x511b4
 despawn = 0x5461c
 turtwig_dialog = 0x6164c
 buneary_dialog = 0x61b3c
@@ -62,7 +63,7 @@ set_bestfriend = 0x54948
 complete_event = 0x54bc8
 end_event_script = 0x50080
 unlock_pokemon = 0x501fc
-freeze_player = 0x50fb0
+lock_player_and_get_accessor = 0x50fb0
 face_player_and_npc = 0x521f8
 remove_held_item = 0x50510
 get_held_item_kind = 0x502a0
@@ -70,26 +71,40 @@ is_friend = 0x5473c
 
 AR01ZN01_INI = 0x69e20
 AR01ZN01_DEF = 0x69db4
-FUN_00054494 = 0x54494
-FUN_00051f1c = 0x51f1c
-FUN_0005acbc = 0x5acbc
-FUN_00051500 = 0x51500
-FUN_00051e9c = 0x51e9c
-FUN_000500c8 = 0x500c8
-FUN_00050124 = 0x50124
+setup_player_for_zone = 0x54494
+SETGIMMICK = 0x5a67c
+fade_out_bgm = 0x51500
+fade_out = 0x51e9c
+force_fade_in = 0x500c8
+force_fade_out = 0x50124
 EA01_Z01_D04 = 0x58a40
 EA01_Z01_D05 = 0x58df8
 EA01_Z01_D06 = 0x5932c
 EA01_Z01_D07 = 0x599dc
+clear_wand_check = 0x54b44
+
+# magikarp unlock
+configure_npc = 0x545b0
+set_object_position = 0x536bc
+set_object_rotation = 0x5375c
+set_event_frame_visible_with_fade = 0x51ae0
+object_id_to_friend_id = 0x549dc
+play_sound_effect = 0x5139c
+reset_object_after_event = 0x51268
+despawn_field = 0x512e8
+hide_event_frame = 0x51b08
+fade_in_bgm = 0x514d8
+restore_player_control = 0x5113c
+update_npc_story_state = 0x5c550
 
 # original power competition functions
-begin_power_competition = 0x51e3c
-create_power_competition_player = 0x50ec0
+store_pre_competition_state = 0x51e3c
+get_player_accessor = 0x50ec0
 prepare_power_competition_camera = 0x540a4
 wait_frames = 0x500bc
 run_power_competition = 0x50840
 despawn_player_object = 0x54440
 spawn_player_object = 0x543ec
 respawn_field = 0x5130c
-face_object_accessors = 0x50724
-finish_power_competition = 0x51e68
+face_object_accessors_instantly = 0x50724
+restore_pre_competition_state = 0x51e68

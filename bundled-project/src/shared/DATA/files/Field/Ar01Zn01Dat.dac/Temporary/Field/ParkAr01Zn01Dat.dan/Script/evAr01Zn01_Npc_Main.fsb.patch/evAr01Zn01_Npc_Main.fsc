@@ -1,19 +1,15 @@
 extern int get_module(string name);
-extern int configure_npc_and_get_accessor(int obj_id);
+extern int lock_npc_and_get_accessor(int obj_id);
 extern void despawn(int obj_id);
-
 extern int show_yes_no_question(int param1, string dialog_id);
-
-extern int get_object_accessor(int param1, int object_id, int param3);
+extern int get_object_accessor(int param1, int object_id, bool use_provided_object_id);
 extern void fade_in(int arg0, int arg1, int arg2, int arg3);
 extern void show_npc_dialog(int param1, string dialog_id);
 extern void give_berries(int value);
 extern void complete_event();
-extern int freeze_player();
+extern int lock_player_and_get_accessor();
 extern void face_player_and_npc(int object_id, int param2);
-
 extern void end_event_script(int param1);
-
 extern void friendship_banner(string banner_id);
 extern void unlock_pokemon(int pokemon_id);
 extern void set_bestfriend(int object_id);
@@ -21,33 +17,40 @@ extern void set_bestfriend(int object_id);
 extern int get_held_item_kind();
 extern int is_friend(int object_id);
 extern void remove_held_item();
-extern void FUN_00054494();
-extern void FUN_00051f1c(int param_1, int param_2, int param_3, int param_4);
-extern void FUN_0005acbc(int param_1);
-extern void FUN_00051500(int param_1);
-extern void FUN_00051e9c(int param_1, int param_2, int param_3, int param_4);
-extern void FUN_000500c8(int param_1, int param_2, int param_3, int param_4);
-extern void FUN_00050124(int param_1, int param_2, int param_3, int param_4);
+extern void setup_player_for_zone();
+extern void SETGIMMICK();
+extern void fade_out_bgm(int frames);
+extern void fade_out(int red, int green, int blue, int frames);
+extern void force_fade_in(int red, int green, int blue, int duration_frames);
+extern void force_fade_out(int red, int green, int blue, int duration_frames);
 extern void EA01_Z01_D04(int param_1);
 extern void EA01_Z01_D05(int param_1);
 extern void EA01_Z01_D06(int param_1);
 extern void EA01_Z01_D07(int param_1);
-
-// =====================================================================
-// original power competition implementation
-// =====================================================================
-
-extern void begin_power_competition();
-extern int create_power_competition_player();
+extern void configure_npc(int object_id);
+extern void set_object_position(int object_id, int x, int y, int z);
+extern void set_object_rotation(int object_id, int x, int y, int z);
+extern void set_event_frame_visible_with_fade(int visible);
+extern int object_id_to_friend_id(int object_id);
+extern void play_sound_effect(int sound_id, int fade_in_frames);
+extern void reset_object_after_event(int object_id);
+extern void despawn_field();
+extern void hide_event_frame(bool use_fade);
+extern void fade_in_bgm(int frames);
+extern void restore_player_control();
+extern void update_npc_story_state(int param_1);
+extern void store_pre_competition_state();
+extern int get_player_accessor();
 extern void prepare_power_competition_camera();
 extern void wait_frames(int frames);
 extern int run_power_competition(int competition_id, int object_id);
 extern void despawn_player_object();
 extern void spawn_player_object();
 extern void respawn_field();
-extern void face_object_accessors(int player_accessor, int object_accessor, int immediate);
-extern void finish_power_competition(int object_id);
-
+// third param is unused, best guess it was intended as immediate trigger, but ended in separate functions
+extern void face_object_accessors_instantly(int player_accessor, int object_accessor, int immediate);
+extern void restore_pre_competition_state(int object_id);
+extern void clear_wand_check();
 config int BATTLE_COUNT;
 
 void special_spawn_condition(int param1){
@@ -62,13 +65,76 @@ void special_spawn_condition(int param1){
         if (is_gimmick_magikarp_spawned == 0) {
             SysCall(0,0x15,0x11,obj_manager,0x36);
         }
-        int gimmick_magikarp_obj = configure_npc_and_get_accessor(0x36);
+        int gimmick_magikarp_obj = lock_npc_and_get_accessor(0x36);
         SysCall(0,0x15,0x2714,gimmick_magikarp_obj,1);
         SysCall(0,0x15,0x15,gimmick_magikarp_obj,0);
     }
     else{
         despawn(0x36);
     }
+    return;
+}
+
+void rescue_magikarp_cutscene(int param_1){
+    int event_script = get_module("EventScript");
+    int field_info = get_module("mnFieldInfo");
+    int global_manager = get_module("GlobalManager");
+    get_module("DisposManager");
+    wait_frames(0x14);
+    int player = lock_player_and_get_accessor();
+
+    vec3 player_position;
+    vec3 player_rotation;
+    SysCall(0,0x15,0x13,player,SysCall(3,1,player_position));
+    SysCall(0,0x15,0x16,player,SysCall(3,1,player_rotation));
+
+    fade_out_bgm(0x1e);
+    fade_out(0,0,0,0x3c);
+    despawn_player_object();
+    despawn(0x36);
+    despawn_field();
+    configure_npc(0xb);
+    lock_npc_and_get_accessor(0xb);
+    set_object_position(0xb,0x310,0x18,-1415);
+    set_object_rotation(0xb,0,0x9a,0);
+    check_location(0x36);
+
+    vec3 camera_position;
+    vec3 camera_target;
+    SysCall(3,2,SysCall(3,1,camera_position),792.17,32.2,-1432.97);
+    SysCall(3,2,SysCall(3,1,camera_target),168.73,-204.49,91.38);
+    SysCall(0,0x15,0xcb,event_script);
+    SysCall(0,0x15,0xcc,event_script,-1,SysCall(3,1,camera_position));
+    SysCall(0,0x15,0xcd,event_script,-1,SysCall(3,1,camera_target));
+    set_event_frame_visible_with_fade(0);
+    int friend_id = object_id_to_friend_id(0xb);
+    SysCall(0,0x15,0x2a,global_manager,friend_id);
+    SysCall(0,0x15,400,event_script,0,0);
+    wait_frames(0x1e);
+    fade_in(0,0,0,0x3c);
+    play_sound_effect(0x7e7,0);
+    SysCall(0,0x15,0x11,field_info,1,"11_00170");
+    wait_frames(0x5a);
+    reset_object_after_event(0xb);
+    wait_frames(0x5a);
+    SysCall(0,0x15,0x12,field_info);
+    wait_frames(0x3c);
+    fade_out(0,0,0,0x3c);
+    hide_event_frame(false);
+    spawn_player_object();
+
+    player = lock_player_and_get_accessor();
+    SysCall(0,0x15,7,player,player_position.x,player_position.y,player_position.z);
+    SysCall(0,0x15,8,player,player_position.x,player_position.y,player_position.z);
+    SysCall(0,0x15,0x22,player,player_position.x,player_position.y,player_position.z,1);
+    SysCall(0,0x15,9,player,player_rotation.x,player_rotation.y,player_rotation.z);
+    SysCall(0,0x15,0xca,event_script,-1);
+    respawn_field();
+    special_spawn_condition(param_1);
+    wait_frames(0x1e);
+    fade_in_bgm(0x1e);
+    fade_in(0,0,0,0x3c);
+    restore_player_control();
     return;
 }
 
@@ -204,12 +270,12 @@ void weedle_dialog(int param_1){
 
 void event_bidoof_dialog(int param_1){
     int object_id = 0xf;
-    int player = freeze_player();
-    int object_accessor = configure_npc_and_get_accessor(object_id);
+    int player = lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(object_id);
     face_player_and_npc(object_id,0);
     int global_manager = get_module("GlobalManager");
     int event_script = get_module("EventScript");
-    SysCall(0,0x15,0x28,object_accessor,0xa40,0,0x3f800000,0x3f800000);
+    SysCall(0,0x15,0x28,object_accessor,0xa40,0,1.0,1.0);
 
     if (is_friend(0x14) == 0){
     // if mankey is not befriended abort dialog
@@ -272,8 +338,8 @@ void event_bidoof_dialog(int param_1){
         }
         end_event_script(param_1);
     }
-    FUN_00051500(0x3c);
-    FUN_00051e9c(0,0,0,0x3c);
+    fade_out_bgm(0x3c);
+    fade_out(0,0,0,0x3c);
     int increased_gf0004 = gf0004 + 1;
     SysCall(0,0x15,0,global_manager,"GF0004", increased_gf0004);
     SysCall(0,0x15,0xca,event_script,0);
@@ -286,7 +352,7 @@ void event_bidoof_dialog(int param_1){
     remove_held_item();
     despawn_player_object();
     spawn_player_object();
-    freeze_player();
+    lock_player_and_get_accessor();
 
     if(increased_gf0004 == 1){
         EA01_Z01_D04(param_1);
@@ -298,7 +364,7 @@ void event_bidoof_dialog(int param_1){
         EA01_Z01_D07(param_1);
     }
     remove_held_item();
-    player = freeze_player();
+    player = lock_player_and_get_accessor();
     SysCall(0,0x15,1,player,0);
     SysCall(0,0x15,7,player,player_position.x,player_position.y,player_position.z);
     SysCall(0,0x15,8,player,player_position.x,player_position.y,player_position.z);
@@ -317,14 +383,14 @@ void event_bidoof_dialog(int param_1){
     }
     respawn_field();
     special_spawn_condition(param_1);
-    object_accessor = configure_npc_and_get_accessor(object_id);
+    object_accessor = lock_npc_and_get_accessor(object_id);
     SysCall(0,0x15,7,object_accessor,object_position.x,object_position.y,object_position.z);
     SysCall(0,0x15,9,object_accessor,object_rotation.x,object_rotation.y,object_rotation.z);
 
-    face_object_accessors(player,object_accessor,1);
-    FUN_00051500(0x3c);
-    FUN_000500c8(0,0,0,0x3c);
-    SysCall(0,0x15,0x28,object_accessor,0xa40,0,0x3f800000,0x3f800000);
+    face_object_accessors_instantly(player,object_accessor,1);
+    fade_out_bgm(0x3c);
+    force_fade_in(0,0,0,0x3c);
+    SysCall(0,0x15,0x28,object_accessor,0xa40,0,1.0,1.0);
 
     if (updated_gf0004 == 1) {
     show_npc_dialog(param_1,"11_90030");
@@ -349,7 +415,7 @@ void event_bidoof_dialog(int param_1){
     friendship_banner("11_00490");
 
     SysCall(0,0x15,0x14,global_manager,100);
-    FUN_00050124(0,0,0,0x3c);
+    force_fade_out(0,0,0,0x3c);
     complete_event();
   }
   end_event_script(param_1);
@@ -591,30 +657,30 @@ void croagunk_dialog(int param_1){
 
 void bidoof_dialog(int param_1){
     int object_id = 0x23;
-    freeze_player();
-    int object_accessor = configure_npc_and_get_accessor(object_id);
+    lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(object_id);
     face_player_and_npc(object_id,0);
-    SysCall(0,0x15,0x28,object_accessor,0xa42,0,0x3f800000,0x3f800000);
+    SysCall(0,0x15,0x28,object_accessor,0xa42,0,1.0,1.0);
     show_npc_dialog(param_1,"11_12720");
     end_event_script(param_1);
 }
 
 void bidoof2_dialog(int param_1){
     int object_id = 0x24;
-    freeze_player();
-    int object_accessor = configure_npc_and_get_accessor(object_id);
+    lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(object_id);
     face_player_and_npc(object_id,0);
-    SysCall(0,0x15,0x28,object_accessor,0xa42,0,0x3f800000,0x3f800000);
+    SysCall(0,0x15,0x28,object_accessor,0xa42,0,1.0,1.0);
     show_npc_dialog(param_1,"11_12820");
     end_event_script(param_1);
 }
 
 void bidoof3_dialog(int param_1){
     int object_id = 0x25;
-    freeze_player();
-    int object_accessor = configure_npc_and_get_accessor(object_id);
+    lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(object_id);
     face_player_and_npc(object_id,0);
-    SysCall(0,0x15,0x28,object_accessor,0xa42,0,0x3f800000,0x3f800000);
+    SysCall(0,0x15,0x28,object_accessor,0xa42,0,1.0,1.0);
     show_npc_dialog(param_1,"11_12920");
     end_event_script(param_1);
 }
@@ -833,16 +899,16 @@ void power_competition_dialog(
     string first_win_dialog_id,
     string repeat_win_dialog_id
 ){
-    freeze_player();
-    configure_npc_and_get_accessor(object_id);
+    lock_player_and_get_accessor();
+    lock_npc_and_get_accessor(object_id);
     face_player_and_npc(object_id,0);
     int response = show_yes_no_question(param_1,question_dialog_id);
     if (response == 1) {
         int hasWon = start_power_competition(param_1,0x0,object_id);
         special_spawn_condition(param_1);
-        int object_accessor = get_object_accessor(param_1,object_id,1);
+        int object_accessor = get_object_accessor(param_1,object_id,true);
         fade_in(0,0,0,0x3c);
-        SysCall(0,0x15,0x28,object_accessor,sound_id,0,0x3f800000,0x3f800000);
+        SysCall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
         if (hasWon == -1) {
             show_npc_dialog(param_1,loss_dialog_id);
         }
@@ -879,8 +945,8 @@ void power_competition_dialog_with_win_count_check(
     string win_count_met_dialog_id,
     string win_count_not_met_dialog_id
 ){
-    freeze_player();
-    configure_npc_and_get_accessor(object_id);
+    lock_player_and_get_accessor();
+    lock_npc_and_get_accessor(object_id);
     face_player_and_npc(object_id,0);
     int global_manager = get_module("GlobalManager");
     int has_required_num = SysCall(0,0x15,1,global_manager,"f0101BattleCounter");
@@ -890,9 +956,9 @@ void power_competition_dialog_with_win_count_check(
         if (response == 1) {
             int hasWon = start_power_competition(param_1,0,object_id);
             special_spawn_condition(param_1);
-            int object_accessor = get_object_accessor(param_1,object_id,1);
+            int object_accessor = get_object_accessor(param_1,object_id,true);
             fade_in(0,0,0,0x3c);
-            SysCall(0,0x15,0x28,object_accessor,sound_id,0,0x3f800000,0x3f800000);
+            SysCall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
             if (hasWon == -1) {
                 show_npc_dialog(param_1,loss_dialog_id);
             }
@@ -934,8 +1000,8 @@ void power_competition_dialog_with_friendship_count_check(
     string friendship_count_met_dialog_id,
     string friendship_count_not_met_dialog_id
 ){
-    freeze_player();
-    configure_npc_and_get_accessor(object_id);
+    lock_player_and_get_accessor();
+    lock_npc_and_get_accessor(object_id);
     face_player_and_npc(object_id,0);
     int global_manager = get_module("GlobalManager");
     int friendship_num = SysCall(0,0x15,0x42,global_manager);
@@ -945,9 +1011,9 @@ void power_competition_dialog_with_friendship_count_check(
         if (response == 1) {
             int hasWon = start_power_competition(param_1,0,object_id);
             special_spawn_condition(param_1);
-            int object_accessor = get_object_accessor(param_1,object_id,1);
+            int object_accessor = get_object_accessor(param_1,object_id,true);
             fade_in(0,0,0,0x3c);
-            SysCall(0,0x15,0x28,object_accessor,sound_id,0,0x3f800000,0x3f800000);
+            SysCall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
             if (hasWon == -1) {
                 show_npc_dialog(param_1,loss_dialog_id);
             }
@@ -985,11 +1051,11 @@ void errand_dialog(
     string already_befriended_id,
     string wrong_item_id
 ) {
-    freeze_player();
-    int object_accessor = configure_npc_and_get_accessor(object_id);
+    lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(object_id);
     face_player_and_npc(object_id,0);
     int global_manager = get_module("GlobalManager");
-    SysCall(0,0x15,0x28,object_accessor,sound_id,0,0x3f800000,0x3f800000);
+    SysCall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
     int item_kind = get_held_item_kind();
     if(item_kind == -1){
         show_npc_dialog(param_1, no_hold_item_dialog_id);
@@ -1016,14 +1082,15 @@ void errand_dialog(
 }
 
 
-int start_power_competition(int event_context, int competition_id, int object_id){
-    begin_power_competition();
+// player_object_id can be actually every other object_id, but it is only used as the player id
+int start_power_competition(int param_1, int player_object_id, int enemy_object_id){
+    store_pre_competition_state();
 
     int global_manager = get_module("GlobalManager");
     int event_script = get_module("EventScript");
     int dispos_manager = get_module("DisposManager");
-    int object_accessor = get_object_accessor(event_context,object_id,1);
-    int player_event_accessor = create_power_competition_player();
+    int object_accessor = get_object_accessor(param_1,enemy_object_id,true);
+    int player_event_accessor = get_player_accessor();
 
     vec3 object_position;
     vec3 player_position;
@@ -1034,8 +1101,8 @@ int start_power_competition(int event_context, int competition_id, int object_id
     SysCall(0,0x15,0xca,event_script,0x1e);
     wait_frames(0x1e);
 
-    int dispos_id = SysCall(0,0x15,0xc,dispos_manager,object_id);
-    int result = run_power_competition(competition_id,object_id);
+    int dispos_id = SysCall(0,0x15,0xc,dispos_manager,enemy_object_id);
+    int result = run_power_competition(player_object_id,enemy_object_id);
     if (result == -1) {
         reset_win_counter();
     }
@@ -1047,7 +1114,7 @@ int start_power_competition(int event_context, int competition_id, int object_id
     despawn_player_object();
     spawn_player_object();
 
-    int player_accessor = freeze_player();
+    int player_accessor = lock_player_and_get_accessor();
     SysCall(0,0x15,7,player_accessor,player_position.x,player_position.y,player_position.z);
     SysCall(0,0x15,8,player_accessor,player_position.x,player_position.y,player_position.z);
     SysCall(0,0x15,0x22,player_accessor,player_position.x,player_position.y,player_position.z,1);
@@ -1059,13 +1126,13 @@ int start_power_competition(int event_context, int competition_id, int object_id
     SysCall(0,0x15,0x8e,global_manager,dispos_id);
 
     respawn_field();
-    configure_npc_and_get_accessor(object_id);
-    object_accessor = get_object_accessor(event_context,object_id,1);
+    lock_npc_and_get_accessor(enemy_object_id);
+    object_accessor = get_object_accessor(param_1,enemy_object_id,true);
     SysCall(0,0x15,7,object_accessor,object_position.x,object_position.y,object_position.z);
     SysCall(0,0x15,8,object_accessor,object_position.x,object_position.y,object_position.z);
     SysCall(0,0x15,0x22,object_accessor,object_position.x,object_position.y,object_position.z,1);
 
-    int object_state = SysCall(0,0x15,0x10,dispos_manager,object_id);
+    int object_state = SysCall(0,0x15,0x10,dispos_manager,enemy_object_id);
     if (object_state == 0) {
         SysCall(0,0x15,0x2a,object_accessor,5);
     }
@@ -1074,10 +1141,10 @@ int start_power_competition(int event_context, int competition_id, int object_id
         SysCall(0,0x15,0x2b,object_accessor,4);
     }
 
-    face_object_accessors(player_accessor,object_accessor,1);
+    face_object_accessors_instantly(player_accessor,object_accessor,1);
     SysCall(0,0x15,0xca,event_script,-1);
-    SysCall(0,0x15,0xd7,event_script,object_id);
-    finish_power_competition(object_id);
+    SysCall(0,0x15,0xd7,event_script,enemy_object_id);
+    restore_pre_competition_state(enemy_object_id);
 
     return result;
 }
@@ -1095,8 +1162,6 @@ void increment_win_counter(){
 
     SysCall(0,0x15,0,global_manager,"f0101BattleCounterNum",increased_counter);
     if (increased_counter >= BATTLE_COUNT) {
-        SysCall(0,6,increased_counter);
-        SysCall(0,6,BATTLE_COUNT);
         SysCall(0,0x15,0,global_manager,"f0101BattleCounter",1);
     }
     return;
@@ -1115,9 +1180,12 @@ bool is_location_checked(int obj_id){
 }
 
 void check_location(int obj_id){
+    int global_manager = get_module("GlobalManager");
+
     // rescue magikarp location uses 0x36 as object_id
     if(obj_id == 0x36){
-    
+        SysCall(0, 0x15, 0x0, global_manager, "MagikarpRescued", 1);
+        return;
     }
     set_bestfriend(obj_id);
     return;
@@ -1134,17 +1202,16 @@ bool is_bestfriend(int obj_id){
 void AR01ZN01_INI(int param_1){
     // activate logs
     SysCall(0,7,1);
+
     int event_script = get_module("EventScript");
     SysCall(0,0x15,0x65,event_script,0,0,0,1);
-    FUN_0005acbc(0x4e23);
-    freeze_player();
-    FUN_00054494();
-    //SETGIMMICK();
-    //FUN_0005b6d8(param_1);
+    lock_player_and_get_accessor();
+    setup_player_for_zone();
+    SETGIMMICK();
     special_spawn_condition(param_1);
-    //FUN_0005c550(param_1);
-    FUN_00051f1c(0,0,0,0x1e);
-    //FUN_00054b44();
+    update_npc_story_state(param_1);
+    fade_in(0,0,0,0x1e);
+    clear_wand_check();
     end_event_script(param_1);
     return;
 }
@@ -1153,15 +1220,13 @@ void AR01ZN01_DEF(int param_1){
     // activate logs
     SysCall(0,7,1);
 
-    FUN_0005acbc(0x4e23);
-    freeze_player();
-    FUN_00054494();
-    //SETGIMMICK();
-    //FUN_0005b6d8(param_1);
+    lock_player_and_get_accessor();
+    setup_player_for_zone();
+    SETGIMMICK();
     special_spawn_condition(param_1);
-    //FUN_0005c550(param_1);
-    FUN_00051f1c(0,0,0,0x1e);
-    //FUN_00054b44();
+    update_npc_story_state(param_1);
+    fade_in(0,0,0,0x1e);
+    clear_wand_check();
     end_event_script(param_1);
     return;
 }
