@@ -50,6 +50,7 @@ extern void respawn_field();
 // third param is unused, best guess it was intended as immediate trigger, but ended in separate functions
 extern void face_object_accessors_instantly(int player_accessor, int object_accessor, int immediate);
 extern void restore_pre_competition_state(int object_id);
+extern void set_npc_state(int object_id, int state);
 extern void clear_wand_check();
 config int BATTLE_COUNT;
 
@@ -268,6 +269,37 @@ void weedle_dialog(int param_1){
     );
 }
 
+void unlock_bidoof_beach(int param_1, int object_id){
+    int global_manager = get_module("GlobalManager");
+    int bidoof_beach_unlocked = SysCall(0,0x15,1,global_manager,"f0301BippaFlag");
+
+    if(bidoof_beach_unlocked == 0){
+        get_module("EventScript");
+        get_module("ObjectManager");
+        int object_accessor = get_object_accessor(param_1,object_id,true);
+        int gf0004 = SysCall(0,0x15,1,global_manager,"GF0004");
+        SysCall(0,0x15,0x28,object_accessor,0xa40,0,1.0,1.0);
+
+        if(gf0004 < 4){
+            if(object_id != 0xf){
+                show_npc_dialog(param_1,"11_00720");
+                end_event_script(param_1);
+            }
+        }
+        else{
+            set_npc_state(0xf,4);
+            show_npc_dialog(param_1,"11_00700");
+            fade_out(0,0,0,0x2d);
+            wait_frames(0x5a);
+            fade_in(0,0,0,0x2d);
+            show_npc_dialog(param_1,"11_00710");
+            SysCall(0,0x15,0,global_manager,"f0301BippaFlag",1);
+            end_event_script(param_1);
+        }
+    }
+    return;
+}
+
 void event_bidoof_dialog(int param_1){
     int object_id = 0xf;
     int player = lock_player_and_get_accessor();
@@ -288,7 +320,7 @@ void event_bidoof_dialog(int param_1){
     SysCall(0,0x15,0x13,object_accessor,SysCall(3,1,object_position));
     SysCall(0,0x15,0x16,object_accessor,SysCall(3,1,object_rotation));
 
-    //TODO: beach_bidoof unlock
+    unlock_bidoof_beach(param_1,object_id);
     
     int gf0004 = SysCall(0,0x15,1,global_manager,"GF0004");
     if(gf0004 > 3){
@@ -373,14 +405,6 @@ void event_bidoof_dialog(int param_1){
 
     int updated_gf0004 = SysCall(0,0x15,1,global_manager,"GF0004");
 
-    //TODO: replace with location checks
-    if(updated_gf0004==1){
-        unlock_pokemon(0x23);
-    } else if(updated_gf0004==2){
-        unlock_pokemon(0x24);
-    } else if(updated_gf0004==3){
-        unlock_pokemon(0x25);
-    }
     respawn_field();
     special_spawn_condition(param_1);
     object_accessor = lock_npc_and_get_accessor(object_id);
@@ -403,7 +427,6 @@ void event_bidoof_dialog(int param_1){
   }
   else if (updated_gf0004 == 4) {
     show_npc_dialog(param_1,"11_90090");
-    unlock_pokemon(0x1b);
     SysCall(0,0x15,0,global_manager,"f0101BippaFlag",1);
   }
   else {
@@ -411,9 +434,10 @@ void event_bidoof_dialog(int param_1){
   }
 
   if (3 < updated_gf0004) {
-  //TODO: check friendship location
-    friendship_banner("11_00490");
-
+    if(!is_location_checked(object_id)){
+        friendship_banner("11_00490");
+        check_location(object_id);
+    }
     SysCall(0,0x15,0x14,global_manager,100);
     force_fade_out(0,0,0,0x3c);
     complete_event();
