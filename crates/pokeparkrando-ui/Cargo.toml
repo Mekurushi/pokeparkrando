@@ -4,6 +4,10 @@ version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 
+[[bin]]
+name = "pokeparkrando"
+path = "src/main.rs"
+
 [dependencies]
 eframe = { version = "0.36.2", features = ["persistence"] }
 pokeparkrando-core.workspace = true
