@@ -4,6 +4,7 @@ mod app;
 mod error;
 mod patcher;
 mod ui;
+mod updater;
 mod workspace;
 
 use app::PokeparkRandoApp;

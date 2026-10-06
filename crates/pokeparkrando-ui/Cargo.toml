@@ -12,6 +12,8 @@ path = "src/main.rs"
 eframe = { version = "0.36.2", features = ["persistence"] }
 pokeparkrando-core.workspace = true
 rfd = "0.17.2"
+semver = "1.0.28"
+self_update = { version = "1.3.0", default-features = false, features = ["github", "rustls", "ureq"] }
 thiserror.workspace = true
 
 [lints]

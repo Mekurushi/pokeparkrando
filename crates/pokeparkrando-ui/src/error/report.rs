@@ -15,6 +15,11 @@ impl From<AppError> for ErrorReport {
         match error {
             AppError::Workspace(error) => Self::from_workspace(error),
             AppError::Patcher(error) => Self::from_patcher(error),
+            AppError::Updater(error) => Self {
+                title: "Could not load versions".to_owned(),
+                message: "The published version list could not be fetched from GitHub".to_owned(),
+                details: Some(error.to_string()),
+            },
         }
     }
 }

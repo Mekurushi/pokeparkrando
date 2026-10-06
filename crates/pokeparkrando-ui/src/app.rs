@@ -1,12 +1,14 @@
 use crate::APP_TITLE;
 use crate::error::ErrorComponent;
 use crate::patcher::{PatcherComponent, PatcherEvent};
+use crate::updater::{UpdaterComponent, UpdaterEvent};
 use crate::workspace::{WorkspaceComponent, WorkspaceEvent};
 use eframe::{CreationContext, Storage, egui};
 
 pub(crate) struct PokeparkRandoApp {
     workspace: WorkspaceComponent,
     patcher: PatcherComponent,
+    updater: UpdaterComponent,
     errors: ErrorComponent,
 }
 
@@ -17,6 +19,7 @@ impl PokeparkRandoApp {
         Self {
             workspace,
             patcher,
+            updater: UpdaterComponent::default(),
             errors: ErrorComponent::default(),
         }
     }
@@ -35,18 +38,35 @@ impl PokeparkRandoApp {
             PatcherEvent::Error(error) => self.errors.push(error),
         }
     }
+
+    fn handle_updater_event(&mut self, event: UpdaterEvent) {
+        match event {
+            UpdaterEvent::Error(error) => self.errors.push(error),
+            UpdaterEvent::VersionSelected(_version) => {
+                //TODO: update logic
+            }
+        }
+    }
 }
 
 impl eframe::App for PokeparkRandoApp {
     fn ui(&mut self, ui: &mut egui::Ui, frame: &mut eframe::Frame) {
-        let workspace_actions_enabled = !self.patcher.is_busy();
+        let actions_enabled = !self.patcher.is_busy();
         let workspace = egui::Panel::top("workspace").show(ui, |ui| {
             let _title = ui.vertical_centered(|ui| {
-                let _heading = ui.heading(egui::RichText::new(APP_TITLE).strong().size(19.0));
+                let _header = ui.horizontal(|ui| {
+                    let _heading = ui.heading(egui::RichText::new(APP_TITLE).strong().size(19.0));
+                    if ui
+                        .add_enabled(actions_enabled, egui::Button::new("Versions..."))
+                        .clicked()
+                        && let Some(event) = self.updater.open(ui.ctx())
+                    {
+                        self.handle_updater_event(event);
+                    }
+                });
             });
             ui.add_space(10.0);
-            self.workspace
-                .show_header(ui, frame, workspace_actions_enabled)
+            self.workspace.show_header(ui, frame, actions_enabled)
         });
         if let Some(event) = workspace.inner {
             self.handle_workspace_event(event);
@@ -64,6 +84,9 @@ impl eframe::App for PokeparkRandoApp {
             });
         }
 
+        if let Some(event) = self.updater.show(ui.ctx()) {
+            self.handle_updater_event(event);
+        }
         self.errors.show(ui.ctx());
     }
 
