@@ -2,6 +2,7 @@ use pokeparkrando_core::{ImportOriginalError, ReadAppkprkError};
 
 use super::AppError;
 use crate::patcher::PatcherError;
+use crate::updater::UpdaterError;
 use crate::workspace::WorkspaceError;
 
 pub(super) struct ErrorReport {
@@ -15,16 +16,52 @@ impl From<AppError> for ErrorReport {
         match error {
             AppError::Workspace(error) => Self::from_workspace(error),
             AppError::Patcher(error) => Self::from_patcher(error),
-            AppError::Updater(error) => Self {
-                title: "Could not load versions".to_owned(),
-                message: "The published version list could not be fetched from GitHub".to_owned(),
-                details: Some(error.to_string()),
-            },
+            AppError::Updater(error) => Self::from_updater(&error),
         }
     }
 }
 
 impl ErrorReport {
+    fn from_updater(error: &UpdaterError) -> Self {
+        match error {
+            UpdaterError::Start(source) => Self {
+                title: "Could not start version check".to_owned(),
+                message: "The version-check worker could not be started".to_owned(),
+                details: Some(source.to_string()),
+            },
+            UpdaterError::Fetch(source) => Self {
+                title: "Could not load versions".to_owned(),
+                message: "The published version list could not be fetched from GitHub".to_owned(),
+                details: Some(source.to_string()),
+            },
+            UpdaterError::FetchStopped => Self {
+                title: "Version check stopped unexpectedly".to_owned(),
+                message: "The version-check worker ended before returning a result".to_owned(),
+                details: None,
+            },
+            UpdaterError::StartInstall(source) => Self {
+                title: "Could not start installation".to_owned(),
+                message: "The update worker could not be started".to_owned(),
+                details: Some(source.to_string()),
+            },
+            UpdaterError::UnsupportedPlatform { os, arch } => Self {
+                title: "Updates unavailable".to_owned(),
+                message: format!("Self-update is not supported on {os} {arch}"),
+                details: None,
+            },
+            UpdaterError::Install(source) => Self {
+                title: "Could not install version".to_owned(),
+                message: "The selected version could not be installed".to_owned(),
+                details: Some(source.to_string()),
+            },
+            UpdaterError::InstallStopped => Self {
+                title: "Installation stopped unexpectedly".to_owned(),
+                message: "The update worker ended before returning a result".to_owned(),
+                details: None,
+            },
+        }
+    }
+
     fn from_workspace(error: WorkspaceError) -> Self {
         match error {
             WorkspaceError::NotDirectory { path } => Self {

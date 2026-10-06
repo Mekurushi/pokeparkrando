@@ -39,11 +39,12 @@ impl PokeparkRandoApp {
         }
     }
 
-    fn handle_updater_event(&mut self, event: UpdaterEvent) {
+    fn handle_updater_event(&mut self, event: UpdaterEvent, context: &egui::Context) {
         match event {
             UpdaterEvent::Error(error) => self.errors.push(error),
-            UpdaterEvent::VersionSelected(_version) => {
-                //TODO: update logic
+            UpdaterEvent::Installed(_version) => {}
+            UpdaterEvent::CloseApplication => {
+                context.send_viewport_cmd(egui::ViewportCommand::Close);
             }
         }
     }
@@ -61,7 +62,7 @@ impl eframe::App for PokeparkRandoApp {
                         .clicked()
                         && let Some(event) = self.updater.open(ui.ctx())
                     {
-                        self.handle_updater_event(event);
+                        self.handle_updater_event(event, ui.ctx());
                     }
                 });
             });
@@ -85,7 +86,7 @@ impl eframe::App for PokeparkRandoApp {
         }
 
         if let Some(event) = self.updater.show(ui.ctx()) {
-            self.handle_updater_event(event);
+            self.handle_updater_event(event, ui.ctx());
         }
         self.errors.show(ui.ctx());
     }
