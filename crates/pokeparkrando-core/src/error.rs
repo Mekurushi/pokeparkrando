@@ -128,6 +128,9 @@ pub enum ImportOriginalError {
 
 #[derive(Debug, Error)]
 pub enum BuildPatchError {
+    #[error(transparent)]
+    InvalidEntranceConfig(#[from] EntranceConfigError),
+
     #[error("failed to prepare bundled patch sources: {source}")]
     PrepareSources {
         #[source]
@@ -151,4 +154,10 @@ pub enum BuildPatchError {
         #[source]
         source: Box<parkforge::RebuildError>,
     },
+}
+
+#[derive(Debug, Error)]
+pub enum EntranceConfigError {
+    #[error("patch file maps entrance {entrance:?} to unknown exit {exit:?}")]
+    UnknownExit { entrance: String, exit: String },
 }

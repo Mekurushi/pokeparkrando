@@ -130,3 +130,8 @@ attraction_show_yes_no_question = 0x52074
 set_berry_counter_visible = 0x5751c
 enter_attraction = 0x56b3c
 rotate_object = 0x537c8
+
+# Drifblim fast travel
+STAXIAREA = 0x57adc
+fade_out_sound = 0x513f4
+travel_to = 0x572dc

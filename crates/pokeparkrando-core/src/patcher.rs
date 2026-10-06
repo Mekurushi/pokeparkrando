@@ -3,7 +3,10 @@ use std::path::{Path, PathBuf};
 
 use crate::Appkprk;
 use crate::bundled_project::BundledProject;
-use crate::error::{BuildPatchError, BundledProjectError, ImportOriginalError};
+use crate::entrance;
+use crate::error::{
+    BuildPatchError, BundledProjectError, EntranceConfigError, ImportOriginalError,
+};
 use crate::original::{
     ImportOriginalProgress, OriginalReadiness, import_original, original_readiness,
 };
@@ -24,8 +27,8 @@ pub struct Patcher {
 }
 
 impl Patcher {
-    pub fn build_config(appkprk: &Appkprk) -> BuildConfig {
-        BuildConfig::from_iter([
+    pub fn build_config(appkprk: &Appkprk) -> Result<BuildConfig, EntranceConfigError> {
+        let mut config = BuildConfig::from_iter([
             (
                 "PLAYER_NAME".to_owned(),
                 BuildConfigValue::String(appkprk.player_name().to_owned()),
@@ -42,7 +45,44 @@ impl Patcher {
                 "FPS_ENHANCEMENT".to_owned(),
                 BuildConfigValue::Boolean(appkprk.options().fps_enhancement_patch()),
             ),
-        ])
+        ]);
+
+        for (entrance, exit) in appkprk.entrances() {
+            if let Some(prefix) = entrance::config_prefix(entrance) {
+                let zone_data =
+                    entrance::zone_data(exit).ok_or_else(|| EntranceConfigError::UnknownExit {
+                        entrance: entrance.clone(),
+                        exit: exit.clone(),
+                    })?;
+
+                drop(config.insert(
+                    format!("{prefix}_ZONE"),
+                    BuildConfigValue::Integer(zone_data.zone),
+                ));
+                drop(config.insert(
+                    format!("{prefix}_AREA"),
+                    BuildConfigValue::Integer(zone_data.area),
+                ));
+                drop(config.insert(
+                    format!("{prefix}_POSITION"),
+                    BuildConfigValue::Integer(zone_data.position),
+                ));
+            } else if let Some(prefix) = entrance::attraction_config_prefix(entrance) {
+                let attraction_id = entrance::attraction_id(exit).ok_or_else(|| {
+                    EntranceConfigError::UnknownExit {
+                        entrance: entrance.clone(),
+                        exit: exit.clone(),
+                    }
+                })?;
+
+                drop(config.insert(
+                    format!("{prefix}_ID"),
+                    BuildConfigValue::Integer(attraction_id),
+                ));
+            }
+        }
+
+        Ok(config)
     }
 
     pub fn load(workspace_root: impl Into<PathBuf>) -> Result<Self, BundledProjectError> {
@@ -93,7 +133,7 @@ impl Patcher {
             &shared_sources,
             &revision_sources,
             &build_destination,
-            Self::build_config(appkprk),
+            Self::build_config(appkprk)?,
             |build_progress| progress(PatchProgress::Building(build_progress)),
             diagnostics,
         )
