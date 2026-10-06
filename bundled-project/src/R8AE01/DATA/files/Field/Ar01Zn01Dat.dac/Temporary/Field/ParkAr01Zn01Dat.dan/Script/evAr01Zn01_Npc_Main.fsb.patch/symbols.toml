@@ -7,6 +7,7 @@ get_module = 0x50044
 lock_npc_and_get_accessor = 0x511b4
 despawn = 0x54624
 turtwig_dialog = 0x61b8c
+bulbasaur_dialog = 0x60a88
 buneary_dialog = 0x6207c
 pachirisu_dialog = 0x625e8
 munchlax_dialog = 0x628d4
@@ -116,9 +117,16 @@ RETURN_AT = 0x6a418
 set_player_at = 0x52fc8
 cleared_prisma_goal_dialog = 0x5d48c
 reset_camera = 0x51ab8
-do_npc_event = 0x51978
+point_camera_between = 0x51978
 has_beaten_attraction_record = 0x54f70
 do_dialog_with_scene = 0x52188
 do_unlock_scenes = 0x5bba4
 spawn_for_short_duration = 0x5b0e4
 SETMUFFINBOX = 0x5a944
+
+# bulbasaur dialog
+face_player_synchronously = 0x53c20
+attraction_show_yes_no_question = 0x52074
+set_berry_counter_visible = 0x579c8
+enter_attraction = 0x56fe8
+rotate_object = 0x537d0

@@ -56,12 +56,17 @@ extern void clear_wand_check();
 // RETURN_AT
 extern void set_player_at(int x, int y, int z);
 extern void reset_camera();
-extern void do_npc_event(int mode, int object_id);
+extern void point_camera_between(int unused, int object_id);
 extern int has_beaten_attraction_record(int object_id, int attraction_id);
 extern void do_dialog_with_scene(int param_1, int object_id, string dialog_id, int scene_id);
 extern void do_unlock_scenes(int param_1);
 extern void spawn_for_short_duration(int object_id);
 extern void SETMUFFINBOX();
+extern void face_player_synchronously(int object_id, int smooth);
+extern int attraction_show_yes_no_question(int param_1, string dialog_id);
+extern void set_berry_counter_visible(bool visible);
+extern void enter_attraction(int param_1, int attraction_id);
+extern void rotate_object(int object_id, int x, int y, int z);
 
 config int BATTLE_COUNT;
 
@@ -96,7 +101,7 @@ void cleared_prisma_goal_dialog(int param_1){
     int npc_accessor = get_object_accessor(param_1,0x21,true);
     int has_bulbasaur_prisma = SysCall(0,0x15,0x51,global_manager,0xf);
     if(has_bulbasaur_prisma == 1){
-        do_npc_event(0,0x21);
+        point_camera_between(0,0x21);
         SysCall(0,0x15,2,npc_accessor,0x1c,10);
         SysCall(0,0x15,0x28,npc_accessor,0xc8a,0,1.0,1.0);
         do_dialog_with_scene(param_1,0x21,"11_60070",0);
@@ -163,7 +168,7 @@ void RETURN_AT(int param_1){
                 wait_frames(0x1e);
             }
             else{
-                do_npc_event(0,0x21);
+                point_camera_between(0,0x21);
                 SysCall(0,0x15,2,npc_accessor,0x1b,10);
                 SysCall(0,0x15,0x28,npc_accessor,0xc89,0,1.0,1.0);
                 do_dialog_with_scene(param_1,0x21,"11_60063",0);
@@ -174,7 +179,7 @@ void RETURN_AT(int param_1){
             }
         }
         else if(has_bulbasaur_prisma == 0){
-            do_npc_event(0,0x21);
+            point_camera_between(0,0x21);
             SysCall(0,0x15,2,npc_accessor,0x1b,10);
             SysCall(0,0x15,0x28,npc_accessor,0xc89,0,1.0,1.0);
 
@@ -275,6 +280,44 @@ void rescue_magikarp_cutscene(int param_1){
     fade_in_bgm(0x1e);
     fade_in(0,0,0,0x3c);
     restore_player_control();
+    return;
+}
+
+void bulbasaur_dialog(int param_1){
+    // keeping Bulbasaur as exception and make attraction entrance free
+    int object_id = 0x21;
+    int attraction_id = 0xf;
+    lock_player_and_get_accessor();
+    int global_manager = get_module("GlobalManager");
+    int event_script = get_module("EventScript");
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+
+    SysCall(0,0x15,2,object_accessor,0x1b,10);
+    SysCall(0,0x15,0x28,object_accessor,0xc89,0,1.0,1.0);
+
+    int accepted = attraction_show_yes_no_question(param_1,"11_60031");
+
+    if(accepted == 1){
+            SysCall(0,0x15,2,object_accessor,0x1c,10);
+            SysCall(0,0x15,0x28,object_accessor,0xc89,0,1.0,1.0);
+            show_npc_dialog(param_1,"11_60050");
+            SysCall(0,0x15,0,global_manager,"fRetAttraction",0x10);
+            fade_out(0,0,0,0x1e);
+            SysCall(0,0x15,0xca,event_script,0);
+            set_berry_counter_visible(false);
+            enter_attraction(param_1,attraction_id);
+    }
+    else{
+        SysCall(0,0x15,2,object_accessor,0x1b,10);
+        SysCall(0,0x15,0x28,object_accessor,0xc89,0,1.0,1.0);
+        show_npc_dialog(param_1,"11_60040");
+        set_berry_counter_visible(false);
+    }
+
+    update_npc_story_state(param_1);
+    rotate_object(object_id,0,0x14d,0);
+    end_event_script(param_1);
     return;
 }
 
