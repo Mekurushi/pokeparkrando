@@ -52,7 +52,146 @@ extern void face_object_accessors_instantly(int player_accessor, int object_acce
 extern void restore_pre_competition_state(int object_id);
 extern void set_npc_state(int object_id, int state);
 extern void clear_wand_check();
+
+// RETURN_AT
+extern void set_player_at(int x, int y, int z);
+extern void reset_camera();
+extern void do_npc_event(int mode, int object_id);
+extern int has_beaten_attraction_record(int object_id, int attraction_id);
+extern void do_dialog_with_scene(int param_1, int object_id, string dialog_id, int scene_id);
+extern void do_unlock_scenes(int param_1);
+extern void spawn_for_short_duration(int object_id);
+extern void SETMUFFINBOX();
+
 config int BATTLE_COUNT;
+
+void AR01ZN01_INI(int param_1){
+    // activate logs
+    SysCall(0,7,1);
+
+    int event_script = get_module("EventScript");
+    SysCall(0,0x15,0x65,event_script,0,0,0,1);
+    setup_field(param_1);
+    fade_in(0,0,0,0x1e);
+    clear_wand_check();
+    end_event_script(param_1);
+    return;
+}
+
+void AR01ZN01_DEF(int param_1){
+    // activate logs
+    SysCall(0,7,1);
+
+    setup_field(param_1);
+    fade_in(0,0,0,0x1e);
+    clear_wand_check();
+    end_event_script(param_1);
+    return;
+}
+
+// RETURN_AT: cleared Prisma goal dialog
+void cleared_prisma_goal_dialog(int param_1){
+    int bulbasaur_object_id = 0x21;
+    int global_manager = get_module("GlobalManager");
+    int npc_accessor = get_object_accessor(param_1,0x21,true);
+    int has_bulbasaur_prisma = SysCall(0,0x15,0x51,global_manager,0xf);
+    if(has_bulbasaur_prisma == 1){
+        do_npc_event(0,0x21);
+        SysCall(0,0x15,2,npc_accessor,0x1c,10);
+        SysCall(0,0x15,0x28,npc_accessor,0xc8a,0,1.0,1.0);
+        do_dialog_with_scene(param_1,0x21,"11_60070",0);
+        spawn_for_short_duration(0x4e23);
+        wait_frames(0x6e);
+        play_sound_effect(0x7ea,0);
+
+        int field_info = get_module("mnFieldInfo");
+        SysCall(0,0x15,0x11,field_info,1,"11_60071");
+        wait_frames(0xb4);
+        SysCall(0,0x15,0x12,field_info);
+
+        SysCall(0,0x15,2,npc_accessor,0x1b,10);
+        SysCall(0,0x15,0x28,npc_accessor,0xc89,0,1.0,1.0);
+        do_dialog_with_scene(param_1,0x21,"11_60072",0);
+        friendship_banner("11_00662");
+        check_location(bulbasaur_object_id);
+        reset_camera();
+        SETMUFFINBOX();
+    }
+    return;
+}
+
+// RETURN_AT
+void RETURN_AT(int param_1){
+    int bulbasaur_object_id = 0x21;
+    int global_manager = get_module("GlobalManager");
+    int event_script = get_module("EventScript");
+    SysCall(0,0x15,0x65,event_script,0,0,0,1);
+
+    setup_field(param_1);
+
+    int player = lock_player_and_get_accessor();
+    set_player_at(-38,-19,-590);
+    int npc_accessor = get_object_accessor(param_1,0x21,true);
+    face_object_accessors_instantly(player,npc_accessor,1);
+    SysCall(0,0x15,0xca,event_script,-1);
+
+    vec3 camera_position; // names are wild guesses
+    vec3 camera_target;
+    SysCall(3,2,SysCall(3,1,camera_position),-61.3,-9.75,-579.8);
+    SysCall(3,2,SysCall(3,1,camera_target),-9.46,-14.56,-614.73);
+    SysCall(0,0x15,0xcb,event_script);
+    SysCall(0,0x15,0xcc,event_script,-1,SysCall(3,1,camera_position));
+    SysCall(0,0x15,0xcd,event_script,-1,SysCall(3,1,camera_target));
+
+    int should_face_npc = SysCall(0,0x15,0x67,event_script);
+    if(should_face_npc == 1){
+        face_object_accessors_instantly(player,npc_accessor,1);
+    }
+    fade_in(0,0,0,0x1e);
+
+    int return_attraction = SysCall(0,0x15,1,global_manager,"fRetAttraction");
+    if(return_attraction == 0x10){
+        lock_npc_and_get_accessor(0x21);
+        int has_bulbasaur_prisma = SysCall(0,0x15,0x51,global_manager,0xf);
+
+        if(has_bulbasaur_prisma == 1){
+            if(!is_location_checked(bulbasaur_object_id)){
+                cleared_prisma_goal_dialog(param_1);
+                reset_object_after_event(0x21);
+                reset_camera();
+                SysCall(0,0x15,0xca,event_script,0x1e);
+                wait_frames(0x1e);
+            }
+            else{
+                do_npc_event(0,0x21);
+                SysCall(0,0x15,2,npc_accessor,0x1b,10);
+                SysCall(0,0x15,0x28,npc_accessor,0xc89,0,1.0,1.0);
+                do_dialog_with_scene(param_1,0x21,"11_60063",0);
+                reset_object_after_event(0x21);
+                reset_camera();
+                SysCall(0,0x15,0xca,event_script,0x1e);
+                wait_frames(0x1e);
+            }
+        }
+        else if(has_bulbasaur_prisma == 0){
+            do_npc_event(0,0x21);
+            SysCall(0,0x15,2,npc_accessor,0x1b,10);
+            SysCall(0,0x15,0x28,npc_accessor,0xc89,0,1.0,1.0);
+
+            do_dialog_with_scene(param_1,0x21,"11_60061",0);
+
+            SysCall(0,0x15,0xca,event_script,0x1e);
+            wait_frames(0x1e);
+            reset_object_after_event(0x21);
+            reset_camera();
+        }
+    }
+
+    restore_player_control();
+    reset_camera();
+    end_event_script(param_1);
+    return;
+}
 
 void special_spawn_condition(int param1){
 
@@ -1223,34 +1362,13 @@ bool is_bestfriend(int obj_id){
     return is_best_friend == 1;
 }
 
-void AR01ZN01_INI(int param_1){
-    // activate logs
-    SysCall(0,7,1);
-
-    int event_script = get_module("EventScript");
-    SysCall(0,0x15,0x65,event_script,0,0,0,1);
+void setup_field(int param_1){
+    int obj_manager = get_module("ObjectManager");
+    SysCall(0,0x15,8, obj_manager, 0x4e23);
     lock_player_and_get_accessor();
     setup_player_for_zone();
     SETGIMMICK();
+    do_unlock_scenes(param_1);
     special_spawn_condition(param_1);
     update_npc_story_state(param_1);
-    fade_in(0,0,0,0x1e);
-    clear_wand_check();
-    end_event_script(param_1);
-    return;
-}
-
-void AR01ZN01_DEF(int param_1){
-    // activate logs
-    SysCall(0,7,1);
-
-    lock_player_and_get_accessor();
-    setup_player_for_zone();
-    SETGIMMICK();
-    special_spawn_condition(param_1);
-    update_npc_story_state(param_1);
-    fade_in(0,0,0,0x1e);
-    clear_wand_check();
-    end_event_script(param_1);
-    return;
 }

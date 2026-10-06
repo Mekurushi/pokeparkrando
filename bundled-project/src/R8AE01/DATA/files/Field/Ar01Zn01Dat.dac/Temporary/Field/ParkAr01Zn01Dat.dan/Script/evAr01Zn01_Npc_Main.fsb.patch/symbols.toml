@@ -110,3 +110,15 @@ respawn_field = 0x5130c
 face_object_accessors_instantly = 0x50724
 restore_pre_competition_state = 0x51e68
 set_npc_state = 0x51cb0
+
+# RETURN_AT
+RETURN_AT = 0x6a418
+set_player_at = 0x52fc8
+cleared_prisma_goal_dialog = 0x5d48c
+reset_camera = 0x51ab8
+do_npc_event = 0x51978
+has_beaten_attraction_record = 0x54f70
+do_dialog_with_scene = 0x52188
+do_unlock_scenes = 0x5bba4
+spawn_for_short_duration = 0x5b0e4
+SETMUFFINBOX = 0x5a944
