@@ -9,8 +9,7 @@ import traceback
 
 import sys
 
-sys.path.insert(0, "../sslib")
-from asm.elf import *
+from elf import *
 
 if sys.platform == "win32":
     devkitbasepath = r"C:\devkitPro\devkitPPC\bin"
@@ -27,6 +26,13 @@ if len(sys.argv) > 1:
 else:
     print("Region context missing")
     sys.exit(1)
+
+BUNDLED_PROJECT_SRC = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "bundled-project", "src")
+)
+BUNDLED_PATCH_DIR = os.path.join(
+    BUNDLED_PROJECT_SRC, REGION + "01", "DATA", "sys", "main.dol.patch"
+)
 
 
 def get_bin(name):
@@ -530,16 +536,19 @@ try:
                 if relocations:
                     diffs[file_path][org_offset]["Relocations"] = relocations
 
-        diff_path = os.path.join("", f"{REGION}/patch_diffs", patch_name + "_diff.txt")
-        with open(diff_path, "w") as f:
-            f.write(
-                yaml.dump(
-                    diffs,
-                    Dumper=yaml.CDumper,
-                    default_flow_style=False,
-                    line_break="\n",
-                )
-            )
+        diff_filename = patch_name + "_diff"
+        diff_yaml = yaml.dump(
+            diffs,
+            Dumper=yaml.CDumper,
+            default_flow_style=False,
+            line_break="\n",
+        )
+        with open(f"{REGION}/patch_diffs/{diff_filename}.yaml", "w") as f:
+            f.write(diff_yaml)
+        bundled_patches_dir = os.path.join(BUNDLED_PATCH_DIR, "patches")
+        os.makedirs(bundled_patches_dir, exist_ok=True)
+        with open(os.path.join(bundled_patches_dir, diff_filename + ".yaml"), "w") as f:
+            f.write(diff_yaml)
 
     # Write the custom symbols to a text file.
     # Delete any entries in custom_symbols that have no custom symbols to avoid clutter.
@@ -550,15 +559,17 @@ try:
 
         output_custom_symbols[file_path] = custom_symbols_for_file
 
+    custom_symbols_yaml = yaml.dump(
+        output_custom_symbols,
+        Dumper=yaml.CDumper,
+        default_flow_style=False,
+        line_break="\n",
+    )
     with open(f"{REGION}/custom_symbols.txt", "w") as f:
-        f.write(
-            yaml.dump(
-                output_custom_symbols,
-                Dumper=yaml.CDumper,
-                default_flow_style=False,
-                line_break="\n",
-            )
-        )
+        f.write(custom_symbols_yaml)
+    os.makedirs(BUNDLED_PATCH_DIR, exist_ok=True)
+    with open(os.path.join(BUNDLED_PATCH_DIR, "custom_symbols.yaml"), "w") as f:
+        f.write(custom_symbols_yaml)
 except Exception as e:
     stack_trace = traceback.format_exc()
     error_message = str(e) + "\n\n" + stack_trace

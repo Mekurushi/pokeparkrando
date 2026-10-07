@@ -2,7 +2,7 @@ from enum import Enum
 from io import BytesIO
 from collections import OrderedDict
 
-from asm.fs_helpers import *
+from fs_helpers import *
 
 
 class ELF:

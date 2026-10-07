@@ -1,4 +1,4 @@
-from asm.fs_helpers import *
+from fs_helpers import *
 
 from io import BytesIO
 from collections import OrderedDict
