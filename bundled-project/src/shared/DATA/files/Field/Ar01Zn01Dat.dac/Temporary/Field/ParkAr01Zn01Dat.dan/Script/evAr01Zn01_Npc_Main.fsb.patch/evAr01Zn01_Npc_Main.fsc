@@ -359,8 +359,6 @@ void rescue_magikarp_cutscene(int param_1){
     SysCall(0,0x15,0xcc,event_script,-1,camera_position);
     SysCall(0,0x15,0xcd,event_script,-1,camera_target);
     set_event_frame_visible_with_fade(0);
-    int friend_id = object_id_to_friend_id(0xb);
-    SysCall(0,0x15,0x2a,global_manager,friend_id);
     SysCall(0,0x15,400,event_script,0,0);
     wait_frames(0x1e);
     fade_in(0,0,0,0x3c);
