@@ -102,7 +102,7 @@ update_npc_story_state = 0x5c550
 # original power competition functions
 store_pre_competition_state = 0x51e3c
 get_player_accessor = 0x50ec0
-prepare_power_competition_camera = 0x540a4
+drop_held_item_animation = 0x540a4
 wait_frames = 0x500bc
 run_power_competition = 0x50840
 despawn_player_object = 0x54440
@@ -135,3 +135,9 @@ rotate_object = 0x537c8
 STAXIAREA = 0x57adc
 fade_out_sound = 0x513f4
 travel_to = 0x572dc
+
+# Drifblim dialog
+drifblim_dialog = 0x61094
+show_npc_dialog_mode_0 = 0x52008
+choose_fast_travel_destination = 0x5760c
+fade_out_audio = 0x516b0

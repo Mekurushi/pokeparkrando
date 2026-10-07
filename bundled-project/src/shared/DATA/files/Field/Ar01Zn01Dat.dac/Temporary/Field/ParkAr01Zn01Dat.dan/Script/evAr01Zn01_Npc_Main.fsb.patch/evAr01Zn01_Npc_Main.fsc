@@ -41,7 +41,7 @@ extern void restore_player_control();
 extern void update_npc_story_state(int param_1);
 extern void store_pre_competition_state();
 extern int get_player_accessor();
-extern void prepare_power_competition_camera();
+extern void drop_held_item_animation();
 extern void wait_frames(int frames);
 extern int run_power_competition(int competition_id, int object_id);
 extern void despawn_player_object();
@@ -69,6 +69,9 @@ extern void enter_attraction(int param_1, int attraction_id);
 extern void rotate_object(int object_id, int x, int y, int z);
 extern void fade_out_sound(int duration);
 extern void travel_to(int zone, int area, int position);
+extern void show_npc_dialog_mode_0(int param_1, string dialog_id);
+extern void choose_fast_travel_destination(int param_1, int object_id, int current_destination);
+extern void fade_out_audio(int frames, bool fade_channel_6, bool fade_channel_8, bool fade_channel_7);
 
 config int BATTLE_COUNT;
 config int MEADOW_ZONE_MAIN_AREA_BULBASAUR_ATTRACTION_ID;
@@ -334,8 +337,8 @@ void rescue_magikarp_cutscene(int param_1){
 
     vec3 player_position;
     vec3 player_rotation;
-    SysCall(0,0x15,0x13,player,SysCall(3,1,player_position));
-    SysCall(0,0x15,0x16,player,SysCall(3,1,player_rotation));
+    SysCall(0,0x15,0x13,player,player_position);
+    SysCall(0,0x15,0x16,player,player_rotation);
 
     fade_out_bgm(0x1e);
     fade_out(0,0,0,0x3c);
@@ -350,11 +353,11 @@ void rescue_magikarp_cutscene(int param_1){
 
     vec3 camera_position;
     vec3 camera_target;
-    SysCall(3,2,SysCall(3,1,camera_position),792.17,32.2,-1432.97);
-    SysCall(3,2,SysCall(3,1,camera_target),168.73,-204.49,91.38);
+    SysCall(3,2,camera_position,792.17,32.2,-1432.97);
+    SysCall(3,2,camera_target,168.73,-204.49,91.38);
     SysCall(0,0x15,0xcb,event_script);
-    SysCall(0,0x15,0xcc,event_script,-1,SysCall(3,1,camera_position));
-    SysCall(0,0x15,0xcd,event_script,-1,SysCall(3,1,camera_target));
+    SysCall(0,0x15,0xcc,event_script,-1,camera_position);
+    SysCall(0,0x15,0xcd,event_script,-1,camera_target);
     set_event_frame_visible_with_fade(0);
     int friend_id = object_id_to_friend_id(0xb);
     SysCall(0,0x15,0x2a,global_manager,friend_id);
@@ -418,6 +421,92 @@ void bulbasaur_dialog(int param_1){
 
     update_npc_story_state(param_1);
     rotate_object(object_id,0,0x14d,0);
+    end_event_script(param_1);
+    return;
+}
+
+void drifblim_dialog(int param_1){
+    int object_id = 0x22;
+    int player_accessor = lock_player_and_get_accessor();
+    int event_script = get_module("EventScript");
+    int global_manager = get_module("GlobalManager");
+    int field_info = get_module("mnFieldInfo");
+
+    drop_held_item_animation();
+    SysCall(0,0x15,0,global_manager,"rfFuwarideTaxi",0);
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+
+    int service_count = SysCall(0,0x15,1,global_manager,"fFuwarideService");
+    if(service_count == 3){
+        SysCall(0,0x15,2,object_accessor,0x1b,10);
+        SysCall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
+        show_npc_dialog_mode_0(param_1,"02_80151");
+        SysCall(0,0x15,2,player_accessor,0x4c,5);
+        play_sound_effect(0x7fa,0);
+        SysCall(0,0x15,0x11,field_info,0,"02_80153");
+        wait_frames(180);
+        SysCall(0,0x15,0x12,field_info);
+        check_location(object_id);
+    }
+
+    if(service_count == 10){
+        SysCall(0,0x15,2,object_accessor,0x1b,10);
+        SysCall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
+        show_npc_dialog_mode_0(param_1,"02_80152");
+    }
+
+    SysCall(0,0x15,2,object_accessor,0x1b,10);
+    SysCall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
+
+    int berry_cost = 0;
+    if(service_count >= 0){
+        if(service_count < 3){
+            set_berry_counter_visible(true);
+            show_npc_dialog_mode_0(param_1,"02_80110");
+            berry_cost = 20;
+        }
+        else if(service_count < 10){
+            set_berry_counter_visible(true);
+            show_npc_dialog_mode_0(param_1,"02_80111");
+            berry_cost = 10;
+        }
+        else{
+            show_npc_dialog_mode_0(param_1,"02_80112");
+        }
+    }
+    else{
+        show_npc_dialog_mode_0(param_1,"02_80112");
+    }
+
+    SysCall(0,0x15,2,object_accessor,0x1b,10);
+    SysCall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
+    int berry_count = SysCall(0,0x15,0x15,global_manager);
+    if(berry_count < berry_cost){
+        show_npc_dialog_mode_0(param_1,"02_80120");
+        set_berry_counter_visible(false);
+    }
+    else{
+        choose_fast_travel_destination(param_1,object_id,0xb);
+        int destination = SysCall(0,0x15,1,global_manager,"rfFuwarideTaxi");
+
+        SysCall(0,0x15,2,object_accessor,0x1b,10);
+        SysCall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
+        if(destination == 99){
+            show_npc_dialog_mode_0(param_1,"02_80140");
+            set_berry_counter_visible(false);
+        }
+        else{
+            SysCall(0,0x15,0x14,global_manager, -berry_cost);
+            show_npc_dialog_mode_0(param_1,"02_80150");
+            set_berry_counter_visible(false);
+            SysCall(0,0x15,0,global_manager,"fFuwarideService",service_count + 1);
+            drop_held_item_animation();
+            fade_out_audio(30,false,false,false);
+            SysCall(0,0x15,4,event_script,0,1);
+        }
+    }
+
     end_event_script(param_1);
     return;
 }
@@ -600,8 +689,8 @@ void event_bidoof_dialog(int param_1){
 
     vec3 object_position;
     vec3 object_rotation;
-    SysCall(0,0x15,0x13,object_accessor,SysCall(3,1,object_position));
-    SysCall(0,0x15,0x16,object_accessor,SysCall(3,1,object_rotation));
+    SysCall(0,0x15,0x13,object_accessor,object_position);
+    SysCall(0,0x15,0x16,object_accessor,object_rotation);
 
     unlock_bidoof_beach(param_1,object_id);
     
@@ -661,8 +750,8 @@ void event_bidoof_dialog(int param_1){
 
     vec3 player_position;
     vec3 player_rotation;
-    SysCall(0,0x15,0x13,player,SysCall(3,1,player_position));
-    SysCall(0,0x15,0x16,player,SysCall(3,1,player_rotation));
+    SysCall(0,0x15,0x13,player,player_position);
+    SysCall(0,0x15,0x16,player,player_rotation);
 
     remove_held_item();
     despawn_player_object();
@@ -1402,7 +1491,7 @@ int start_power_competition(int param_1, int player_object_id, int enemy_object_
     vec3 object_position;
     vec3 player_position;
 
-    prepare_power_competition_camera();
+    drop_held_item_animation();
     SysCall(0,0x15,0x13,object_accessor,SysCall(3,1,object_position));
     SysCall(0,0x15,0x13,player_event_accessor,SysCall(3,1,player_position));
     SysCall(0,0x15,0xca,event_script,0x1e);
