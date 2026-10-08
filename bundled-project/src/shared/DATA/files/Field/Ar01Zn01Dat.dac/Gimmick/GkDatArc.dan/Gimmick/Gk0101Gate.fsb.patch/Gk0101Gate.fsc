@@ -1,0 +1,18 @@
+extern int get_module(string name);
+
+void CLOSE(int param_1){
+    int object_manager = get_module("ObjectManager");
+    int object_id = SysCall(0,0x15,0,param_1);
+    int gate = SysCall(0,0x15,1,object_manager,object_id);
+    int global_manager = get_module("GlobalManager");
+    int has_bulbasaur_prisma = SysCall(0,0x15,0x51,global_manager,0xf);
+
+    if(has_bulbasaur_prisma == 1){
+        SysCall(0,0x15,0,gate,2);
+    }
+    else{
+        SysCall(0,0x15,4,param_1);
+        SysCall(0,0x15,1,gate,0);
+    }
+    return;
+}
