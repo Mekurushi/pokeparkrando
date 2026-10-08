@@ -47,9 +47,7 @@ impl Patcher {
             ),
             (
                 "UNLOCK_FAST_TRAVEL_WITH_TAXI_STOP".to_owned(),
-                BuildConfigValue::Boolean(
-                    appkprk.options().unlock_fast_travel_with_taxi_stop(),
-                ),
+                BuildConfigValue::Boolean(appkprk.options().unlock_fast_travel_with_taxi_stop()),
             ),
         ]);
 
