@@ -112,6 +112,13 @@ face_object_accessors_instantly = 0x50724
 restore_pre_competition_state = 0x51e68
 set_npc_state = 0x51cb0
 
+# Unlock scenes
+do_unlock_scenes = 0x5bba4
+has_wand_check = 0x54b78
+is_unlock_scene_played = 0x550e0
+show_unlock_cutscene_at_position = 0x55eb4
+show_unlock_cutscene_at_current_position = 0x55840
+
 # RETURN_AT
 RETURN_AT = 0x6a418
 set_player_at = 0x52fc8
@@ -120,7 +127,6 @@ reset_camera = 0x51ab8
 point_camera_between = 0x51978
 has_beaten_attraction_record = 0x54f70
 do_dialog_with_scene = 0x52188
-do_unlock_scenes = 0x5bba4
 spawn_for_short_duration = 0x5b0e4
 SETMUFFINBOX = 0x5a944
 

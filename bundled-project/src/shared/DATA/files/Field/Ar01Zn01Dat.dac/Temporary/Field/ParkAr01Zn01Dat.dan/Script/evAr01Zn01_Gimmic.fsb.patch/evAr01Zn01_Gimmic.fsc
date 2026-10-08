@@ -20,6 +20,7 @@ extern void complete_event();
 extern int lock_player_and_get_accessor();
 extern void despawn_player_object();
 
+// unused preserved if somewhen necessary again
 int weedle_tree_gimmic_logic(int object_id){
     int event_script = get_module("EventScript");
     int global_manager = get_module("GlobalManager");
@@ -89,14 +90,15 @@ int weedle_tree_gimmic_logic(int object_id){
 }
 
 void TREEBEEDLE(int param_1){
-    int dispos_manager = get_module("DisposManager");
     int global_manager = get_module("GlobalManager");
+    int field_info = get_module("mnFieldInfo");
 
     int is_location_checked = SysCall(0,0x15,1,global_manager,"f0101WeedleTree");
     if(is_location_checked == 0){
-        lock_player_and_get_accessor();
-        weedle_tree_gimmic_logic(0xe);
-        restore_player_control();
+        SysCall(0,0x15,0,global_manager,"f0101WeedleTree",1);
+        SysCall(0,0x15,0x11,field_info,1,"11_00200");
+        wait_frames(180);
+        SysCall(0,0x15,0x12,field_info);
     }
 
     SysCall(0,0x15,0,global_manager,"zfTreeBeedle",1);
@@ -105,78 +107,15 @@ void TREEBEEDLE(int param_1){
 }
 
 void TREE_CATAPI(int param_1){
-    int event_script = get_module("EventScript");
     int global_manager = get_module("GlobalManager");
     int field_info = get_module("mnFieldInfo");
-    get_module("ObjectManager");
 
     int is_loc_checked = SysCall(0,0x15,1,global_manager,"f0101CaterpieTree");
     if(is_loc_checked == 0){
         SysCall(0,0x15,0,global_manager,"f0101CaterpieTree",1);
-        wait_frames(30);
-
-        vec3 player_position;
-        vec3 player_rotation;
-        int player = lock_player_and_get_accessor();
-        SysCall(0,0x15,0x13,player,player_position);
-        SysCall(0,0x15,0x16,player,player_rotation);
-
-        fade_out_bgm(30);
-        fade_out(0,0,0,60);
-        despawn_field();
-        configure_npc(0xd);
-
-        int caterpie = lock_npc_and_get_accessor(0xd);
-        SysCall(0,0x15,7,caterpie,-68.27,20.0,-1168.46);
-        SysCall(0,0x15,8,caterpie,-68.27,20.0,-1168.46);
-        SysCall(0,0x15,0x1c,caterpie,1);
-        SysCall(0,0x15,9,caterpie,0.0,125.0,0.0);
-
-        despawn_player_object();
-        set_event_frame_visible_with_fade(0);
-        
-        SysCall(0,0x15,400,event_script,0,0);
-
-        vec3 camera_position;
-        vec3 camera_target;
-        SysCall(3,2,camera_position,-55.97,7.74,-1184.04);
-        SysCall(3,2,camera_target,-71.67,3.73,-1164.28);
-        SysCall(0,0x15,0xcb,event_script);
-        SysCall(0,0x15,0xcc,event_script,-1,camera_position);
-        SysCall(0,0x15,0xcd,event_script,-1,camera_target);
-
-        fade_in(0,0,0,30);
-        play_sound_effect(0x7e7,0);
         SysCall(0,0x15,0x11,field_info,1,"11_00190");
         wait_frames(180);
         SysCall(0,0x15,0x12,field_info);
-        wait_frames(60);
-
-        fade_out(0,0,0,60);
-        hide_event_frame(false);
-        reset_object_after_event(0xd);
-        SysCall(0,0x15,0x15,caterpie,0);
-        wait_frames(30);
-        respawn_field();
-        SysCall(0,0x15,400,event_script,0,1);
-        fade_in_bgm(30);
-        complete_event();
-
-        spawn_player_object();
-        player = lock_player_and_get_accessor();
-        SysCall(0,0x15,7,player,player_position.x,player_position.y,player_position.z);
-        SysCall(0,0x15,8,player,player_position.x,player_position.y,player_position.z);
-        SysCall(0,0x15,0x22,player,player_position.x,player_position.y,player_position.z,1);
-        SysCall(0,0x15,9,player,player_rotation.x,player_rotation.y,player_rotation.z);
-
-        int player_state = SysCall(0,0x15,0x30,player);
-        if(player_state == 0){
-            SysCall(0,0x15,2,player,0,0);
-        }
-        SysCall(0,0x15,0,player,0);
-        SysCall(0,0x15,0xca,event_script,-1);
-        fade_in(0,0,0,30);
-        restore_player_control();
     }
 
     SysCall(0,0x15,0,global_manager,"zfTreeCatapi",1);

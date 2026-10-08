@@ -53,13 +53,18 @@ extern void restore_pre_competition_state(int object_id);
 extern void set_npc_state(int object_id, int state);
 extern void clear_wand_check();
 
+// Unlock scenes
+extern int has_wand_check();
+extern int is_unlock_scene_played(int friend_id);
+extern void show_unlock_cutscene_at_position(int param_1, int object_id, string dialog_id, int camera_preset, int param_5, float x, float y, float z);
+extern void show_unlock_cutscene_at_current_position(int param_1, int object_id, string dialog_id, int camera_preset, int param_5);
+
 // RETURN_AT
 extern void set_player_at(int x, int y, int z);
 extern void reset_camera();
 extern void point_camera_between(int unused, int object_id);
 extern int has_beaten_attraction_record(int object_id, int attraction_id);
 extern void do_dialog_with_scene(int param_1, int object_id, string dialog_id, int scene_id);
-extern void do_unlock_scenes(int param_1);
 extern void spawn_for_short_duration(int object_id);
 extern void SETMUFFINBOX();
 extern void face_player_synchronously(int object_id, int smooth);
@@ -124,7 +129,92 @@ void AR01ZN01_DEF(int param_1){
     return;
 }
 
-// RETURN_AT: cleared Prisma goal dialog
+void do_unlock_scenes(int param_1){
+    int global_manager = get_module("GlobalManager");
+    if(has_wand_check() == 1){
+        fade_out(0,0,0,60);
+    }
+
+    // Pachirisu
+    if(SysCall(0,0x15,0x29,global_manager,4) == 1){
+        show_unlock_cutscene_at_position(param_1,7,"11_00140",0,0,-80.0,-16.0,-650.0);
+    }
+
+    // Chimchar
+    if(SysCall(0,0x15,0x29,global_manager,7) == 1){
+        show_unlock_cutscene_at_position(param_1,10,"11_00160",0,0,336.9,23.0,-1075.0);
+    }
+    
+    // magikarp
+    if(SysCall(0,0x15,0x29,global_manager,0x8) == 1){
+        show_unlock_cutscene_at_position(param_1,0xb,"11_00170",0,0,784.0,24.0,-1415.0);
+    }
+
+    // Lotad
+    if(SysCall(0,0x15,0x29,global_manager,9) == 1){
+        show_unlock_cutscene_at_position(param_1,0xc,"11_00180",0,0,-89.5,-7.0,-836.9);
+    }
+
+    // caterpie
+    if(SysCall(0,0x15,0x29,global_manager,10) == 1){
+        show_unlock_cutscene_at_position(param_1,0xd,"11_00190",0,0,-68.27,20.0,-1168.46);
+    }
+
+    // Weedle
+    if(SysCall(0,0x15,0x29,global_manager, 0xb) == 1){
+        show_unlock_cutscene_at_position(param_1,0xe,"11_00200",0,0,395.68,46.09,-1469.44);
+    }
+
+    // Bonsly
+    if(SysCall(0,0x15,0x29,global_manager,0xf) == 1){
+        show_unlock_cutscene_at_position(param_1,0x12,"11_00230",0,0,-80.0,-16.0,-650.0);
+    }
+
+    // Shinx
+    if(SysCall(0,0x15,0x29,global_manager,0x10) == 1){
+        show_unlock_cutscene_at_position(param_1,0x13,"11_00240",0,0,424.6,23.0,-619.0);
+    }
+
+    // Butterfree
+    if(SysCall(0,0x15,0x29,global_manager,0x16) == 1){
+        show_unlock_cutscene_at_position(param_1,0x19,"11_00300",10,0,-89.5,-7.0,-836.9);
+    }
+
+    // Tropius
+    if(SysCall(0,0x15,0x29,global_manager,0x17) == 1){
+        show_unlock_cutscene_at_position(param_1,0x1a,"11_00310",30,0,336.9,23.0,-1075.0);
+    }
+
+    // Bibarel
+    if(SysCall(0,0x15,0x29,global_manager,0x18) == 1){
+        show_unlock_cutscene_at_current_position(param_1,0x1b,"11_00320",10,0);
+    }
+
+    // Ambipom
+    if(SysCall(0,0x15,0x29,global_manager,0x19) == 1){
+        show_unlock_cutscene_at_position(param_1,0x1c,"11_00330",10,0,-33.0,-1.0,-1566.5);
+    }
+
+    // Sudowoodo
+    if(SysCall(0,0x15,0x29,global_manager,0x57) == 1){
+        show_unlock_cutscene_at_position(param_1,0x1d,"11_00340",10,0,-481.6,14.0,-775.8);
+    }
+
+    // Scyther
+    if(SysCall(0,0x15,0x29,global_manager,0x1b) == 1){
+        show_unlock_cutscene_at_position(param_1,0x1e,"11_00350",20,0,-481.6,14.0,-775.8);
+    }
+
+    int event_script = get_module("EventScript");
+    SysCall(0,0x15,400,event_script,0,1);
+    int audio_state = SysCall(0,0x15,0x1f7,event_script,0x17e0);
+
+    if(audio_state == 0){
+        fade_in_bgm(30);
+    }
+    return;
+}
+
 void cleared_prisma_goal_dialog(int param_1){
     int bulbasaur_object_id = 0x21;
     int global_manager = get_module("GlobalManager");
@@ -331,8 +421,13 @@ void rescue_magikarp_cutscene(int param_1){
     int event_script = get_module("EventScript");
     int field_info = get_module("mnFieldInfo");
     int global_manager = get_module("GlobalManager");
-    get_module("DisposManager");
-    wait_frames(0x14);
+
+    despawn(0x36);
+    SysCall(0,0x15,0x11,field_info,1,"11_00170");
+    wait_frames(0xB4);
+    SysCall(0,0x15,0x12,field_info);
+
+    /*wait_frames(0x14);
     int player = lock_player_and_get_accessor();
 
     vec3 player_position;
@@ -384,7 +479,7 @@ void rescue_magikarp_cutscene(int param_1){
     wait_frames(0x1e);
     fade_in_bgm(0x1e);
     fade_in(0,0,0,0x3c);
-    restore_player_control();
+    restore_player_control();*/
     return;
 }
 
