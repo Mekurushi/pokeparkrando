@@ -1,0 +1,16 @@
+extern int get_module(string name);
+
+void WAIT(int param_1){
+    int global_manager = get_module("GlobalManager");
+    int location_checked = SysCall(
+        0,0x15,1,global_manager,"f0101ShroomishBox"
+    );
+
+    if(location_checked == 1){
+        int object_manager = get_module("ObjectManager");
+        int object_id = SysCall(0,0x15,0,param_1);
+        int object = SysCall(0,0x15,1,object_manager,object_id);
+        SysCall(0,0x15,0x1a,object);
+    }
+    return;
+}

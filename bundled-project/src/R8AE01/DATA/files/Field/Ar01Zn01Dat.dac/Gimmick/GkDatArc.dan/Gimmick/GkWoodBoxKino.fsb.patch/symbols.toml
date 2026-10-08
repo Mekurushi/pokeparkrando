@@ -1,0 +1,5 @@
+base_address = 0x50000
+
+[functions]
+WAIT = 0x50b90
+get_module = 0x50044
