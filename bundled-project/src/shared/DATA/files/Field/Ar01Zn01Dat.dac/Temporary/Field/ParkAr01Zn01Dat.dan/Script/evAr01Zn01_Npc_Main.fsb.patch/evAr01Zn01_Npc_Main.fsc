@@ -165,6 +165,11 @@ void do_unlock_scenes(int param_1){
         show_unlock_cutscene_at_position(param_1,0xe,"11_00200",0,0,395.68,46.09,-1469.44);
     }
 
+    // Shroomish
+    if(SysCall(0,0x15,0x29,global_manager,0xe) == 1){
+        show_unlock_cutscene_at_position(param_1,0x11,"11_00220",0,0, 949.0, 24.0, -1314.0);
+    }
+
     // Bonsly
     if(SysCall(0,0x15,0x29,global_manager,0xf) == 1){
         show_unlock_cutscene_at_position(param_1,0x12,"11_00230",0,0,-80.0,-16.0,-650.0);

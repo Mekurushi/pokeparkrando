@@ -20,6 +20,11 @@ extern void complete_event();
 extern int lock_player_and_get_accessor();
 extern void despawn_player_object();
 
+// Shroomish box
+extern void unlock_pokemon(int pokemon_id);
+extern void set_object_position(int object_id, int x, int y, int z);
+extern void set_object_rotation(int object_id, int x, int y, int z);
+
 // unused preserved if somewhen necessary again
 int weedle_tree_gimmic_logic(int object_id){
     int event_script = get_module("EventScript");
@@ -119,6 +124,21 @@ void TREE_CATAPI(int param_1){
     }
 
     SysCall(0,0x15,0,global_manager,"zfTreeCatapi",1);
+    end_event_script(param_1);
+    return;
+}
+
+void BOX_KINOCOCO(int param_1){
+    int global_manager = get_module("GlobalManager");
+    int is_location_checked = SysCall(0,0x15,1,global_manager,"f0101ShroomishBox");
+    if(is_location_checked == 0){
+        int field_info = get_module("mnFieldInfo");
+        SysCall(0,0x15,0,global_manager,"f0101ShroomishBox",1);
+        SysCall(0,0x15,0x11,field_info,1,"11_00220");
+        wait_frames(180);
+        SysCall(0,0x15,0x12,field_info);
+    }
+
     end_event_script(param_1);
     return;
 }

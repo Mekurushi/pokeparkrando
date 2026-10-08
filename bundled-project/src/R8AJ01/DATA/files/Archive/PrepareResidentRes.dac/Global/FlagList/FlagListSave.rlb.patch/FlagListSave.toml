@@ -1,5 +1,12 @@
 [[edits]]
 table = "FlagTable"
+row = 89
+
+[edits.set]
+flag_name = { value = "f0101ShroomishBox" }
+
+[[edits]]
+table = "FlagTable"
 row = 172
 
 [edits.set]

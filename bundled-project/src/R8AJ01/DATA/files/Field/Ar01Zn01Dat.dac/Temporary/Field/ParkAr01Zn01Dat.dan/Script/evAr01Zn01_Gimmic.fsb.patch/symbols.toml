@@ -25,3 +25,9 @@ respawn_field = 0x5130c
 complete_event = 0x54bc8
 lock_player_and_get_accessor = 0x50fb0
 despawn_player_object = 0x54440
+
+# Shroomish box
+BOX_KINOCOCO = 0x58ba4
+unlock_pokemon = 0x501fc
+set_object_position = 0x536bc
+set_object_rotation = 0x5375c
