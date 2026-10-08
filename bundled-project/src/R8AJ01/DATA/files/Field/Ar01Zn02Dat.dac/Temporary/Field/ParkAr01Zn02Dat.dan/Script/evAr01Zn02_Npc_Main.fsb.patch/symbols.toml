@@ -16,3 +16,11 @@ attraction_show_yes_no_question = 0x52074
 fade_out = 0x51e9c
 enter_attraction = 0x56b3c
 end_event_script = 0x50080
+
+A01_Z02_INIT = 0x595c8
+setup_player_for_zone = 0x54494
+special_spawn_conditions = 0x581a0
+update_npc_story_state = 0x58210
+fade_in = 0x51f1c
+
+set_chapter = 0x54a10

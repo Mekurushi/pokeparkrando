@@ -1703,3 +1703,8 @@ void setup_field(int param_1){
     special_spawn_condition(param_1);
     update_npc_story_state(param_1);
 }
+
+// stub out set_chapter
+void set_chapter(int chapter){
+    return;
+}

@@ -147,3 +147,5 @@ drifblim_dialog = 0x615d4
 show_npc_dialog_mode_0 = 0x52008
 choose_fast_travel_destination = 0x57ab8
 fade_out_audio = 0x516b0
+
+set_chapter = 0x54a18

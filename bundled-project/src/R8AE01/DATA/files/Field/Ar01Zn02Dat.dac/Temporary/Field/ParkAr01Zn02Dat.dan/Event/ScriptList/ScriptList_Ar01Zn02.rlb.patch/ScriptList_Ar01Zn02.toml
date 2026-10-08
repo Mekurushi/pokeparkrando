@@ -1,0 +1,7 @@
+[[removes]]
+table = "EnterZoneScriptList"
+row = 1
+
+[[removes]]
+table = "TouchAreaScriptList"
+row = 1

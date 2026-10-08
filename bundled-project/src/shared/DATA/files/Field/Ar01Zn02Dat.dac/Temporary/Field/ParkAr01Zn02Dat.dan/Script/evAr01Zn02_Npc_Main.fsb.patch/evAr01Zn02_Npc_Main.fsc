@@ -13,7 +13,30 @@ extern void fade_out(int red, int green, int blue, int frames);
 extern void enter_attraction(int param_1, int attraction_id);
 extern void end_event_script(int param_1);
 
+extern void setup_player_for_zone();
+extern void special_spawn_conditions(int param_1);
+extern void update_npc_story_state(int param_1);
+extern void fade_in(int red, int green, int blue, int frames);
+
 config int MEADOW_ZONE_VENUSAUR_AREA_VENUSAUR_ATTRACTION_ID;
+
+void A01_Z02_INIT(int param_1){
+    // activate logs
+    SysCall(0,7,1);
+
+    int event_script = get_module("EventScript");
+    SysCall(0,0x15,0x65,event_script,0,0,0,1);
+
+    int object_manager = get_module("ObjectManager");
+    SysCall(0,0x15,8,object_manager,20000);
+
+    lock_player_and_get_accessor();
+    setup_player_for_zone();
+    update_npc_story_state(param_1);
+    fade_in(0,0,0,30);
+    end_event_script(param_1);
+    return;
+}
 
 void venusaur_dialog(int param_1){
     int venusaur_object_id = 0x37;
@@ -115,4 +138,9 @@ bool is_bestfriend(int obj_id){
     int friend_id = SysCall(0,0x15,0xe,disp_manager,obj_id);
     int is_best_friend = SysCall(0,0x15,0x4b,global_manager,friend_id);
     return is_best_friend == 1;
+}
+
+// stub out set_chapter
+void set_chapter(int chapter){
+    return;
 }
