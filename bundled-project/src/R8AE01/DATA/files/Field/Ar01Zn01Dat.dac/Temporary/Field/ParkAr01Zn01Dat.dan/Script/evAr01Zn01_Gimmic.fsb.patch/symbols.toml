@@ -1,0 +1,27 @@
+base_address = 0x50000
+
+[functions]
+weedle_tree_gimmic_logic = 0x582bc
+TREEBEEDLE = 0x586e4
+TREE_CATAPI = 0x58778
+get_module = 0x50044
+fade_out = 0x51e9c
+wait_frames = 0x500bc
+end_event_script = 0x50080
+fade_out_bgm = 0x51500
+lock_npc_and_get_accessor = 0x511b4
+fade_in_bgm = 0x514d8
+spawn_player_object = 0x543f4
+set_event_frame_visible_with_fade = 0x51ae0
+object_id_to_friend_id = 0x549e4
+fade_in = 0x51f1c
+configure_npc = 0x545b8
+restore_player_control = 0x5113c
+hide_event_frame = 0x51b08
+reset_object_after_event = 0x51268
+despawn_field = 0x512e8
+play_sound_effect = 0x5139c
+respawn_field = 0x5130c
+complete_event = 0x54bd0
+lock_player_and_get_accessor = 0x50fb0
+despawn_player_object = 0x54448

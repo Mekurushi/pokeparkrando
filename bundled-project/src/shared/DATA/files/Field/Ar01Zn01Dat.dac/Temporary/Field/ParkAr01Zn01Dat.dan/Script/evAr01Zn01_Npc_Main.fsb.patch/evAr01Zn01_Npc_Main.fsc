@@ -1568,7 +1568,7 @@ bool is_location_checked(int obj_id){
 
     // rescue magikarp location uses 0x36 as object_id
     if(obj_id == 0x36){
-        return SysCall(0, 0x15, 0x1, global_manager, "MagikarpRescued") == 1;
+        return SysCall(0, 0x15, 0x1, global_manager, "f0101MagikarpRescued") == 1;
     }
     return is_bestfriend(obj_id);
 }
@@ -1578,7 +1578,7 @@ void check_location(int obj_id){
 
     // rescue magikarp location uses 0x36 as object_id
     if(obj_id == 0x36){
-        SysCall(0, 0x15, 0x0, global_manager, "MagikarpRescued", 1);
+        SysCall(0, 0x15, 0x0, global_manager, "f0101MagikarpRescued", 1);
         return;
     }
     set_bestfriend(obj_id);
