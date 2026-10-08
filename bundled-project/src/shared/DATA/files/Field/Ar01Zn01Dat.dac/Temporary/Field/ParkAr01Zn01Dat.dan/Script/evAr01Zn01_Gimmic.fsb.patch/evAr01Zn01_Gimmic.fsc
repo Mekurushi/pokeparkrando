@@ -23,7 +23,6 @@ extern void despawn_player_object();
 int weedle_tree_gimmic_logic(int object_id){
     int event_script = get_module("EventScript");
     int global_manager = get_module("GlobalManager");
-    get_module("ObjectManager");
     int field_info = get_module("mnFieldInfo");
     SysCall(0,0x15,0,global_manager,"f0101WeedleTree",1);
     wait_frames(30);
