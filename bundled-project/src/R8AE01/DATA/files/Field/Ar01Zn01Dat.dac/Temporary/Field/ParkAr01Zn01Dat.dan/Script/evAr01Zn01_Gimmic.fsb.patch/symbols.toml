@@ -26,6 +26,12 @@ complete_event = 0x54bd0
 lock_player_and_get_accessor = 0x50fb0
 despawn_player_object = 0x54448
 
+# Taxi stop
+TAXI_STOP = 0x58c48
+get_player_accessor = 0x50ec0
+face_player_towards_object_synchronously = 0x533b4
+show_message_box = 0x50ca4
+
 # Shroomish box
 BOX_KINOCOCO = 0x59078
 unlock_pokemon = 0x501fc

@@ -55,6 +55,10 @@ fn build_config() -> BuildConfig {
         ),
         ("FPS_ENHANCEMENT".into(), BuildConfigValue::Boolean(true)),
         (
+            "UNLOCK_FAST_TRAVEL_WITH_TAXI_STOP".into(),
+            BuildConfigValue::Boolean(true),
+        ),
+        (
             "MEADOW_ZONE_MAIN_AREA_BULBASAUR_ATTRACTION_ID".into(),
             BuildConfigValue::Integer(0xf),
         ),

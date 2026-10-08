@@ -131,7 +131,7 @@ spawn_for_short_duration = 0x5ac38
 SETMUFFINBOX = 0x5a498
 
 # Bulbasaur dialog
-face_player_synchronously = 0x53c18
+face_object_towards_player_synchronously = 0x53c18
 attraction_show_yes_no_question = 0x52074
 set_berry_counter_visible = 0x5751c
 enter_attraction = 0x56b3c

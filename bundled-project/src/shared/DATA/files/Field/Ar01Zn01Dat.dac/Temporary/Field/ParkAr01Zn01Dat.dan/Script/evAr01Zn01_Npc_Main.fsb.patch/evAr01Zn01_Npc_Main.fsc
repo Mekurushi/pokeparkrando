@@ -67,7 +67,7 @@ extern int has_beaten_attraction_record(int object_id, int attraction_id);
 extern void do_dialog_with_scene(int param_1, int object_id, string dialog_id, int scene_id);
 extern void spawn_for_short_duration(int object_id);
 extern void SETMUFFINBOX();
-extern void face_player_synchronously(int object_id, int smooth);
+extern void face_object_towards_player_synchronously(int object_id, int smooth);
 extern int attraction_show_yes_no_question(int param_1, string dialog_id);
 extern void set_berry_counter_visible(bool visible);
 extern void enter_attraction(int param_1, int attraction_id);

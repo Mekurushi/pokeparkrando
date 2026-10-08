@@ -45,6 +45,12 @@ impl Patcher {
                 "FPS_ENHANCEMENT".to_owned(),
                 BuildConfigValue::Boolean(appkprk.options().fps_enhancement_patch()),
             ),
+            (
+                "UNLOCK_FAST_TRAVEL_WITH_TAXI_STOP".to_owned(),
+                BuildConfigValue::Boolean(
+                    appkprk.options().unlock_fast_travel_with_taxi_stop(),
+                ),
+            ),
         ]);
 
         for (entrance, exit) in appkprk.entrances() {
