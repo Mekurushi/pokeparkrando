@@ -1,0 +1,8 @@
+extern int get_module(string name);
+
+void INVOKEDMGELC(int param_1){
+    int global_manager = get_module("GlobalManager");
+    int damage_accessor = SysCall(0,0x15,5,param_1);
+    SysCall(0,0x15,0,damage_accessor,param_1,1);
+    return;
+}
