@@ -63,6 +63,10 @@ fn build_config() -> BuildConfig {
             BuildConfigValue::Integer(0xf),
         ),
         (
+            "MEADOW_ZONE_VENUSAUR_AREA_VENUSAUR_ATTRACTION_ID".into(),
+            BuildConfigValue::Integer(0x2),
+        ),
+        (
             "MEADOW_ZONE_MAIN_AREA_TREEHOUSE_CONNECTION_ZONE".into(),
             BuildConfigValue::Integer(2),
         ),

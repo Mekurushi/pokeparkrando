@@ -1,0 +1,118 @@
+extern int get_module(string name);
+extern int lock_player_and_get_accessor();
+extern int lock_npc_and_get_accessor(int object_id);
+extern void face_player_and_npc(int object_id, int param_2);
+extern void show_npc_dialog(int param_1, string dialog_id);
+extern void friendship_banner(string dialog_id);
+extern void set_bestfriend(int object_id);
+extern void rotate_object(int object_id, int x, int y, int z);
+extern void set_object_variant(int object_id, int variant);
+extern void set_berry_counter_visible(bool visible);
+extern int attraction_show_yes_no_question(int param_1, string dialog_id);
+extern void fade_out(int red, int green, int blue, int frames);
+extern void enter_attraction(int param_1, int attraction_id);
+extern void end_event_script(int param_1);
+
+config int MEADOW_ZONE_VENUSAUR_AREA_VENUSAUR_ATTRACTION_ID;
+
+void venusaur_dialog(int param_1){
+    int venusaur_object_id = 0x37;
+    lock_player_and_get_accessor();
+    int global_manager = get_module("GlobalManager");
+    int event_script = get_module("EventScript");
+    int venusaur = lock_npc_and_get_accessor(venusaur_object_id);
+    int has_venusaur_prisma = SysCall(0,0x15,0x51,global_manager,2);
+        
+    face_player_and_npc(venusaur_object_id,0);
+    SysCall(0,0x15,2,venusaur,0x1b,10);
+    SysCall(0,0x15,0x28,venusaur,0xf4a,0,1.0,1.0);
+    
+    if(has_venusaur_prisma == 0){
+        show_npc_dialog(param_1,"12_60020");
+    }
+    else{
+        int has_blaziken_prisma = SysCall(0,0x15,0x51,global_manager,0xb);
+        int has_empoleon_prisma = SysCall(0,0x15,0x51,global_manager,8);
+        if(has_blaziken_prisma == 0){
+            if(has_empoleon_prisma == 0){
+                show_npc_dialog(param_1,"12_60010");
+            }
+            else{
+                show_npc_dialog(param_1,"12_60013");
+            }
+        }
+        else if(has_empoleon_prisma != 0){
+            
+            if(!is_location_checked(venusaur_object_id)){
+                show_npc_dialog(param_1,"12_60014");
+                friendship_banner("12_00020");
+                check_location(venusaur_object_id);
+                rotate_object(venusaur_object_id,0,0,0);
+                end_event_script(param_1);
+            }
+            else{
+                show_npc_dialog(param_1,"12_60011");
+            }
+        }
+    }
+
+    SysCall(0,0x15,2,venusaur,0x1b,10);
+    SysCall(0,0x15,0x28,venusaur,0xf4a,0,1.0,1.0);
+    set_berry_counter_visible(true);
+
+    int response = attraction_show_yes_no_question(param_1,"12_60030");
+    if(response == 1){
+        int berry_count = SysCall(0,0x15,0x15,global_manager);
+        if(berry_count < 5){
+            SysCall(0,0x15,2,venusaur,0x1b,10);
+            SysCall(0,0x15,0x28,venusaur,0xf4a,0,1.0,1.0);
+            show_npc_dialog(param_1,"12_60060");
+            set_berry_counter_visible(false);
+        }
+        else{
+            if(has_venusaur_prisma == 0){
+                SysCall(0,0x15,2,venusaur,0x1b,10);
+            }
+            else{
+                SysCall(0,0x15,2,venusaur,0x1c,10);
+            }
+            SysCall(0,0x15,0x14,global_manager,-5);
+            show_npc_dialog(param_1,"12_60050");
+            SysCall(0,0x15,0,global_manager,"fRetAttraction",3);
+            set_berry_counter_visible(false);
+            fade_out(0,0,0,60);
+            SysCall(0,0x15,0xca,event_script,0);
+            enter_attraction(param_1,MEADOW_ZONE_VENUSAUR_AREA_VENUSAUR_ATTRACTION_ID);
+            lock_npc_and_get_accessor(venusaur_object_id);
+            lock_player_and_get_accessor();
+            SysCall(0,0x15,2,venusaur,0x1b,10);
+        }
+    }
+    else{
+        SysCall(0,0x15,2,venusaur,0x1b,10);
+        SysCall(0,0x15,0x28,venusaur,0xf4a,0,1.0,1.0);
+        show_npc_dialog(param_1,"12_60040");
+        set_berry_counter_visible(false);
+    }
+
+    rotate_object(venusaur_object_id,0,0,0);
+    end_event_script(param_1);
+    return;
+}
+
+bool is_location_checked(int obj_id){
+    return is_bestfriend(obj_id);
+}
+
+void check_location(int obj_id){
+    set_bestfriend(obj_id);
+    return;
+}
+
+bool is_bestfriend(int obj_id){
+    int global_manager = get_module("GlobalManager");
+    int disp_manager = get_module("DisposManager");
+    int friend_id = SysCall(0,0x15,0xe,disp_manager,obj_id);
+    int is_best_friend = SysCall(0,0x15,0x4b,global_manager,friend_id);
+    return is_best_friend == 1;
+}

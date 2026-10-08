@@ -1,0 +1,18 @@
+base_address = 0x50000
+
+[functions]
+venusaur_dialog = 0x58cf4
+get_module = 0x50044
+lock_player_and_get_accessor = 0x50fb0
+lock_npc_and_get_accessor = 0x511b4
+face_player_and_npc = 0x521f8
+show_npc_dialog = 0x51f9c
+friendship_banner = 0x54c90
+set_bestfriend = 0x54948
+rotate_object = 0x537c8
+set_object_variant = 0x51b30
+set_berry_counter_visible = 0x5751c
+attraction_show_yes_no_question = 0x52074
+fade_out = 0x51e9c
+enter_attraction = 0x56b3c
+end_event_script = 0x50080
