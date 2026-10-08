@@ -1,0 +1,48 @@
+extern int get_module(string name);
+extern int lock_player_and_get_accessor();
+extern int show_yes_no_question(int param_1, string dialog_id);
+extern void fade_out_audio(int frames, bool fade_channel_6, bool fade_channel_8, bool fade_channel_7);
+extern void fade_out(int red, int green, int blue, int frames);
+extern void set_player_at(int x, int y, int z);
+extern void set_player_rotation(int x, int y, int z);
+extern void wait_frames(int frames);
+extern void fade_in(int red, int green, int blue, int frames);
+extern void restore_player_control();
+extern void end_event_script(int param_1);
+
+config int MEADOW_ZONE_VENUSAUR_AREA_MEADOW_ZONE_MAIN_GATE_ZONE;
+config int MEADOW_ZONE_VENUSAUR_AREA_MEADOW_ZONE_MAIN_GATE_AREA;
+config int MEADOW_ZONE_VENUSAUR_AREA_MEADOW_ZONE_MAIN_GATE_POSITION;
+
+void EMAPA01_Z01(int param_1){
+    int event_script = get_module("EventScript");
+    int global_manager = get_module("GlobalManager");
+    lock_player_and_get_accessor();
+
+    int accepted = show_yes_no_question(1,"12_00030");
+    if(accepted == 1){
+        fade_out_audio(60,true,true,true);
+        SysCall(0,0x15,400,event_script,3,0);
+        SysCall(
+            0,0x15,0x78,global_manager,
+            MEADOW_ZONE_VENUSAUR_AREA_MEADOW_ZONE_MAIN_GATE_ZONE,
+            MEADOW_ZONE_VENUSAUR_AREA_MEADOW_ZONE_MAIN_GATE_AREA,
+            MEADOW_ZONE_VENUSAUR_AREA_MEADOW_ZONE_MAIN_GATE_POSITION
+        );
+        int scene_manager = get_module("SceneManager");
+        SysCall(0,0x15,6,scene_manager,"ZoneChange",1);
+        SysCall(0,0x15,3,scene_manager);
+    }
+    else{
+        fade_out(0,0,0,60);
+        set_player_at(0,5,-92);
+        set_player_rotation(0,0,0);
+        SysCall(0,0x15,0xca,event_script,-1);
+        wait_frames(5);
+        fade_in(0,0,0,60);
+        restore_player_control();
+    }
+
+    end_event_script(param_1);
+    return;
+}

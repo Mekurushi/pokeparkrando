@@ -79,6 +79,18 @@ fn build_config() -> BuildConfig {
             BuildConfigValue::Integer(0),
         ),
         (
+            "MEADOW_ZONE_VENUSAUR_AREA_MEADOW_ZONE_MAIN_GATE_ZONE".into(),
+            BuildConfigValue::Integer(1),
+        ),
+        (
+            "MEADOW_ZONE_VENUSAUR_AREA_MEADOW_ZONE_MAIN_GATE_AREA".into(),
+            BuildConfigValue::Integer(2),
+        ),
+        (
+            "MEADOW_ZONE_VENUSAUR_AREA_MEADOW_ZONE_MAIN_GATE_POSITION".into(),
+            BuildConfigValue::Integer(0),
+        ),
+        (
             "MEADOW_ZONE_MAIN_AREA_VENUSAUR_GATE_ZONE".into(),
             BuildConfigValue::Integer(1),
         ),
