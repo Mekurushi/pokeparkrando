@@ -955,6 +955,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "cranelift-bitset"
+version = "0.132.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cf01ecc92fc5499789d79c3b817299d5a8ddd828d31dcf0f9cc3cc66f38dbb36"
+dependencies = [
+ "wasmtime-internal-core",
+]
+
+[[package]]
+name = "cranelift-entity"
+version = "0.132.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2eea22522144ba08c7e7ef94bfc25d474ef016c2771974b8ab1986734ac85965"
+dependencies = [
+ "cranelift-bitset",
+ "wasmtime-internal-core",
+]
+
+[[package]]
 name = "crc32fast"
 version = "1.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1541,35 +1560,64 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "42703706b716c37f96a77aea830392ad231f44c9e9a67872fa5548707e11b11c"
 
 [[package]]
-name = "fsc_assembler"
+name = "fsb-assembler"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/pokepark-fsc.git?rev=8034e5bf3a255cf9eaf3aab3ab0af016f308691e#8034e5bf3a255cf9eaf3aab3ab0af016f308691e"
-
-[[package]]
-name = "fsc_codegen"
-version = "0.1.0"
-source = "git+https://github.com/Mekurushi/pokepark-fsc.git?rev=8034e5bf3a255cf9eaf3aab3ab0af016f308691e#8034e5bf3a255cf9eaf3aab3ab0af016f308691e"
+source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=15fa9b1d17d26b1d9f41c5d23c97632d22a75013#15fa9b1d17d26b1d9f41c5d23c97632d22a75013"
 dependencies = [
- "fsc_assembler",
- "fsc_sema",
+ "fsb-ir",
 ]
 
 [[package]]
-name = "fsc_compiler"
+name = "fsb-ir"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/pokepark-fsc.git?rev=8034e5bf3a255cf9eaf3aab3ab0af016f308691e#8034e5bf3a255cf9eaf3aab3ab0af016f308691e"
+source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=15fa9b1d17d26b1d9f41c5d23c97632d22a75013#15fa9b1d17d26b1d9f41c5d23c97632d22a75013"
 dependencies = [
- "fsc_assembler",
- "fsc_codegen",
- "fsc_diagnostics",
- "fsc_parse",
- "fsc_sema",
+ "cranelift-entity",
 ]
 
 [[package]]
-name = "fsc_diagnostics"
+name = "fsb-patcher"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/pokepark-fsc.git?rev=8034e5bf3a255cf9eaf3aab3ab0af016f308691e#8034e5bf3a255cf9eaf3aab3ab0af016f308691e"
+source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=15fa9b1d17d26b1d9f41c5d23c97632d22a75013#15fa9b1d17d26b1d9f41c5d23c97632d22a75013"
+dependencies = [
+ "fsb-assembler",
+ "fsb-ir",
+ "fsc-codegen",
+ "fsc-diagnostics",
+ "fsc-mir",
+ "fsc-parse",
+ "fsc-sema",
+ "serde",
+ "toml",
+]
+
+[[package]]
+name = "fsc-codegen"
+version = "0.1.0"
+source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=15fa9b1d17d26b1d9f41c5d23c97632d22a75013#15fa9b1d17d26b1d9f41c5d23c97632d22a75013"
+dependencies = [
+ "cranelift-entity",
+ "fsb-ir",
+ "fsc-mir",
+]
+
+[[package]]
+name = "fsc-compiler"
+version = "0.1.0"
+source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=15fa9b1d17d26b1d9f41c5d23c97632d22a75013#15fa9b1d17d26b1d9f41c5d23c97632d22a75013"
+dependencies = [
+ "fsb-assembler",
+ "fsc-codegen",
+ "fsc-diagnostics",
+ "fsc-mir",
+ "fsc-parse",
+ "fsc-sema",
+]
+
+[[package]]
+name = "fsc-diagnostics"
+version = "0.1.0"
+source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=15fa9b1d17d26b1d9f41c5d23c97632d22a75013#15fa9b1d17d26b1d9f41c5d23c97632d22a75013"
 dependencies = [
  "annotate-snippets",
  "serde",
@@ -1577,35 +1625,32 @@ dependencies = [
 ]
 
 [[package]]
-name = "fsc_parse"
+name = "fsc-mir"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/pokepark-fsc.git?rev=8034e5bf3a255cf9eaf3aab3ab0af016f308691e#8034e5bf3a255cf9eaf3aab3ab0af016f308691e"
+source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=15fa9b1d17d26b1d9f41c5d23c97632d22a75013#15fa9b1d17d26b1d9f41c5d23c97632d22a75013"
 dependencies = [
- "fsc_diagnostics",
+ "cranelift-entity",
+ "fsc-diagnostics",
+ "fsc-sema",
+]
+
+[[package]]
+name = "fsc-parse"
+version = "0.1.0"
+source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=15fa9b1d17d26b1d9f41c5d23c97632d22a75013#15fa9b1d17d26b1d9f41c5d23c97632d22a75013"
+dependencies = [
+ "fsc-diagnostics",
  "logos",
 ]
 
 [[package]]
-name = "fsc_patcher"
+name = "fsc-sema"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/pokepark-fsc.git?rev=8034e5bf3a255cf9eaf3aab3ab0af016f308691e#8034e5bf3a255cf9eaf3aab3ab0af016f308691e"
+source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=15fa9b1d17d26b1d9f41c5d23c97632d22a75013#15fa9b1d17d26b1d9f41c5d23c97632d22a75013"
 dependencies = [
- "fsc_assembler",
- "fsc_codegen",
- "fsc_diagnostics",
- "fsc_parse",
- "fsc_sema",
- "serde",
- "toml",
-]
-
-[[package]]
-name = "fsc_sema"
-version = "0.1.0"
-source = "git+https://github.com/Mekurushi/pokepark-fsc.git?rev=8034e5bf3a255cf9eaf3aab3ab0af016f308691e#8034e5bf3a255cf9eaf3aab3ab0af016f308691e"
-dependencies = [
- "fsc_diagnostics",
- "fsc_parse",
+ "cranelift-entity",
+ "fsc-diagnostics",
+ "fsc-parse",
 ]
 
 [[package]]
@@ -3015,7 +3060,7 @@ checksum = "13c45bb4a6ae1280ec0803b1ef9d3455eb50f01efbbe1447ab020f1d54fba9d8"
 [[package]]
 name = "parkforge"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/parkforge.git?rev=814134f0e06313640913a4abd2ebff40ffa98849#814134f0e06313640913a4abd2ebff40ffa98849"
+source = "git+https://github.com/Mekurushi/parkforge.git?rev=fb9e646f99df03822d250e3510987ae437775a33#fb9e646f99df03822d250e3510987ae437775a33"
 dependencies = [
  "parkforge-build",
  "parkforge-game-tree",
@@ -3029,11 +3074,11 @@ dependencies = [
 [[package]]
 name = "parkforge-build"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/parkforge.git?rev=814134f0e06313640913a4abd2ebff40ffa98849#814134f0e06313640913a4abd2ebff40ffa98849"
+source = "git+https://github.com/Mekurushi/parkforge.git?rev=fb9e646f99df03822d250e3510987ae437775a33#fb9e646f99df03822d250e3510987ae437775a33"
 dependencies = [
- "fsc_compiler",
- "fsc_diagnostics",
- "fsc_patcher",
+ "fsb-patcher",
+ "fsc-compiler",
+ "fsc-diagnostics",
  "parkforge-staging",
  "parkforge-types",
  "rlb-domain",
@@ -3047,7 +3092,7 @@ dependencies = [
 [[package]]
 name = "parkforge-game-tree"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/parkforge.git?rev=814134f0e06313640913a4abd2ebff40ffa98849#814134f0e06313640913a4abd2ebff40ffa98849"
+source = "git+https://github.com/Mekurushi/parkforge.git?rev=fb9e646f99df03822d250e3510987ae437775a33#fb9e646f99df03822d250e3510987ae437775a33"
 dependencies = [
  "nlzss11",
  "parkforge-staging",
@@ -3061,7 +3106,7 @@ dependencies = [
 [[package]]
 name = "parkforge-project"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/parkforge.git?rev=814134f0e06313640913a4abd2ebff40ffa98849#814134f0e06313640913a4abd2ebff40ffa98849"
+source = "git+https://github.com/Mekurushi/parkforge.git?rev=fb9e646f99df03822d250e3510987ae437775a33#fb9e646f99df03822d250e3510987ae437775a33"
 dependencies = [
  "parkforge-types",
  "serde",
@@ -3073,7 +3118,7 @@ dependencies = [
 [[package]]
 name = "parkforge-staging"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/parkforge.git?rev=814134f0e06313640913a4abd2ebff40ffa98849#814134f0e06313640913a4abd2ebff40ffa98849"
+source = "git+https://github.com/Mekurushi/parkforge.git?rev=fb9e646f99df03822d250e3510987ae437775a33#fb9e646f99df03822d250e3510987ae437775a33"
 dependencies = [
  "tempfile",
  "thiserror 2.0.21",
@@ -3082,7 +3127,7 @@ dependencies = [
 [[package]]
 name = "parkforge-types"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/parkforge.git?rev=814134f0e06313640913a4abd2ebff40ffa98849#814134f0e06313640913a4abd2ebff40ffa98849"
+source = "git+https://github.com/Mekurushi/parkforge.git?rev=fb9e646f99df03822d250e3510987ae437775a33#fb9e646f99df03822d250e3510987ae437775a33"
 dependencies = [
  "relative-path",
  "serde",
@@ -3092,7 +3137,7 @@ dependencies = [
 [[package]]
 name = "parkforge-wii-disc"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/parkforge.git?rev=814134f0e06313640913a4abd2ebff40ffa98849#814134f0e06313640913a4abd2ebff40ffa98849"
+source = "git+https://github.com/Mekurushi/parkforge.git?rev=fb9e646f99df03822d250e3510987ae437775a33#fb9e646f99df03822d250e3510987ae437775a33"
 dependencies = [
  "binrw 0.14.2",
  "disc_riider",
@@ -4975,6 +5020,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "23f0c9c52aa7cd7d77769a4cfe2a9adb1b331f489a41d912ce14513d5ab995c6"
 dependencies = [
  "unicode-ident",
+]
+
+[[package]]
+name = "wasmtime-internal-core"
+version = "45.0.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3073c03f97f871fe6400e68621c863b93ba79296f8e570285231952d23fcc804"
+dependencies = [
+ "hashbrown 0.17.1",
+ "libm",
 ]
 
 [[package]]

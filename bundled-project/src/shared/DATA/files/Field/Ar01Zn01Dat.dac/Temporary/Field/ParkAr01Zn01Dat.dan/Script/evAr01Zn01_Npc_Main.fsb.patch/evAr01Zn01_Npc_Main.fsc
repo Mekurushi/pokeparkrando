@@ -107,10 +107,10 @@ config int MEADOW_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_POSITION;
 
 void AR01ZN01_INI(int param_1){
     // activate logs
-    SysCall(0,7,1);
+    @syscall(0,7,1);
 
     int event_script = get_module("EventScript");
-    SysCall(0,0x15,0x65,event_script,0,0,0,1);
+    @syscall(0,0x15,0x65,event_script,0,0,0,1);
     setup_field(param_1);
     fade_in(0,0,0,0x1e);
     clear_wand_check();
@@ -120,7 +120,7 @@ void AR01ZN01_INI(int param_1){
 
 void AR01ZN01_DEF(int param_1){
     // activate logs
-    SysCall(0,7,1);
+    @syscall(0,7,1);
 
     setup_field(param_1);
     fade_in(0,0,0,0x1e);
@@ -136,83 +136,83 @@ void do_unlock_scenes(int param_1){
     }
 
     // Pachirisu
-    if(SysCall(0,0x15,0x29,global_manager,4) == 1){
+    if(@syscall(0,0x15,0x29,global_manager,4) == 1){
         show_unlock_cutscene_at_position(param_1,7,"11_00140",0,0,-80.0,-16.0,-650.0);
     }
 
     // Chimchar
-    if(SysCall(0,0x15,0x29,global_manager,7) == 1){
+    if(@syscall(0,0x15,0x29,global_manager,7) == 1){
         show_unlock_cutscene_at_position(param_1,10,"11_00160",0,0,336.9,23.0,-1075.0);
     }
     
     // magikarp
-    if(SysCall(0,0x15,0x29,global_manager,0x8) == 1){
+    if(@syscall(0,0x15,0x29,global_manager,0x8) == 1){
         show_unlock_cutscene_at_position(param_1,0xb,"11_00170",0,0,784.0,24.0,-1415.0);
     }
 
     // Lotad
-    if(SysCall(0,0x15,0x29,global_manager,9) == 1){
+    if(@syscall(0,0x15,0x29,global_manager,9) == 1){
         show_unlock_cutscene_at_position(param_1,0xc,"11_00180",0,0,-89.5,-7.0,-836.9);
     }
 
     // caterpie
-    if(SysCall(0,0x15,0x29,global_manager,10) == 1){
+    if(@syscall(0,0x15,0x29,global_manager,10) == 1){
         show_unlock_cutscene_at_position(param_1,0xd,"11_00190",0,0,-68.27,20.0,-1168.46);
     }
 
     // Weedle
-    if(SysCall(0,0x15,0x29,global_manager, 0xb) == 1){
+    if(@syscall(0,0x15,0x29,global_manager, 0xb) == 1){
         show_unlock_cutscene_at_position(param_1,0xe,"11_00200",0,0,395.68,46.09,-1469.44);
     }
 
     // Shroomish
-    if(SysCall(0,0x15,0x29,global_manager,0xe) == 1){
+    if(@syscall(0,0x15,0x29,global_manager,0xe) == 1){
         show_unlock_cutscene_at_position(param_1,0x11,"11_00220",0,0, 949.0, 24.0, -1314.0);
     }
 
     // Bonsly
-    if(SysCall(0,0x15,0x29,global_manager,0xf) == 1){
+    if(@syscall(0,0x15,0x29,global_manager,0xf) == 1){
         show_unlock_cutscene_at_position(param_1,0x12,"11_00230",0,0,-80.0,-16.0,-650.0);
     }
 
     // Shinx
-    if(SysCall(0,0x15,0x29,global_manager,0x10) == 1){
+    if(@syscall(0,0x15,0x29,global_manager,0x10) == 1){
         show_unlock_cutscene_at_position(param_1,0x13,"11_00240",0,0,424.6,23.0,-619.0);
     }
 
     // Butterfree
-    if(SysCall(0,0x15,0x29,global_manager,0x16) == 1){
+    if(@syscall(0,0x15,0x29,global_manager,0x16) == 1){
         show_unlock_cutscene_at_position(param_1,0x19,"11_00300",10,0,-89.5,-7.0,-836.9);
     }
 
     // Tropius
-    if(SysCall(0,0x15,0x29,global_manager,0x17) == 1){
+    if(@syscall(0,0x15,0x29,global_manager,0x17) == 1){
         show_unlock_cutscene_at_position(param_1,0x1a,"11_00310",30,0,336.9,23.0,-1075.0);
     }
 
     // Bibarel
-    if(SysCall(0,0x15,0x29,global_manager,0x18) == 1){
+    if(@syscall(0,0x15,0x29,global_manager,0x18) == 1){
         show_unlock_cutscene_at_current_position(param_1,0x1b,"11_00320",10,0);
     }
 
     // Ambipom
-    if(SysCall(0,0x15,0x29,global_manager,0x19) == 1){
+    if(@syscall(0,0x15,0x29,global_manager,0x19) == 1){
         show_unlock_cutscene_at_position(param_1,0x1c,"11_00330",10,0,-33.0,-1.0,-1566.5);
     }
 
     // Sudowoodo
-    if(SysCall(0,0x15,0x29,global_manager,0x57) == 1){
+    if(@syscall(0,0x15,0x29,global_manager,0x57) == 1){
         show_unlock_cutscene_at_position(param_1,0x1d,"11_00340",10,0,-481.6,14.0,-775.8);
     }
 
     // Scyther
-    if(SysCall(0,0x15,0x29,global_manager,0x1b) == 1){
+    if(@syscall(0,0x15,0x29,global_manager,0x1b) == 1){
         show_unlock_cutscene_at_position(param_1,0x1e,"11_00350",20,0,-481.6,14.0,-775.8);
     }
 
     int event_script = get_module("EventScript");
-    SysCall(0,0x15,400,event_script,0,1);
-    int audio_state = SysCall(0,0x15,0x1f7,event_script,0x17e0);
+    @syscall(0,0x15,400,event_script,0,1);
+    int audio_state = @syscall(0,0x15,0x1f7,event_script,0x17e0);
 
     if(audio_state == 0){
         fade_in_bgm(30);
@@ -224,23 +224,23 @@ void cleared_prisma_goal_dialog(int param_1){
     int bulbasaur_object_id = 0x21;
     int global_manager = get_module("GlobalManager");
     int npc_accessor = get_object_accessor(param_1,0x21,true);
-    int has_bulbasaur_prisma = SysCall(0,0x15,0x51,global_manager,0xf);
+    int has_bulbasaur_prisma = @syscall(0,0x15,0x51,global_manager,0xf);
     if(has_bulbasaur_prisma == 1){
         point_camera_between(0,0x21);
-        SysCall(0,0x15,2,npc_accessor,0x1c,10);
-        SysCall(0,0x15,0x28,npc_accessor,0xc8a,0,1.0,1.0);
+        @syscall(0,0x15,2,npc_accessor,0x1c,10);
+        @syscall(0,0x15,0x28,npc_accessor,0xc8a,0,1.0,1.0);
         do_dialog_with_scene(param_1,0x21,"11_60070",0);
         spawn_for_short_duration(0x4e23);
         wait_frames(0x6e);
         play_sound_effect(0x7ea,0);
 
         int field_info = get_module("mnFieldInfo");
-        SysCall(0,0x15,0x11,field_info,1,"11_60071");
+        @syscall(0,0x15,0x11,field_info,1,"11_60071");
         wait_frames(0xb4);
-        SysCall(0,0x15,0x12,field_info);
+        @syscall(0,0x15,0x12,field_info);
 
-        SysCall(0,0x15,2,npc_accessor,0x1b,10);
-        SysCall(0,0x15,0x28,npc_accessor,0xc89,0,1.0,1.0);
+        @syscall(0,0x15,2,npc_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,npc_accessor,0xc89,0,1.0,1.0);
         do_dialog_with_scene(param_1,0x21,"11_60072",0);
         friendship_banner("11_00662");
         check_location(bulbasaur_object_id);
@@ -255,7 +255,7 @@ void RETURN_AT(int param_1){
     int bulbasaur_object_id = 0x21;
     int global_manager = get_module("GlobalManager");
     int event_script = get_module("EventScript");
-    SysCall(0,0x15,0x65,event_script,0,0,0,1);
+    @syscall(0,0x15,0x65,event_script,0,0,0,1);
 
     setup_field(param_1);
 
@@ -263,54 +263,62 @@ void RETURN_AT(int param_1){
     set_player_at(-38,-19,-590);
     int npc_accessor = get_object_accessor(param_1,0x21,true);
     face_object_accessors_instantly(player,npc_accessor,1);
-    SysCall(0,0x15,0xca,event_script,-1);
+    @syscall(0,0x15,0xca,event_script,-1);
 
-    vec3 camera_position; // names are wild guesses
-    vec3 camera_target;
-    SysCall(3,2,SysCall(3,1,camera_position),-61.3,-9.75,-579.8);
-    SysCall(3,2,SysCall(3,1,camera_target),-9.46,-14.56,-614.73);
-    SysCall(0,0x15,0xcb,event_script);
-    SysCall(0,0x15,0xcc,event_script,-1,SysCall(3,1,camera_position));
-    SysCall(0,0x15,0xcd,event_script,-1,SysCall(3,1,camera_target));
+    vec3 camera_position = vec3{
+    .x = -61.3,
+    .y = -9.75,
+    .z = -579.8
+    };
 
-    int should_face_npc = SysCall(0,0x15,0x67,event_script);
+    vec3 camera_target = vec3{
+    .x = -9.46,
+    .y = -14.56,
+    .z = -614.73
+    };
+
+    @syscall(0,0x15,0xcb,event_script);
+    @syscall(0,0x15,0xcc,event_script,-1,&camera_position);
+    @syscall(0,0x15,0xcd,event_script,-1,&camera_target);
+
+    int should_face_npc = @syscall(0,0x15,0x67,event_script);
     if(should_face_npc == 1){
         face_object_accessors_instantly(player,npc_accessor,1);
     }
     fade_in(0,0,0,0x1e);
 
-    int return_attraction = SysCall(0,0x15,1,global_manager,"fRetAttraction");
+    int return_attraction = @syscall(0,0x15,1,global_manager,"fRetAttraction");
     if(return_attraction == 0x10){
         lock_npc_and_get_accessor(0x21);
-        int has_bulbasaur_prisma = SysCall(0,0x15,0x51,global_manager,0xf);
+        int has_bulbasaur_prisma = @syscall(0,0x15,0x51,global_manager,0xf);
 
         if(has_bulbasaur_prisma == 1){
             if(!is_location_checked(bulbasaur_object_id)){
                 cleared_prisma_goal_dialog(param_1);
                 reset_object_after_event(0x21);
                 reset_camera();
-                SysCall(0,0x15,0xca,event_script,0x1e);
+                @syscall(0,0x15,0xca,event_script,0x1e);
                 wait_frames(0x1e);
             }
             else{
                 point_camera_between(0,0x21);
-                SysCall(0,0x15,2,npc_accessor,0x1b,10);
-                SysCall(0,0x15,0x28,npc_accessor,0xc89,0,1.0,1.0);
+                @syscall(0,0x15,2,npc_accessor,0x1b,10);
+                @syscall(0,0x15,0x28,npc_accessor,0xc89,0,1.0,1.0);
                 do_dialog_with_scene(param_1,0x21,"11_60063",0);
                 reset_object_after_event(0x21);
                 reset_camera();
-                SysCall(0,0x15,0xca,event_script,0x1e);
+                @syscall(0,0x15,0xca,event_script,0x1e);
                 wait_frames(0x1e);
             }
         }
         else if(has_bulbasaur_prisma == 0){
             point_camera_between(0,0x21);
-            SysCall(0,0x15,2,npc_accessor,0x1b,10);
-            SysCall(0,0x15,0x28,npc_accessor,0xc89,0,1.0,1.0);
+            @syscall(0,0x15,2,npc_accessor,0x1b,10);
+            @syscall(0,0x15,0x28,npc_accessor,0xc89,0,1.0,1.0);
 
             do_dialog_with_scene(param_1,0x21,"11_60061",0);
 
-            SysCall(0,0x15,0xca,event_script,0x1e);
+            @syscall(0,0x15,0xca,event_script,0x1e);
             wait_frames(0x1e);
             reset_object_after_event(0x21);
             reset_camera();
@@ -328,13 +336,13 @@ void STAXIAREA(int param_1){
     int event_script = get_module("EventScript");
     int sound_manager = get_module("SoundManager");
 
-    SysCall(0,0x15,100,event_script,0,0,0,0x3c);
-    int destination = SysCall(0,0x15,1,global_manager,"rfFuwarideTaxi");
-    SysCall(0,0x15,0x16,sound_manager,6,1.0);
-    SysCall(0,0x15,0x16,sound_manager,8,1.0);
-    SysCall(0,0x15,0x16,sound_manager,7,1.0);
+    @syscall(0,0x15,100,event_script,0,0,0,0x3c);
+    int destination = @syscall(0,0x15,1,global_manager,"rfFuwarideTaxi");
+    @syscall(0,0x15,0x16,sound_manager,6,1.0);
+    @syscall(0,0x15,0x16,sound_manager,8,1.0);
+    @syscall(0,0x15,0x16,sound_manager,7,1.0);
     fade_out_sound(15);
-    SysCall(0,0x15,400,event_script,3,0);
+    @syscall(0,0x15,400,event_script,3,0);
 
     if(destination == 0xb){
         travel_to(1,1,3);
@@ -408,13 +416,13 @@ void special_spawn_condition(int param1){
 
     if(spawn_gimmick_magikarp == false) {
         int obj_manager = get_module("ObjectManager");
-        int is_gimmick_magikarp_spawned = SysCall(0,0x15,10,obj_manager,0x36);
+        int is_gimmick_magikarp_spawned = @syscall(0,0x15,10,obj_manager,0x36);
         if (is_gimmick_magikarp_spawned == 0) {
-            SysCall(0,0x15,0x11,obj_manager,0x36);
+            @syscall(0,0x15,0x11,obj_manager,0x36);
         }
         int gimmick_magikarp_obj = lock_npc_and_get_accessor(0x36);
-        SysCall(0,0x15,0x2714,gimmick_magikarp_obj,1);
-        SysCall(0,0x15,0x15,gimmick_magikarp_obj,0);
+        @syscall(0,0x15,0x2714,gimmick_magikarp_obj,1);
+        @syscall(0,0x15,0x15,gimmick_magikarp_obj,0);
     }
     else{
         despawn(0x36);
@@ -428,17 +436,17 @@ void rescue_magikarp_cutscene(int param_1){
     int global_manager = get_module("GlobalManager");
 
     despawn(0x36);
-    SysCall(0,0x15,0x11,field_info,1,"11_00170");
+    @syscall(0,0x15,0x11,field_info,1,"11_00170");
     wait_frames(0xB4);
-    SysCall(0,0x15,0x12,field_info);
+    @syscall(0,0x15,0x12,field_info);
 
     /*wait_frames(0x14);
     int player = lock_player_and_get_accessor();
 
     vec3 player_position;
     vec3 player_rotation;
-    SysCall(0,0x15,0x13,player,player_position);
-    SysCall(0,0x15,0x16,player,player_rotation);
+    @syscall(0,0x15,0x13,player,&player_position);
+    @syscall(0,0x15,0x16,player,&player_rotation);
 
     fade_out_bgm(0x1e);
     fade_out(0,0,0,0x3c);
@@ -451,34 +459,40 @@ void rescue_magikarp_cutscene(int param_1){
     set_object_rotation(0xb,0,0x9a,0);
     check_location(0x36);
 
-    vec3 camera_position;
-    vec3 camera_target;
-    SysCall(3,2,camera_position,792.17,32.2,-1432.97);
-    SysCall(3,2,camera_target,168.73,-204.49,91.38);
-    SysCall(0,0x15,0xcb,event_script);
-    SysCall(0,0x15,0xcc,event_script,-1,camera_position);
-    SysCall(0,0x15,0xcd,event_script,-1,camera_target);
+    vec3 camera_position = vec3{
+    .x = 792.17,
+    .y = 32.2,
+    .z = -1432.97
+    };
+    vec3 camera_target= vec3{
+    .x = 168.73,
+    .y = -204.49,
+    .z = 91.38
+    };;
+    @syscall(0,0x15,0xcb,event_script);
+    @syscall(0,0x15,0xcc,event_script,-1,&camera_position);
+    @syscall(0,0x15,0xcd,event_script,-1,&camera_target);
     set_event_frame_visible_with_fade(0);
-    SysCall(0,0x15,400,event_script,0,0);
+    @syscall(0,0x15,400,event_script,0,0);
     wait_frames(0x1e);
     fade_in(0,0,0,0x3c);
     play_sound_effect(0x7e7,0);
-    SysCall(0,0x15,0x11,field_info,1,"11_00170");
+    @syscall(0,0x15,0x11,field_info,1,"11_00170");
     wait_frames(0x5a);
     reset_object_after_event(0xb);
     wait_frames(0x5a);
-    SysCall(0,0x15,0x12,field_info);
+    @syscall(0,0x15,0x12,field_info);
     wait_frames(0x3c);
     fade_out(0,0,0,0x3c);
     hide_event_frame(false);
     spawn_player_object();
 
     player = lock_player_and_get_accessor();
-    SysCall(0,0x15,7,player,player_position.x,player_position.y,player_position.z);
-    SysCall(0,0x15,8,player,player_position.x,player_position.y,player_position.z);
-    SysCall(0,0x15,0x22,player,player_position.x,player_position.y,player_position.z,1);
-    SysCall(0,0x15,9,player,player_rotation.x,player_rotation.y,player_rotation.z);
-    SysCall(0,0x15,0xca,event_script,-1);
+    @syscall(0,0x15,7,player,player_position.x,player_position.y,player_position.z);
+    @syscall(0,0x15,8,player,player_position.x,player_position.y,player_position.z);
+    @syscall(0,0x15,0x22,player,player_position.x,player_position.y,player_position.z,1);
+    @syscall(0,0x15,9,player,player_rotation.x,player_rotation.y,player_rotation.z);
+    @syscall(0,0x15,0xca,event_script,-1);
     respawn_field();
     special_spawn_condition(param_1);
     wait_frames(0x1e);
@@ -497,23 +511,23 @@ void bulbasaur_dialog(int param_1){
     int object_accessor = lock_npc_and_get_accessor(object_id);
     face_player_and_npc(object_id,0);
 
-    SysCall(0,0x15,2,object_accessor,0x1b,10);
-    SysCall(0,0x15,0x28,object_accessor,0xc89,0,1.0,1.0);
+    @syscall(0,0x15,2,object_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,object_accessor,0xc89,0,1.0,1.0);
 
     int accepted = attraction_show_yes_no_question(param_1,"11_60031");
 
     if(accepted == 1){
-        SysCall(0,0x15,2,object_accessor,0x1c,10);
-        SysCall(0,0x15,0x28,object_accessor,0xc89,0,1.0,1.0);
+        @syscall(0,0x15,2,object_accessor,0x1c,10);
+        @syscall(0,0x15,0x28,object_accessor,0xc89,0,1.0,1.0);
         show_npc_dialog(param_1,"11_60050");
-        SysCall(0,0x15,0,global_manager,"fRetAttraction",0x10);
+        @syscall(0,0x15,0,global_manager,"fRetAttraction",0x10);
         fade_out(0,0,0,0x1e);
-        SysCall(0,0x15,0xca,event_script,0);
+        @syscall(0,0x15,0xca,event_script,0);
         enter_attraction(param_1, MEADOW_ZONE_MAIN_AREA_BULBASAUR_ATTRACTION_ID);
     }
     else{
-        SysCall(0,0x15,2,object_accessor,0x1b,10);
-        SysCall(0,0x15,0x28,object_accessor,0xc89,0,1.0,1.0);
+        @syscall(0,0x15,2,object_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,object_accessor,0xc89,0,1.0,1.0);
         show_npc_dialog(param_1,"11_60040");
     }
 
@@ -531,31 +545,31 @@ void drifblim_dialog(int param_1){
     int field_info = get_module("mnFieldInfo");
 
     drop_held_item_animation();
-    SysCall(0,0x15,0,global_manager,"rfFuwarideTaxi",0);
+    @syscall(0,0x15,0,global_manager,"rfFuwarideTaxi",0);
     int object_accessor = lock_npc_and_get_accessor(object_id);
     face_player_and_npc(object_id,0);
 
-    int service_count = SysCall(0,0x15,1,global_manager,"fFuwarideService");
+    int service_count = @syscall(0,0x15,1,global_manager,"fFuwarideService");
     if(service_count == 3){
-        SysCall(0,0x15,2,object_accessor,0x1b,10);
-        SysCall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
+        @syscall(0,0x15,2,object_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
         show_npc_dialog_mode_0(param_1,"02_80151");
-        SysCall(0,0x15,2,player_accessor,0x4c,5);
+        @syscall(0,0x15,2,player_accessor,0x4c,5);
         play_sound_effect(0x7fa,0);
-        SysCall(0,0x15,0x11,field_info,0,"02_80153");
+        @syscall(0,0x15,0x11,field_info,0,"02_80153");
         wait_frames(180);
-        SysCall(0,0x15,0x12,field_info);
+        @syscall(0,0x15,0x12,field_info);
         check_location(object_id);
     }
 
     if(service_count == 10){
-        SysCall(0,0x15,2,object_accessor,0x1b,10);
-        SysCall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
+        @syscall(0,0x15,2,object_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
         show_npc_dialog_mode_0(param_1,"02_80152");
     }
 
-    SysCall(0,0x15,2,object_accessor,0x1b,10);
-    SysCall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
+    @syscall(0,0x15,2,object_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
 
     int berry_cost = 0;
     if(service_count >= 0){
@@ -577,31 +591,31 @@ void drifblim_dialog(int param_1){
         show_npc_dialog_mode_0(param_1,"02_80112");
     }
 
-    SysCall(0,0x15,2,object_accessor,0x1b,10);
-    SysCall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
-    int berry_count = SysCall(0,0x15,0x15,global_manager);
+    @syscall(0,0x15,2,object_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
+    int berry_count = @syscall(0,0x15,0x15,global_manager);
     if(berry_count < berry_cost){
         show_npc_dialog_mode_0(param_1,"02_80120");
         set_berry_counter_visible(false);
     }
     else{
         choose_fast_travel_destination(param_1,object_id,0xb);
-        int destination = SysCall(0,0x15,1,global_manager,"rfFuwarideTaxi");
+        int destination = @syscall(0,0x15,1,global_manager,"rfFuwarideTaxi");
 
-        SysCall(0,0x15,2,object_accessor,0x1b,10);
-        SysCall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
+        @syscall(0,0x15,2,object_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
         if(destination == 99){
             show_npc_dialog_mode_0(param_1,"02_80140");
             set_berry_counter_visible(false);
         }
         else{
-            SysCall(0,0x15,0x14,global_manager, -berry_cost);
+            @syscall(0,0x15,0x14,global_manager, -berry_cost);
             show_npc_dialog_mode_0(param_1,"02_80150");
             set_berry_counter_visible(false);
-            SysCall(0,0x15,0,global_manager,"fFuwarideService",service_count + 1);
+            @syscall(0,0x15,0,global_manager,"fFuwarideService",service_count + 1);
             drop_held_item_animation();
             fade_out_audio(30,false,false,false);
-            SysCall(0,0x15,4,event_script,0,1);
+            @syscall(0,0x15,4,event_script,0,1);
         }
     }
 
@@ -741,14 +755,14 @@ void weedle_dialog(int param_1){
 
 void unlock_bidoof_beach(int param_1, int object_id){
     int global_manager = get_module("GlobalManager");
-    int bidoof_beach_unlocked = SysCall(0,0x15,1,global_manager,"f0301BippaFlag");
+    int bidoof_beach_unlocked = @syscall(0,0x15,1,global_manager,"f0301BippaFlag");
 
     if(bidoof_beach_unlocked == 0){
         get_module("EventScript");
         get_module("ObjectManager");
         int object_accessor = get_object_accessor(param_1,object_id,true);
-        int gf0004 = SysCall(0,0x15,1,global_manager,"GF0004");
-        SysCall(0,0x15,0x28,object_accessor,0xa40,0,1.0,1.0);
+        int gf0004 = @syscall(0,0x15,1,global_manager,"GF0004");
+        @syscall(0,0x15,0x28,object_accessor,0xa40,0,1.0,1.0);
 
         if(gf0004 < 4){
             if(object_id != 0xf){
@@ -763,7 +777,7 @@ void unlock_bidoof_beach(int param_1, int object_id){
             wait_frames(0x5a);
             fade_in(0,0,0,0x2d);
             show_npc_dialog(param_1,"11_00710");
-            SysCall(0,0x15,0,global_manager,"f0301BippaFlag",1);
+            @syscall(0,0x15,0,global_manager,"f0301BippaFlag",1);
             end_event_script(param_1);
         }
     }
@@ -777,7 +791,7 @@ void event_bidoof_dialog(int param_1){
     face_player_and_npc(object_id,0);
     int global_manager = get_module("GlobalManager");
     int event_script = get_module("EventScript");
-    SysCall(0,0x15,0x28,object_accessor,0xa40,0,1.0,1.0);
+    @syscall(0,0x15,0x28,object_accessor,0xa40,0,1.0,1.0);
 
     if (is_friend(0x14) == 0){
     // if mankey is not befriended abort dialog
@@ -787,21 +801,21 @@ void event_bidoof_dialog(int param_1){
 
     vec3 object_position;
     vec3 object_rotation;
-    SysCall(0,0x15,0x13,object_accessor,object_position);
-    SysCall(0,0x15,0x16,object_accessor,object_rotation);
+    @syscall(0,0x15,0x13,object_accessor,&object_position);
+    @syscall(0,0x15,0x16,object_accessor,&object_rotation);
 
     unlock_bidoof_beach(param_1,object_id);
     
-    int gf0004 = SysCall(0,0x15,1,global_manager,"GF0004");
+    int gf0004 = @syscall(0,0x15,1,global_manager,"GF0004");
     if(gf0004 > 3){
         show_npc_dialog(param_1,"11_90091");
         end_event_script(param_1);
     }
     
-    int gf0005 = SysCall(0,0x15,1,global_manager,"GF0005");
+    int gf0005 = @syscall(0,0x15,1,global_manager,"GF0005");
     if (gf0005 == 0){
         show_npc_dialog(param_1,"11_90000");
-        SysCall(0,0x15,0,global_manager,"GF0005",1);
+        @syscall(0,0x15,0,global_manager,"GF0005",1);
     }
 
     int item_kind = get_held_item_kind();
@@ -843,13 +857,13 @@ void event_bidoof_dialog(int param_1){
     fade_out_bgm(0x3c);
     fade_out(0,0,0,0x3c);
     int increased_gf0004 = gf0004 + 1;
-    SysCall(0,0x15,0,global_manager,"GF0004", increased_gf0004);
-    SysCall(0,0x15,0xca,event_script,0);
+    @syscall(0,0x15,0,global_manager,"GF0004", increased_gf0004);
+    @syscall(0,0x15,0xca,event_script,0);
 
     vec3 player_position;
     vec3 player_rotation;
-    SysCall(0,0x15,0x13,player,player_position);
-    SysCall(0,0x15,0x16,player,player_rotation);
+    @syscall(0,0x15,0x13,player,&player_position);
+    @syscall(0,0x15,0x16,player,&player_rotation);
 
     remove_held_item();
     despawn_player_object();
@@ -867,24 +881,24 @@ void event_bidoof_dialog(int param_1){
     }
     remove_held_item();
     player = lock_player_and_get_accessor();
-    SysCall(0,0x15,1,player,0);
-    SysCall(0,0x15,7,player,player_position.x,player_position.y,player_position.z);
-    SysCall(0,0x15,8,player,player_position.x,player_position.y,player_position.z);
-    SysCall(0,0x15,0x22,player,player_position.x,player_position.y,player_position.z,1);
-    SysCall(0,0x15,9,player,player_rotation.x,player_rotation.y,player_rotation.z);
+    @syscall(0,0x15,1,player,0);
+    @syscall(0,0x15,7,player,player_position.x,player_position.y,player_position.z);
+    @syscall(0,0x15,8,player,player_position.x,player_position.y,player_position.z);
+    @syscall(0,0x15,0x22,player,player_position.x,player_position.y,player_position.z,1);
+    @syscall(0,0x15,9,player,player_rotation.x,player_rotation.y,player_rotation.z);
 
-    int updated_gf0004 = SysCall(0,0x15,1,global_manager,"GF0004");
+    int updated_gf0004 = @syscall(0,0x15,1,global_manager,"GF0004");
 
     respawn_field();
     special_spawn_condition(param_1);
     object_accessor = lock_npc_and_get_accessor(object_id);
-    SysCall(0,0x15,7,object_accessor,object_position.x,object_position.y,object_position.z);
-    SysCall(0,0x15,9,object_accessor,object_rotation.x,object_rotation.y,object_rotation.z);
+    @syscall(0,0x15,7,object_accessor,object_position.x,object_position.y,object_position.z);
+    @syscall(0,0x15,9,object_accessor,object_rotation.x,object_rotation.y,object_rotation.z);
 
     face_object_accessors_instantly(player,object_accessor,1);
     fade_out_bgm(0x3c);
     force_fade_in(0,0,0,0x3c);
-    SysCall(0,0x15,0x28,object_accessor,0xa40,0,1.0,1.0);
+    @syscall(0,0x15,0x28,object_accessor,0xa40,0,1.0,1.0);
 
     if (updated_gf0004 == 1) {
     show_npc_dialog(param_1,"11_90030");
@@ -897,7 +911,7 @@ void event_bidoof_dialog(int param_1){
   }
   else if (updated_gf0004 == 4) {
     show_npc_dialog(param_1,"11_90090");
-    SysCall(0,0x15,0,global_manager,"f0101BippaFlag",1);
+    @syscall(0,0x15,0,global_manager,"f0101BippaFlag",1);
   }
   else {
     show_npc_dialog(param_1,"01_00001");
@@ -908,7 +922,7 @@ void event_bidoof_dialog(int param_1){
         friendship_banner("11_00490");
         check_location(object_id);
     }
-    SysCall(0,0x15,0x14,global_manager,100);
+    @syscall(0,0x15,0x14,global_manager,100);
     force_fade_out(0,0,0,0x3c);
     complete_event();
   }
@@ -1154,7 +1168,7 @@ void bidoof_dialog(int param_1){
     lock_player_and_get_accessor();
     int object_accessor = lock_npc_and_get_accessor(object_id);
     face_player_and_npc(object_id,0);
-    SysCall(0,0x15,0x28,object_accessor,0xa42,0,1.0,1.0);
+    @syscall(0,0x15,0x28,object_accessor,0xa42,0,1.0,1.0);
     show_npc_dialog(param_1,"11_12720");
     end_event_script(param_1);
 }
@@ -1164,7 +1178,7 @@ void bidoof2_dialog(int param_1){
     lock_player_and_get_accessor();
     int object_accessor = lock_npc_and_get_accessor(object_id);
     face_player_and_npc(object_id,0);
-    SysCall(0,0x15,0x28,object_accessor,0xa42,0,1.0,1.0);
+    @syscall(0,0x15,0x28,object_accessor,0xa42,0,1.0,1.0);
     show_npc_dialog(param_1,"11_12820");
     end_event_script(param_1);
 }
@@ -1174,7 +1188,7 @@ void bidoof3_dialog(int param_1){
     lock_player_and_get_accessor();
     int object_accessor = lock_npc_and_get_accessor(object_id);
     face_player_and_npc(object_id,0);
-    SysCall(0,0x15,0x28,object_accessor,0xa42,0,1.0,1.0);
+    @syscall(0,0x15,0x28,object_accessor,0xa42,0,1.0,1.0);
     show_npc_dialog(param_1,"11_12920");
     end_event_script(param_1);
 }
@@ -1402,7 +1416,7 @@ void power_competition_dialog(
         special_spawn_condition(param_1);
         int object_accessor = get_object_accessor(param_1,object_id,true);
         fade_in(0,0,0,0x3c);
-        SysCall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
+        @syscall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
         if (hasWon == -1) {
             show_npc_dialog(param_1,loss_dialog_id);
         }
@@ -1443,7 +1457,7 @@ void power_competition_dialog_with_win_count_check(
     lock_npc_and_get_accessor(object_id);
     face_player_and_npc(object_id,0);
     int global_manager = get_module("GlobalManager");
-    int has_required_num = SysCall(0,0x15,1,global_manager,"f0101BattleCounter");
+    int has_required_num = @syscall(0,0x15,1,global_manager,"f0101BattleCounter");
     if(has_required_num == 1){
         show_npc_dialog(param_1,win_count_met_dialog_id);
         int response = show_yes_no_question(param_1,question_dialog_id);
@@ -1452,7 +1466,7 @@ void power_competition_dialog_with_win_count_check(
             special_spawn_condition(param_1);
             int object_accessor = get_object_accessor(param_1,object_id,true);
             fade_in(0,0,0,0x3c);
-            SysCall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
+            @syscall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
             if (hasWon == -1) {
                 show_npc_dialog(param_1,loss_dialog_id);
             }
@@ -1498,7 +1512,7 @@ void power_competition_dialog_with_friendship_count_check(
     lock_npc_and_get_accessor(object_id);
     face_player_and_npc(object_id,0);
     int global_manager = get_module("GlobalManager");
-    int friendship_num = SysCall(0,0x15,0x42,global_manager);
+    int friendship_num = @syscall(0,0x15,0x42,global_manager);
     if(friendship_num >= friendship_count){
         show_npc_dialog(param_1,friendship_count_met_dialog_id);
         int response = show_yes_no_question(param_1,question_dialog_id);
@@ -1507,7 +1521,7 @@ void power_competition_dialog_with_friendship_count_check(
             special_spawn_condition(param_1);
             int object_accessor = get_object_accessor(param_1,object_id,true);
             fade_in(0,0,0,0x3c);
-            SysCall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
+            @syscall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
             if (hasWon == -1) {
                 show_npc_dialog(param_1,loss_dialog_id);
             }
@@ -1549,7 +1563,7 @@ void errand_dialog(
     int object_accessor = lock_npc_and_get_accessor(object_id);
     face_player_and_npc(object_id,0);
     int global_manager = get_module("GlobalManager");
-    SysCall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
+    @syscall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
     int item_kind = get_held_item_kind();
     if(item_kind == -1){
         show_npc_dialog(param_1, no_hold_item_dialog_id);
@@ -1587,21 +1601,28 @@ int start_power_competition(int param_1, int player_object_id, int enemy_object_
     int player_event_accessor = get_player_accessor();
 
     vec3 object_position;
-    vec3 player_position;
+    object_position.x = 0.0;
+    object_position.y = 0.0;
+    object_position.z = 0.0;
 
+    vec3 player_position;
+    player_position.x = 0.0;
+    player_position.y = 0.0;
+    player_position.z = 0.0;
+    
     drop_held_item_animation();
-    SysCall(0,0x15,0x13,object_accessor,SysCall(3,1,object_position));
-    SysCall(0,0x15,0x13,player_event_accessor,SysCall(3,1,player_position));
-    SysCall(0,0x15,0xca,event_script,0x1e);
+    @syscall(0,0x15,0x13,object_accessor,&object_position);
+    @syscall(0,0x15,0x13,player_event_accessor,&player_position);
+    @syscall(0,0x15,0xca,event_script,0x1e);
     wait_frames(0x1e);
 
-    int dispos_id = SysCall(0,0x15,0xc,dispos_manager,enemy_object_id);
+    int dispos_id = @syscall(0,0x15,0xc,dispos_manager,enemy_object_id);
     int result = run_power_competition(player_object_id,enemy_object_id);
     if (result == -1) {
         reset_win_counter();
     }
     else{
-        SysCall(0,0x15,0x93,global_manager,dispos_id);
+        @syscall(0,0x15,0x93,global_manager,dispos_id);
         increment_win_counter();
     }
 
@@ -1609,35 +1630,35 @@ int start_power_competition(int param_1, int player_object_id, int enemy_object_
     spawn_player_object();
 
     int player_accessor = lock_player_and_get_accessor();
-    SysCall(0,0x15,7,player_accessor,player_position.x,player_position.y,player_position.z);
-    SysCall(0,0x15,8,player_accessor,player_position.x,player_position.y,player_position.z);
-    SysCall(0,0x15,0x22,player_accessor,player_position.x,player_position.y,player_position.z,1);
-    int player_state = SysCall(0,0x15,0x30,player_accessor);
+    @syscall(0,0x15,7,player_accessor,player_position.x,player_position.y,player_position.z);
+    @syscall(0,0x15,8,player_accessor,player_position.x,player_position.y,player_position.z);
+    @syscall(0,0x15,0x22,player_accessor,player_position.x,player_position.y,player_position.z,1);
+    int player_state = @syscall(0,0x15,0x30,player_accessor);
     if (player_state == 0) {
-        SysCall(0,0x15,2,player_accessor,0,0);
+        @syscall(0,0x15,2,player_accessor,0,0);
     }
-    SysCall(0,0x15,0,player_accessor,0);
-    SysCall(0,0x15,0x8e,global_manager,dispos_id);
+    @syscall(0,0x15,0,player_accessor,0);
+    @syscall(0,0x15,0x8e,global_manager,dispos_id);
 
     respawn_field();
     lock_npc_and_get_accessor(enemy_object_id);
     object_accessor = get_object_accessor(param_1,enemy_object_id,true);
-    SysCall(0,0x15,7,object_accessor,object_position.x,object_position.y,object_position.z);
-    SysCall(0,0x15,8,object_accessor,object_position.x,object_position.y,object_position.z);
-    SysCall(0,0x15,0x22,object_accessor,object_position.x,object_position.y,object_position.z,1);
+    @syscall(0,0x15,7,object_accessor,object_position.x,object_position.y,object_position.z);
+    @syscall(0,0x15,8,object_accessor,object_position.x,object_position.y,object_position.z);
+    @syscall(0,0x15,0x22,object_accessor,object_position.x,object_position.y,object_position.z,1);
 
-    int object_state = SysCall(0,0x15,0x10,dispos_manager,enemy_object_id);
+    int object_state = @syscall(0,0x15,0x10,dispos_manager,enemy_object_id);
     if (object_state == 0) {
-        SysCall(0,0x15,0x2a,object_accessor,5);
+        @syscall(0,0x15,0x2a,object_accessor,5);
     }
     else{
-        SysCall(0,0x15,0x2a,object_accessor,10);
-        SysCall(0,0x15,0x2b,object_accessor,4);
+        @syscall(0,0x15,0x2a,object_accessor,10);
+        @syscall(0,0x15,0x2b,object_accessor,4);
     }
 
     face_object_accessors_instantly(player_accessor,object_accessor,1);
-    SysCall(0,0x15,0xca,event_script,-1);
-    SysCall(0,0x15,0xd7,event_script,enemy_object_id);
+    @syscall(0,0x15,0xca,event_script,-1);
+    @syscall(0,0x15,0xd7,event_script,enemy_object_id);
     restore_pre_competition_state(enemy_object_id);
 
     return result;
@@ -1645,18 +1666,18 @@ int start_power_competition(int param_1, int player_object_id, int enemy_object_
 
 void reset_win_counter(){
     int global_manager = get_module("GlobalManager");
-    int counter_num = SysCall(0,0x15,0,global_manager,"f0101BattleCounterNum",0);
+    int counter_num = @syscall(0,0x15,0,global_manager,"f0101BattleCounterNum",0);
     return;
 }
 
 void increment_win_counter(){
     int global_manager = get_module("GlobalManager");
-    int counter_num = SysCall(0,0x15,1,global_manager,"f0101BattleCounterNum");
+    int counter_num = @syscall(0,0x15,1,global_manager,"f0101BattleCounterNum");
     int increased_counter = counter_num + 1;
 
-    SysCall(0,0x15,0,global_manager,"f0101BattleCounterNum",increased_counter);
+    @syscall(0,0x15,0,global_manager,"f0101BattleCounterNum",increased_counter);
     if (increased_counter >= BATTLE_COUNT) {
-        SysCall(0,0x15,0,global_manager,"f0101BattleCounter",1);
+        @syscall(0,0x15,0,global_manager,"f0101BattleCounter",1);
     }
     return;
 }
@@ -1668,7 +1689,7 @@ bool is_location_checked(int obj_id){
 
     // rescue magikarp location uses 0x36 as object_id
     if(obj_id == 0x36){
-        return SysCall(0, 0x15, 0x1, global_manager, "f0101MagikarpRescued") == 1;
+        return @syscall(0, 0x15, 0x1, global_manager, "f0101MagikarpRescued") == 1;
     }
     return is_bestfriend(obj_id);
 }
@@ -1678,7 +1699,7 @@ void check_location(int obj_id){
 
     // rescue magikarp location uses 0x36 as object_id
     if(obj_id == 0x36){
-        SysCall(0, 0x15, 0x0, global_manager, "f0101MagikarpRescued", 1);
+        @syscall(0, 0x15, 0x0, global_manager, "f0101MagikarpRescued", 1);
         return;
     }
     set_bestfriend(obj_id);
@@ -1688,14 +1709,14 @@ void check_location(int obj_id){
 bool is_bestfriend(int obj_id){
     int global_manager = get_module("GlobalManager");
     int disp_manager = get_module("DisposManager");
-    int friend_id = SysCall(0,0x15,0xe,disp_manager,obj_id);
-    int is_best_friend = SysCall(0,0x15,0x4b,global_manager,friend_id);
+    int friend_id = @syscall(0,0x15,0xe,disp_manager,obj_id);
+    int is_best_friend = @syscall(0,0x15,0x4b,global_manager,friend_id);
     return is_best_friend == 1;
 }
 
 void setup_field(int param_1){
     int obj_manager = get_module("ObjectManager");
-    SysCall(0,0x15,8, obj_manager, 0x4e23);
+    @syscall(0,0x15,8, obj_manager, 0x4e23);
     lock_player_and_get_accessor();
     setup_player_for_zone();
     SETGIMMICK();

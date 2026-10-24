@@ -31,7 +31,7 @@ extern void unlock_pokemon(int pokemon_id);
 extern void set_object_position(int object_id, int x, int y, int z);
 extern void set_object_rotation(int object_id, int x, int y, int z);
 
-void TAXI_STOP(int param_1){
+export void TAXI_STOP(int param_1){
     int global_manager = get_module("GlobalManager");
     lock_player_and_get_accessor();
     face_player_towards_object_synchronously(0x4e37,1);
@@ -39,14 +39,14 @@ void TAXI_STOP(int param_1){
     show_message_box(0,"02_80160");
 
     if(UNLOCK_FAST_TRAVEL_WITH_TAXI_STOP == true){
-        int taxi_stop_unlocked = SysCall(0,0x15,1,global_manager,"f0101FuwarideTaxiStop");
+        int taxi_stop_unlocked = @syscall(0,0x15,1,global_manager,"f0101FuwarideTaxiStop");
         if(taxi_stop_unlocked == 0){
             int field_info = get_module("mnFieldInfo");
-            SysCall(0,0x15,0x11,field_info,1,"11_00380");
+            @syscall(0,0x15,0x11,field_info,1,"11_00380");
             wait_frames(90);
             wait_frames(90);
-            SysCall(0,0x15,0x12,field_info);
-            SysCall(0,0x15,0,global_manager,"f0101FuwarideTaxiStop",1);
+            @syscall(0,0x15,0x12,field_info);
+            @syscall(0,0x15,0,global_manager,"f0101FuwarideTaxiStop",1);
         }
     }
 
@@ -61,14 +61,14 @@ int weedle_tree_gimmic_logic(int object_id){
     int event_script = get_module("EventScript");
     int global_manager = get_module("GlobalManager");
     int field_info = get_module("mnFieldInfo");
-    SysCall(0,0x15,0,global_manager,"f0101WeedleTree",1);
+    @syscall(0,0x15,0,global_manager,"f0101WeedleTree",1);
     wait_frames(30);
 
     vec3 player_position;
     vec3 player_rotation;
     int player = lock_player_and_get_accessor();
-    SysCall(0,0x15,0x13,player,player_position);
-    SysCall(0,0x15,0x16,player,player_rotation);
+    @syscall(0,0x15,0x13,player,&player_position);
+    @syscall(0,0x15,0x16,player,&player_rotation);
 
     fade_out_bgm(30);
     fade_out(0,0,0,60);
@@ -76,98 +76,103 @@ int weedle_tree_gimmic_logic(int object_id){
     configure_npc(object_id);
 
     int weedle = lock_npc_and_get_accessor(object_id);
-    SysCall(0,0x15,7,weedle,395.68,46.09,-1469.44);
-    SysCall(0,0x15,8,weedle,395.68,46.09,-1469.44);
-    SysCall(0,0x15,0x1c,weedle,1);
+    @syscall(0,0x15,7,weedle,395.68,46.09,-1469.44);
+    @syscall(0,0x15,8,weedle,395.68,46.09,-1469.44);
+    @syscall(0,0x15,0x1c,weedle,1);
     despawn_player_object();
-
-    vec3 camera_position;
-    vec3 camera_target;
-    SysCall(3,2,camera_position,400.47,34.94,-1446.18);
-    SysCall(3,2,camera_target,395.55,30.89,-1470.35);
-    SysCall(0,0x15,0xcb,event_script);
-    SysCall(0,0x15,0xcc,event_script,-1,camera_position);
-    SysCall(0,0x15,0xcd,event_script,-1,camera_target);
+    vec3 camera_position = vec3{
+    .x = 400.47,
+    .y = 34.94,
+    .z = -1446.18
+    };
+    vec3 camera_target = vec3{
+    .x = 395.55,
+    .y = 30.89,
+    .z = -1470.35
+    };
+    @syscall(0,0x15,0xcb,event_script);
+    @syscall(0,0x15,0xcc,event_script,-1,&camera_position);
+    @syscall(0,0x15,0xcd,event_script,-1,&camera_target);
 
     set_event_frame_visible_with_fade(0);
-    SysCall(0,0x15,400,event_script,0,0);
+    @syscall(0,0x15,400,event_script,0,0);
     wait_frames(30);
     fade_in(0,0,0,30);
     play_sound_effect(0x7e7,0);
-    SysCall(0,0x15,0x11,field_info,1,"11_00200");
+    @syscall(0,0x15,0x11,field_info,1,"11_00200");
     wait_frames(90);
     reset_object_after_event(object_id);
     wait_frames(90);
-    SysCall(0,0x15,0x12,field_info);
+    @syscall(0,0x15,0x12,field_info);
     wait_frames(60);
 
     fade_out(0,0,0,60);hide_event_frame(false);
     wait_frames(30);
     respawn_field();
-    SysCall(0,0x15,400,event_script,0,1);
+    @syscall(0,0x15,400,event_script,0,1);
 
     spawn_player_object();
     player = lock_player_and_get_accessor();
-    SysCall(0,0x15,7,player,player_position.x,player_position.y,player_position.z);
-    SysCall(0,0x15,8,player,player_position.x,player_position.y,player_position.z);
-    SysCall(0,0x15,0x22,player,player_position.x,player_position.y,player_position.z,1);
-    SysCall(0,0x15,9,player,player_rotation.x,player_rotation.y,player_rotation.z);
+    @syscall(0,0x15,7,player,player_position.x,player_position.y,player_position.z);
+    @syscall(0,0x15,8,player,player_position.x,player_position.y,player_position.z);
+    @syscall(0,0x15,0x22,player,player_position.x,player_position.y,player_position.z,1);
+    @syscall(0,0x15,9,player,player_rotation.x,player_rotation.y,player_rotation.z);
 
-    int player_state = SysCall(0,0x15,0x30,player);
+    int player_state = @syscall(0,0x15,0x30,player);
     if(player_state == 0){
-        SysCall(0,0x15,2,player,0,0);
+        @syscall(0,0x15,2,player,0,0);
     }
-    SysCall(0,0x15,0,player,0);
-    SysCall(0,0x15,0xca,event_script,-1);
+    @syscall(0,0x15,0,player,0);
+    @syscall(0,0x15,0xca,event_script,-1);
     fade_in_bgm(30);
     complete_event();
     fade_in(0,0,0,30);
     return 1;
 }
 
-void TREEBEEDLE(int param_1){
+export void TREEBEEDLE(int param_1){
     int global_manager = get_module("GlobalManager");
     int field_info = get_module("mnFieldInfo");
 
-    int is_location_checked = SysCall(0,0x15,1,global_manager,"f0101WeedleTree");
+    int is_location_checked = @syscall(0,0x15,1,global_manager,"f0101WeedleTree");
     if(is_location_checked == 0){
-        SysCall(0,0x15,0,global_manager,"f0101WeedleTree",1);
-        SysCall(0,0x15,0x11,field_info,1,"11_00200");
+        @syscall(0,0x15,0,global_manager,"f0101WeedleTree",1);
+        @syscall(0,0x15,0x11,field_info,1,"11_00200");
         wait_frames(180);
-        SysCall(0,0x15,0x12,field_info);
+        @syscall(0,0x15,0x12,field_info);
     }
 
-    SysCall(0,0x15,0,global_manager,"zfTreeBeedle",1);
+    @syscall(0,0x15,0,global_manager,"zfTreeBeedle",1);
     end_event_script(param_1);
     return;
 }
 
-void TREE_CATAPI(int param_1){
+export void TREE_CATAPI(int param_1){
     int global_manager = get_module("GlobalManager");
     int field_info = get_module("mnFieldInfo");
 
-    int is_loc_checked = SysCall(0,0x15,1,global_manager,"f0101CaterpieTree");
+    int is_loc_checked = @syscall(0,0x15,1,global_manager,"f0101CaterpieTree");
     if(is_loc_checked == 0){
-        SysCall(0,0x15,0,global_manager,"f0101CaterpieTree",1);
-        SysCall(0,0x15,0x11,field_info,1,"11_00190");
+        @syscall(0,0x15,0,global_manager,"f0101CaterpieTree",1);
+        @syscall(0,0x15,0x11,field_info,1,"11_00190");
         wait_frames(180);
-        SysCall(0,0x15,0x12,field_info);
+        @syscall(0,0x15,0x12,field_info);
     }
 
-    SysCall(0,0x15,0,global_manager,"zfTreeCatapi",1);
+    @syscall(0,0x15,0,global_manager,"zfTreeCatapi",1);
     end_event_script(param_1);
     return;
 }
 
-void BOX_KINOCOCO(int param_1){
+export void BOX_KINOCOCO(int param_1){
     int global_manager = get_module("GlobalManager");
-    int is_location_checked = SysCall(0,0x15,1,global_manager,"f0101ShroomishBox");
+    int is_location_checked = @syscall(0,0x15,1,global_manager,"f0101ShroomishBox");
     if(is_location_checked == 0){
         int field_info = get_module("mnFieldInfo");
-        SysCall(0,0x15,0,global_manager,"f0101ShroomishBox",1);
-        SysCall(0,0x15,0x11,field_info,1,"11_00220");
+        @syscall(0,0x15,0,global_manager,"f0101ShroomishBox",1);
+        @syscall(0,0x15,0x11,field_info,1,"11_00220");
         wait_frames(180);
-        SysCall(0,0x15,0x12,field_info);
+        @syscall(0,0x15,0x12,field_info);
     }
 
     end_event_script(param_1);
