@@ -1,0 +1,20 @@
+void WAIT1(int param_1){
+  int treehouse = @syscall(0,0x15,4,param_1);
+  @syscall(0,0x15,0,treehouse,param_1,3);
+  int treehouse_0x1e = @syscall(0,0x15,0x1e,param_1);
+  @syscall(0,0x15,4,treehouse_0x1e,3,0);
+}
+
+void WAIT2(int param_1){
+  int treehouse = @syscall(0,0x15,4,param_1);
+  @syscall(0,0x15,0,treehouse,param_1,3);
+  int treehouse_0x1e = @syscall(0,0x15,0x1e,param_1);
+  @syscall(0,0x15,4,treehouse_0x1e,3,0);
+}
+
+void WAIT3(int param_1){
+  int treehouse = @syscall(0,0x15,4,param_1);
+  @syscall(0,0x15,0,treehouse,param_1,3);
+  int treehouse_0x1e = @syscall(0,0x15,0x1e,param_1);
+  @syscall(0,0x15,4,treehouse_0x1e,3,0);
+}

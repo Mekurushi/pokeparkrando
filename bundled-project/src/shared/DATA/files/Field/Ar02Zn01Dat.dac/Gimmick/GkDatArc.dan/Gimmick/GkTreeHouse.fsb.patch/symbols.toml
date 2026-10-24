@@ -1,0 +1,6 @@
+base_address = 0x50000
+
+[functions]
+WAIT1 = 0x50b90
+WAIT2 = 0x50be8
+WAIT3 = 0x50c40
