@@ -1,0 +1,57 @@
+extern int get_module(string name);
+extern int initialize_start_menu();
+extern void setup_start_menu_ui();
+extern void play_start_menu_intro();
+extern int run_start_menu(int first_open, int restore_selection);
+
+extern static int selected_attraction;
+
+bool is_attraction_menu_entry_available(int attraction_id){
+    return false;
+}
+
+void MAIN(){
+    int start_menu = get_module("mnStartMenu");
+    int global_manager = get_module("GlobalManager");
+    int first_open = 1;
+    int restore_selection = initialize_start_menu();
+    setup_start_menu_ui();
+
+    int selected_action = -1;
+    while(selected_action < 0){
+        if(restore_selection == 0){
+            play_start_menu_intro();
+        }
+        int menu_closed = @syscall(0,0x15,0xd,start_menu);
+        if(menu_closed != 0){
+            break;
+        }
+        selected_action = run_start_menu(first_open,restore_selection);
+        first_open = 0;
+        restore_selection = 0;
+    }
+
+    bool selected_attraction_entry = selected_action >= 4 && selected_action < 0x14;
+    if(selected_attraction_entry){
+        @syscall(0,0x15,0x18,start_menu,selected_attraction);
+        @syscall(0,0x15,0x14,start_menu,selected_action - 4);
+    }
+    else{
+        bool load_new_file = false;
+        int menu_closed = @syscall(0,0x15,0xd,start_menu);
+        if(menu_closed == 0){
+            @syscall(0,0x15,0xb,start_menu,selected_action);
+            int file_initialized = @syscall(0,0x15,0x22,global_manager);
+            load_new_file = file_initialized == 0;
+        }
+        if(load_new_file){
+            @syscall(0,0x15,0x23,global_manager,1);
+            @syscall(0,0x15,0x1e,global_manager,1);
+        }
+    }
+
+    @syscall(0,0x15,0x40,start_menu);
+    while(true){
+        @pause(0);
+    }
+}
