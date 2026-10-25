@@ -4,14 +4,14 @@ extern void finalize_lobby_pokemon_list();
 extern static int[256] data_50080;
 extern static int[256] data_50388;
 extern static int[256] data_50690;
-extern static int[0x1a] data_509b0;
-extern static int[0x1a] data_50a18;
+extern static int[0x1a] pokemon_ids;
+extern static int[0x1a] selection_enabled_array;
 extern static int[0x1a] data_50a80;
 extern static int[0x1a] data_50ae8;
 extern static int[0x1a] data_50b50;
 extern static int[0x1a] data_50bb8;
 extern static int[0x1a] data_50c20;
-extern static int data_50c88;
+extern static int selection_index;
 extern static int data_50c8c;
 extern static int data_50cb0;
 extern static int data_50cb4;
@@ -66,22 +66,22 @@ void initialize_lobby_state(int param_1, int param_2){
 
 void build_lobby_pokemon_list(int param_1){
     int global_manager = get_module("GlobalManager");
-    int source_count = @syscall(0,0x15,0x54,global_manager,param_1);
-    if(source_count > 0x1a){
-        source_count = 0x1a;
+    int pokemon_count = @syscall(0,0x15,0x54,global_manager,param_1);
+    if(pokemon_count > 0x1a){
+        pokemon_count = 0x1a;
     }
 
-    data_50c88 = 0;
-    for(int source_index = 0; source_index < source_count; source_index = source_index + 1){
+    selection_index = 0;
+    for(int pokemon_index = 0; pokemon_index < pokemon_count; pokemon_index = pokemon_index + 1){
         int pokemon_id = @syscall(
-            0,0x15,0x58,global_manager,param_1,source_index
+            0,0x15,0x58,global_manager,param_1,pokemon_index
         );
         if(pokemon_id == -1){
             continue;
         }
 
-        data_509b0[data_50c88] = pokemon_id;
-        data_50a18[data_50c88] = @syscall(
+        pokemon_ids[selection_index] = pokemon_id;
+        selection_enabled_array[selection_index] = @syscall(
             0,0x15,0x3d,global_manager,pokemon_id
         );
 
@@ -95,12 +95,12 @@ void build_lobby_pokemon_list(int param_1){
             );
         }
 
-        if(data_50a18[data_50c88] != 0 && pokemon_state == 0){
-            data_50a80[data_50c88] = 1;
+        if(selection_enabled_array[selection_index] != 0 && pokemon_state == 0){
+            data_50a80[selection_index] = 1;
             @syscall(0,0x15,0x43,global_manager,pokemon_id,param_1);
         }
         else{
-            data_50a80[data_50c88] = 0;
+            data_50a80[selection_index] = 0;
         }
 
         if(pokemon_id == 0){
@@ -113,19 +113,19 @@ void build_lobby_pokemon_list(int param_1){
         }
 
         if(pokemon_state == 0){
-            data_50ae8[data_50c88] = 1;
+            data_50ae8[selection_index] = 1;
         }
         else{
-            data_50ae8[data_50c88] = 0;
+            data_50ae8[selection_index] = 0;
         }
 
         int pokemon_index = @syscall(
             0,0x15,0x45,global_manager,pokemon_id
         );
-        data_50b50[data_50c88] = data_50080[pokemon_index];
-        data_50bb8[data_50c88] = data_50690[pokemon_index];
-        data_50c20[data_50c88] = data_50388[pokemon_index];
-        data_50c88 = data_50c88+1;
+        data_50b50[selection_index] = data_50080[pokemon_index];
+        data_50bb8[selection_index] = data_50690[pokemon_index];
+        data_50c20[selection_index] = data_50388[pokemon_index];
+        selection_index = selection_index+1;
     }
 
     finalize_lobby_pokemon_list();
