@@ -9,6 +9,7 @@ pub(crate) use parkforge::{
     ProjectConfig, ProjectError, RebuildError, SourceMount,
 };
 
+#[allow(clippy::too_many_arguments)]
 pub(crate) fn build_with_paths<P, D>(
     original: &Path,
     shared_sources: &Path,
