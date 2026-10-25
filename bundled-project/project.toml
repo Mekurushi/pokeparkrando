@@ -83,11 +83,138 @@ targets = [
     "DATA/files/Field/Ar02Zn01Dat_Sp.dac/Gimmick/GkDatArc.dan",
 ]
 
+# If patches to rlbs inside of the lobbies/attractions are coming then this needs to be reduced to the scripts
+
 [[games.R8AP01.source-mounts]]
-source = "DATA/files/Archive/Lobby16Dat.dac"
+source = "DATA/files/Archive/Lobby01Dat.dac"
 targets = [
+    "DATA/files/Archive/Lobby01Dat_Fr.dac",
+    "DATA/files/Archive/Lobby01Dat_Ge.dac",
+    "DATA/files/Archive/Lobby01Dat_It.dac",
+    "DATA/files/Archive/Lobby01Dat_Sp.dac",
+
+    "DATA/files/Archive/Lobby02Dat_Fr.dac",
+    "DATA/files/Archive/Lobby02Dat_Ge.dac",
+    "DATA/files/Archive/Lobby02Dat_It.dac",
+    "DATA/files/Archive/Lobby02Dat_Sp.dac",
+
+    "DATA/files/Archive/Lobby03Dat_Fr.dac",
+    "DATA/files/Archive/Lobby03Dat_Ge.dac",
+    "DATA/files/Archive/Lobby03Dat_It.dac",
+    "DATA/files/Archive/Lobby03Dat_Sp.dac",
+
+    "DATA/files/Archive/Lobby04Dat_Fr.dac",
+    "DATA/files/Archive/Lobby04Dat_Ge.dac",
+    "DATA/files/Archive/Lobby04Dat_It.dac",
+    "DATA/files/Archive/Lobby04Dat_Sp.dac",
+
+    "DATA/files/Archive/Lobby05Dat_Fr.dac",
+    "DATA/files/Archive/Lobby05Dat_Ge.dac",
+    "DATA/files/Archive/Lobby05Dat_It.dac",
+    "DATA/files/Archive/Lobby05Dat_Sp.dac",
+
+    "DATA/files/Archive/Lobby06Dat_Fr.dac",
+    "DATA/files/Archive/Lobby06Dat_Ge.dac",
+    "DATA/files/Archive/Lobby06Dat_It.dac",
+    "DATA/files/Archive/Lobby06Dat_Sp.dac",
+
+    "DATA/files/Archive/Lobby07Dat_Fr.dac",
+    "DATA/files/Archive/Lobby07Dat_Ge.dac",
+    "DATA/files/Archive/Lobby07Dat_It.dac",
+    "DATA/files/Archive/Lobby07Dat_Sp.dac",
+
+    "DATA/files/Archive/Lobby09Dat_Fr.dac",
+    "DATA/files/Archive/Lobby09Dat_Ge.dac",
+    "DATA/files/Archive/Lobby09Dat_It.dac",
+    "DATA/files/Archive/Lobby09Dat_Sp.dac",
+
+    "DATA/files/Archive/Lobby10Dat_Fr.dac",
+    "DATA/files/Archive/Lobby10Dat_Ge.dac",
+    "DATA/files/Archive/Lobby10Dat_It.dac",
+    "DATA/files/Archive/Lobby10Dat_Sp.dac",
+
+    "DATA/files/Archive/Lobby11Dat_Fr.dac",
+    "DATA/files/Archive/Lobby11Dat_Ge.dac",
+    "DATA/files/Archive/Lobby11Dat_It.dac",
+    "DATA/files/Archive/Lobby11Dat_Sp.dac",
+
+    "DATA/files/Archive/Lobby12Dat_Fr.dac",
+    "DATA/files/Archive/Lobby12Dat_Ge.dac",
+    "DATA/files/Archive/Lobby12Dat_It.dac",
+    "DATA/files/Archive/Lobby12Dat_Sp.dac",
+
+    "DATA/files/Archive/Lobby13Dat_Fr.dac",
+    "DATA/files/Archive/Lobby13Dat_Ge.dac",
+    "DATA/files/Archive/Lobby13Dat_It.dac",
+    "DATA/files/Archive/Lobby13Dat_Sp.dac",
+
+    "DATA/files/Archive/Lobby15Dat_Fr.dac",
+    "DATA/files/Archive/Lobby15Dat_Ge.dac",
+    "DATA/files/Archive/Lobby15Dat_It.dac",
+    "DATA/files/Archive/Lobby15Dat_Sp.dac",
+
     "DATA/files/Archive/Lobby16Dat_Fr.dac",
     "DATA/files/Archive/Lobby16Dat_Ge.dac",
     "DATA/files/Archive/Lobby16Dat_It.dac",
     "DATA/files/Archive/Lobby16Dat_Sp.dac",
+]
+
+[[games.R8AJ01.source-mounts]]
+source = "DATA/files/Archive/Lobby01Dat.dac"
+targets = [
+    "DATA/files/Archive/Lobby02Dat.dac",
+
+    "DATA/files/Archive/Lobby03Dat.dac",
+
+    "DATA/files/Archive/Lobby04Dat.dac",
+
+    "DATA/files/Archive/Lobby05Dat.dac",
+
+    "DATA/files/Archive/Lobby06Dat.dac",
+
+    "DATA/files/Archive/Lobby07Dat.dac",
+
+    "DATA/files/Archive/Lobby09Dat.dac",
+
+    "DATA/files/Archive/Lobby10Dat.dac",
+
+    "DATA/files/Archive/Lobby11Dat.dac",
+
+    "DATA/files/Archive/Lobby12Dat.dac",
+
+    "DATA/files/Archive/Lobby13Dat.dac",
+
+    "DATA/files/Archive/Lobby15Dat.dac",
+
+    "DATA/files/Archive/Lobby16Dat.dac",
+]
+
+[[games.R8AE01.source-mounts]]
+source = "DATA/files/Archive/Lobby01Dat.dac"
+targets = [
+    "DATA/files/Archive/Lobby02Dat.dac",
+
+    "DATA/files/Archive/Lobby03Dat.dac",
+
+    "DATA/files/Archive/Lobby04Dat.dac",
+
+    "DATA/files/Archive/Lobby05Dat.dac",
+
+    "DATA/files/Archive/Lobby06Dat.dac",
+
+    "DATA/files/Archive/Lobby07Dat.dac",
+
+    "DATA/files/Archive/Lobby09Dat.dac",
+
+    "DATA/files/Archive/Lobby10Dat.dac",
+
+    "DATA/files/Archive/Lobby11Dat.dac",
+
+    "DATA/files/Archive/Lobby12Dat.dac",
+
+    "DATA/files/Archive/Lobby13Dat.dac",
+
+    "DATA/files/Archive/Lobby15Dat.dac",
+
+    "DATA/files/Archive/Lobby16Dat.dac",
 ]
