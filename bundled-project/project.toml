@@ -82,3 +82,12 @@ targets = [
     "DATA/files/Field/Ar02Zn01Dat_It.dac/Gimmick/GkDatArc.dan",
     "DATA/files/Field/Ar02Zn01Dat_Sp.dac/Gimmick/GkDatArc.dan",
 ]
+
+[[games.R8AP01.source-mounts]]
+source = "DATA/files/Archive/Lobby16Dat.dac"
+targets = [
+    "DATA/files/Archive/Lobby16Dat_Fr.dac",
+    "DATA/files/Archive/Lobby16Dat_Ge.dac",
+    "DATA/files/Archive/Lobby16Dat_It.dac",
+    "DATA/files/Archive/Lobby16Dat_Sp.dac",
+]

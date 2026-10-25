@@ -1562,7 +1562,7 @@ checksum = "42703706b716c37f96a77aea830392ad231f44c9e9a67872fa5548707e11b11c"
 [[package]]
 name = "fsb-assembler"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=15fa9b1d17d26b1d9f41c5d23c97632d22a75013#15fa9b1d17d26b1d9f41c5d23c97632d22a75013"
+source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=aa8e00882ee76ffbc79e378a037fa9767937ec63#aa8e00882ee76ffbc79e378a037fa9767937ec63"
 dependencies = [
  "fsb-ir",
 ]
@@ -1570,7 +1570,7 @@ dependencies = [
 [[package]]
 name = "fsb-ir"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=15fa9b1d17d26b1d9f41c5d23c97632d22a75013#15fa9b1d17d26b1d9f41c5d23c97632d22a75013"
+source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=aa8e00882ee76ffbc79e378a037fa9767937ec63#aa8e00882ee76ffbc79e378a037fa9767937ec63"
 dependencies = [
  "cranelift-entity",
 ]
@@ -1578,7 +1578,7 @@ dependencies = [
 [[package]]
 name = "fsb-patcher"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=15fa9b1d17d26b1d9f41c5d23c97632d22a75013#15fa9b1d17d26b1d9f41c5d23c97632d22a75013"
+source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=aa8e00882ee76ffbc79e378a037fa9767937ec63#aa8e00882ee76ffbc79e378a037fa9767937ec63"
 dependencies = [
  "fsb-assembler",
  "fsb-ir",
@@ -1594,7 +1594,7 @@ dependencies = [
 [[package]]
 name = "fsc-codegen"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=15fa9b1d17d26b1d9f41c5d23c97632d22a75013#15fa9b1d17d26b1d9f41c5d23c97632d22a75013"
+source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=aa8e00882ee76ffbc79e378a037fa9767937ec63#aa8e00882ee76ffbc79e378a037fa9767937ec63"
 dependencies = [
  "cranelift-entity",
  "fsb-ir",
@@ -1604,7 +1604,7 @@ dependencies = [
 [[package]]
 name = "fsc-compiler"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=15fa9b1d17d26b1d9f41c5d23c97632d22a75013#15fa9b1d17d26b1d9f41c5d23c97632d22a75013"
+source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=aa8e00882ee76ffbc79e378a037fa9767937ec63#aa8e00882ee76ffbc79e378a037fa9767937ec63"
 dependencies = [
  "fsb-assembler",
  "fsc-codegen",
@@ -1617,7 +1617,7 @@ dependencies = [
 [[package]]
 name = "fsc-diagnostics"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=15fa9b1d17d26b1d9f41c5d23c97632d22a75013#15fa9b1d17d26b1d9f41c5d23c97632d22a75013"
+source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=aa8e00882ee76ffbc79e378a037fa9767937ec63#aa8e00882ee76ffbc79e378a037fa9767937ec63"
 dependencies = [
  "annotate-snippets",
  "serde",
@@ -1627,7 +1627,7 @@ dependencies = [
 [[package]]
 name = "fsc-mir"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=15fa9b1d17d26b1d9f41c5d23c97632d22a75013#15fa9b1d17d26b1d9f41c5d23c97632d22a75013"
+source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=aa8e00882ee76ffbc79e378a037fa9767937ec63#aa8e00882ee76ffbc79e378a037fa9767937ec63"
 dependencies = [
  "cranelift-entity",
  "fsc-diagnostics",
@@ -1637,7 +1637,7 @@ dependencies = [
 [[package]]
 name = "fsc-parse"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=15fa9b1d17d26b1d9f41c5d23c97632d22a75013#15fa9b1d17d26b1d9f41c5d23c97632d22a75013"
+source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=aa8e00882ee76ffbc79e378a037fa9767937ec63#aa8e00882ee76ffbc79e378a037fa9767937ec63"
 dependencies = [
  "fsc-diagnostics",
  "logos",
@@ -1646,7 +1646,7 @@ dependencies = [
 [[package]]
 name = "fsc-sema"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=15fa9b1d17d26b1d9f41c5d23c97632d22a75013#15fa9b1d17d26b1d9f41c5d23c97632d22a75013"
+source = "git+https://github.com/Mekurushi/pokepark-fscript.git?rev=aa8e00882ee76ffbc79e378a037fa9767937ec63#aa8e00882ee76ffbc79e378a037fa9767937ec63"
 dependencies = [
  "cranelift-entity",
  "fsc-diagnostics",
@@ -3060,7 +3060,7 @@ checksum = "13c45bb4a6ae1280ec0803b1ef9d3455eb50f01efbbe1447ab020f1d54fba9d8"
 [[package]]
 name = "parkforge"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/parkforge.git?rev=6e88cee57253cd9d63a46d2c92a8a497c7073246#6e88cee57253cd9d63a46d2c92a8a497c7073246"
+source = "git+https://github.com/Mekurushi/parkforge.git?rev=daa4c0c45b566ba4e81ff3e31ab6155409eb900f#daa4c0c45b566ba4e81ff3e31ab6155409eb900f"
 dependencies = [
  "parkforge-build",
  "parkforge-game-tree",
@@ -3074,7 +3074,7 @@ dependencies = [
 [[package]]
 name = "parkforge-build"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/parkforge.git?rev=6e88cee57253cd9d63a46d2c92a8a497c7073246#6e88cee57253cd9d63a46d2c92a8a497c7073246"
+source = "git+https://github.com/Mekurushi/parkforge.git?rev=daa4c0c45b566ba4e81ff3e31ab6155409eb900f#daa4c0c45b566ba4e81ff3e31ab6155409eb900f"
 dependencies = [
  "fsb-patcher",
  "fsc-compiler",
@@ -3092,7 +3092,7 @@ dependencies = [
 [[package]]
 name = "parkforge-game-tree"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/parkforge.git?rev=6e88cee57253cd9d63a46d2c92a8a497c7073246#6e88cee57253cd9d63a46d2c92a8a497c7073246"
+source = "git+https://github.com/Mekurushi/parkforge.git?rev=daa4c0c45b566ba4e81ff3e31ab6155409eb900f#daa4c0c45b566ba4e81ff3e31ab6155409eb900f"
 dependencies = [
  "nlzss11",
  "parkforge-staging",
@@ -3106,7 +3106,7 @@ dependencies = [
 [[package]]
 name = "parkforge-project"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/parkforge.git?rev=6e88cee57253cd9d63a46d2c92a8a497c7073246#6e88cee57253cd9d63a46d2c92a8a497c7073246"
+source = "git+https://github.com/Mekurushi/parkforge.git?rev=daa4c0c45b566ba4e81ff3e31ab6155409eb900f#daa4c0c45b566ba4e81ff3e31ab6155409eb900f"
 dependencies = [
  "parkforge-types",
  "serde",
@@ -3118,7 +3118,7 @@ dependencies = [
 [[package]]
 name = "parkforge-staging"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/parkforge.git?rev=6e88cee57253cd9d63a46d2c92a8a497c7073246#6e88cee57253cd9d63a46d2c92a8a497c7073246"
+source = "git+https://github.com/Mekurushi/parkforge.git?rev=daa4c0c45b566ba4e81ff3e31ab6155409eb900f#daa4c0c45b566ba4e81ff3e31ab6155409eb900f"
 dependencies = [
  "tempfile",
  "thiserror 2.0.21",
@@ -3127,7 +3127,7 @@ dependencies = [
 [[package]]
 name = "parkforge-types"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/parkforge.git?rev=6e88cee57253cd9d63a46d2c92a8a497c7073246#6e88cee57253cd9d63a46d2c92a8a497c7073246"
+source = "git+https://github.com/Mekurushi/parkforge.git?rev=daa4c0c45b566ba4e81ff3e31ab6155409eb900f#daa4c0c45b566ba4e81ff3e31ab6155409eb900f"
 dependencies = [
  "relative-path",
  "serde",
@@ -3137,7 +3137,7 @@ dependencies = [
 [[package]]
 name = "parkforge-wii-disc"
 version = "0.1.0"
-source = "git+https://github.com/Mekurushi/parkforge.git?rev=6e88cee57253cd9d63a46d2c92a8a497c7073246#6e88cee57253cd9d63a46d2c92a8a497c7073246"
+source = "git+https://github.com/Mekurushi/parkforge.git?rev=daa4c0c45b566ba4e81ff3e31ab6155409eb900f#daa4c0c45b566ba4e81ff3e31ab6155409eb900f"
 dependencies = [
  "binrw 0.14.2",
  "disc_riider",
