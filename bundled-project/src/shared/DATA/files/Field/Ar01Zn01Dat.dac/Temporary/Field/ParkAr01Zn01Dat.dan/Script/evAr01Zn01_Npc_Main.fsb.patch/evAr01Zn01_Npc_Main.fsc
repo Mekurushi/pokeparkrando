@@ -1674,6 +1674,7 @@ void increment_win_counter(){
     int global_manager = get_module("GlobalManager");
     int counter_num = @syscall(0,0x15,1,global_manager,"f0101BattleCounterNum");
     int increased_counter = counter_num + 1;
+    @syscall(0,6,increased_counter, "counter");
 
     @syscall(0,0x15,0,global_manager,"f0101BattleCounterNum",increased_counter);
     if (increased_counter >= BATTLE_COUNT) {

@@ -6,13 +6,14 @@ pub use parkforge::{
 };
 pub(crate) use parkforge::{
     BuildError, BuildPaths, CheckError, ExtractError, ExtractionProgress, IdentifyError,
-    ProjectConfig, ProjectError, RebuildError,
+    ProjectConfig, ProjectError, RebuildError, SourceMount,
 };
 
 pub(crate) fn build_with_paths<P, D>(
     original: &Path,
     shared_sources: &Path,
     revision_sources: &Path,
+    source_mounts: &[SourceMount],
     destination: &Path,
     config: BuildConfig,
     progress: P,
@@ -27,6 +28,7 @@ where
             original,
             shared_sources,
             revision_sources,
+            source_mounts,
             destination,
         },
         config,

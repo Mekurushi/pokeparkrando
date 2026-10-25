@@ -10,3 +10,75 @@ display-name = "PokePark Wii (NA)"
 
 [games.R8AP01]
 display-name = "PokePark Wii (PAL)"
+
+[[games.R8AP01.source-mounts]]
+source = "DATA/files/Archive/PrepareResidentDat.dac"
+targets = [
+    "DATA/files/Archive/PrepareResidentDat_Fr.dac",
+    "DATA/files/Archive/PrepareResidentDat_Ge.dac",
+    "DATA/files/Archive/PrepareResidentDat_It.dac",
+    "DATA/files/Archive/PrepareResidentDat_Sp.dac",
+]
+
+[[games.R8AP01.source-mounts]]
+source = "DATA/files/Archive/PrepareResidentRes.dac"
+targets = [
+    "DATA/files/Archive/PrepareResidentRes_Fr.dac",
+    "DATA/files/Archive/PrepareResidentRes_Ge.dac",
+    "DATA/files/Archive/PrepareResidentRes_It.dac",
+    "DATA/files/Archive/PrepareResidentRes_Sp.dac",
+]
+
+[[games.R8AP01.source-mounts]]
+source = "DATA/files/Archive/StartMenuDat.dac"
+targets = [
+    "DATA/files/Archive/StartMenuDat_Fr.dac",
+    "DATA/files/Archive/StartMenuDat_Ge.dac",
+    "DATA/files/Archive/StartMenuDat_It.dac",
+    "DATA/files/Archive/StartMenuDat_Sp.dac",
+]
+
+[[games.R8AP01.source-mounts]]
+source = "DATA/files/Field/Ar01Zn01Dat.dac/Field"
+targets = [
+    "DATA/files/Field/Ar01Zn01Dat_Fr.dac/Field",
+    "DATA/files/Field/Ar01Zn01Dat_Ge.dac/Field",
+    "DATA/files/Field/Ar01Zn01Dat_It.dac/Field",
+    "DATA/files/Field/Ar01Zn01Dat_Sp.dac/Field",
+]
+
+[[games.R8AP01.source-mounts]]
+source = "DATA/files/Field/Ar01Zn01Dat.dac/Gimmick/GkDatArc.dan"
+targets = [
+    "DATA/files/Field/Ar01Zn01Dat_Fr.dac/Gimmick/GkDatArc.dan",
+    "DATA/files/Field/Ar01Zn01Dat_Ge.dac/Gimmick/GkDatArc.dan",
+    "DATA/files/Field/Ar01Zn01Dat_It.dac/Gimmick/GkDatArc.dan",
+    "DATA/files/Field/Ar01Zn01Dat_Sp.dac/Gimmick/GkDatArc.dan",
+]
+
+[[games.R8AP01.source-mounts]]
+source = "DATA/files/Field/Ar01Zn01Dat.dac/Temporary/Field/ParkAr01Zn01Dat.dan"
+targets = [
+    "DATA/files/Field/Ar01Zn01Dat_Fr.dac/Temporary/Field/ParkAr01Zn01Dat_Fr.dan",
+    "DATA/files/Field/Ar01Zn01Dat_Ge.dac/Temporary/Field/ParkAr01Zn01Dat_Ge.dan",
+    "DATA/files/Field/Ar01Zn01Dat_It.dac/Temporary/Field/ParkAr01Zn01Dat_It.dan",
+    "DATA/files/Field/Ar01Zn01Dat_Sp.dac/Temporary/Field/ParkAr01Zn01Dat_Sp.dan",
+]
+
+[[games.R8AP01.source-mounts]]
+source = "DATA/files/Field/Ar01Zn02Dat.dac/Temporary/Field/ParkAr01Zn02Dat.dan"
+targets = [
+    "DATA/files/Field/Ar01Zn02Dat_Fr.dac/Temporary/Field/ParkAr01Zn02Dat_Fr.dan",
+    "DATA/files/Field/Ar01Zn02Dat_Ge.dac/Temporary/Field/ParkAr01Zn02Dat_Ge.dan",
+    "DATA/files/Field/Ar01Zn02Dat_It.dac/Temporary/Field/ParkAr01Zn02Dat_It.dan",
+    "DATA/files/Field/Ar01Zn02Dat_Sp.dac/Temporary/Field/ParkAr01Zn02Dat_Sp.dan",
+]
+
+[[games.R8AP01.source-mounts]]
+source = "DATA/files/Field/Ar02Zn01Dat.dac/Gimmick/GkDatArc.dan"
+targets = [
+    "DATA/files/Field/Ar02Zn01Dat_Fr.dac/Gimmick/GkDatArc.dan",
+    "DATA/files/Field/Ar02Zn01Dat_Ge.dac/Gimmick/GkDatArc.dan",
+    "DATA/files/Field/Ar02Zn01Dat_It.dac/Gimmick/GkDatArc.dan",
+    "DATA/files/Field/Ar02Zn01Dat_Sp.dac/Gimmick/GkDatArc.dan",
+]

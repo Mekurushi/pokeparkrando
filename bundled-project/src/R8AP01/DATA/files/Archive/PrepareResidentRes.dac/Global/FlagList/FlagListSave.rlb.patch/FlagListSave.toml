@@ -1,0 +1,43 @@
+[[edits]]
+table = "FlagTable"
+row = 89
+
+[edits.set]
+flag_name = { value = "f0101ShroomishBox" }
+
+[[edits]]
+table = "FlagTable"
+row = 172
+
+[edits.set]
+flag_name = { value = "f0101MagikarpRescued" }
+
+[[edits]]
+table = "FlagTable"
+row = 144
+
+[edits.set]
+flag_name = { value = "f0101WeedleTree" }
+
+[[edits]]
+table = "FlagTable"
+row = 147
+
+[edits.set]
+flag_name = { value = "f0101CaterpieTree" }
+
+[[edits]]
+table = "FlagTable"
+row = 192
+
+[edits.set]
+flag_name = { value = "f0101BattleCounter" }
+
+[[edits]]
+table = "FlagTable"
+row = 200
+
+[edits.set]
+flag_name = { value = "f0101BattleCounterNum" }
+bit_width = { value = 4 }
+

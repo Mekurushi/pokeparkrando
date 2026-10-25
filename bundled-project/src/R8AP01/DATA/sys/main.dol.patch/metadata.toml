@@ -1,0 +1,11 @@
+free-space-start = 0x8048a620
+original-dol-size = 0x36ef40
+original-free-space-ram-address = 0x8048a620
+default-thread-stack-end-high-instruction = 0x80210210
+default-thread-stack-end-low-instruction = 0x8021021c
+default-thread-stack-base-high-instruction = 0x8021020c
+default-thread-stack-base-low-instruction = 0x80210214
+mem1-arena-low-high-instruction = 0x80206de8
+mem1-arena-low-low-instruction = 0x80206dec
+startup-stack-pointer-high-instruction = 0x80004234
+startup-stack-pointer-low-instruction = 0x80004238

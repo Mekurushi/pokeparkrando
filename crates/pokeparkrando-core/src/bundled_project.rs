@@ -5,7 +5,7 @@ use include_dir::{Dir, include_dir};
 use tempfile::TempDir;
 
 use crate::error::BundledProjectError;
-use crate::parkforge::{GameId, ProjectConfig};
+use crate::parkforge::{GameId, ProjectConfig, SourceMount};
 
 const PROJECT_CONFIG: &str = include_str!("../../../bundled-project/project.toml");
 static PROJECT_SOURCES: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/../../bundled-project/src");
@@ -52,6 +52,13 @@ impl BundledProject {
             .games
             .get(game_id)
             .and_then(|game| game.display_name.as_deref())
+    }
+
+    pub(crate) fn source_mounts(&self, game_id: &GameId) -> Option<&[SourceMount]> {
+        self.config
+            .games
+            .get(game_id)
+            .map(|game| game.source_mounts.as_slice())
     }
 }
 

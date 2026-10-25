@@ -1,0 +1,15 @@
+base_address = 0x50000
+
+[functions]
+EMAPA01_Z01 = 0x582bc
+get_module = 0x50044
+lock_player_and_get_accessor = 0x50fb0
+show_yes_no_question = 0x50cf4
+fade_out_audio = 0x516b0
+fade_out = 0x51e9c
+set_player_at = 0x52fc8
+set_player_rotation = 0x530d4
+wait_frames = 0x500bc
+fade_in = 0x51f1c
+restore_player_control = 0x5113c
+end_event_script = 0x50080

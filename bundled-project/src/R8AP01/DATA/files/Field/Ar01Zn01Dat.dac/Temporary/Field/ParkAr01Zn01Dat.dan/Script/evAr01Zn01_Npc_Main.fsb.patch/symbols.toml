@@ -1,0 +1,151 @@
+base_address = 0x50000
+
+[functions]
+special_spawn_condition = 0x5c3c0
+rescue_magikarp_cutscene = 0x5ccd4
+get_module = 0x50044
+lock_npc_and_get_accessor = 0x511b4
+despawn = 0x54624
+turtwig_dialog = 0x61b8c
+bulbasaur_dialog = 0x60a88
+buneary_dialog = 0x6207c
+pachirisu_dialog = 0x625e8
+munchlax_dialog = 0x628d4
+treecko_dialog = 0x62bbc
+chimchar_dialog = 0x62ed0
+magikarp_dialog = 0x6317c
+lotad_dialog = 0x63428
+caterpie_dialog = 0x6372c
+weedle_dialog = 0x63a14
+event_bidoof_dialog = 0x5f820
+unlock_bidoof_beach = 0x5f6c0
+oddish_dialog = 0x63cc0
+shroomish_dialog = 0x63f74
+bonsly_dialog = 0x64218
+shinx_dialog = 0x64550
+mankey_dialog = 0x647fc
+aipom_dialog = 0x64ae0
+spearow_dialog = 0x64dc0
+torterra_dialog = 0x6506c
+starly_dialog = 0x65354
+butterfree_dialog = 0x65600
+tropius_dialog = 0x658ac
+bibarel_dialog = 0x65ae8
+ambipom_dialog = 0x65d94
+sudowoodo_dialog = 0x66040
+scyther_dialog = 0x662f4
+leafeon_dialog = 0x666ac
+croagunk_dialog = 0x5fee0
+bidoof_dialog = 0x669cc
+bidoof2_dialog = 0x66b1c
+bidoof3_dialog = 0x66c6c
+starly2_dialog = 0x66dbc
+starly3_dialog = 0x6708c
+aipom2_dialog = 0x67338
+starly4_dialog = 0x67618
+athletic_spearow_dialog = 0x678b4
+lotad2_dialog = 0x67ca4
+lotad3_dialog = 0x67f88
+starly5_dialog = 0x68268
+buneary2_dialog = 0x684f4
+shinx2_dialog = 0x68a30
+turtwig2_dialog = 0x68cbc
+butterfree2_dialog = 0x693a4
+munchlax2_dialog = 0x69630
+caterpie2_dialog = 0x69918
+pachirisu2_dialog = 0x69bbc
+
+show_yes_no_question = 0x54d54
+get_object_accessor = 0x50f20
+fade_in = 0x51f1c
+show_npc_dialog = 0x51f9c
+give_berries = 0x577e8
+friendship_banner = 0x54c98
+set_bestfriend = 0x54950
+complete_event = 0x54bd0
+end_event_script = 0x50080
+unlock_pokemon = 0x501fc
+lock_player_and_get_accessor = 0x50fb0
+face_player_and_npc = 0x521f8
+remove_held_item = 0x50510
+get_held_item_kind = 0x502a0
+is_friend = 0x54744
+
+AR01ZN01_INI = 0x6a370
+AR01ZN01_DEF = 0x6a2fc
+setup_player_for_zone = 0x5449c
+SETGIMMICK = 0x5ab28
+fade_out_bgm = 0x51500
+fade_out = 0x51e9c
+force_fade_in = 0x500c8
+force_fade_out = 0x50124
+EA01_Z01_D04 = 0x58eec
+EA01_Z01_D05 = 0x592a4
+EA01_Z01_D06 = 0x597d8
+EA01_Z01_D07 = 0x59e88
+clear_wand_check = 0x54b4c
+
+# magikarp unlock
+configure_npc = 0x545b8
+set_object_position = 0x536c4
+set_object_rotation = 0x53764
+set_event_frame_visible_with_fade = 0x51ae0
+object_id_to_friend_id = 0x549e4
+play_sound_effect = 0x5139c
+reset_object_after_event = 0x51268
+despawn_field = 0x512e8
+hide_event_frame = 0x51b08
+fade_in_bgm = 0x514d8
+restore_player_control = 0x5113c
+update_npc_story_state = 0x5ca1c
+
+# original power competition functions
+store_pre_competition_state = 0x51e3c
+get_player_accessor = 0x50ec0
+drop_held_item_animation = 0x540ac
+wait_frames = 0x500bc
+run_power_competition = 0x50840
+despawn_player_object = 0x54448
+spawn_player_object = 0x543f4
+respawn_field = 0x5130c
+face_object_accessors_instantly = 0x50724
+restore_pre_competition_state = 0x51e68
+set_npc_state = 0x51cb0
+
+# Unlock scenes
+do_unlock_scenes = 0x5bba4
+has_wand_check = 0x54b78
+is_unlock_scene_played = 0x550e0
+show_unlock_cutscene_at_position = 0x55eb4
+show_unlock_cutscene_at_current_position = 0x55840
+
+# RETURN_AT
+RETURN_AT = 0x6a418
+set_player_at = 0x52fc8
+cleared_prisma_goal_dialog = 0x5d48c
+reset_camera = 0x51ab8
+point_camera_between = 0x51978
+has_beaten_attraction_record = 0x54f70
+do_dialog_with_scene = 0x52188
+spawn_for_short_duration = 0x5b0e4
+SETMUFFINBOX = 0x5a944
+
+# bulbasaur dialog
+face_object_towards_player_synchronously = 0x53c20
+attraction_show_yes_no_question = 0x52074
+set_berry_counter_visible = 0x579c8
+enter_attraction = 0x56fe8
+rotate_object = 0x537d0
+
+# Drifblim fast travel
+STAXIAREA = 0x57f88
+fade_out_sound = 0x513f4
+travel_to = 0x57788
+
+# Drifblim dialog
+drifblim_dialog = 0x615d4
+show_npc_dialog_mode_0 = 0x52008
+choose_fast_travel_destination = 0x57ab8
+fade_out_audio = 0x516b0
+
+set_chapter = 0x54a18

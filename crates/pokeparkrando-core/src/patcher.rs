@@ -132,10 +132,12 @@ impl Patcher {
         let build_destination = build_root.path().join(game_id.as_str());
         let shared_sources = sources.shared();
         let revision_sources = sources.revision(game_id);
+        let source_mounts = self.project.source_mounts(game_id).unwrap_or_default();
         parkforge::build_with_paths(
             &original,
             &shared_sources,
             &revision_sources,
+            source_mounts,
             &build_destination,
             Self::build_config(appkprk)?,
             |build_progress| progress(PatchProgress::Building(build_progress)),
