@@ -1,0 +1,184 @@
+extern int get_module(string name);
+extern void despawn(int obj_id);
+extern void end_event_script(int param_1);
+extern void face_player_and_npc(int object_id, int param_2);
+extern int lock_npc_and_get_accessor(int obj_id);
+extern int lock_player_and_get_accessor();
+extern void open_gate(int gate_id, int state);
+extern void play_sound_effect(int sound_id, int fade_in_frames);
+extern void rotate_object(int object_id, int x, int y, int z);
+
+extern int run_power_up_shop_dialog(
+    int param_1,
+    int object_id,
+    string initial_dialog_id,
+    string question_dialog_id,
+    string accepted_dialog_id,
+    string success_dialog_id,
+    string insufficient_berries_dialog_id,
+    string declined_dialog_id,
+    int berry_cost,
+    string level_flag,
+    int new_level
+);
+extern void run_double_dash_unlock_dialog(
+    int param_1,
+    int object_id,
+    string initial_dialog_id,
+    string success_dialog_id,
+    string unlock_flag
+);
+extern void show_message_box(int mode, string message_id);
+extern void show_npc_dialog(int param_1, string dialog_id);
+
+
+void update_gate_states(){
+    int global_manager = get_module("GlobalManager");
+
+    // mewadow
+    open_gate(0x4e28,2);
+
+    // beach
+    if(@syscall(0,0x15,0x51,global_manager,2) != 0){
+        open_gate(0x4e29,2);
+    }
+    // cavern
+    if(@syscall(0,0x15,0x51,global_manager,8) != 0){
+        open_gate(0x4e2a,2);
+    }
+    // haunted
+    if(@syscall(0,0x15,0x51,global_manager,0xb) != 0){
+        open_gate(0x4e2b,2);
+    }
+    // granite
+    if(@syscall(0,0x15,0x51,global_manager,0xc) != 0){
+        open_gate(0x4e2c,2);
+    }
+}
+
+void update_treehouse_spawns(int unk){
+    int global_manager = get_module("GlobalManager");
+
+    if(@syscall(0,0x15,0x51,global_manager,8) != 1){
+        despawn(0x3f);
+        despawn(0x57);
+    }
+
+    if(@syscall(0,0x15,0x51,global_manager,6) != 1){
+        despawn(0x55);
+    }
+
+    if(@syscall(0,0x15,0x51,global_manager,2) != 1){
+        despawn(0x56);
+    }
+}
+
+void update_treehouse_spawns_2(int unk){
+    int global_manager = get_module("GlobalManager");
+
+    if(@syscall(0,0x15,0x51,global_manager,8) != 1){
+        despawn(0x3f);
+        despawn(0x57);
+    }
+
+    if(@syscall(0,0x15,0x51,global_manager,6) != 1){
+        despawn(0x55);
+    }
+
+    if(@syscall(0,0x15,0x51,global_manager,2) != 1){
+        despawn(0x56);
+    }
+}
+
+void ponyta_dialog(int param_1){
+    int player_accessor = lock_player_and_get_accessor();
+    int global_manager = get_module("GlobalManager");
+    int object_id = 0x55;
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+
+    int power_up_dash = @syscall(0,0x15,1,global_manager,"f0201PowerUpDash");
+    int power_up_level = @syscall(0,0x15,1,global_manager,"f0201LevelPonyta");
+
+    //double dash
+    if(power_up_dash == 0){
+        run_double_dash_unlock_dialog(param_1,object_id,"21_60401","21_60402","f0201PowerUpDash");
+        @syscall(0,0x15,2,player_accessor,0x4c,5);
+        play_sound_effect(0x7fd,0);
+        show_message_box(1,"21_00440");
+        show_message_box(1,"21_00490");
+    }
+    else if(power_up_level == 0){
+        int accepted = run_power_up_shop_dialog(
+            param_1,
+            object_id,
+            "21_60280",
+            "21_60340",
+            "21_60380",
+            "21_60390",
+            "21_60400",
+            "21_60370",
+            0x15e,
+            "f0201LevelPonyta",
+            1
+        );
+        if(accepted == 1){
+            @syscall(0,0x15,2,player_accessor,0x4c,5);
+            play_sound_effect(0x7fd,0);
+            show_message_box(1,"21_00450");
+        }
+    }
+    else if(power_up_level == 1){
+        int accepted = run_power_up_shop_dialog(
+            param_1,
+            object_id,
+            "21_60300",
+            "21_60350",
+            "21_60380",
+            "21_60390",
+            "21_60400",
+            "21_60370",
+            1000,
+            "f0201LevelPonyta",
+            2
+        );
+        if(accepted == 1){
+            @syscall(0,0x15,2,player_accessor,0x4c,5);
+            play_sound_effect(0x7fd,0);
+            show_message_box(1,"21_00450");
+        }
+    }
+    else if(power_up_level == 2){
+        int accepted = run_power_up_shop_dialog(
+            param_1,
+            object_id,
+            "21_60310",
+            "21_60360",
+            "21_60380",
+            "21_60390",
+            "21_60400",
+            "21_60370",
+            0x5dc,
+            "f0201LevelPonyta",
+            3
+        );
+        if(accepted == 1){
+            @syscall(0,0x15,2,player_accessor,0x4c,5);
+            play_sound_effect(0x7fd,0);
+            show_message_box(1,"21_00450");
+        }
+    }
+    else{
+        @syscall(0,0x15,2,object_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,object_accessor,0x1382,0,1.0,1.0);
+        if(power_up_dash == 0){
+            show_npc_dialog(param_1,"21_60321");
+        }
+        else{
+            show_npc_dialog(param_1,"21_60320");
+        }
+    }
+
+    rotate_object(object_id,0,0xae,0);
+    end_event_script(param_1);
+}

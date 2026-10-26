@@ -1,0 +1,20 @@
+base_address = 0x50000
+
+[functions]
+get_module = 0x50044
+end_event_script = 0x50080
+lock_player_and_get_accessor = 0x50fb0
+show_message_box = 0x50ca4
+lock_npc_and_get_accessor = 0x511b4
+play_sound_effect = 0x5139c
+show_npc_dialog = 0x51f9c
+face_player_and_npc = 0x521f8
+rotate_object = 0x537d0
+despawn = 0x54624
+open_gate = 0x5de8c
+update_treehouse_spawns = 0x5c978
+update_treehouse_spawns_2 = 0x602bc
+update_gate_states = 0x604c4
+run_power_up_shop_dialog = 0x5cfec
+run_double_dash_unlock_dialog = 0x5d230
+ponyta_dialog = 0x66758
