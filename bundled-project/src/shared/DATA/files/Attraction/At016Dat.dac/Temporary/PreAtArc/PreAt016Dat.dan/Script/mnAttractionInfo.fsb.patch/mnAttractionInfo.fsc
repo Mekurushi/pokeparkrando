@@ -1,0 +1,240 @@
+extern int get_module(string name);
+extern void FUN_000502fc(int unk);
+extern int FUN_00050080(int unk);
+extern void FUN_000510d0(int unk);
+extern void FUN_00051c94(int unk);
+extern int FUN_00052278();
+extern void FUN_00052330();
+extern void FUN_0005239c(int unk, int unk_2, int unk_3, int unk_4, int unk_5, int unk_6, int unk_7);
+extern void FUN_000524d0(int unk, int show_prisma_clear_time, int unk_2, int unk_3, int unk_4, int unk_5);
+extern void FUN_00052618();
+extern void FUN_00052760(int unk, int unk_2, int unk_3, int unk_4, int unk_5, int unk_6);
+extern void FUN_00052bcc(int unk, int unk_2, int unk_3, int unk_4, int unk_5, bool unk_6);
+extern int FUN_00052d50(int unk, int unk_2, int unk_3);
+
+int check_legendary_pokemon_unlocked(int unk, int unk_2){
+    int global_manager = get_module("GlobalManager");
+    int unk_3 = -1;
+
+    int index = 0;
+    while(index < @syscall(0,0x15,0x54,global_manager,unk)){
+        int unk_5 = @syscall(0,0x15,0x58,global_manager,unk,index);
+        int unk_4 = @syscall(0,0x15,0x41,global_manager,unk_5);
+        if(unk_4 != 0){
+            unk_3 = unk_5;
+            break;
+        }
+        index = index + 1;
+    }
+
+    if(unk_3 == -1){
+        return -1;
+    }
+    int unk_4 = @syscall(0,0x15,0x4b,global_manager,unk_3);
+    if(unk_4 != 0){
+        return -1;
+    }
+
+    int unk_5 = @syscall(0,0x15,0x55,global_manager,unk,unk_3);
+    int unk_6 = @syscall(0,0x15,0x55,global_manager,unk,0);
+    int unk_7 = FUN_00050080(unk);
+    index = 0;
+    while(index < @syscall(0,0x15,0x54,global_manager,unk)){
+        if(index != unk_5 && index != unk_2){
+            if(unk_7 == -1 || index != unk_6){
+                int unk_8 = @syscall(0,0x15,0x5d,global_manager,unk,index);
+                if(unk_8 != -1){
+                    unk_8 = @syscall(0,0x15,0x6e,global_manager,unk,index);
+                    if(unk_8 == 0){
+                        return -1;
+                    }
+                }
+            }
+        }
+        index = index + 1;
+    }
+    return unk_3;
+}
+
+void STARTDEMO(){
+    int mn_at = get_module("mnAtInfo");
+    int global_manager = get_module("GlobalManager");
+    int attraction_id = @syscall(0,0x15,0,mn_at);
+    int attr = @syscall(0,0x15,1,mn_at);
+    int pokemon_count = @syscall(0,0x15,0x55,global_manager,attraction_id,attr);
+    int unk = @syscall(0,0x15,0x5a,global_manager,attr);
+    int unk_2 = @syscall(0,0x15,0x67,global_manager,attraction_id);
+    int unk_3 = @syscall(0,0x15,0x6c,global_manager,unk);
+    int unk_4 = @syscall(0,0x15,0x50,global_manager,attraction_id);
+    int unk_5 = @syscall(0,0x15,0x24,global_manager);
+    int already_cleared;
+    int unk_6;
+    if(unk_5 == 0){
+        already_cleared = @syscall(0,0x15,0x68,global_manager,attraction_id);
+        unk_6 = @syscall(0,0x15,0x6e,global_manager,attraction_id,pokemon_count);
+        int unk_7 = @syscall(0,0x15,0x5d,global_manager,attraction_id,unk);
+        if(unk_7 == -1){
+            unk_6 = 1;
+        }
+    }
+    else{
+        already_cleared = 1;
+        unk_6 = 1;
+    }
+    FUN_000510d0(unk_4);
+    FUN_00051c94(0);
+    FUN_000524d0(unk_4,already_cleared,unk_2,unk_6,unk_3,1);
+}
+
+void STARTDEMOEND(){
+    int mn_at = get_module("mnAtInfo");
+    int global_manager = get_module("GlobalManager");
+    int attraction_id = @syscall(0,0x15,0,mn_at);
+    int attr = @syscall(0,0x15,1,mn_at);
+    int pokemon_count = @syscall(0,0x15,0x55,global_manager,attraction_id,attr);
+    int unk = @syscall(0,0x15,0x5a,global_manager,attr);
+    int unk_2 = @syscall(0,0x15,0x67,global_manager,attraction_id);
+    int unk_3 = @syscall(0,0x15,0x6c,global_manager,unk);
+    int unk_4 = @syscall(0,0x15,0x50,global_manager,attraction_id);
+    int unk_5 = @syscall(0,0x15,0x24,global_manager);
+    int already_cleared;
+    int unk_6;
+    if(unk_5 == 0){
+        already_cleared = @syscall(0,0x15,0x68,global_manager,attraction_id);
+        unk_6 = @syscall(0,0x15,0x6e,global_manager,attraction_id,pokemon_count);
+    }
+    else{
+        already_cleared = 1;
+        unk_6 = 1;
+    }
+    FUN_000524d0(unk_4,already_cleared,unk_2,unk_6,unk_3,0);
+}
+
+void RESULT(){
+    int mn_at = get_module("mnAtInfo");
+    int global_manager = get_module("GlobalManager");
+    int attraction_id = @syscall(0,0x15,0,mn_at);
+    int attr = @syscall(0,0x15,1,mn_at);
+    int pokemon_count = @syscall(0,0x15,0x55,global_manager,attraction_id,attr);
+    int unk = @syscall(0,0x15,0x5a,global_manager,attr);
+    int unk_1 = @syscall(0,0x15,2,mn_at);
+    int unk_2 = @syscall(0,0x15,0x67,global_manager,attraction_id);
+    int unk_3 = @syscall(0,0x15,0x6c,global_manager,unk);
+    int unk_4 = @syscall(0,0x15,0x50,global_manager,attraction_id);
+    int unk_5 = @syscall(0,0x15,0x40,global_manager,attr,attraction_id);
+    int unk_6 = @syscall(0,0x15,0x5d,global_manager,attraction_id,unk);
+    int unk_7 = @syscall(0,0x15,0x24,global_manager);
+    int already_cleared;
+    int unk_8;
+    if(unk_7 == 0){
+        already_cleared = @syscall(0,0x15,0x68,global_manager,attraction_id);
+        unk_8 = @syscall(0,0x15,0x6e,global_manager,attraction_id,pokemon_count);
+        if(unk_6 == -1){
+            unk_8 = 1;
+        }
+    }
+    else{
+        already_cleared = 1;
+        unk_8 = 1;
+    }
+
+    FUN_000510d0(unk_4);
+    int unk_9 = 0;
+    if(already_cleared == 0){
+        unk_9 = @syscall(0,0x15,0x53,global_manager,attraction_id,unk_1);
+    }
+    FUN_0005239c(unk_1,unk_4,already_cleared,unk_2,unk_8,unk_3,unk_9);
+
+    bool unk_10 = already_cleared == 0 && unk_9 != 0;
+    if(unk_10 != false){
+        FUN_00052618();
+        @syscall(0,0x15,0x69,global_manager,attraction_id,1);
+    }
+
+    // target record
+    int unk_11 = FUN_00052d50(unk_1,unk_3,unk_4);
+    if(unk_8 == 0 && unk_11 != 0){
+        int unk_12 = check_legendary_pokemon_unlocked(attraction_id,pokemon_count);
+        unk = @syscall(0,0x15,0x5e,global_manager,unk);
+        FUN_00052760(unk_1,unk_4,unk_3,unk_6,unk,unk_12);
+        @syscall(0,0x15,0x6d,global_manager,attraction_id,pokemon_count,1);
+        give_reward(unk_6,unk);
+        if(unk_12 != -1){
+            give_reward(1,unk_12);
+        }
+    }
+    if(unk_11 == 0){
+        // deathlink
+        @syscall(0,0x15,0,global_manager,"zfPowerComp");
+    }
+
+    int unk_13;
+    if(unk_5 == 0){
+        unk_13 = @syscall(0,0x15,0x66,global_manager,unk_4);
+    }
+    else{
+        unk_13 = @syscall(0,0x15,0x56,global_manager,attraction_id,pokemon_count);
+    }
+
+    // personal record
+    int unk_14 = 0;
+    int unk_15 = @syscall(0,0x15,0x60,global_manager,unk_4);
+    if(unk_15 == 0){
+        if(unk_1 < unk_13){
+            unk_14 = 1;
+        }
+    }
+    else if(unk_13 < unk_1){
+        unk_14 = 1;
+    }
+    bool unk_16 = unk_14 != 0 || unk_5 == 0;
+    FUN_00052bcc(unk_1,unk_4,unk_5,unk_13,unk_14,unk_16);
+    if(unk_16 != false){
+        @syscall(0,0x15,0x57,global_manager,attraction_id,pokemon_count,unk_1);
+    }
+
+    int unk_17 = 0;
+    int unk_18 = @syscall(0,0x15,0x40,global_manager,attr,attraction_id);
+    if(unk_18 == 0){
+        @syscall(0,0x15,0x3f,global_manager,attr,attraction_id);
+        unk_17 = 1;
+    }
+    unk_7 = @syscall(0,0x15,0x24,global_manager);
+    if(unk_7 == 0){
+        @syscall(0,0x15,0x63,global_manager,attraction_id);
+    }
+    @syscall(0,0x15,6,mn_at,0);
+
+    unk_7 = @syscall(0,0x15,0x24,global_manager);
+    if(unk_7 == 1 && (unk_16 != false || unk_17 != 0)){
+        FUN_000502fc(0);
+        int unk_19 = FUN_00052278();
+        FUN_000502fc(1);
+        if(unk_19 == 0){
+            FUN_00052330();
+        }
+    }
+
+    @syscall(0,0x15,4,mn_at);
+    while(true){
+        @pause(0);
+    }
+}
+
+void give_reward(int mode, int value){
+    int global_manager = get_module("GlobalManager");
+    if(mode == 1){
+        if(value != 0x5){ // skipping mew
+            @syscall(0,0x15,0x4a,global_manager,value);
+        }
+    }
+    else if(mode == 0){
+        @syscall(0,0x15,0x28,global_manager,value);
+    }
+    else if(mode == 3){
+        @syscall(0,0x15,0xb7,global_manager,value,1);
+    }
+    else if(mode == 2){
+        @syscall(0,0x15,0x14,global_manager,value);
+    }
+}
