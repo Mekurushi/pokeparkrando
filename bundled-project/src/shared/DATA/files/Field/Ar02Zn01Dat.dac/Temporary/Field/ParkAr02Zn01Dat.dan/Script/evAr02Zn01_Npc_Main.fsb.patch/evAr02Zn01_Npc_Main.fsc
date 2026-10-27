@@ -8,7 +8,46 @@ extern void open_gate(int gate_id, int state);
 extern void play_sound_effect(int sound_id, int fade_in_frames);
 extern void rotate_object(int object_id, int x, int y, int z);
 
-extern int run_power_up_shop_dialog(
+extern int run_dash_shop_dialog(
+    int param_1,
+    int object_id,
+    string initial_dialog_id,
+    string question_dialog_id,
+    string accepted_dialog_id,
+    string success_dialog_id,
+    string insufficient_berries_dialog_id,
+    string declined_dialog_id,
+    int berry_cost,
+    string level_flag,
+    int new_level
+);
+extern int run_thunderbolt_shop_dialog(
+    int param_1,
+    int object_id,
+    string initial_dialog_id,
+    string question_dialog_id,
+    string accepted_dialog_id,
+    string success_dialog_id,
+    string insufficient_berries_dialog_id,
+    string declined_dialog_id,
+    int berry_cost,
+    string level_flag,
+    int new_level
+);
+extern int run_health_shop_dialog(
+    int param_1,
+    int object_id,
+    string initial_dialog_id,
+    string question_dialog_id,
+    string accepted_dialog_id,
+    string success_dialog_id,
+    string insufficient_berries_dialog_id,
+    string declined_dialog_id,
+    int berry_cost,
+    string level_flag,
+    int new_level
+);
+extern int run_iron_tail_shop_dialog(
     int param_1,
     int object_id,
     string initial_dialog_id,
@@ -109,7 +148,7 @@ void ponyta_dialog(int param_1){
         show_message_box(1,"21_00490");
     }
     else if(power_up_level == 0){
-        int accepted = run_power_up_shop_dialog(
+        int accepted = run_dash_shop_dialog(
             param_1,
             object_id,
             "21_60280",
@@ -129,7 +168,7 @@ void ponyta_dialog(int param_1){
         }
     }
     else if(power_up_level == 1){
-        int accepted = run_power_up_shop_dialog(
+        int accepted = run_dash_shop_dialog(
             param_1,
             object_id,
             "21_60300",
@@ -149,7 +188,7 @@ void ponyta_dialog(int param_1){
         }
     }
     else if(power_up_level == 2){
-        int accepted = run_power_up_shop_dialog(
+        int accepted = run_dash_shop_dialog(
             param_1,
             object_id,
             "21_60310",
@@ -180,5 +219,243 @@ void ponyta_dialog(int param_1){
     }
 
     rotate_object(object_id,0,0xae,0);
+    end_event_script(param_1);
+}
+
+void electabuzz_dialog(int param_1){
+    int player_accessor = lock_player_and_get_accessor();
+    int global_manager = get_module("GlobalManager");
+    int object_id = 0x51;
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    int power_up_level = @syscall(0,0x15,1,global_manager,"f0201LevelEleboo");
+
+    @syscall(0,0x15,2,object_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,object_accessor,0x950,0,1.0,1.0);
+
+    if(power_up_level == 0){
+        int accepted = run_thunderbolt_shop_dialog(
+            param_1,
+            object_id,
+            "21_60010",
+            "21_60070",
+            "21_60130",
+            "21_60140",
+            "21_60150",
+            "21_60120",
+            0x15e,
+            "f0201LevelEleboo",
+            1
+        );
+        if(accepted == 1){
+            @syscall(0,0x15,2,player_accessor,0x4c,5);
+            play_sound_effect(0x7fd,0);
+            show_message_box(1,"21_00390");
+        }
+    }
+    else if(power_up_level == 1){
+        int accepted = run_thunderbolt_shop_dialog(
+            param_1,
+            object_id,
+            "21_60020",
+            "21_60080",
+            "21_60130",
+            "21_60140",
+            "21_60150",
+            "21_60120",
+            1000,
+            "f0201LevelEleboo",
+            2
+        );
+        if(accepted == 1){
+            @syscall(0,0x15,2,player_accessor,0x4c,5);
+            play_sound_effect(0x7fd,0);
+            show_message_box(1,"21_00400");
+        }
+    }
+    else if(power_up_level == 2){
+        int accepted = run_thunderbolt_shop_dialog(
+            param_1,
+            object_id,
+            "21_60030",
+            "21_60090",
+            "21_60130",
+            "21_60140",
+            "21_60150",
+            "21_60120",
+            0x5dc,
+            "f0201LevelEleboo",
+            3
+        );
+        if(accepted == 1){
+            @syscall(0,0x15,2,player_accessor,0x4c,5);
+            play_sound_effect(0x7fd,0);
+            show_message_box(1,"21_00410");
+        }
+    }
+    else if(power_up_level == 3){
+        show_npc_dialog(param_1,"21_60060");
+    }
+
+    rotate_object(object_id,0,0xb3,0);
+    end_event_script(param_1);
+}
+
+void bibarel_dialog(int param_1){
+    int player_accessor = lock_player_and_get_accessor();
+    int global_manager = get_module("GlobalManager");
+    int object_id = 0x56;
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    int power_up_level = @syscall(0,0x15,1,global_manager,"f0201LevelBeadaru");
+
+    @syscall(0,0x15,2,object_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,object_accessor,0xbf3,0,1.0,1.0);
+
+    if(power_up_level == 0){
+        int accepted = run_health_shop_dialog(
+            param_1,
+            object_id,
+            "21_60430",
+            "21_60470",
+            "21_60510",
+            "21_60520",
+            "21_60530",
+            "21_60500",
+            0x15e,
+            "f0201LevelBeadaru",
+            1
+        );
+        if(accepted == 1){
+            @syscall(0,0x15,2,player_accessor,0x4c,5);
+            play_sound_effect(0x7fd,0);
+            show_message_box(1,"21_00430");
+        }
+    }
+    else if(power_up_level == 1){
+        int accepted = run_health_shop_dialog(
+            param_1,
+            object_id,
+            "21_60440",
+            "21_60480",
+            "21_60510",
+            "21_60520",
+            "21_60530",
+            "21_60500",
+            1000,
+            "f0201LevelBeadaru",
+            2
+        );
+        if(accepted == 1){
+            @syscall(0,0x15,2,player_accessor,0x4c,5);
+            play_sound_effect(0x7fd,0);
+            show_message_box(1,"21_00430");
+        }
+    }
+    else if(power_up_level == 2){
+        int accepted = run_health_shop_dialog(
+            param_1,
+            object_id,
+            "21_60450",
+            "21_60490",
+            "21_60510",
+            "21_60520",
+            "21_60530",
+            "21_60500",
+            0x5dc,
+            "f0201LevelBeadaru",
+            3
+        );
+        if(accepted == 1){
+            @syscall(0,0x15,2,player_accessor,0x4c,5);
+            play_sound_effect(0x7fd,0);
+            show_message_box(1,"21_00430");
+        }
+    }
+    else if(power_up_level == 3){
+        show_npc_dialog(param_1,"21_60460");
+    }
+
+    rotate_object(object_id,0,0xb2,0);
+    end_event_script(param_1);
+}
+
+void primeape_dialog(int param_1){
+    int player_accessor = lock_player_and_get_accessor();
+    int global_manager = get_module("GlobalManager");
+    int object_id = 0x57;
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    int power_up_level = @syscall(0,0x15,1,global_manager,"f0201LevelOkorizaru");
+
+    @syscall(0,0x15,2,object_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,object_accessor,0xe1e,0,1.0,1.0);
+
+    if(power_up_level == 0){
+        int accepted = run_iron_tail_shop_dialog(
+            param_1,
+            object_id,
+            "21_60700",
+            "21_60750",
+            "21_60800",
+            "21_60810",
+            "21_60820",
+            "21_60790",
+            0x15e,
+            "f0201LevelOkorizaru",
+            1
+        );
+        if(accepted == 1){
+            @syscall(0,0x15,2,player_accessor,0x4c,5);
+            play_sound_effect(0x7fd,0);
+            show_message_box(1,"21_00460");
+            show_message_box(1,"21_00500");
+        }
+    }
+    else if(power_up_level == 1){
+        int accepted = run_iron_tail_shop_dialog(
+            param_1,
+            object_id,
+            "21_60710",
+            "21_60760",
+            "21_60800",
+            "21_60810",
+            "21_60820",
+            "21_60790",
+            1000,
+            "f0201LevelOkorizaru",
+            2
+        );
+        if(accepted == 1){
+            @syscall(0,0x15,2,player_accessor,0x4c,5);
+            play_sound_effect(0x7fd,0);
+            show_message_box(1,"21_00470");
+        }
+    }
+    else if(power_up_level == 2){
+        int accepted = run_iron_tail_shop_dialog(
+            param_1,
+            object_id,
+            "21_60720",
+            "21_60770",
+            "21_60800",
+            "21_60810",
+            "21_60820",
+            "21_60790",
+            0x5dc,
+            "f0201LevelOkorizaru",
+            3
+        );
+        if(accepted == 1){
+            @syscall(0,0x15,2,player_accessor,0x4c,5);
+            play_sound_effect(0x7fd,0);
+            show_message_box(1,"21_00470");
+        }
+    }
+    else{
+        show_npc_dialog(param_1,"21_60740");
+    }
+
+    rotate_object(object_id,0,0xb7,0);
     end_event_script(param_1);
 }
