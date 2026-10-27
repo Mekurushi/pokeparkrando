@@ -1,0 +1,197 @@
+extern int get_module(string name);
+extern int lock_player_and_get_accessor();
+extern int show_yes_no_question(int param_1, string dialog_id);
+extern void fade_out_audio(int frames, bool fade_channel_6, bool fade_channel_8, bool fade_channel_7);
+extern void wait_frames(int frames);
+extern void fade_out(int red, int green, int blue, int frames);
+extern void set_player_at(int x, int y, int z);
+extern void set_player_rotation(int x, int y, int z);
+extern void fade_in(int red, int green, int blue, int frames);
+extern void restore_player_control();
+extern void end_event_script(int param_1);
+
+config int TREEHOUSE_MEADOW_PASSAGE_MEADOW_ZONE_CONNECTION_ZONE;
+config int TREEHOUSE_MEADOW_PASSAGE_MEADOW_ZONE_CONNECTION_AREA;
+config int TREEHOUSE_MEADOW_PASSAGE_MEADOW_ZONE_CONNECTION_POSITION;
+
+config int TREEHOUSE_BEACH_PASSAGE_BEACH_ZONE_CONNECTION_ZONE;
+config int TREEHOUSE_BEACH_PASSAGE_BEACH_ZONE_CONNECTION_AREA;
+config int TREEHOUSE_BEACH_PASSAGE_BEACH_ZONE_CONNECTION_POSITION;
+
+config int TREEHOUSE_CAVERN_PASSAGE_CAVERN_ZONE_CONNECTION_ZONE;
+config int TREEHOUSE_CAVERN_PASSAGE_CAVERN_ZONE_CONNECTION_AREA;
+config int TREEHOUSE_CAVERN_PASSAGE_CAVERN_ZONE_CONNECTION_POSITION;
+
+config int TREEHOUSE_HAUNTED_PASSAGE_HAUNTED_ZONE_CONNECTION_ZONE;
+config int TREEHOUSE_HAUNTED_PASSAGE_HAUNTED_ZONE_CONNECTION_AREA;
+config int TREEHOUSE_HAUNTED_PASSAGE_HAUNTED_ZONE_CONNECTION_POSITION;
+
+config int TREEHOUSE_GRANITE_PASSAGE_GRANITE_ZONE_CONNECTION_ZONE;
+config int TREEHOUSE_GRANITE_PASSAGE_GRANITE_ZONE_CONNECTION_AREA;
+config int TREEHOUSE_GRANITE_PASSAGE_GRANITE_ZONE_CONNECTION_POSITION;
+
+
+void EMAPA01_Z01(int param_1){
+    int event_script = get_module("EventScript");
+    lock_player_and_get_accessor();
+
+    int accepted = show_yes_no_question(1,"21_00530");
+    if(accepted == 1){
+        fade_out_audio(60,true,true,true);
+        @syscall(0,0x15,400,event_script,3,0);
+        int global_manager = get_module("GlobalManager");
+        @syscall(
+            0,0x15,0x78,global_manager,
+            TREEHOUSE_MEADOW_PASSAGE_MEADOW_ZONE_CONNECTION_ZONE,
+            TREEHOUSE_MEADOW_PASSAGE_MEADOW_ZONE_CONNECTION_AREA,
+            TREEHOUSE_MEADOW_PASSAGE_MEADOW_ZONE_CONNECTION_POSITION
+        );
+        int scene_manager = get_module("SceneManager");
+        @syscall(0,0x15,6,scene_manager,"ZoneChange",1);
+        @syscall(0,0x15,3,scene_manager);
+    }
+    else{
+        fade_out(0,0,0,60);
+        set_player_at(-984,0x2d,0x30a);
+        set_player_rotation(0,0x5b,0);
+        @syscall(0,0x15,0xca,event_script,-1);
+        wait_frames(5);
+        fade_in(0,0,0,60);
+        restore_player_control();
+    }
+
+    end_event_script(param_1);
+    return;
+}
+
+void EMAPA03_Z01(int param_1){
+    int event_script = get_module("EventScript");
+    lock_player_and_get_accessor();
+
+    int accepted = show_yes_no_question(1,"21_00540");
+    if(accepted == 1){
+        fade_out_audio(60,true,true,true);
+        @syscall(0,0x15,400,event_script,3,0);
+        int global_manager = get_module("GlobalManager");
+        @syscall(
+            0,0x15,0x78,global_manager,
+            TREEHOUSE_BEACH_PASSAGE_BEACH_ZONE_CONNECTION_ZONE,
+            TREEHOUSE_BEACH_PASSAGE_BEACH_ZONE_CONNECTION_AREA,
+            TREEHOUSE_BEACH_PASSAGE_BEACH_ZONE_CONNECTION_POSITION
+        );
+        int scene_manager = get_module("SceneManager");
+        @syscall(0,0x15,6,scene_manager,"ZoneChange",1);
+        @syscall(0,0x15,3,scene_manager);
+    }
+    else{
+        fade_out(0,0,0,60);
+        set_player_at(-1267,-5,0x365);
+        set_player_rotation(0,0x7d,0);
+        @syscall(0,0x15,0xca,event_script,-1);
+        wait_frames(5);
+        fade_in(0,0,0,60);
+        restore_player_control();
+    }
+
+    end_event_script(param_1);
+    return;
+}
+
+void EMAPA04_Z01(int param_1){
+    int event_script = get_module("EventScript");
+    lock_player_and_get_accessor();
+
+    int accepted = show_yes_no_question(1,"21_00550");
+    if(accepted == 1){
+        fade_out_audio(60,true,true,true);
+        @syscall(0,0x15,400,event_script,3,0);
+        int global_manager = get_module("GlobalManager");
+        @syscall(
+            0,0x15,0x78,global_manager,
+            TREEHOUSE_CAVERN_PASSAGE_CAVERN_ZONE_CONNECTION_ZONE,
+            TREEHOUSE_CAVERN_PASSAGE_CAVERN_ZONE_CONNECTION_AREA,
+            TREEHOUSE_CAVERN_PASSAGE_CAVERN_ZONE_CONNECTION_POSITION
+        );
+        int scene_manager = get_module("SceneManager");
+        @syscall(0,0x15,6,scene_manager,"ZoneChange",1);
+        @syscall(0,0x15,3,scene_manager);
+    }
+    else{
+        fade_out(0,0,0,60);
+        set_player_at(-1811,0x41,0x101);
+        set_player_rotation(0,0xd6,0);
+        @syscall(0,0x15,0xca,event_script,-1);
+        wait_frames(5);
+        fade_in(0,0,0,60);
+        restore_player_control();
+    }
+
+    end_event_script(param_1);
+    return;
+}
+
+void EMAPA05_Z01(int param_1){
+    int event_script = get_module("EventScript");
+    lock_player_and_get_accessor();
+
+    int accepted = show_yes_no_question(1,"21_00560");
+    if(accepted == 1){
+        fade_out_audio(60,true,true,true);
+        @syscall(0,0x15,400,event_script,3,0);
+        int global_manager = get_module("GlobalManager");
+        @syscall(
+            0,0x15,0x78,global_manager,
+            TREEHOUSE_HAUNTED_PASSAGE_HAUNTED_ZONE_CONNECTION_ZONE,
+            TREEHOUSE_HAUNTED_PASSAGE_HAUNTED_ZONE_CONNECTION_AREA,
+            TREEHOUSE_HAUNTED_PASSAGE_HAUNTED_ZONE_CONNECTION_POSITION
+        );
+        int scene_manager = get_module("SceneManager");
+        @syscall(0,0x15,6,scene_manager,"ZoneChange",1);
+        @syscall(0,0x15,3,scene_manager);
+    }
+    else{
+        fade_out(0,0,0,60);
+        set_player_at(-1047,0x6c,0xf1);
+        set_player_rotation(0,0x49,0);
+        @syscall(0,0x15,0xca,event_script,-1);
+        wait_frames(5);
+        fade_in(0,0,0,60);
+        restore_player_control();
+    }
+
+    end_event_script(param_1);
+    return;
+}
+
+void EMAPA06_Z01(int param_1){
+    int event_script = get_module("EventScript");
+    lock_player_and_get_accessor();
+
+    int accepted = show_yes_no_question(1,"21_00560");
+    if(accepted == 1){
+        fade_out_audio(60,true,true,true);
+        @syscall(0,0x15,400,event_script,3,0);
+        int global_manager = get_module("GlobalManager");
+        @syscall(
+            0,0x15,0x78,global_manager,
+            TREEHOUSE_GRANITE_PASSAGE_GRANITE_ZONE_CONNECTION_ZONE,
+            TREEHOUSE_GRANITE_PASSAGE_GRANITE_ZONE_CONNECTION_AREA,
+            TREEHOUSE_GRANITE_PASSAGE_GRANITE_ZONE_CONNECTION_POSITION
+        );
+        int scene_manager = get_module("SceneManager");
+        @syscall(0,0x15,6,scene_manager,"ZoneChange",1);
+        @syscall(0,0x15,3,scene_manager);
+    }
+    else{
+        fade_out(0,0,0,60);
+        set_player_at(-1372,0x7f,0x25);
+        set_player_rotation(0,0xf0,0);
+        @syscall(0,0x15,0xca,event_script,-1);
+        wait_frames(5);
+        fade_in(0,0,0,60);
+        restore_player_control();
+    }
+
+    end_event_script(param_1);
+    return;
+}

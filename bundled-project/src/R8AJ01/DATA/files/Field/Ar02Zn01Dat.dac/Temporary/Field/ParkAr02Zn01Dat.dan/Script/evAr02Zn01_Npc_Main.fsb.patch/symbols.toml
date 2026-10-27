@@ -55,6 +55,7 @@ update_balloon_visibility = 0x5bff4
 EBALLOONAREA = 0x58f64
 fade_out_sound = 0x513f4
 travel_to = 0x572dc
+STAXIAREA = 0x57adc
 
 [data]
 most_completed_attraction_ids = 0x63f24
