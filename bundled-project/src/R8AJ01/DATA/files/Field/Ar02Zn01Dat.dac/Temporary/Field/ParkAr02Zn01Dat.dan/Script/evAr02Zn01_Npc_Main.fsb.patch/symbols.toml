@@ -2,6 +2,7 @@ base_address = 0x50000
 
 [functions]
 get_module = 0x50044
+A02_Z01_INIT = 0x6a220
 collect_most_completed_attraction_ids = 0x50a60
 run_selection_dialog = 0x50c40
 end_event_script = 0x50080
@@ -11,8 +12,16 @@ show_message_box = 0x50ca4
 lock_npc_and_get_accessor = 0x511b4
 play_sound_effect = 0x5139c
 fade_out_audio = 0x516b0
+fade_in = 0x51f1c
 show_npc_dialog = 0x51f9c
 show_npc_dialog_mode_0 = 0x52008
+show_unlock_cutscene_at_current_position = 0x55838
+setup_player_for_zone = 0x54494
+clear_wand_check = 0x54b44
+set_player_at = 0x52fc0
+set_player_rotation = 0x530cc
+SETGIMMICK = 0x5c2ac
+update_npc_story_state = 0x60060
 face_player_and_npc = 0x521f8
 face_player_towards_object_synchronously = 0x533ac
 rotate_object = 0x537c8

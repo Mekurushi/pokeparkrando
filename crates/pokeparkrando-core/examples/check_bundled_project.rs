@@ -121,30 +121,102 @@ fn build_config() -> BuildConfig {
             "TREEHOUSE_GRANITE_PASSAGE_GRANITE_ZONE_CONNECTION_POSITION".into(),
             BuildConfigValue::Integer(0),
         ),
-        ("TREEHOUSE_MEADOW_DRIFBLIM_FAST_TRAVEL_ZONE".into(), BuildConfigValue::Integer(1)),
-        ("TREEHOUSE_MEADOW_DRIFBLIM_FAST_TRAVEL_AREA".into(), BuildConfigValue::Integer(1)),
-        ("TREEHOUSE_MEADOW_DRIFBLIM_FAST_TRAVEL_POSITION".into(), BuildConfigValue::Integer(3)),
-        ("TREEHOUSE_BEACH_DRIFBLIM_FAST_TRAVEL_ZONE".into(), BuildConfigValue::Integer(3)),
-        ("TREEHOUSE_BEACH_DRIFBLIM_FAST_TRAVEL_AREA".into(), BuildConfigValue::Integer(1)),
-        ("TREEHOUSE_BEACH_DRIFBLIM_FAST_TRAVEL_POSITION".into(), BuildConfigValue::Integer(2)),
-        ("TREEHOUSE_ICE_DRIFBLIM_FAST_TRAVEL_ZONE".into(), BuildConfigValue::Integer(3)),
-        ("TREEHOUSE_ICE_DRIFBLIM_FAST_TRAVEL_AREA".into(), BuildConfigValue::Integer(2)),
-        ("TREEHOUSE_ICE_DRIFBLIM_FAST_TRAVEL_POSITION".into(), BuildConfigValue::Integer(2)),
-        ("TREEHOUSE_CAVERN_DRIFBLIM_FAST_TRAVEL_ZONE".into(), BuildConfigValue::Integer(4)),
-        ("TREEHOUSE_CAVERN_DRIFBLIM_FAST_TRAVEL_AREA".into(), BuildConfigValue::Integer(1)),
-        ("TREEHOUSE_CAVERN_DRIFBLIM_FAST_TRAVEL_POSITION".into(), BuildConfigValue::Integer(2)),
-        ("TREEHOUSE_MAGMA_DRIFBLIM_FAST_TRAVEL_ZONE".into(), BuildConfigValue::Integer(4)),
-        ("TREEHOUSE_MAGMA_DRIFBLIM_FAST_TRAVEL_AREA".into(), BuildConfigValue::Integer(2)),
-        ("TREEHOUSE_MAGMA_DRIFBLIM_FAST_TRAVEL_POSITION".into(), BuildConfigValue::Integer(2)),
-        ("TREEHOUSE_HAUNTED_DRIFBLIM_FAST_TRAVEL_ZONE".into(), BuildConfigValue::Integer(5)),
-        ("TREEHOUSE_HAUNTED_DRIFBLIM_FAST_TRAVEL_AREA".into(), BuildConfigValue::Integer(1)),
-        ("TREEHOUSE_HAUNTED_DRIFBLIM_FAST_TRAVEL_POSITION".into(), BuildConfigValue::Integer(2)),
-        ("TREEHOUSE_GRANITE_DRIFBLIM_FAST_TRAVEL_ZONE".into(), BuildConfigValue::Integer(6)),
-        ("TREEHOUSE_GRANITE_DRIFBLIM_FAST_TRAVEL_AREA".into(), BuildConfigValue::Integer(1)),
-        ("TREEHOUSE_GRANITE_DRIFBLIM_FAST_TRAVEL_POSITION".into(), BuildConfigValue::Integer(2)),
-        ("TREEHOUSE_FLOWER_DRIFBLIM_FAST_TRAVEL_ZONE".into(), BuildConfigValue::Integer(6)),
-        ("TREEHOUSE_FLOWER_DRIFBLIM_FAST_TRAVEL_AREA".into(), BuildConfigValue::Integer(2)),
-        ("TREEHOUSE_FLOWER_DRIFBLIM_FAST_TRAVEL_POSITION".into(), BuildConfigValue::Integer(1)),
+        (
+            "TREEHOUSE_MEADOW_DRIFBLIM_FAST_TRAVEL_ZONE".into(),
+            BuildConfigValue::Integer(1),
+        ),
+        (
+            "TREEHOUSE_MEADOW_DRIFBLIM_FAST_TRAVEL_AREA".into(),
+            BuildConfigValue::Integer(1),
+        ),
+        (
+            "TREEHOUSE_MEADOW_DRIFBLIM_FAST_TRAVEL_POSITION".into(),
+            BuildConfigValue::Integer(3),
+        ),
+        (
+            "TREEHOUSE_BEACH_DRIFBLIM_FAST_TRAVEL_ZONE".into(),
+            BuildConfigValue::Integer(3),
+        ),
+        (
+            "TREEHOUSE_BEACH_DRIFBLIM_FAST_TRAVEL_AREA".into(),
+            BuildConfigValue::Integer(1),
+        ),
+        (
+            "TREEHOUSE_BEACH_DRIFBLIM_FAST_TRAVEL_POSITION".into(),
+            BuildConfigValue::Integer(2),
+        ),
+        (
+            "TREEHOUSE_ICE_DRIFBLIM_FAST_TRAVEL_ZONE".into(),
+            BuildConfigValue::Integer(3),
+        ),
+        (
+            "TREEHOUSE_ICE_DRIFBLIM_FAST_TRAVEL_AREA".into(),
+            BuildConfigValue::Integer(2),
+        ),
+        (
+            "TREEHOUSE_ICE_DRIFBLIM_FAST_TRAVEL_POSITION".into(),
+            BuildConfigValue::Integer(2),
+        ),
+        (
+            "TREEHOUSE_CAVERN_DRIFBLIM_FAST_TRAVEL_ZONE".into(),
+            BuildConfigValue::Integer(4),
+        ),
+        (
+            "TREEHOUSE_CAVERN_DRIFBLIM_FAST_TRAVEL_AREA".into(),
+            BuildConfigValue::Integer(1),
+        ),
+        (
+            "TREEHOUSE_CAVERN_DRIFBLIM_FAST_TRAVEL_POSITION".into(),
+            BuildConfigValue::Integer(2),
+        ),
+        (
+            "TREEHOUSE_MAGMA_DRIFBLIM_FAST_TRAVEL_ZONE".into(),
+            BuildConfigValue::Integer(4),
+        ),
+        (
+            "TREEHOUSE_MAGMA_DRIFBLIM_FAST_TRAVEL_AREA".into(),
+            BuildConfigValue::Integer(2),
+        ),
+        (
+            "TREEHOUSE_MAGMA_DRIFBLIM_FAST_TRAVEL_POSITION".into(),
+            BuildConfigValue::Integer(2),
+        ),
+        (
+            "TREEHOUSE_HAUNTED_DRIFBLIM_FAST_TRAVEL_ZONE".into(),
+            BuildConfigValue::Integer(5),
+        ),
+        (
+            "TREEHOUSE_HAUNTED_DRIFBLIM_FAST_TRAVEL_AREA".into(),
+            BuildConfigValue::Integer(1),
+        ),
+        (
+            "TREEHOUSE_HAUNTED_DRIFBLIM_FAST_TRAVEL_POSITION".into(),
+            BuildConfigValue::Integer(2),
+        ),
+        (
+            "TREEHOUSE_GRANITE_DRIFBLIM_FAST_TRAVEL_ZONE".into(),
+            BuildConfigValue::Integer(6),
+        ),
+        (
+            "TREEHOUSE_GRANITE_DRIFBLIM_FAST_TRAVEL_AREA".into(),
+            BuildConfigValue::Integer(1),
+        ),
+        (
+            "TREEHOUSE_GRANITE_DRIFBLIM_FAST_TRAVEL_POSITION".into(),
+            BuildConfigValue::Integer(2),
+        ),
+        (
+            "TREEHOUSE_FLOWER_DRIFBLIM_FAST_TRAVEL_ZONE".into(),
+            BuildConfigValue::Integer(6),
+        ),
+        (
+            "TREEHOUSE_FLOWER_DRIFBLIM_FAST_TRAVEL_AREA".into(),
+            BuildConfigValue::Integer(2),
+        ),
+        (
+            "TREEHOUSE_FLOWER_DRIFBLIM_FAST_TRAVEL_POSITION".into(),
+            BuildConfigValue::Integer(1),
+        ),
         (
             "PLAYER_NAME".into(),
             BuildConfigValue::String("Player1".into()),

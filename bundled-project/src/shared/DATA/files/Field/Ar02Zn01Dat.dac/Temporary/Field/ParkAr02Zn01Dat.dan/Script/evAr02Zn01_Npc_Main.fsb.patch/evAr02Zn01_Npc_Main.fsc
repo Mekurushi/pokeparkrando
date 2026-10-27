@@ -10,6 +10,7 @@ extern void drop_held_item_animation();
 extern void end_event_script(int param_1);
 extern void fade_out_audio(int frames, bool fade_channel_6, bool fade_channel_8, bool fade_channel_7);
 extern void fade_out_sound(int sound_id);
+extern void fade_in(int red, int green, int blue, int frames);
 extern void face_player_and_npc(int object_id, int param_2);
 extern void face_player_towards_object_synchronously(int object_id, int param_2);
 extern int lock_npc_and_get_accessor(int obj_id);
@@ -19,6 +20,12 @@ extern void play_sound_effect(int sound_id, int fade_in_frames);
 extern void rotate_object(int object_id, int x, int y, int z);
 extern void set_berry_counter_visible(bool visible);
 extern void set_bestfriend(int object_id);
+extern void set_player_at(int x, int y, int z);
+extern void set_player_rotation(int x, int y, int z);
+extern void setup_player_for_zone();
+extern void clear_wand_check();
+extern void SETGIMMICK(int param_1);
+extern void update_npc_story_state(int param_1);
 
 extern int run_dash_shop_dialog(
     int param_1,
@@ -83,6 +90,13 @@ extern void choose_fast_travel_destination(int param_1, int object_id, int curre
 extern void show_message_box(int mode, string message_id);
 extern void show_npc_dialog(int param_1, string dialog_id);
 extern void show_npc_dialog_mode_0(int param_1, string dialog_id);
+extern void show_unlock_cutscene_at_current_position(
+	int param_1,
+	int object_id,
+	string dialog_id,
+	int camera_preset,
+	int param_5
+);
 extern void wait_frames(int frames);
 extern void travel_to(int zone, int area, int position);
 
@@ -125,6 +139,33 @@ config int TREEHOUSE_GRANITE_DRIFBLIM_FAST_TRAVEL_POSITION;
 config int TREEHOUSE_FLOWER_DRIFBLIM_FAST_TRAVEL_ZONE;
 config int TREEHOUSE_FLOWER_DRIFBLIM_FAST_TRAVEL_AREA;
 config int TREEHOUSE_FLOWER_DRIFBLIM_FAST_TRAVEL_POSITION;
+
+
+void A02_Z01_INIT(int param_1){
+	int global_manager = get_module("GlobalManager");
+	int event_script = get_module("EventScript");
+	@syscall(0,0x15,0x65,event_script,0,0,0,1);
+
+	lock_player_and_get_accessor();
+	setup_player_for_zone();
+
+    int staff_roll = @syscall(0,0x15,1,global_manager,"rfStaffRoll");
+	if(staff_roll == 1){
+		set_player_at(-1368,0x53,0x25a);
+		set_player_rotation(0,0xed,0);
+		@syscall(0,0x15,0,global_manager,"rfStaffRoll",0);
+	}
+
+	update_gate_states();
+	update_treehouse_spawns_2(param_1);
+	update_npc_story_state(param_1);
+	SETGIMMICK(param_1);
+
+	show_piplup_unlock_scene(param_1);
+	fade_in(0,0,0,0x1e);
+	clear_wand_check();
+	end_event_script(param_1);
+}
 
 
 void update_gate_states(){
@@ -183,6 +224,31 @@ void update_treehouse_spawns_2(int unk){
     if(@syscall(0,0x15,0x51,global_manager,2) != 1){
         despawn(0x56);
     }
+    if(
+		get_prisma_amount() < SKYGARDEN_PRISMA_COUNT
+	){
+        despawn(0x52);
+    }
+}
+
+void show_piplup_unlock_scene(int param_1){
+	int global_manager = get_module("GlobalManager");
+	int unlock_scene_played = @syscall(
+		0,0x15,1,global_manager,"f0201PiplupPrismaUnlockScene"
+	);
+
+	if(
+		get_prisma_amount() >= SKYGARDEN_PRISMA_COUNT &&
+		unlock_scene_played == 0
+	){
+		@syscall(
+			0,0x15,0,global_manager,"f0201PiplupPrismaUnlockScene",1
+		);
+        // TODO: create new text for this
+		show_unlock_cutscene_at_current_position(
+			param_1,0x52,"21_60180",10,0
+		);
+	}
 }
 
 void ponyta_dialog(int param_1){
