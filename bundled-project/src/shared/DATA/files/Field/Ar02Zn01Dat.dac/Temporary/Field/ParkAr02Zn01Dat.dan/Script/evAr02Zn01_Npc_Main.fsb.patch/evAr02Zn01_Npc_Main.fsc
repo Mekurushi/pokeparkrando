@@ -1,12 +1,16 @@
 extern int get_module(string name);
 extern void despawn(int obj_id);
+extern void drop_held_item_animation();
 extern void end_event_script(int param_1);
+extern void fade_out_audio(int frames, bool fade_channel_6, bool fade_channel_8, bool fade_channel_7);
 extern void face_player_and_npc(int object_id, int param_2);
 extern int lock_npc_and_get_accessor(int obj_id);
 extern int lock_player_and_get_accessor();
 extern void open_gate(int gate_id, int state);
 extern void play_sound_effect(int sound_id, int fade_in_frames);
 extern void rotate_object(int object_id, int x, int y, int z);
+extern void set_berry_counter_visible(bool visible);
+extern void set_bestfriend(int object_id);
 
 extern int run_dash_shop_dialog(
     int param_1,
@@ -67,8 +71,11 @@ extern void run_double_dash_unlock_dialog(
     string success_dialog_id,
     string unlock_flag
 );
+extern void choose_fast_travel_destination(int param_1, int object_id, int current_destination);
 extern void show_message_box(int mode, string message_id);
 extern void show_npc_dialog(int param_1, string dialog_id);
+extern void show_npc_dialog_mode_0(int param_1, string dialog_id);
+extern void wait_frames(int frames);
 
 
 void update_gate_states(){
@@ -458,4 +465,100 @@ void primeape_dialog(int param_1){
 
     rotate_object(object_id,0,0xb7,0);
     end_event_script(param_1);
+}
+
+void drifblim_dialog(int param_1){
+    int object_id = 0x54;
+    int player_accessor = lock_player_and_get_accessor();
+    int event_script = get_module("EventScript");
+    int global_manager = get_module("GlobalManager");
+    int field_info = get_module("mnFieldInfo");
+
+    drop_held_item_animation();
+    @syscall(0,0x15,0,global_manager,"rfFuwarideTaxi",0);
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+
+    int service_count = @syscall(0,0x15,1,global_manager,"fFuwarideService");
+    // friendship event state
+    int service_dialog_state = @syscall(0,0x15,1,global_manager,"fTalkFuwarideService");
+    if(service_count == 3 && service_dialog_state == 0){
+        @syscall(0,0x15,2,object_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
+        show_npc_dialog_mode_0(param_1,"02_80151");
+        @syscall(0,0x15,0,global_manager,"fTalkFuwarideService",1);
+        @syscall(0,0x15,2,player_accessor,0x4c,5);
+        play_sound_effect(0x7fa,0);
+        @syscall(0,0x15,0x11,field_info,0,"02_80153");
+        wait_frames(180);
+        @syscall(0,0x15,0x12,field_info);
+        check_location(object_id);
+    }
+
+    service_dialog_state = @syscall(0,0x15,1,global_manager,"fTalkFuwarideService");
+    if(service_count == 10 && service_dialog_state == 1){
+        @syscall(0,0x15,2,object_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
+        show_npc_dialog_mode_0(param_1,"02_80152");
+        @syscall(0,0x15,0,global_manager,"fTalkFuwarideService",2);
+    }
+
+    @syscall(0,0x15,2,object_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
+
+    int berry_cost = 0;
+    if(service_count >= 0){
+        if(service_count < 3){
+            set_berry_counter_visible(true);
+            show_npc_dialog_mode_0(param_1,"02_80110");
+            berry_cost = 20;
+        }
+        else if(service_count < 10){
+            set_berry_counter_visible(true);
+            show_npc_dialog_mode_0(param_1,"02_80111");
+            berry_cost = 10;
+        }
+        else{
+            show_npc_dialog_mode_0(param_1,"02_80112");
+        }
+    }
+    else{
+        show_npc_dialog_mode_0(param_1,"02_80112");
+    }
+
+    @syscall(0,0x15,2,object_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
+    int berry_count = @syscall(0,0x15,0x15,global_manager);
+    if(berry_count < berry_cost){
+        show_npc_dialog_mode_0(param_1,"02_80120");
+        set_berry_counter_visible(false);
+        rotate_object(object_id,0,0x83,0);
+    }
+    else{
+        choose_fast_travel_destination(param_1,object_id,0x15);
+        int destination = @syscall(0,0x15,1,global_manager,"rfFuwarideTaxi");
+
+        @syscall(0,0x15,2,object_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
+        if(destination == 99){
+            show_npc_dialog_mode_0(param_1,"02_80140");
+            set_berry_counter_visible(false);
+            rotate_object(object_id,0,0x83,0);
+        }
+        else{
+            @syscall(0,0x15,0x14,global_manager,-berry_cost);
+            show_npc_dialog_mode_0(param_1,"02_80150");
+            set_berry_counter_visible(false);
+            @syscall(0,0x15,0,global_manager,"fFuwarideService",service_count + 1);
+            drop_held_item_animation();
+            fade_out_audio(30,false,false,false);
+            @syscall(0,0x15,4,event_script,2,1);
+        }
+    }
+
+    end_event_script(param_1);
+}
+
+void check_location(int object_id){
+    set_bestfriend(object_id);
 }
