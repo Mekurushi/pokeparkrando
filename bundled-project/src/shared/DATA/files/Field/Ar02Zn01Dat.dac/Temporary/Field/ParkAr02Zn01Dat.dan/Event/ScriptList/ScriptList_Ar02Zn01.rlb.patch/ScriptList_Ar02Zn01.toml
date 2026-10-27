@@ -1,0 +1,35 @@
+[[removes]]
+table = "EnterZoneScriptList"
+row = 0
+
+[[removes]]
+table = "EnterZoneScriptList"
+row = 1
+
+[[removes]]
+table = "EnterZoneScriptList"
+row = 2
+
+[[removes]]
+table = "EnterZoneScriptList"
+row = 3
+
+[[removes]]
+table = "EnterZoneScriptList"
+row = 4
+
+[[removes]]
+table = "EnterZoneScriptList"
+row = 5
+
+[[removes]]
+table = "TouchAreaScriptList"
+row = 5
+
+[[removes]]
+table = "TouchAreaScriptList"
+row = 6
+
+[[removes]]
+table = "TouchAreaScriptList"
+row = 7

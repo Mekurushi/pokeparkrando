@@ -83,6 +83,15 @@ targets = [
     "DATA/files/Field/Ar02Zn01Dat_Sp.dac/Gimmick/GkDatArc.dan",
 ]
 
+[[games.R8AP01.source-mounts]]
+source = "DATA/files/Field/Ar02Zn01Dat.dac/Temporary/Field/ParkAr02Zn01Dat.dan"
+targets = [
+    "DATA/files/Field/Ar02Zn01Dat_Fr.dac/Temporary/Field/ParkAr02Zn01Dat_Fr.dan",
+    "DATA/files/Field/Ar02Zn01Dat_Ge.dac/Temporary/Field/ParkAr02Zn01Dat_Ge.dan",
+    "DATA/files/Field/Ar02Zn01Dat_It.dac/Temporary/Field/ParkAr02Zn01Dat_It.dan",
+    "DATA/files/Field/Ar02Zn01Dat_Sp.dac/Temporary/Field/ParkAr02Zn01Dat_Sp.dan",
+]
+
 # If patches to rlbs inside of the lobbies/attractions are coming then this needs to be reduced to the scripts
 
 [[games.R8AP01.source-mounts]]
