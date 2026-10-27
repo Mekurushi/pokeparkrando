@@ -1,6 +1,7 @@
 extern int get_module(string name);
 extern int collect_most_completed_attraction_ids(int[16]& attraction_ids);
 extern int run_selection_dialog(int pokemon_id, int dialog_mode, string dialog_id);
+extern void run_chikorita_quiz(int param_1);
 extern int show_yes_no_question(int param_1, string dialog_id);
 extern void configure_npc(int object_id);
 extern void friendship_banner(string message_id);
@@ -998,6 +999,21 @@ void burmy_dialog(int param_1){
 		show_npc_dialog(param_1,"21_60980");
 	}
 
+	end_event_script(param_1);
+}
+
+void chikorita_dialog(int param_1){
+	lock_player_and_get_accessor();
+	const int object_id = 0x50;
+	int object_accessor = lock_npc_and_get_accessor(object_id);
+
+	face_player_and_npc(object_id,0);
+	@syscall(0,0x15,2,object_accessor,0x1b,10);
+	@syscall(0,0x15,0x28,object_accessor,0x13dc,0,1.0,1.0);
+
+	show_npc_dialog(param_1,"21_11190");
+	run_chikorita_quiz(param_1);
+	rotate_object(object_id,0,0x2f,0);
 	end_event_script(param_1);
 }
 
