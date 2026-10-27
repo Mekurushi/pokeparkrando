@@ -1,9 +1,13 @@
 extern int get_module(string name);
+extern int collect_most_completed_attraction_ids(int[16]& attraction_ids);
+extern int run_selection_dialog(int pokemon_id, int dialog_mode, string dialog_id);
+extern void friendship_banner(string message_id);
 extern void despawn(int obj_id);
 extern void drop_held_item_animation();
 extern void end_event_script(int param_1);
 extern void fade_out_audio(int frames, bool fade_channel_6, bool fade_channel_8, bool fade_channel_7);
 extern void face_player_and_npc(int object_id, int param_2);
+extern void face_player_towards_object_synchronously(int object_id, int param_2);
 extern int lock_npc_and_get_accessor(int obj_id);
 extern int lock_player_and_get_accessor();
 extern void open_gate(int gate_id, int state);
@@ -76,6 +80,17 @@ extern void show_message_box(int mode, string message_id);
 extern void show_npc_dialog(int param_1, string dialog_id);
 extern void show_npc_dialog_mode_0(int param_1, string dialog_id);
 extern void wait_frames(int frames);
+
+extern int collect_meadow_zone_friendship_left_count();
+extern int collect_beach_zone_friendship_left_count();
+extern int collect_ice_zone_friendship_left_count();
+extern int collect_cavern_zone_friendship_left_count();
+extern int collect_magma_zone_friendship_left_count();
+extern int collect_haunted_zone_friendship_left_count();
+extern int collect_granite_zone_friendship_left_count();
+extern int collect_flower_zone_friendship_left_count();
+
+extern static int[16] most_completed_attraction_ids;
 
 
 void update_gate_states(){
@@ -559,6 +574,278 @@ void drifblim_dialog(int param_1){
     end_event_script(param_1);
 }
 
+void mime_jr_dialog(int param_1){
+    lock_player_and_get_accessor();
+    int global_manager = get_module("GlobalManager");
+    int field_info = get_module("mnFieldInfo");
+    const int object_id = 0x45;
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    int pokemon_id = @syscall(0,0x15,0x19,object_accessor);
+
+    face_player_and_npc(object_id,0);
+    @syscall(0,0x15,0x28,object_accessor,0x941,0,1.0,1.0);
+
+    if(is_location_checked(object_id) == false){
+        show_npc_dialog(param_1,"21_60541");
+        friendship_banner("21_00150");
+        check_location(object_id);
+    }
+
+    show_npc_dialog(param_1,"21_60540");
+    @syscall(0,0x15,0x28,field_info,1);
+    @syscall(0,0x15,0x29,field_info,"21_60580");
+    @syscall(0,0x15,0x29,field_info,"21_60590");
+    @syscall(0,0x15,0x29,field_info,"21_60600");
+    @syscall(0,0x15,0x29,field_info,"21_60610");
+    @syscall(0,0x15,0x29,field_info,"21_60620");
+    @syscall(0,0x15,0x29,field_info,"21_60560");
+
+    int selection = run_selection_dialog(pokemon_id,1,"21_60550");
+    if(selection == 0){
+        int attraction_played_count = @syscall(0,0x15,0x64,global_manager);
+        if(attraction_played_count < 60000){
+            @syscall(0,0x15,0xe,field_info,0,attraction_played_count);
+            show_npc_dialog(param_1,"21_60640");
+        }
+        else{
+            show_npc_dialog(param_1,"21_60641");
+        }
+    }
+    else if(selection == 1){
+        int most_completed_attraction_id_count = collect_most_completed_attraction_ids(&most_completed_attraction_ids);
+        int most_completed_attraction_id = 0;
+        if(most_completed_attraction_id_count != 0){
+            most_completed_attraction_id = most_completed_attraction_ids[0];
+        }
+
+        string dialog_id = "21_60650";
+        if(most_completed_attraction_id == 1){
+            dialog_id = "21_60651";
+        }
+        else if(most_completed_attraction_id == 2){
+            dialog_id = "21_60652";
+        }
+        else if(most_completed_attraction_id == 3){
+            dialog_id = "21_60653";
+        }
+        else if(most_completed_attraction_id == 4){
+            dialog_id = "21_60654";
+        }
+        else if(most_completed_attraction_id == 5){
+            dialog_id = "21_60655";
+        }
+        else if(most_completed_attraction_id == 6){
+            dialog_id = "21_60656";
+        }
+        else if(most_completed_attraction_id == 8){
+            dialog_id = "21_60657";
+        }
+        else if(most_completed_attraction_id == 9){
+            dialog_id = "21_60658";
+        }
+        else if(most_completed_attraction_id == 10){
+            dialog_id = "21_60659";
+        }
+        else if(most_completed_attraction_id == 0xb){
+            dialog_id = "21_60660";
+        }
+        else if(most_completed_attraction_id == 0xc){
+            dialog_id = "21_60661";
+        }
+        else if(most_completed_attraction_id == 0xe){
+            dialog_id = "21_60662";
+        }
+        else if(most_completed_attraction_id == 0xf){
+            dialog_id = "21_60663";
+        }
+        show_npc_dialog(param_1,dialog_id);
+    }
+    else if(selection == 2){
+        int power_comp_count = @syscall(0,0x15,0x8f,global_manager);
+        if(power_comp_count < 60000){
+            @syscall(0,0x15,0xe,field_info,0,power_comp_count);
+            show_npc_dialog(param_1,"21_60665");
+        }
+        else{
+            show_npc_dialog(param_1,"21_60666");
+        }
+    }
+    else if(selection == 3){
+        int power_comp_count = @syscall(0,0x15,0x8f,global_manager);
+        int won_power_comp_count = @syscall(0,0x15,0x92,global_manager);
+        int power_comp_win_percentage = won_power_comp_count * 100 / power_comp_count;
+        @syscall(0,0x15,0xe,field_info,0,power_comp_win_percentage);
+        show_npc_dialog(param_1,"21_60670");
+    }
+    else if(selection == 4){
+        int berry_count = @syscall(0,0x15,0x1a,global_manager);
+        if(berry_count < 60000){
+            @syscall(0,0x15,0xe,field_info,0,berry_count);
+            show_npc_dialog(param_1,"21_60680");
+        }
+        else{
+            show_npc_dialog(param_1,"21_60681");
+        }
+    }
+    else if(selection == 5){
+        show_npc_dialog(param_1,"21_60621");
+    }
+    
+    rotate_object(object_id,0,0x18,0);
+    end_event_script(param_1);
+}
+
+void abra_dialog(int param_1){
+    lock_player_and_get_accessor();
+    int event_script = get_module("EventScript");
+    int field_info = get_module("mnFieldInfo");
+    const int object_id = 0x49;
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    int pokemon_id = @syscall(0,0x15,0x19,object_accessor);
+
+    face_player_towards_object_synchronously(object_id,1);
+    @syscall(0,0x15,0xd7,event_script,object_id);
+    @syscall(0,0x15,0x28,object_accessor,0xeb4,0,1.0,1.0);
+
+    if(is_location_checked(object_id) == false){
+        show_npc_dialog(param_1,"21_60992");
+        friendship_banner("21_00160");
+        check_location(object_id);
+    }
+
+    show_npc_dialog(param_1,"21_60990");
+    int friendship_left_total = collect_meadow_zone_friendship_left_count();
+    friendship_left_total = friendship_left_total + collect_beach_zone_friendship_left_count();
+    friendship_left_total = friendship_left_total + collect_ice_zone_friendship_left_count();
+    friendship_left_total = friendship_left_total + collect_cavern_zone_friendship_left_count();
+    friendship_left_total = friendship_left_total + collect_magma_zone_friendship_left_count();
+    friendship_left_total = friendship_left_total + collect_haunted_zone_friendship_left_count();
+    friendship_left_total = friendship_left_total + collect_granite_zone_friendship_left_count();
+    friendship_left_total = friendship_left_total + collect_flower_zone_friendship_left_count();
+    if(friendship_left_total == 0){
+        show_npc_dialog(param_1,"21_60991");
+        end_event_script(param_1);
+    }
+
+    @syscall(0,0x15,0x28,field_info,1);
+    @syscall(0,0x15,0x29,field_info,"21_61010");
+    @syscall(0,0x15,0x29,field_info,"21_61020");
+    @syscall(0,0x15,0x29,field_info,"21_61030");
+    @syscall(0,0x15,0x29,field_info,"21_61040");
+    @syscall(0,0x15,0x29,field_info,"21_61050");
+    @syscall(0,0x15,0x29,field_info,"21_61070");
+    @syscall(0,0x15,0x29,field_info,"21_61080");
+    @syscall(0,0x15,0x29,field_info,"21_61090");
+    @syscall(0,0x15,0x29,field_info,"21_61100");
+
+    int selection = run_selection_dialog(pokemon_id,1,"21_61000");
+
+    @syscall(0,0x15,0x28,object_accessor,0xeb4,0,1.0,1.0);
+    if(selection == 8){
+        @syscall(0,0x15,2,object_accessor,0xb,10);
+        show_npc_dialog(param_1,"21_61200");
+    }
+    else{
+        @syscall(0,0x15,2,object_accessor,0x1d,10);
+        show_npc_dialog(param_1,"21_61110");
+        @syscall(0,0x15,0x28,object_accessor,0xeb4,0,1.0,1.0);
+        if(selection == 0){
+			int meadow_friendship_left_count = collect_meadow_zone_friendship_left_count();
+			if(meadow_friendship_left_count == 0){
+				show_npc_dialog(param_1,"21_61121");
+			}
+			else{
+				@syscall(0,0x15,0xe,field_info,0,meadow_friendship_left_count);
+				show_npc_dialog(param_1,"21_61120");
+			}
+        }
+        else if(selection == 1){
+			int beach_friendship_left_count = collect_beach_zone_friendship_left_count();
+			if(beach_friendship_left_count == 0){
+				show_npc_dialog(param_1,"21_61131");
+			}
+			else{
+				@syscall(0,0x15,0xe,field_info,0,beach_friendship_left_count);
+				show_npc_dialog(param_1,"21_61130");
+			}
+        }
+        else if(selection == 2){
+			int ice_friendship_left_count = collect_ice_zone_friendship_left_count();
+			if(ice_friendship_left_count == 0){
+				show_npc_dialog(param_1,"21_61141");
+			}
+			else{
+				@syscall(0,0x15,0xe,field_info,0,ice_friendship_left_count);
+				show_npc_dialog(param_1,"21_61140");
+			}
+        }
+        else if(selection == 3){
+			int cavern_friendship_left_count = collect_cavern_zone_friendship_left_count();
+			if(cavern_friendship_left_count == 0){
+				show_npc_dialog(param_1,"21_61151");
+			}
+			else{
+				@syscall(0,0x15,0xe,field_info,0,cavern_friendship_left_count);
+				show_npc_dialog(param_1,"21_61150");
+			}
+        }
+        else if(selection == 4){
+			int magma_friendship_left_count = collect_magma_zone_friendship_left_count();
+			if(magma_friendship_left_count == 0){
+				show_npc_dialog(param_1,"21_61161");
+			}
+			else{
+				@syscall(0,0x15,0xe,field_info,0,magma_friendship_left_count);
+				show_npc_dialog(param_1,"21_61160");
+			}
+        }
+        else if(selection == 5){
+			int haunted_friendship_left_count = collect_haunted_zone_friendship_left_count();
+			if(haunted_friendship_left_count == 0){
+				show_npc_dialog(param_1,"21_61171");
+			}
+			else{
+				@syscall(0,0x15,0xe,field_info,0,haunted_friendship_left_count);
+				show_npc_dialog(param_1,"21_61170");
+			}
+        }
+        else if(selection == 6){
+			int granite_friendship_left_count = collect_granite_zone_friendship_left_count();
+			if(granite_friendship_left_count == 0){
+				show_npc_dialog(param_1,"21_61181");
+			}
+			else{
+				@syscall(0,0x15,0xe,field_info,0,granite_friendship_left_count);
+				show_npc_dialog(param_1,"21_61180");
+			}
+        }
+        else if(selection == 7){
+			int flower_friendship_left_count = collect_flower_zone_friendship_left_count();
+			if(flower_friendship_left_count == 0){
+				show_npc_dialog(param_1,"21_61191");
+			}
+			else{
+				@syscall(0,0x15,0xe,field_info,0,flower_friendship_left_count);
+				show_npc_dialog(param_1,"21_61190");
+			}
+        }
+    }
+
+    end_event_script(param_1);
+}
+
 void check_location(int object_id){
     set_bestfriend(object_id);
+}
+
+bool is_location_checked(int obj_id){
+    return is_bestfriend(obj_id);
+}
+
+bool is_bestfriend(int obj_id){
+    int global_manager = get_module("GlobalManager");
+    int disp_manager = get_module("DisposManager");
+    int friend_id = @syscall(0,0x15,0xe,disp_manager,obj_id);
+    int is_best_friend = @syscall(0,0x15,0x4b,global_manager,friend_id);
+    return is_best_friend == 1;
 }

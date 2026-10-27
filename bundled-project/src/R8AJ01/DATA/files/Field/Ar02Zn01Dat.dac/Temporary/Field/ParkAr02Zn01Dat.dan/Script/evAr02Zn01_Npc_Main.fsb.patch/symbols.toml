@@ -2,6 +2,8 @@ base_address = 0x50000
 
 [functions]
 get_module = 0x50044
+collect_most_completed_attraction_ids = 0x50a60
+run_selection_dialog = 0x50c40
 end_event_script = 0x50080
 wait_frames = 0x500bc
 lock_player_and_get_accessor = 0x50fb0
@@ -12,8 +14,10 @@ fade_out_audio = 0x516b0
 show_npc_dialog = 0x51f9c
 show_npc_dialog_mode_0 = 0x52008
 face_player_and_npc = 0x521f8
+face_player_towards_object_synchronously = 0x533ac
 rotate_object = 0x537c8
 drop_held_item_animation = 0x540a4
+friendship_banner = 0x54c90
 despawn = 0x5461c
 set_bestfriend = 0x54948
 set_berry_counter_visible = 0x5751c
@@ -32,3 +36,16 @@ ponyta_dialog = 0x66264
 bibarel_dialog = 0x6665c
 primeape_dialog = 0x669b0
 drifblim_dialog = 0x66e08
+mime_jr_dialog = 0x63f64
+abra_dialog = 0x645e4
+collect_meadow_zone_friendship_left_count = 0x5da04
+collect_beach_zone_friendship_left_count = 0x5de00
+collect_ice_zone_friendship_left_count = 0x5e1bc
+collect_cavern_zone_friendship_left_count = 0x5e558
+collect_magma_zone_friendship_left_count = 0x5e8d4
+collect_haunted_zone_friendship_left_count = 0x5ec50
+collect_granite_zone_friendship_left_count = 0x5f0ac
+collect_flower_zone_friendship_left_count = 0x5f408
+
+[data]
+most_completed_attraction_ids = 0x63f24
