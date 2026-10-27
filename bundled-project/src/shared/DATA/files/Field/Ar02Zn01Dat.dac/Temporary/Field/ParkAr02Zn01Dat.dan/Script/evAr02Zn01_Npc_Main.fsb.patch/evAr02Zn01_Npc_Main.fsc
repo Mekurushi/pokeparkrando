@@ -932,6 +932,23 @@ void piplup_dialog(int param_1){
 	end_event_script(param_1);
 }
 
+void update_balloon_visibility(){
+	int object_manager = get_module("ObjectManager");
+	int unfinished_balloon_id = @syscall(0,0x15,4,object_manager,0x4e26);
+	int unfinished_balloon = @syscall(0,0x15,1,object_manager,unfinished_balloon_id);
+	int completed_balloon_id = @syscall(0,0x15,4,object_manager,0x4e27);
+	int completed_balloon = @syscall(0,0x15,1,object_manager,completed_balloon_id);
+
+	int prisma_amount = get_prisma_amount();
+	if(prisma_amount >= SKYGARDEN_PRISMA_COUNT){
+		@syscall(0,0x15,0x1a,unfinished_balloon);
+	}
+	else{
+		@syscall(0,0x15,0x1a,unfinished_balloon);
+		@syscall(0,0x15,0x1a,completed_balloon);
+	}
+}
+
 int get_prisma_amount(){
 	int global_manager = get_module("GlobalManager");
 	int prisma_amount = 0;

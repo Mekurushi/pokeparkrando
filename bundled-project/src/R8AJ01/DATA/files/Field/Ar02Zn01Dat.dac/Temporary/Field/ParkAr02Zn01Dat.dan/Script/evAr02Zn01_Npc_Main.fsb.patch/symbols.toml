@@ -51,6 +51,7 @@ piplup_dialog = 0x65960
 show_yes_no_question = 0x54d4c
 configure_npc = 0x545b0
 despawn_field = 0x512e8
+update_balloon_visibility = 0x5bff4
 
 [data]
 most_completed_attraction_ids = 0x63f24
