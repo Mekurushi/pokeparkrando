@@ -46,6 +46,7 @@ collect_magma_zone_friendship_left_count = 0x5ed7c
 collect_haunted_zone_friendship_left_count = 0x5f0f8
 collect_granite_zone_friendship_left_count = 0x5f554
 collect_flower_zone_friendship_left_count = 0x5f8f0
+burmy_dialog = 0x65448
 
 [data]
 most_completed_attraction_ids = 0x64418

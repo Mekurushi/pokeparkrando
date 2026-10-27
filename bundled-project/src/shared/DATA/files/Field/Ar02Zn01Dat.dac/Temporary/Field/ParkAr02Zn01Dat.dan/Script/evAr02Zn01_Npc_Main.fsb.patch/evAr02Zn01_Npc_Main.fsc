@@ -691,7 +691,7 @@ void mime_jr_dialog(int param_1){
         show_npc_dialog(param_1,"21_60621");
     }
     
-    rotate_object(object_id,0,0x18,0);
+	rotate_object(object_id,0,0xdc,0);
     end_event_script(param_1);
 }
 
@@ -832,6 +832,62 @@ void abra_dialog(int param_1){
     }
 
     end_event_script(param_1);
+}
+
+void burmy_dialog(int param_1){
+	lock_player_and_get_accessor();
+	int event_script = get_module("EventScript");
+	int global_manager = get_module("GlobalManager");
+	int field_info = get_module("mnFieldInfo");
+	const int object_id = 0x4b;
+	int object_accessor = lock_npc_and_get_accessor(object_id);
+	int unk_1 = @syscall(0,0x15,0x19,object_accessor);
+
+	face_player_towards_object_synchronously(object_id,1);
+	@syscall(0,0x15,0xd7,event_script,object_id);
+	@syscall(0,0x15,0x28,object_accessor,0x1076,0,1.0,1.0);
+
+	if(is_location_checked(object_id) == false){
+		show_npc_dialog(param_1,"21_60831");
+		friendship_banner("21_00140");
+		check_location(object_id);
+	}
+
+	show_npc_dialog(param_1,"21_60830");
+	@syscall(0,0x15,0x28,field_info,1);
+	@syscall(0,0x15,0x29,field_info,"21_60850");
+	@syscall(0,0x15,0x29,field_info,"21_60860");
+	@syscall(0,0x15,0x29,field_info,"21_60870");
+	@syscall(0,0x15,0x29,field_info,"21_60880");
+	@syscall(0,0x15,0x29,field_info,"21_60890");
+	@syscall(0,0x15,0x29,field_info,"21_60900");
+	@syscall(0,0x15,0x29,field_info,"21_60910");
+
+	int selection = run_selection_dialog(unk_1,1,"21_60840");
+
+	if(selection == 0){
+		show_npc_dialog(param_1,"21_60920");
+	}
+	else if(selection == 1){
+		show_npc_dialog(param_1,"21_60930");
+	}
+	else if(selection == 2){
+		show_npc_dialog(param_1,"21_60940");
+	}
+	else if(selection == 3){
+		show_npc_dialog(param_1,"21_60950");
+	}
+	else if(selection == 4){
+		show_npc_dialog(param_1,"21_60960");
+	}
+	else if(selection == 5){
+		show_npc_dialog(param_1,"21_60970");
+	}
+	else if(selection == 6){
+		show_npc_dialog(param_1,"21_60980");
+	}
+
+	end_event_script(param_1);
 }
 
 void check_location(int object_id){
