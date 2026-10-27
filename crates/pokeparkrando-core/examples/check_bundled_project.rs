@@ -50,6 +50,18 @@ fn build_config() -> BuildConfig {
             BuildConfigValue::Integer(14),
         ),
         (
+            "TREEHOUSE_PIPLUP_SKYBALLOON_ZONE".into(),
+            BuildConfigValue::Integer(7),
+        ),
+        (
+            "TREEHOUSE_PIPLUP_SKYBALLOON_AREA".into(),
+            BuildConfigValue::Integer(1),
+        ),
+        (
+            "TREEHOUSE_PIPLUP_SKYBALLOON_POSITION".into(),
+            BuildConfigValue::Integer(0),
+        ),
+        (
             "PLAYER_NAME".into(),
             BuildConfigValue::String("Player1".into()),
         ),

@@ -9,6 +9,7 @@ extern void despawn_field();
 extern void drop_held_item_animation();
 extern void end_event_script(int param_1);
 extern void fade_out_audio(int frames, bool fade_channel_6, bool fade_channel_8, bool fade_channel_7);
+extern void fade_out_sound(int sound_id);
 extern void face_player_and_npc(int object_id, int param_2);
 extern void face_player_towards_object_synchronously(int object_id, int param_2);
 extern int lock_npc_and_get_accessor(int obj_id);
@@ -83,6 +84,7 @@ extern void show_message_box(int mode, string message_id);
 extern void show_npc_dialog(int param_1, string dialog_id);
 extern void show_npc_dialog_mode_0(int param_1, string dialog_id);
 extern void wait_frames(int frames);
+extern void travel_to(int zone, int area, int position);
 
 extern int collect_meadow_zone_friendship_left_count();
 extern int collect_beach_zone_friendship_left_count();
@@ -96,6 +98,9 @@ extern int collect_flower_zone_friendship_left_count();
 extern static int[16] most_completed_attraction_ids;
 
 config int SKYGARDEN_PRISMA_COUNT;
+config int TREEHOUSE_PIPLUP_SKYBALLOON_ZONE;
+config int TREEHOUSE_PIPLUP_SKYBALLOON_AREA;
+config int TREEHOUSE_PIPLUP_SKYBALLOON_POSITION;
 
 
 void update_gate_states(){
@@ -930,6 +935,20 @@ void piplup_dialog(int param_1){
 	}
 
 	end_event_script(param_1);
+}
+
+void EBALLOONAREA(int param_1){
+	int sound_manager = get_module("SoundManager");
+	fade_out_sound(0xf);
+	@syscall(0,0x15,0x16,sound_manager,2,1.0);
+	@syscall(0,0x15,0x16,sound_manager,0xc,1.0);
+	@syscall(0,0x15,0x16,sound_manager,6,1.0);
+	@syscall(0,0x15,0x16,sound_manager,7,1.0);
+	travel_to(
+		TREEHOUSE_PIPLUP_SKYBALLOON_ZONE,
+		TREEHOUSE_PIPLUP_SKYBALLOON_AREA,
+		TREEHOUSE_PIPLUP_SKYBALLOON_POSITION
+	);
 }
 
 void update_balloon_visibility(){
