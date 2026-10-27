@@ -47,6 +47,10 @@ collect_haunted_zone_friendship_left_count = 0x5ec50
 collect_granite_zone_friendship_left_count = 0x5f0ac
 collect_flower_zone_friendship_left_count = 0x5f408
 burmy_dialog = 0x64f54
+piplup_dialog = 0x65960
+show_yes_no_question = 0x54d4c
+configure_npc = 0x545b0
+despawn_field = 0x512e8
 
 [data]
 most_completed_attraction_ids = 0x63f24

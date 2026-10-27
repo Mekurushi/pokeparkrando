@@ -46,6 +46,10 @@ fn build_config() -> BuildConfig {
     BuildConfig::from_iter([
         ("BATTLE_COUNT".into(), BuildConfigValue::Integer(5)),
         (
+            "SKYGARDEN_PRISMA_COUNT".into(),
+            BuildConfigValue::Integer(14),
+        ),
+        (
             "PLAYER_NAME".into(),
             BuildConfigValue::String("Player1".into()),
         ),

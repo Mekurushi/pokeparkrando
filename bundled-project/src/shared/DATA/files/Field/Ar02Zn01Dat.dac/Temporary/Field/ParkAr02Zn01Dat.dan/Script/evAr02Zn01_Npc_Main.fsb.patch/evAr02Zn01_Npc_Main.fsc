@@ -1,8 +1,11 @@
 extern int get_module(string name);
 extern int collect_most_completed_attraction_ids(int[16]& attraction_ids);
 extern int run_selection_dialog(int pokemon_id, int dialog_mode, string dialog_id);
+extern int show_yes_no_question(int param_1, string dialog_id);
+extern void configure_npc(int object_id);
 extern void friendship_banner(string message_id);
 extern void despawn(int obj_id);
+extern void despawn_field();
 extern void drop_held_item_animation();
 extern void end_event_script(int param_1);
 extern void fade_out_audio(int frames, bool fade_channel_6, bool fade_channel_8, bool fade_channel_7);
@@ -91,6 +94,8 @@ extern int collect_granite_zone_friendship_left_count();
 extern int collect_flower_zone_friendship_left_count();
 
 extern static int[16] most_completed_attraction_ids;
+
+config int SKYGARDEN_PRISMA_COUNT;
 
 
 void update_gate_states(){
@@ -888,6 +893,63 @@ void burmy_dialog(int param_1){
 	}
 
 	end_event_script(param_1);
+}
+
+void piplup_dialog(int param_1){
+	lock_player_and_get_accessor();
+	int event_script = get_module("EventScript");
+	const int object_id = 0x52;
+	int object_accessor = lock_npc_and_get_accessor(object_id);
+
+	face_player_and_npc(object_id,0);
+	@syscall(0,0x15,2,object_accessor,0x1b,10);
+	@syscall(0,0x15,0x28,object_accessor,0x98c,0,1.0,1.0);
+
+	int prisma_amount = get_prisma_amount();
+	if(prisma_amount >= SKYGARDEN_PRISMA_COUNT){
+		show_npc_dialog(param_1,"21_60180");
+		int response = show_yes_no_question(param_1,"21_80050");
+
+		@syscall(0,0x15,2,object_accessor,0x1b,10);
+		@syscall(0,0x15,0x28,object_accessor,0x98c,0,1.0,1.0);
+		if(response == 0){
+			show_npc_dialog(param_1,"21_80060");
+		}
+		else{
+			show_npc_dialog(param_1,"21_80070");
+			fade_out_audio(30,true,true,true);
+			despawn_field();
+			configure_npc(0x52);
+			configure_npc(0x44);
+			configure_npc(0x50);
+			@syscall(0,0x15,4,event_script,0,1);
+		}
+	}
+	else{
+		show_npc_dialog(param_1,"21_60171");
+	}
+
+	end_event_script(param_1);
+}
+
+int get_prisma_amount(){
+	int global_manager = get_module("GlobalManager");
+	int prisma_amount = 0;
+	prisma_amount = prisma_amount + @syscall(0,0x15,0x51,global_manager,0);
+	prisma_amount = prisma_amount + @syscall(0,0x15,0x51,global_manager,1);
+	prisma_amount = prisma_amount + @syscall(0,0x15,0x51,global_manager,2);
+	prisma_amount = prisma_amount + @syscall(0,0x15,0x51,global_manager,3);
+	prisma_amount = prisma_amount + @syscall(0,0x15,0x51,global_manager,4);
+	prisma_amount = prisma_amount + @syscall(0,0x15,0x51,global_manager,5);
+	prisma_amount = prisma_amount + @syscall(0,0x15,0x51,global_manager,6);
+	prisma_amount = prisma_amount + @syscall(0,0x15,0x51,global_manager,8);
+	prisma_amount = prisma_amount + @syscall(0,0x15,0x51,global_manager,9);
+	prisma_amount = prisma_amount + @syscall(0,0x15,0x51,global_manager,0xa);
+	prisma_amount = prisma_amount + @syscall(0,0x15,0x51,global_manager,0xb);
+	prisma_amount = prisma_amount + @syscall(0,0x15,0x51,global_manager,0xc);
+	prisma_amount = prisma_amount + @syscall(0,0x15,0x51,global_manager,0xe);
+	prisma_amount = prisma_amount + @syscall(0,0x15,0x51,global_manager,0xf);
+	return prisma_amount;
 }
 
 void check_location(int object_id){
