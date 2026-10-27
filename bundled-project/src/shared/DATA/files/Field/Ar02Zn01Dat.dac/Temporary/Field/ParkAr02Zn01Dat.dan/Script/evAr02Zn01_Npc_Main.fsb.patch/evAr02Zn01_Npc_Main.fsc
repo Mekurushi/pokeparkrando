@@ -161,7 +161,7 @@ void A02_Z01_INIT(int param_1){
 	update_npc_story_state(param_1);
 	SETGIMMICK(param_1);
 
-	show_piplup_unlock_scene(param_1);
+	show_treehouse_unlock_scenes(param_1);
 	fade_in(0,0,0,0x1e);
 	clear_wand_check();
 	end_event_script(param_1);
@@ -196,7 +196,6 @@ void update_treehouse_spawns(int unk){
     int global_manager = get_module("GlobalManager");
 
     if(@syscall(0,0x15,0x51,global_manager,8) != 1){
-        despawn(0x3f);
         despawn(0x57);
     }
 
@@ -213,7 +212,6 @@ void update_treehouse_spawns_2(int unk){
     int global_manager = get_module("GlobalManager");
 
     if(@syscall(0,0x15,0x51,global_manager,8) != 1){
-        despawn(0x3f);
         despawn(0x57);
     }
 
@@ -231,22 +229,35 @@ void update_treehouse_spawns_2(int unk){
     }
 }
 
-void show_piplup_unlock_scene(int param_1){
+void show_treehouse_unlock_scenes(int param_1){
+    // TODO: create new text for this
 	int global_manager = get_module("GlobalManager");
-	int unlock_scene_played = @syscall(
-		0,0x15,1,global_manager,"f0201PiplupPrismaUnlockScene"
-	);
 
-	if(
-		get_prisma_amount() >= SKYGARDEN_PRISMA_COUNT &&
-		unlock_scene_played == 0
-	){
-		@syscall(
-			0,0x15,0,global_manager,"f0201PiplupPrismaUnlockScene",1
-		);
-        // TODO: create new text for this
+    // piplup
+	if(get_prisma_amount() >= SKYGARDEN_PRISMA_COUNT){
 		show_unlock_cutscene_at_current_position(
 			param_1,0x52,"21_60180",10,0
+		);
+	}
+
+    // ponyta
+	if(@syscall(0,0x15,0x51,global_manager,6) == 1){
+		show_unlock_cutscene_at_current_position(
+			param_1,0x55,"21_60401",10,0
+		);
+	}
+
+    // bibarel
+	if(@syscall(0,0x15,0x51,global_manager,2) == 1){
+		show_unlock_cutscene_at_current_position(
+			param_1,0x56,"21_60430",10,0
+		);
+	}
+
+    // primeape
+	if(@syscall(0,0x15,0x51,global_manager,8) == 1){
+		show_unlock_cutscene_at_current_position(
+			param_1,0x57,"21_60700",10,0
 		);
 	}
 }

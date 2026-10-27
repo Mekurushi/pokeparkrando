@@ -41,9 +41,4 @@ row = 200
 flag_name = { value = "f0101BattleCounterNum" }
 bit_width = { value = 4 }
 
-[[appends]]
-table = "FlagTable"
-[appends.row]
-flag_name = { value = "f0201PiplupPrismaUnlockScene" }
-bit_width = { value = 1 }
 
