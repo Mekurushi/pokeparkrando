@@ -1,0 +1,425 @@
+extern int get_module(string name);
+extern int lock_npc_and_get_accessor(int object_id);
+extern int show_yes_no_question(int param_1, string dialog_id);
+extern int get_object_accessor(int param_1, int object_id, bool use_provided_object_id);
+extern void fade_in(int red, int green, int blue, int frames);
+extern void show_npc_dialog(int param_1, string dialog_id);
+extern void give_berries(int value);
+extern void complete_event();
+extern int lock_player_and_get_accessor();
+extern void face_player_and_npc(int object_id, int param_2);
+extern void end_event_script(int param_1);
+extern void friendship_banner(string banner_id);
+extern void set_bestfriend(int object_id);
+extern int get_held_item_kind();
+extern void remove_held_item();
+extern void store_pre_competition_state();
+extern int get_player_accessor();
+extern void drop_held_item_animation();
+extern void wait_frames(int frames);
+extern int run_power_competition(int player_object_id, int enemy_object_id);
+extern void despawn_player_object();
+extern void spawn_player_object();
+extern void respawn_field();
+extern void face_object_accessors_instantly(int player_accessor, int object_accessor, int immediate);
+extern void restore_pre_competition_state(int object_id);
+extern void special_spawn_condition(int param_1);
+extern void setup_player_for_zone();
+extern void cleanup_debug_object(int object_id);
+extern void update_npc_story_state(int param_1);
+extern void SETITEMS(int param_1);
+extern void clear_wand_check();
+extern int has_wand_check();
+extern void fade_out(int red, int green, int blue, int frames);
+extern void show_unlock_cutscene_at_position(int param_1, int object_id, string dialog_id, int camera_preset, int param_5, float x, float y, float z);
+extern void fade_in_bgm(int frames);
+
+config int BATTLE_COUNT;
+
+void A03_Z01_INIT(int param_1){
+
+    int event_script = get_module("EventScript");
+    @syscall(0,0x15,0x65,event_script,0,0,0,1);
+    setup_field(param_1);
+    SETITEMS(param_1);
+    fade_in(0,0,0,0x1e);
+    clear_wand_check();
+    end_event_script(param_1);
+    return;
+}
+
+void AR03ZN01_DEF(int param_1){
+
+    setup_field(param_1);
+    fade_in(0,0,0,0x1e);
+    clear_wand_check();
+    end_event_script(param_1);
+    return;
+}
+
+void do_unlock_scenes(int param_1){
+    int global_manager = get_module("GlobalManager");
+    if(has_wand_check() == 1){
+        fade_out(0,0,0,0x3c);
+    }
+
+    // Krabby
+    if(@syscall(0,0x15,0x29,global_manager,0x31) == 1){
+        show_unlock_cutscene_at_position(param_1,0x75,"31_00220",0,0,628.6,-39.0,467.6);
+    }
+
+    // Totodile
+    if(@syscall(0,0x15,0x29,global_manager,0x32) == 1){
+        show_unlock_cutscene_at_position(param_1,0x76,"31_00230",10,0,628.6,-39.0,467.6);
+    }
+
+    // Mudkip
+    if(@syscall(0,0x15,0x29,global_manager,0x33) == 1){
+        show_unlock_cutscene_at_position(param_1,0x77,"31_00240",0,0,628.6,-39.0,467.6);
+    }
+
+    // Corphish
+    if(@syscall(0,0x15,0x29,global_manager,0x34) == 1){
+        show_unlock_cutscene_at_position(param_1,0x78,"31_00250",10,0,171.6,-44.0,1485.3);
+    }
+
+    // Golduck
+    if(@syscall(0,0x15,0x29,global_manager,0x39) == 1){
+        show_unlock_cutscene_at_position(param_1,0x7f,"31_00310",20,0,-450.0,-42.0,937.0);
+    }
+
+    // Floatzel
+    if(@syscall(0,0x15,0x29,global_manager,0x3a) == 1){
+        show_unlock_cutscene_at_position(param_1,0x80,"31_00320",10,0,-450.0,-42.0,937.0);
+    }
+
+    int event_script = get_module("EventScript");
+    @syscall(0,0x15,400,event_script,0,1);
+    int audio_state = @syscall(0,0x15,0x1f7,event_script,0x17e3);
+    if(audio_state == 0){
+        fade_in_bgm(0x1e);
+    }
+    return;
+}
+
+// =====================================================================
+// randomizer helpers
+// =====================================================================
+
+void power_competition_dialog(
+    int param_1,
+    int object_id,
+    int sound_id,
+    string friendship_banner_id,
+    string question_dialog_id,
+    string decline_dialog_id,
+    string loss_dialog_id,
+    string first_win_dialog_id,
+    string repeat_win_dialog_id
+){
+    lock_player_and_get_accessor();
+    lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    int response = show_yes_no_question(param_1,question_dialog_id);
+    if (response == 1) {
+        int has_won = start_power_competition(param_1,0,object_id);
+        special_spawn_condition(param_1);
+        int object_accessor = get_object_accessor(param_1,object_id,true);
+        fade_in(0,0,0,0x3c);
+        @syscall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
+        if (has_won == -1) {
+            show_npc_dialog(param_1,loss_dialog_id);
+        }
+        else{
+            give_berries(has_won);
+            if(is_location_checked(object_id) == false){
+                show_npc_dialog(param_1,first_win_dialog_id);
+                friendship_banner(friendship_banner_id);
+                check_location(object_id);
+            }
+            else{
+                show_npc_dialog(param_1,repeat_win_dialog_id);
+            }
+        }
+        complete_event();
+    }
+    else{
+        show_npc_dialog(param_1,decline_dialog_id);
+    }
+    end_event_script(param_1);
+    return;
+}
+
+void power_competition_dialog_with_win_count_check(
+    int param_1,
+    int object_id,
+    int sound_id,
+    string friendship_banner_id,
+    string question_dialog_id,
+    string decline_dialog_id,
+    string loss_dialog_id,
+    string first_win_dialog_id,
+    string repeat_win_dialog_id,
+    string win_count_met_dialog_id,
+    string win_count_not_met_dialog_id
+){
+    lock_player_and_get_accessor();
+    lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    int global_manager = get_module("GlobalManager");
+    int has_required_num = @syscall(0,0x15,1,global_manager,"f0301BattleCounter");
+    if(has_required_num == 1){
+        show_npc_dialog(param_1,win_count_met_dialog_id);
+        int response = show_yes_no_question(param_1,question_dialog_id);
+        if (response == 1) {
+            int has_won = start_power_competition(param_1,0,object_id);
+            special_spawn_condition(param_1);
+            int object_accessor = get_object_accessor(param_1,object_id,true);
+            fade_in(0,0,0,0x3c);
+            @syscall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
+            if (has_won == -1) {
+                show_npc_dialog(param_1,loss_dialog_id);
+            }
+            else{
+                give_berries(has_won);
+                if(is_location_checked(object_id) == false){
+                    show_npc_dialog(param_1,first_win_dialog_id);
+                    friendship_banner(friendship_banner_id);
+                    check_location(object_id);
+                }
+                else{
+                    show_npc_dialog(param_1,repeat_win_dialog_id);
+                }
+            }
+            complete_event();
+        }
+        else{
+            show_npc_dialog(param_1,decline_dialog_id);
+        }
+    }
+    else{
+        show_npc_dialog(param_1,win_count_not_met_dialog_id);
+    }
+    end_event_script(param_1);
+    return;
+}
+
+void power_competition_dialog_with_friendship_count_check(
+    int param_1,
+    int object_id,
+    int sound_id,
+    string friendship_banner_id,
+    int friendship_count,
+    string question_dialog_id,
+    string decline_dialog_id,
+    string loss_dialog_id,
+    string first_win_dialog_id,
+    string repeat_win_dialog_id,
+    string friendship_count_met_dialog_id,
+    string friendship_count_not_met_dialog_id
+){
+    lock_player_and_get_accessor();
+    lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    int global_manager = get_module("GlobalManager");
+    int friendship_num = @syscall(0,0x15,0x42,global_manager);
+    if(friendship_num >= friendship_count){
+        show_npc_dialog(param_1,friendship_count_met_dialog_id);
+        int response = show_yes_no_question(param_1,question_dialog_id);
+        if (response == 1) {
+            int has_won = start_power_competition(param_1,0,object_id);
+            special_spawn_condition(param_1);
+            int object_accessor = get_object_accessor(param_1,object_id,true);
+            fade_in(0,0,0,0x3c);
+            @syscall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
+            if (has_won == -1) {
+                show_npc_dialog(param_1,loss_dialog_id);
+            }
+            else{
+                give_berries(has_won);
+                if(is_location_checked(object_id) == false){
+                    show_npc_dialog(param_1,first_win_dialog_id);
+                    friendship_banner(friendship_banner_id);
+                    check_location(object_id);
+                }
+                else{
+                    show_npc_dialog(param_1,repeat_win_dialog_id);
+                }
+            }
+            complete_event();
+        }
+        else{
+            show_npc_dialog(param_1,decline_dialog_id);
+        }
+    }
+    else{
+        show_npc_dialog(param_1,friendship_count_not_met_dialog_id);
+    }
+    end_event_script(param_1);
+    return;
+}
+
+void errand_dialog(
+    int param_1,
+    int object_id,
+    int sound_id,
+    string no_hold_item_dialog_id,
+    string befriend_dialog_id,
+    string friendship_banner_id,
+    string already_befriended_id,
+    string wrong_item_id
+){
+    lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    @syscall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
+    int item_kind = get_held_item_kind();
+    if(item_kind == -1){
+        show_npc_dialog(param_1,no_hold_item_dialog_id);
+    }
+    else if(item_kind == 0x15){
+        if(is_location_checked(object_id) == false){
+            remove_held_item();
+            show_npc_dialog(param_1,befriend_dialog_id);
+            friendship_banner(friendship_banner_id);
+            check_location(object_id);
+        }
+        else{
+            show_npc_dialog(param_1,already_befriended_id);
+            remove_held_item();
+        }
+        give_berries(0x32);
+        complete_event();
+    }
+    else{
+        show_npc_dialog(param_1,wrong_item_id);
+    }
+    end_event_script(param_1);
+    return;
+}
+
+// player_object_id can be any object id, but is only used as the player id.
+int start_power_competition(int param_1, int player_object_id, int enemy_object_id){
+    store_pre_competition_state();
+
+    int global_manager = get_module("GlobalManager");
+    int event_script = get_module("EventScript");
+    int dispos_manager = get_module("DisposManager");
+    int object_accessor = get_object_accessor(param_1,enemy_object_id,true);
+    int player_event_accessor = get_player_accessor();
+
+    vec3 object_position = vec3{
+        .x = 0.0,
+        .y = 0.0,
+        .z = 0.0
+    };
+
+    vec3 player_position = vec3{
+        .x = 0.0,
+        .y = 0.0,
+        .z = 0.0
+    };
+
+    drop_held_item_animation();
+    @syscall(0,0x15,0x13,object_accessor,&object_position);
+    @syscall(0,0x15,0x13,player_event_accessor,&player_position);
+    @syscall(0,0x15,0xca,event_script,0x1e);
+    wait_frames(0x1e);
+
+    int dispos_id = @syscall(0,0x15,0xc,dispos_manager,enemy_object_id);
+    int result = run_power_competition(player_object_id,enemy_object_id);
+    if(result == -1){
+        reset_win_counter();
+    }
+    else{
+        @syscall(0,0x15,0x93,global_manager,dispos_id);
+        increment_win_counter();
+    }
+
+    despawn_player_object();
+    spawn_player_object();
+
+    int player_accessor = lock_player_and_get_accessor();
+    @syscall(0,0x15,7,player_accessor,player_position.x,player_position.y,player_position.z);
+    @syscall(0,0x15,8,player_accessor,player_position.x,player_position.y,player_position.z);
+    @syscall(0,0x15,0x22,player_accessor,player_position.x,player_position.y,player_position.z,1);
+    int player_state = @syscall(0,0x15,0x30,player_accessor);
+    if(player_state == 0){
+        @syscall(0,0x15,2,player_accessor,0,0);
+    }
+    @syscall(0,0x15,0,player_accessor,0);
+    @syscall(0,0x15,0x8e,global_manager,dispos_id);
+
+    respawn_field();
+    lock_npc_and_get_accessor(enemy_object_id);
+    object_accessor = get_object_accessor(param_1,enemy_object_id,true);
+    @syscall(0,0x15,7,object_accessor,object_position.x,object_position.y,object_position.z);
+    @syscall(0,0x15,8,object_accessor,object_position.x,object_position.y,object_position.z);
+    @syscall(0,0x15,0x22,object_accessor,object_position.x,object_position.y,object_position.z,1);
+
+    int object_state = @syscall(0,0x15,0x10,dispos_manager,enemy_object_id);
+    if(object_state == 0){
+        @syscall(0,0x15,0x2a,object_accessor,5);
+    }
+    else{
+        @syscall(0,0x15,0x2a,object_accessor,10);
+        @syscall(0,0x15,0x2b,object_accessor,4);
+    }
+
+    face_object_accessors_instantly(player_accessor,object_accessor,1);
+    @syscall(0,0x15,0xca,event_script,-1);
+    @syscall(0,0x15,0xd7,event_script,enemy_object_id);
+    restore_pre_competition_state(enemy_object_id);
+    return result;
+}
+
+void reset_win_counter(){
+    int global_manager = get_module("GlobalManager");
+    @syscall(0,0x15,0,global_manager,"zfPowerComp");
+    int counter_num = @syscall(0,0x15,0,global_manager,"f0301BattleCounterNum",0);
+    return;
+}
+
+void increment_win_counter(){
+    int global_manager = get_module("GlobalManager");
+    int counter_num = @syscall(0,0x15,1,global_manager,"f0301BattleCounterNum");
+    int increased_counter = counter_num + 1;
+    @syscall(0,6,increased_counter,"counter");
+    @syscall(0,0x15,0,global_manager,"f0301BattleCounterNum",increased_counter);
+    if(increased_counter >= BATTLE_COUNT){
+        @syscall(0,0x15,0,global_manager,"f0301BattleCounter",1);
+    }
+    return;
+}
+
+bool is_location_checked(int object_id){
+    return is_bestfriend(object_id);
+}
+
+void check_location(int object_id){
+    set_bestfriend(object_id);
+    return;
+}
+
+bool is_bestfriend(int object_id){
+    int global_manager = get_module("GlobalManager");
+    int dispos_manager = get_module("DisposManager");
+    int friend_id = @syscall(0,0x15,0xe,dispos_manager,object_id);
+    int is_best_friend = @syscall(0,0x15,0x4b,global_manager,friend_id);
+    return is_best_friend == 1;
+}
+
+void setup_field(int param_1){
+    cleanup_debug_object(0x4e22);
+    cleanup_debug_object(0x4e23);
+    lock_player_and_get_accessor();
+    setup_player_for_zone();
+    do_unlock_scenes(param_1);
+    update_npc_story_state(param_1);
+    return;
+}
+
+// stub out set_chapter
+void set_chapter(int chapter){
+    return;
+}

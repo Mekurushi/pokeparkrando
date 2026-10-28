@@ -1607,15 +1607,17 @@ int start_power_competition(int param_1, int player_object_id, int enemy_object_
     int object_accessor = get_object_accessor(param_1,enemy_object_id,true);
     int player_event_accessor = get_player_accessor();
 
-    vec3 object_position;
-    object_position.x = 0.0;
-    object_position.y = 0.0;
-    object_position.z = 0.0;
+    vec3 object_position = vec3{
+        .x = 0.0,
+        .y = 0.0,
+        .z = 0.0
+    };
 
-    vec3 player_position;
-    player_position.x = 0.0;
-    player_position.y = 0.0;
-    player_position.z = 0.0;
+    vec3 player_position = vec3{
+        .x = 0.0,
+        .y = 0.0,
+        .z = 0.0
+    };
     
     drop_held_item_animation();
     @syscall(0,0x15,0x13,object_accessor,&object_position);
