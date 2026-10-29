@@ -23,7 +23,9 @@ extern void spawn_player_object();
 extern void respawn_field();
 extern void face_object_accessors_instantly(int player_accessor, int object_accessor, int immediate);
 extern void restore_pre_competition_state(int object_id);
-extern void special_spawn_condition(int param_1);
+extern int spawn_object_if_missing(int object_id);
+extern void set_object_position(int object_id, int x, int y, int z);
+extern void set_object_rotation_instantly(int object_id, int x, int y, int z);
 extern void setup_player_for_zone();
 extern void cleanup_debug_object(int object_id);
 extern void update_npc_story_state(int param_1);
@@ -33,8 +35,15 @@ extern int has_wand_check();
 extern void fade_out(int red, int green, int blue, int frames);
 extern void show_unlock_cutscene_at_position(int param_1, int object_id, string dialog_id, int camera_preset, int param_5, float x, float y, float z);
 extern void fade_in_bgm(int frames);
+extern void fade_out_audio(int frames, bool fade_channel_6, bool fade_channel_8, bool fade_channel_7);
+extern void play_sound_effect(int sound_id, int fade_in_frames);
+extern void set_berry_counter_visible(bool visible);
+extern void choose_fast_travel_destination(int param_1, int object_id, int current_destination);
+extern void show_npc_dialog_mode_0(int param_1, string dialog_id);
+extern void rotate_object(int object_id, int x_rotation, int y_rotation, int z_rotation);
 
 config int BATTLE_COUNT;
+config bool EACH_ZONE;
 
 void A03_Z01_INIT(int param_1){
 
@@ -42,6 +51,7 @@ void A03_Z01_INIT(int param_1){
     @syscall(0,0x15,0x65,event_script,0,0,0,1);
     setup_field(param_1);
     SETITEMS(param_1);
+    special_spawn_condition(param_1);
     fade_in(0,0,0,0x1e);
     clear_wand_check();
     end_event_script(param_1);
@@ -99,6 +109,659 @@ void do_unlock_scenes(int param_1){
     if(audio_state == 0){
         fade_in_bgm(0x1e);
     }
+    return;
+}
+
+void piplup_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x6b,
+        0x98c,
+        "31_00380",
+        "31_10040",
+        "31_10050",
+        "31_10070",
+        "31_10090",
+        "31_10080"
+    );
+}
+
+void buizel_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x6c,
+        0x9f5,
+        "31_00390",
+        "31_10140",
+        "31_10150",
+        "31_10170",
+        "31_10190",
+        "31_10180"
+    );
+}
+
+void psyduck_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x6d,
+        0x1346,
+        "31_00400",
+        "31_10240",
+        "31_10250",
+        "31_10270",
+        "31_10290",
+        "31_10280"
+    );
+}
+
+void slowpoke_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x6e,
+        0x12a1,
+        "31_00410",
+        "31_10340",
+        "31_10350",
+        "31_10370",
+        "31_10390",
+        "31_10380"
+    );
+}
+
+void azurill_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x6f,
+        0xd10,
+        "31_00420",
+        "31_10440",
+        "31_10450",
+        "31_10470",
+        "31_10490",
+        "31_10480"
+    );
+}
+
+void corsola_dialog(int param_1){
+    // TODO: quiz logic
+}
+
+void taillow_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x71,
+        0x1355,
+        "31_00440",
+        "31_10640",
+        "31_10650",
+        "31_10670",
+        "31_10690",
+        "31_10680"
+    );
+}
+
+void starly_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x72,
+        0xbe4,
+        "31_00450",
+        "31_10740",
+        "31_10750",
+        "31_10770",
+        "31_10790",
+        "31_10780"
+    );
+}
+
+void spearow_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x73,
+        0x1193,
+        "11_00560",
+        "31_10840",
+        "31_10850",
+        "31_10870",
+        "31_10880",
+        "31_10880"
+    );
+}
+
+void wingull_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x74,
+        0xe69,
+        "31_00470",
+        "31_10940",
+        "31_10950",
+        "31_10970",
+        "31_10990",
+        "31_10980"
+    );
+}
+
+void krabby_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x75,
+        0xe87,
+        "31_00480",
+        "31_11040",
+        "31_11050",
+        "31_11070",
+        "31_11090",
+        "31_11080"
+    );
+}
+
+void totodile_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x76,
+        0x13be,
+        "31_00490",
+        "31_11140",
+        "31_11150",
+        "31_11170",
+        "31_11190",
+        "31_11180"
+    );
+}
+
+void mudkip_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x77,
+        0x13af,
+        "31_00500",
+        "31_11240",
+        "31_11250",
+        "31_11270",
+        "31_11290",
+        "31_11280"
+    );
+}
+
+void corphish_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x78,
+        0xb3f,
+        "31_00510",
+        "31_11340",
+        "31_11350",
+        "31_11370",
+        "31_11390",
+        "31_11380"
+    );
+}
+
+void corphish2_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x79,
+        0xbb7,
+        "31_00520",
+        "31_11440",
+        "31_11450",
+        "31_11470",
+        "31_11490",
+        "31_11480"
+    );
+}
+
+void wynaut_dialog(int param_1){
+    lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(0x7a);
+    face_player_and_npc(0x7a,0);
+    @syscall(0,0x15,0x28,object_accessor,0xae5,0,1.0,1.0);
+    show_npc_dialog(param_1,"31_11500");
+    end_event_script(param_1);
+}
+
+void carvanha_dialog(int param_1){
+    lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(0x7b);
+    face_player_and_npc(0x7b,0);
+    @syscall(0,0x15,0x28,object_accessor,0x10a3,0,1.0,1.0);
+    show_npc_dialog(param_1,"31_11600");
+    end_event_script(param_1);
+}
+
+void sharpedo_dialog(int param_1){
+    lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(0x7c);
+    face_player_and_npc(0x7c,0);
+    @syscall(0,0x15,0x28,object_accessor,0x10b3,0,1.0,1.0);
+    show_npc_dialog(param_1,"31_11700");
+    end_event_script(param_1);
+}
+
+void wailord_dialog(int param_1){
+    // TODO: unique dialog logic
+}
+
+void vaporeon_dialog(int param_1){
+    power_competition_dialog_with_friendship_count_check(
+        param_1,
+        0x7e,
+        0xd97,
+        "31_00540",
+        30,
+        "31_11940",
+        "31_11950",
+        "31_11970",
+        "31_11990",
+        "31_11980",
+        "31_11901",
+        "31_11900"
+    );
+}
+
+void golduck_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x7f,
+        0xc2f,
+        "31_00550",
+        "31_12040",
+        "31_12050",
+        "31_12070",
+        "31_12090",
+        "31_12080"
+    );
+}
+
+void floatzel_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x80,
+        0x1094,
+        "31_00560",
+        "31_12140",
+        "31_12150",
+        "31_12170",
+        "31_12190",
+        "31_12180"
+    );
+}
+
+void staravia_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x81,
+        0x9e6,
+        "31_00570",
+        "31_12240",
+        "31_12250",
+        "31_12270",
+        "31_12290",
+        "31_12280"
+    );
+}
+
+void pidgeotto_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x82,
+        0x11a2,
+        "31_00580",
+        "31_12340",
+        "31_12350",
+        "31_12370",
+        "31_12390",
+        "31_12380"
+    );
+}
+
+void blastoise_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x83,
+        0xba8,
+        "31_00590",
+        "31_12440",
+        "31_12450",
+        "31_12470",
+        "31_12490",
+        "31_12480"
+    );
+}
+
+void bidoof_dialog(int param_1){
+    // TODO: bridge logic
+}
+
+void lapras_dialog(int param_1){
+    // TODO: travel logic
+}
+
+void pelipper_dialog(int param_1){
+    // TODO: attraction logic
+}
+
+void gyarados_dialog(int param_1){
+    // TODO: attraction logic
+}
+
+void feraligatr_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x85,
+        0xc02,
+        "31_00610",
+        "31_12640",
+        "31_12650",
+        "31_12670",
+        "31_12690",
+        "31_12680"
+    );
+}
+
+void drifblim_dialog(int param_1){
+    int object_id = 0x89;
+    int player_accessor = lock_player_and_get_accessor();
+    int event_script = get_module("EventScript");
+    int global_manager = get_module("GlobalManager");
+    int field_info = get_module("mnFieldInfo");
+
+    drop_held_item_animation();
+    @syscall(0,0x15,0,global_manager,"rfFuwarideTaxi",0);
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+
+    int service_count = @syscall(0,0x15,1,global_manager,"fFuwarideService");
+    int service_dialog_state = @syscall(0,0x15,1,global_manager,"fTalkFuwarideService");
+    if(service_count == 3 && service_dialog_state == 0){
+        @syscall(0,0x15,2,object_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
+        show_npc_dialog_mode_0(param_1,"02_80151");
+        @syscall(0,0x15,0,global_manager,"fTalkFuwarideService",1);
+        @syscall(0,0x15,2,player_accessor,0x4c,5);
+        play_sound_effect(0x7fa,0);
+        @syscall(0,0x15,0x11,field_info,0,"02_80153");
+        wait_frames(180);
+        @syscall(0,0x15,0x12,field_info);
+        check_location(object_id);
+    }
+
+    service_dialog_state = @syscall(0,0x15,1,global_manager,"fTalkFuwarideService");
+    if(service_count == 10 && service_dialog_state == 1){
+        @syscall(0,0x15,2,object_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
+        show_npc_dialog_mode_0(param_1,"02_80152");
+        @syscall(0,0x15,0,global_manager,"fTalkFuwarideService",2);
+    }
+
+    @syscall(0,0x15,2,object_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
+
+    int berry_cost = 0;
+    if(service_count >= 0){
+        if(service_count < 3){
+            set_berry_counter_visible(true);
+            show_npc_dialog_mode_0(param_1,"02_80110");
+            berry_cost = 20;
+        }
+        else if(service_count < 10){
+            set_berry_counter_visible(true);
+            show_npc_dialog_mode_0(param_1,"02_80111");
+            berry_cost = 10;
+        }
+        else{
+            show_npc_dialog_mode_0(param_1,"02_80112");
+        }
+    }
+    else{
+        show_npc_dialog_mode_0(param_1,"02_80112");
+    }
+
+    @syscall(0,0x15,2,object_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
+    int berry_count = @syscall(0,0x15,0x15,global_manager);
+    if(berry_count < berry_cost){
+        show_npc_dialog_mode_0(param_1,"02_80120");
+        set_berry_counter_visible(false);
+        rotate_object(object_id,0,0x83,0);
+    }
+    else{
+        choose_fast_travel_destination(param_1,object_id,0x1f);
+        int destination = @syscall(0,0x15,1,global_manager,"rfFuwarideTaxi");
+
+        @syscall(0,0x15,2,object_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
+        if(destination == 99){
+            show_npc_dialog_mode_0(param_1,"02_80140");
+            set_berry_counter_visible(false);
+            rotate_object(object_id,0,0x83,0);
+        }
+        else{
+            @syscall(0,0x15,0x14,global_manager,-berry_cost);
+            show_npc_dialog_mode_0(param_1,"02_80150");
+            set_berry_counter_visible(false);
+            @syscall(0,0x15,0,global_manager,"fFuwarideService",service_count + 1);
+            drop_held_item_animation();
+            fade_out_audio(30,false,false,false);
+            @syscall(0,0x15,4,event_script,2,1);
+        }
+    }
+
+    end_event_script(param_1);
+}
+
+void krabby2_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x8a,
+        0xe87,
+        "31_00480",
+        "31_12740",
+        "31_12750",
+        "31_12770",
+        "31_12790",
+        "31_12780"
+    );
+}
+
+void corsola2_dialog(int param_1){
+    // TODO: quiz logic
+}
+
+void corsola3_dialog(int param_1){
+    // TODO: quiz logic
+}
+
+void wingull2_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x8d,
+        0xe69,
+        "31_00470",
+        "31_13040",
+        "31_13050",
+        "31_13070",
+        "31_13090",
+        "31_13080"
+    );
+}
+
+void wingull3_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x8e,
+        0xe69,
+        "31_00470",
+        "31_13140",
+        "31_13150",
+        "31_13170",
+        "31_13190",
+        "31_13180"
+    );
+}
+
+void starly2_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x8f,
+        0xbe4,
+        "31_00450",
+        "31_13240",
+        "31_13250",
+        "31_13270",
+        "31_13290",
+        "31_13280"
+    );
+}
+
+void starly3_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x90,
+        0xbe4,
+        "31_00450",
+        "31_13340",
+        "31_13350",
+        "31_13370",
+        "31_13390",
+        "31_13380"
+    );
+}
+
+void carvanha2_dialog(int param_1){
+    // TODO: check if unused
+    end_event_script(param_1);
+}
+
+void carvanha3_dialog(int param_1){
+    // TODO: check if unused
+    end_event_script(param_1);
+}
+
+void taillow2_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x93,
+        0x1355,
+        "31_00440",
+        "31_13640",
+        "31_13650",
+        "31_13670",
+        "31_13690",
+        "31_13680"
+    );
+}
+
+void spearow2_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x94,
+        0x1193,
+        "11_00560",
+        "31_13740",
+        "31_13750",
+        "31_13770",
+        "31_13780",
+        "31_13780"
+    );
+}
+
+void wingull4_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x95,
+        0xe69,
+        "31_00470",
+        "31_13840",
+        "31_13850",
+        "31_13870",
+        "31_13890",
+        "31_13880"
+    );
+}
+
+void krabby3_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x96,
+        0xe87,
+        "31_00480",
+        "31_13940",
+        "31_13950",
+        "31_13970",
+        "31_13990",
+        "31_13980"
+    );
+}
+
+void krabby4_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x97,
+        0xe87,
+        "31_00480",
+        "31_14040",
+        "31_14050",
+        "31_14070",
+        "31_14090",
+        "31_14080"
+    );
+}
+
+void corphish3_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x98,
+        0xb3f,
+        "31_00510",
+        "31_14140",
+        "31_14150",
+        "31_14170",
+        "31_14190",
+        "31_14180"
+    );
+}
+
+void corphish4_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x99,
+        0xb3f,
+        "31_00510",
+        "31_14240",
+        "31_14250",
+        "31_14270",
+        "31_14290",
+        "31_14280"
+    );
+}
+
+void chatot_dialog(int param_1){
+    lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(0x9a);
+    face_player_and_npc(0x9a,0);
+    @syscall(0,0x15,2,object_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,object_accessor,0x96e,0,1.0,1.0);
+    show_npc_dialog_mode_0(param_1,"02_70170");
+    // TODO: hint system or similiar
+    end_event_script(param_1);
+}
+
+void totodile2_dialog(int param_1){
+    // TODO: check if unused
+    end_event_script(param_1);
+}
+
+void special_spawn_condition(int param_1){
+    // setting piplup location
+    spawn_object_if_missing(0x6b);
+    set_object_position(0x6b,-71,-49,937);
+
+    // always spawning chatot
+    spawn_object_if_missing(0x9a);
+    set_object_position(0x9a,-39,-16,200);
+    set_object_rotation_instantly(0x9a,0,78,0);
     return;
 }
 
@@ -393,10 +1056,34 @@ void increment_win_counter(){
 }
 
 bool is_location_checked(int object_id){
+    int global_manager = get_module("GlobalManager");
+    if(EACH_ZONE){
+        // starly
+        if(object_id == 0x72 || object_id == 0x8f || object_id == 0x90){
+            return @syscall(0,0x15,0x6e,global_manager,0,7) != 0;
+        }
+        // spearow
+        if(object_id == 0x73 || object_id == 0x94){
+            return @syscall(0,0x15,0x6e,global_manager,8,13) != 0;
+        }
+    }
     return is_bestfriend(object_id);
 }
 
 void check_location(int object_id){
+    if(EACH_ZONE){
+        int global_manager = get_module("GlobalManager");
+        // starly
+        if(object_id == 0x72 || object_id == 0x8f || object_id == 0x90){
+            @syscall(0,0x15,0x6d,global_manager,0,7,1);
+            return;
+        }
+        // spearow
+        if(object_id == 0x73 || object_id == 0x94){
+            @syscall(0,0x15,0x6d,global_manager,8,13,1);
+            return;
+        }
+    }
     set_bestfriend(object_id);
     return;
 }

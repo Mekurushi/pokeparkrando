@@ -45,6 +45,7 @@ fn main() -> ExitCode {
 fn build_config() -> BuildConfig {
     BuildConfig::from_iter([
         ("BATTLE_COUNT".into(), BuildConfigValue::Integer(5)),
+        ("EACH_ZONE".into(), BuildConfigValue::Boolean(true)),
         (
             "SKYGARDEN_PRISMA_COUNT".into(),
             BuildConfigValue::Integer(14),

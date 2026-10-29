@@ -38,6 +38,10 @@ impl Patcher {
                 BuildConfigValue::Integer(appkprk.options().required_battle_count().cast_signed()),
             ),
             (
+                "EACH_ZONE".to_owned(),
+                BuildConfigValue::Boolean(appkprk.options().each_zone()),
+            ),
+            (
                 "SKYGARDEN_PRISMA_COUNT".to_owned(),
                 BuildConfigValue::Integer(appkprk.options().required_prisma_count().cast_signed()),
             ),
