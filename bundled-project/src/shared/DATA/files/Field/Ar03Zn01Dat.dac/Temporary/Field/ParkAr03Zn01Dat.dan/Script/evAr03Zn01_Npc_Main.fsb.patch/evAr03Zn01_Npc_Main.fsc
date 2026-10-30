@@ -352,7 +352,31 @@ void sharpedo_dialog(int param_1){
 }
 
 void wailord_dialog(int param_1){
-    // TODO: unique dialog logic
+    int player_accessor = lock_player_and_get_accessor();
+    int global_manager = get_module("GlobalManager");
+    int object_accessor = lock_npc_and_get_accessor(0x7d);
+    face_player_and_npc(0x7d,0);
+
+    int recycle_box = @syscall(0,0x15,1,global_manager,"fRecycleBox");
+    int talked_to_wailord = @syscall(0,0x15,1,global_manager,"f0301TalkWhaloh");
+    if(recycle_box >= 6 && talked_to_wailord == 0){
+        drop_held_item_animation();
+    }
+    @syscall(0,0x15,0x28,object_accessor,0x103a,0,1.0,1.0);
+    if(recycle_box != 6){
+        show_npc_dialog(param_1,"31_11801");
+    }
+    else if(talked_to_wailord == 1){
+        show_npc_dialog(param_1,"31_11804");
+    }
+    else{
+        show_npc_dialog(param_1,"31_11802");
+        check_location(0x7d);
+        @syscall(0,0x15,1,player_accessor,0x4c);
+        friendship_banner("31_00613");
+        @syscall(0,0x15,0,global_manager,"f0301TalkWhaloh",1);
+    }
+    end_event_script(param_1);
 }
 
 void vaporeon_dialog(int param_1){
