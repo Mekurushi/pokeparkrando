@@ -1,0 +1,51 @@
+[[edits]]
+table = "itemKindTotalNumData"
+row = 1
+
+[edits.set]
+amount = { value = 6 }
+
+[[appends]]
+table = "itemDispositionData"
+
+[appends.row]
+object_id = { value = 11007 }
+object_type = { value = 6 }
+item_kind = { value = 7 }
+position_x = { value = 0.0 }
+position_y = { value = 0.0 }
+position_z = { value = 0.0 }
+rotation_y = { value = 0.0 }
+unknown_0x18 = { value = 0.0 }
+unknown_0x1c = { value = 0.0 }
+unknown_0x20 = { value = 0.0 }
+
+[[appends]]
+table = "itemDispositionData"
+
+[appends.row]
+object_id = { value = 11008 }
+object_type = { value = 6 }
+item_kind = { value = 7 }
+position_x = { value = 0.0 }
+position_y = { value = 0.0 }
+position_z = { value = 0.0 }
+rotation_y = { value = 0.0 }
+unknown_0x18 = { value = 0.0 }
+unknown_0x1c = { value = 0.0 }
+unknown_0x20 = { value = 0.0 }
+
+[[appends]]
+table = "itemDispositionData"
+
+[appends.row]
+object_id = { value = 11009 }
+object_type = { value = 6 }
+item_kind = { value = 7 }
+position_x = { value = 0.0 }
+position_y = { value = 0.0 }
+position_z = { value = 0.0 }
+rotation_y = { value = 0.0 }
+unknown_0x18 = { value = 0.0 }
+unknown_0x1c = { value = 0.0 }
+unknown_0x20 = { value = 0.0 }

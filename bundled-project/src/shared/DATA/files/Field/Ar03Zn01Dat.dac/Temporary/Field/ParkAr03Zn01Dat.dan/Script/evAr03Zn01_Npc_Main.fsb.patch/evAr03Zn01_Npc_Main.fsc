@@ -29,7 +29,6 @@ extern void set_object_rotation_instantly(int object_id, int x, int y, int z);
 extern void setup_player_for_zone();
 extern void cleanup_debug_object(int object_id);
 extern void update_npc_story_state(int param_1);
-extern void SETITEMS(int param_1);
 extern void clear_wand_check();
 extern int has_wand_check();
 extern void fade_out(int red, int green, int blue, int frames);
@@ -821,6 +820,27 @@ void special_spawn_condition(int param_1){
     set_object_position(0x9a,-39,-16,200);
     set_object_rotation_instantly(0x9a,0,78,0);
     return;
+}
+
+void spawn_bottle(int object_manager, int dispos_manager, int disposition_id, float x, float y, float z){
+    @syscall(0,0x15,5,dispos_manager,disposition_id);
+    int object_id = @syscall(0,0x15,4,object_manager,disposition_id);
+    int object_accessor = @syscall(0,0x15,1,object_manager,object_id);
+    @syscall(0,0x15,7,object_accessor,x,y,z);
+    @syscall(0,0x15,8,object_accessor,x,y,z);
+    @syscall(0,0x15,0x22,object_accessor,x,y,z,1);
+}
+
+void SETITEMS(int param_1){
+    int object_manager = get_module("ObjectManager");
+    int dispos_manager = get_module("DisposManager");
+
+    spawn_bottle(object_manager,dispos_manager,11007,318.19,-48.19,1388.53);
+    spawn_bottle(object_manager,dispos_manager,11004,223.5,-39.7,1414.5);
+    spawn_bottle(object_manager,dispos_manager,11008,-33.42,-46.98,1488.53);
+    spawn_bottle(object_manager,dispos_manager,11005,260.73,-48.76,1481.3);
+    spawn_bottle(object_manager,dispos_manager,11009,63.48,-36.0,1348.2);
+    spawn_bottle(object_manager,dispos_manager,11006,85.6,-36.0,1301.4);
 }
 
 // =====================================================================
