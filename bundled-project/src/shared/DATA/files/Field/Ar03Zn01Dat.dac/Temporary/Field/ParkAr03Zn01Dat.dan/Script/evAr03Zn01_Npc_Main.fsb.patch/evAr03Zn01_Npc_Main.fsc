@@ -41,6 +41,7 @@ extern void set_berry_counter_visible(bool visible);
 extern void choose_fast_travel_destination(int param_1, int object_id, int current_destination);
 extern void show_npc_dialog_mode_0(int param_1, string dialog_id);
 extern void rotate_object(int object_id, int x_rotation, int y_rotation, int z_rotation);
+extern int ask_quiz_question(int param_1, string question_id, string answer_1_id, string answer_2_id, string answer_3_id, string correct_answer_id);
 
 config int BATTLE_COUNT;
 config bool EACH_ZONE;
@@ -183,7 +184,18 @@ void azurill_dialog(int param_1){
 }
 
 void corsola_dialog(int param_1){
-    // TODO: quiz logic
+    quiz_dialog(
+        param_1,
+        0x70,
+        0x13fa,
+        0,
+        "31_00430",
+        "31_10540",
+        "31_10550",
+        "31_10570",
+        "31_10590",
+        "31_10580"
+    );
 }
 
 void taillow_dialog(int param_1){
@@ -566,11 +578,33 @@ void krabby2_dialog(int param_1){
 }
 
 void corsola2_dialog(int param_1){
-    // TODO: quiz logic
+    quiz_dialog(
+        param_1,
+        0x8b,
+        0x13fa,
+        1,
+        "31_00430",
+        "31_12840",
+        "31_12850",
+        "31_12870",
+        "31_12890",
+        "31_12880"
+    );
 }
 
 void corsola3_dialog(int param_1){
-    // TODO: quiz logic
+    quiz_dialog(
+        param_1,
+        0x8c,
+        0x13fa,
+        2,
+        "31_00430",
+        "31_12940",
+        "31_12950",
+        "31_12970",
+        "31_12990",
+        "31_12980"
+    );
 }
 
 void wingull2_dialog(int param_1){
@@ -768,6 +802,428 @@ void special_spawn_condition(int param_1){
 // =====================================================================
 // randomizer helpers
 // =====================================================================
+
+// I wanted a data-driven approach for the quizzes, with arrays where it's only necessary to define the data,
+// but I found no simple clean way to compile string arrays without materializing, so this is postponed for now
+const int QUIZ_DIALOG_INTRO = 0;
+const int QUIZ_DIALOG_ROUND_INTRO = 1;
+const int QUIZ_DIALOG_CORRECT = 2;
+const int QUIZ_DIALOG_WRONG = 3;
+
+string get_quiz_question_id(int quiz_id, int round, int question, int field){
+    if(quiz_id == 0){
+        if(round == 0){
+            if(question == 0){
+                if(field == 0){ return "31_50000"; }
+                if(field == 1){ return "31_50010"; }
+                if(field == 2){ return "31_50020"; }
+                if(field == 3){ return "31_50030"; }
+                return "31_50040";
+            }
+            if(question == 1){
+                if(field == 0){ return "31_50050"; }
+                if(field == 1){ return "31_50060"; }
+                if(field == 2){ return "31_50070"; }
+                if(field == 3){ return "31_50080"; }
+                return "31_50090";
+            }
+            if(question == 2){
+                if(field == 0){ return "31_50100"; }
+                if(field == 1){ return "31_50110"; }
+                if(field == 2){ return "31_50120"; }
+                if(field == 3){ return "31_50130"; }
+                return "31_50140";
+            }
+            if(field == 0){ return "31_50150"; }
+            if(field == 1){ return "31_50160"; }
+            if(field == 2){ return "31_50170"; }
+            if(field == 3){ return "31_50180"; }
+            return "31_50190";
+        }
+        if(round == 1){
+            if(question == 0){
+                if(field == 0){ return "31_50200"; }
+                if(field == 1){ return "31_50210"; }
+                if(field == 2){ return "31_50220"; }
+                if(field == 3){ return "31_50230"; }
+                return "31_50240";
+            }
+            if(question == 1){
+                if(field == 0){ return "31_50250"; }
+                if(field == 1){ return "31_50260"; }
+                if(field == 2){ return "31_50270"; }
+                if(field == 3){ return "31_50280"; }
+                return "31_50290";
+            }
+            if(question == 2){
+                if(field == 0){ return "31_50300"; }
+                if(field == 1){ return "31_50310"; }
+                if(field == 2){ return "31_50320"; }
+                if(field == 3){ return "31_50330"; }
+                return "31_50340";
+            }
+            if(field == 0){ return "31_50350"; }
+            if(field == 1){ return "31_50360"; }
+            if(field == 2){ return "31_50370"; }
+            if(field == 3){ return "31_50380"; }
+            return "31_50390";
+        }
+        if(question == 0){
+            if(field == 0){ return "31_50400"; }
+            if(field == 1){ return "31_50410"; }
+            if(field == 2){ return "31_50420"; }
+            if(field == 3){ return "31_50430"; }
+            return "31_50440";
+        }
+        if(question == 1){
+            if(field == 0){ return "31_50450"; }
+            if(field == 1){ return "31_50460"; }
+            if(field == 2){ return "31_50470"; }
+            if(field == 3){ return "31_50480"; }
+            return "31_50490";
+        }
+        if(question == 2){
+            if(field == 0){ return "31_50500"; }
+            if(field == 1){ return "31_50510"; }
+            if(field == 2){ return "31_50520"; }
+            if(field == 3){ return "31_50530"; }
+            return "31_50540";
+        }
+        if(field == 0){ return "31_50550"; }
+        if(field == 1){ return "31_50560"; }
+        if(field == 2){ return "31_50570"; }
+        if(field == 3){ return "31_50580"; }
+        return "31_50590";
+    }
+    if(quiz_id == 1){
+        if(round == 0){
+        if(question == 0){
+            if(field == 0){ return "31_50800"; }
+            if(field == 1){ return "31_50810"; }
+            if(field == 2){ return "31_50820"; }
+            if(field == 3){ return "31_50830"; }
+            return "31_50840";
+        }
+        if(question == 1){
+            if(field == 0){ return "31_50850"; }
+            if(field == 1){ return "31_50860"; }
+            if(field == 2){ return "31_50870"; }
+            if(field == 3){ return "31_50880"; }
+            return "31_50890";
+        }
+        if(question == 2){
+            if(field == 0){ return "31_50900"; }
+            if(field == 1){ return "31_50910"; }
+            if(field == 2){ return "31_50920"; }
+            if(field == 3){ return "31_50930"; }
+            return "31_50940";
+        }
+        if(field == 0){ return "31_50950"; }
+        if(field == 1){ return "31_50960"; }
+        if(field == 2){ return "31_50970"; }
+        if(field == 3){ return "31_50980"; }
+        return "31_50990";
+    }
+        if(round == 1){
+        if(question == 0){
+            if(field == 0){ return "31_51000"; }
+            if(field == 1){ return "31_51010"; }
+            if(field == 2){ return "31_51020"; }
+            if(field == 3){ return "31_51030"; }
+            return "31_51040";
+        }
+        if(question == 1){
+            if(field == 0){ return "31_51050"; }
+            if(field == 1){ return "31_51060"; }
+            if(field == 2){ return "31_51070"; }
+            if(field == 3){ return "31_51080"; }
+            return "31_51090";
+        }
+        if(question == 2){
+            if(field == 0){ return "31_51100"; }
+            if(field == 1){ return "31_51110"; }
+            if(field == 2){ return "31_51120"; }
+            if(field == 3){ return "31_51130"; }
+            return "31_51140";
+        }
+        if(field == 0){ return "31_51150"; }
+        if(field == 1){ return "31_51160"; }
+        if(field == 2){ return "31_51170"; }
+        if(field == 3){ return "31_51180"; }
+        return "31_51190";
+    }
+        if(question == 0){
+        if(field == 0){ return "31_51200"; }
+        if(field == 1){ return "31_51210"; }
+        if(field == 2){ return "31_51220"; }
+        if(field == 3){ return "31_51230"; }
+        return "31_51240";
+    }
+        if(question == 1){
+        if(field == 0){ return "31_51250"; }
+        if(field == 1){ return "31_51260"; }
+        if(field == 2){ return "31_51270"; }
+        if(field == 3){ return "31_51280"; }
+        return "31_51290";
+    }
+        if(question == 2){
+        if(field == 0){ return "31_51300"; }
+        if(field == 1){ return "31_51310"; }
+        if(field == 2){ return "31_51320"; }
+        if(field == 3){ return "31_51330"; }
+        return "31_51340";
+    }
+        if(field == 0){ return "31_51350"; }
+        if(field == 1){ return "31_51360"; }
+        if(field == 2){ return "31_51370"; }
+        if(field == 3){ return "31_51380"; }
+        return "31_51390";
+    }
+    if(round == 0){
+        if(question == 0){
+            if(field == 0){ return "31_51600"; }
+            if(field == 1){ return "31_51610"; }
+            if(field == 2){ return "31_51620"; }
+            if(field == 3){ return "31_51630"; }
+            return "31_51640";
+        }
+        if(question == 1){
+            if(field == 0){ return "31_51650"; }
+            if(field == 1){ return "31_51660"; }
+            if(field == 2){ return "31_51670"; }
+            if(field == 3){ return "31_51680"; }
+            return "31_51690";
+        }
+        if(question == 2){
+            if(field == 0){ return "31_51700"; }
+            if(field == 1){ return "31_51710"; }
+            if(field == 2){ return "31_51720"; }
+            if(field == 3){ return "31_51730"; }
+            return "31_51740";
+        }
+        if(field == 0){ return "31_51750"; }
+        if(field == 1){ return "31_51760"; }
+        if(field == 2){ return "31_51770"; }
+        if(field == 3){ return "31_51780"; }
+        return "31_51790";
+    }
+    if(round == 1){
+        if(question == 0){
+            if(field == 0){ return "31_51800"; }
+            if(field == 1){ return "31_51810"; }
+            if(field == 2){ return "31_51820"; }
+            if(field == 3){ return "31_51830"; }
+            return "31_51840";
+        }
+        if(question == 1){
+            if(field == 0){ return "31_51850"; }
+            if(field == 1){ return "31_51860"; }
+            if(field == 2){ return "31_51870"; }
+            if(field == 3){ return "31_51880"; }
+            return "31_51890";
+        }
+        if(question == 2){
+            if(field == 0){ return "31_51900"; }
+            if(field == 1){ return "31_51910"; }
+            if(field == 2){ return "31_51920"; }
+            if(field == 3){ return "31_51930"; }
+            return "31_51940";
+        }
+        if(field == 0){ return "31_51950"; }
+        if(field == 1){ return "31_51960"; }
+        if(field == 2){ return "31_51970"; }
+        if(field == 3){ return "31_51980"; }
+        return "31_51990";
+    }
+    if(question == 0){
+        if(field == 0){ return "31_52000"; }
+        if(field == 1){ return "31_52010"; }
+        if(field == 2){ return "31_52020"; }
+        if(field == 3){ return "31_52030"; }
+        return "31_52040";
+    }
+    if(question == 1){
+        if(field == 0){ return "31_52050"; }
+        if(field == 1){ return "31_52060"; }
+        if(field == 2){ return "31_52070"; }
+        if(field == 3){ return "31_52080"; }
+        return "31_52090";
+    }
+    if(question == 2){
+        if(field == 0){ return "31_52100"; }
+        if(field == 1){ return "31_52110"; }
+        if(field == 2){ return "31_52120"; }
+        if(field == 3){ return "31_52130"; }
+        return "31_52140";
+    }
+    if(field == 0){ return "31_52150"; }
+    if(field == 1){ return "31_52160"; }
+    if(field == 2){ return "31_52170"; }
+    if(field == 3){ return "31_52180"; }
+    return "31_52190";
+}
+
+string get_quiz_dialog_id(int quiz_id, int kind, int index){
+    if(quiz_id == 0){
+        if(kind == QUIZ_DIALOG_INTRO){
+            if(index == 0){ return "31_10560"; }
+            return "31_10591";
+        }
+        if(kind == QUIZ_DIALOG_ROUND_INTRO){
+            if(index == 0){ return "31_10592"; }
+            return "31_10593";
+        }
+        if(kind == QUIZ_DIALOG_CORRECT){ return "31_10595"; }
+        return "31_10596";
+    }
+    if(quiz_id == 1){
+        if(kind == QUIZ_DIALOG_INTRO){
+            if(index == 0){ return "31_12860"; }
+            return "31_12891";
+        }
+        if(kind == QUIZ_DIALOG_ROUND_INTRO){
+            if(index == 0){ return "31_12892"; }
+            return "31_12893";
+        }
+        if(kind == QUIZ_DIALOG_CORRECT){ return "31_12895"; }
+        return "31_12896";
+    }
+    if(kind == QUIZ_DIALOG_INTRO){
+        if(index == 0){ return "31_12960"; }
+        return "31_12991";
+    }
+    if(kind == QUIZ_DIALOG_ROUND_INTRO){
+        if(index == 0){ return "31_12992"; }
+        return "31_12993";
+    }
+    if(kind == QUIZ_DIALOG_CORRECT){ return "31_12995"; }
+    return "31_12996";
+}
+
+void quiz_dialog(
+    int param_1,
+    int object_id,
+    int sound_id,
+    int quiz_id,
+    string friendship_banner_id,
+    string question_dialog_id,
+    string decline_dialog_id,
+    string loss_dialog_id,
+    string first_win_dialog_id,
+    string repeat_win_dialog_id
+){
+    int player_accessor = lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    int response = show_yes_no_question(param_1,question_dialog_id);
+    if(response == 1){
+        int has_won = start_quiz(param_1,object_id,quiz_id,player_accessor);
+        @syscall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
+        if(has_won == -1){
+            reset_win_counter();
+            play_sound_effect(0x803,0);
+            show_npc_dialog(param_1,loss_dialog_id);
+            fade_in_bgm(0x1e);
+        }
+        else{
+            increment_win_counter();
+            give_berries(20);
+            play_sound_effect(0x802,0);
+            @syscall(0,0x15,2,player_accessor,0x4e,5);
+            if(is_location_checked(object_id) == false){
+                show_npc_dialog(param_1,first_win_dialog_id);
+                fade_in_bgm(0x1e);
+                check_location(object_id);
+                @syscall(0,0x15,1,player_accessor,0x4c);
+                friendship_banner(friendship_banner_id);
+            }
+            else{
+                show_npc_dialog(param_1,repeat_win_dialog_id);
+                fade_in_bgm(0x1e);
+            }
+            @syscall(0,0x15,2,player_accessor,0,5);
+            int global_manager = get_module("GlobalManager");
+            @syscall(0,0x15,0x93,global_manager,5);
+        }
+        int sound_manager = get_module("SoundManager");
+        @syscall(0,0x15,0x16,sound_manager,0xc,1.0);
+        wait_frames(10);
+        complete_event();
+    }
+    else{
+        show_npc_dialog(param_1,decline_dialog_id);
+    }
+    end_event_script(param_1);
+    return;
+}
+
+int start_quiz(int param_1, int object_id, int quiz_id, int player_accessor){
+    int global_manager = get_module("GlobalManager");
+    int event_script = get_module("EventScript");
+    int sound_manager = get_module("SoundManager");
+    @syscall(0,0x15,0x8e,global_manager,5);
+    drop_held_item_animation();
+    @syscall(0,0x15,0x192,event_script,10);
+    wait_frames(10);
+    @syscall(0,0x15,0x16,sound_manager,0xc,0);
+    play_sound_effect(0x1832,0x1e);
+    show_npc_dialog(param_1,get_quiz_dialog_id(quiz_id,QUIZ_DIALOG_INTRO,0));
+    show_npc_dialog(param_1,get_quiz_dialog_id(quiz_id,QUIZ_DIALOG_INTRO,1));
+
+    int object_accessor = get_object_accessor(param_1,object_id,true);
+    for(int round = 0; round < 3; round = round + 1){
+        int question = @syscall(0,0x24,4);
+        if(ask_and_handle_quiz_question(
+            param_1,
+            object_accessor,
+            player_accessor,
+            get_quiz_question_id(quiz_id,round,question,0),
+            get_quiz_question_id(quiz_id,round,question,1),
+            get_quiz_question_id(quiz_id,round,question,2),
+            get_quiz_question_id(quiz_id,round,question,3),
+            get_quiz_question_id(quiz_id,round,question,4),
+            get_quiz_dialog_id(quiz_id,QUIZ_DIALOG_CORRECT,0),
+            get_quiz_dialog_id(quiz_id,QUIZ_DIALOG_WRONG,0)
+        ) != 1){
+            @syscall(0,0x15,0x1f5,event_script,0x1832,10);
+            wait_frames(10);
+            return -1;
+        }
+        if(round < 2){
+            show_npc_dialog(param_1,get_quiz_dialog_id(quiz_id,QUIZ_DIALOG_ROUND_INTRO,round));
+        }
+    }
+    @syscall(0,0x15,0x1f5,event_script,0x1832,10);
+    wait_frames(10);
+    return 1;
+}
+
+int ask_and_handle_quiz_question(
+    int param_1,
+    int object_accessor,
+    int player_accessor,
+    string question_id,
+    string answer_1_id,
+    string answer_2_id,
+    string answer_3_id,
+    string correct_answer_id,
+    string correct_dialog_id,
+    string wrong_dialog_id
+){
+    int result = ask_quiz_question(param_1,question_id,answer_1_id,answer_2_id,answer_3_id,correct_answer_id);
+    if(result == 1){
+        play_sound_effect(0x499,0);
+        @syscall(0,0x15,2,object_accessor,0x20,10);
+        show_npc_dialog(param_1,correct_dialog_id);
+        return 1;
+    }
+    play_sound_effect(0x62,0);
+    @syscall(0,0x15,2,object_accessor,0x21,10);
+    @syscall(0,0x15,2,player_accessor,0x51,5);
+    show_npc_dialog(param_1,wrong_dialog_id);
+    show_npc_dialog(param_1,correct_answer_id);
+    return -1;
+}
 
 void power_competition_dialog(
     int param_1,
@@ -1040,6 +1496,8 @@ void reset_win_counter(){
     int global_manager = get_module("GlobalManager");
     @syscall(0,0x15,0,global_manager,"zfPowerComp");
     int counter_num = @syscall(0,0x15,0,global_manager,"f0301BattleCounterNum",0);
+    @syscall(0,6,0,"counter");
+
     return;
 }
 

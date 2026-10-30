@@ -46,6 +46,7 @@ set_berry_counter_visible = 0x579c8
 choose_fast_travel_destination = 0x57ab8
 show_npc_dialog_mode_0 = 0x52008
 rotate_object = 0x537d0
+ask_quiz_question = 0x56d2c
 A03_Z01_INIT = 0x6982c
 AR03ZN01_DEF = 0x698ec
 do_unlock_scenes = 0x5d97c
