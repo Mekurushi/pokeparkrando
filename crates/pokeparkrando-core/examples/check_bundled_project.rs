@@ -244,6 +244,10 @@ fn build_config() -> BuildConfig {
             BuildConfigValue::Integer(0x5),
         ),
         (
+            "BEACH_ZONE_MAIN_AREA_PELIPPER_ATTRACTION_ID".into(),
+            BuildConfigValue::Integer(0x6),
+        ),
+        (
             "MEADOW_ZONE_MAIN_AREA_TREEHOUSE_CONNECTION_ZONE".into(),
             BuildConfigValue::Integer(2),
         ),

@@ -48,6 +48,7 @@ extern void enter_attraction(int param_1, int attraction_id);
 config int BATTLE_COUNT;
 config bool EACH_ZONE;
 config int BEACH_ZONE_RECYCLE_AREA_GYARADOS_ATTRACTION_ID;
+config int BEACH_ZONE_MAIN_AREA_PELIPPER_ATTRACTION_ID;
 
 void A03_Z01_INIT(int param_1){
 
@@ -592,7 +593,45 @@ void lapras_dialog(int param_1){
 }
 
 void pelipper_dialog(int param_1){
-    // TODO: attraction logic
+    const int PELIPPER_OBJECT_ID = 0x87;
+    const int ATTRACTION_FEE = 10;
+
+    int player_accessor = lock_player_and_get_accessor();
+    int pelipper_accessor = lock_npc_and_get_accessor(PELIPPER_OBJECT_ID);
+    face_player_and_npc(PELIPPER_OBJECT_ID,0);
+
+    set_berry_counter_visible(true);
+    int wants_to_enter = attraction_show_yes_no_question(param_1,"31_60210");
+    if(wants_to_enter == 1){
+        int global_manager = get_module("GlobalManager");
+        int berry_count = @syscall(0,0x15,0x15,global_manager);
+        if(berry_count < ATTRACTION_FEE){
+            @syscall(0,0x15,2,pelipper_accessor,0x1b,10);
+            @syscall(0,0x15,0x28,pelipper_accessor,0xe78,0,1.0,1.0);
+            show_npc_dialog(param_1,"31_60240");
+        }
+        else{
+            @syscall(0,0x15,2,pelipper_accessor,0x1c,10);
+            @syscall(0,0x15,0x28,pelipper_accessor,0xe78,0,1.0,1.0);
+            @syscall(0,0x15,0x14,global_manager,-ATTRACTION_FEE);
+            show_npc_dialog(param_1,"31_60230");
+            set_berry_counter_visible(false);
+            @syscall(0,0x15,0,global_manager,"fRetAttraction",7);
+            fade_out(0,0,0,0x1e);
+            @syscall(0,0x15,0,player_accessor,0);
+            enter_attraction(param_1,BEACH_ZONE_MAIN_AREA_PELIPPER_ATTRACTION_ID);
+        }
+    }
+    else{
+        @syscall(0,0x15,2,pelipper_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,pelipper_accessor,0xe78,0,1.0,1.0);
+        show_npc_dialog(param_1,"31_60220");
+    }
+
+    set_berry_counter_visible(false);
+    rotate_object(PELIPPER_OBJECT_ID,0,0xb4,0);
+    update_npc_story_state(param_1);
+    end_event_script(param_1);
 }
 
 void gyarados_dialog(int param_1){
@@ -634,6 +673,7 @@ void gyarados_dialog(int param_1){
     }
 
     set_berry_counter_visible(false);
+    rotate_object(GYARADOS_OBJECT_ID,0,0xa9,0);
     end_event_script(param_1);
 }
 
