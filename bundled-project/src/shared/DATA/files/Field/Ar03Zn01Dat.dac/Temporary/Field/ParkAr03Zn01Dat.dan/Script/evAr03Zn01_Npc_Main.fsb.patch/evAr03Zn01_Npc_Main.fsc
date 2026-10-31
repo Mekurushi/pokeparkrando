@@ -44,11 +44,37 @@ extern int ask_quiz_question(int param_1, string question_id, string answer_1_id
 extern void start_carvanha_scene(int param_1);
 extern int attraction_show_yes_no_question(int param_1, string dialog_id);
 extern void enter_attraction(int param_1, int attraction_id);
+extern void fade_out_sound(int duration);
+extern void travel_to(int zone, int area, int position);
 
 config int BATTLE_COUNT;
 config bool EACH_ZONE;
 config int BEACH_ZONE_RECYCLE_AREA_GYARADOS_ATTRACTION_ID;
 config int BEACH_ZONE_MAIN_AREA_PELIPPER_ATTRACTION_ID;
+config int BEACH_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_ZONE;
+config int BEACH_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_AREA;
+config int BEACH_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_POSITION;
+config int BEACH_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL_ZONE;
+config int BEACH_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL_AREA;
+config int BEACH_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL_POSITION;
+config int BEACH_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL_ZONE;
+config int BEACH_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL_AREA;
+config int BEACH_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL_POSITION;
+config int BEACH_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL_ZONE;
+config int BEACH_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL_AREA;
+config int BEACH_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL_POSITION;
+config int BEACH_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL_ZONE;
+config int BEACH_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL_AREA;
+config int BEACH_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL_POSITION;
+config int BEACH_ZONE_MAIN_AREA_HAUNTED_DRIFBLIM_FAST_TRAVEL_ZONE;
+config int BEACH_ZONE_MAIN_AREA_HAUNTED_DRIFBLIM_FAST_TRAVEL_AREA;
+config int BEACH_ZONE_MAIN_AREA_HAUNTED_DRIFBLIM_FAST_TRAVEL_POSITION;
+config int BEACH_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL_ZONE;
+config int BEACH_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL_AREA;
+config int BEACH_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL_POSITION;
+config int BEACH_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_ZONE;
+config int BEACH_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_AREA;
+config int BEACH_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_POSITION;
 
 void A03_Z01_INIT(int param_1){
 
@@ -1004,6 +1030,83 @@ void chatot_dialog(int param_1){
 void totodile2_dialog(int param_1){
     // TODO: check if unused
     end_event_script(param_1);
+}
+
+void STAXIAREA(int param_1){
+    int global_manager = get_module("GlobalManager");
+    int event_script = get_module("EventScript");
+    int sound_manager = get_module("SoundManager");
+
+    @syscall(0,0x15,100,event_script,0,0,0,0x3c);
+    int destination = @syscall(0,0x15,1,global_manager,"rfFuwarideTaxi");
+    @syscall(0,0x15,0x16,sound_manager,6,1.0);
+    @syscall(0,0x15,0x16,sound_manager,8,1.0);
+    @syscall(0,0x15,0x16,sound_manager,7,1.0);
+    fade_out_sound(15);
+    @syscall(0,0x15,400,event_script,3,0);
+
+    if(destination == 0xb){
+        travel_to(
+            BEACH_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_ZONE,
+            BEACH_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_AREA,
+            BEACH_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_POSITION
+        );
+    }
+    else if(destination == 0x15){
+        travel_to(
+            BEACH_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL_ZONE,
+            BEACH_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL_AREA,
+            BEACH_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL_POSITION
+        );
+    }
+    else if(destination == 0x1f){
+        travel_to(3,1,2);
+    }
+    else if(destination == 0x20){
+        travel_to(
+            BEACH_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL_ZONE,
+            BEACH_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL_AREA,
+            BEACH_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL_POSITION
+        );
+    }
+    else if(destination == 0x29){
+        travel_to(
+            BEACH_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL_ZONE,
+            BEACH_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL_AREA,
+            BEACH_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL_POSITION
+        );
+    }
+    else if(destination == 0x2a){
+        travel_to(
+            BEACH_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL_ZONE,
+            BEACH_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL_AREA,
+            BEACH_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL_POSITION
+        );
+    }
+    else if(destination == 0x33){
+        travel_to(
+            BEACH_ZONE_MAIN_AREA_HAUNTED_DRIFBLIM_FAST_TRAVEL_ZONE,
+            BEACH_ZONE_MAIN_AREA_HAUNTED_DRIFBLIM_FAST_TRAVEL_AREA,
+            BEACH_ZONE_MAIN_AREA_HAUNTED_DRIFBLIM_FAST_TRAVEL_POSITION
+        );
+    }
+    else if(destination == 0x34){
+        travel_to(5,2,0);
+    }
+    else if(destination == 0x3d){
+        travel_to(
+            BEACH_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL_ZONE,
+            BEACH_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL_AREA,
+            BEACH_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL_POSITION
+        );
+    }
+    else if(destination == 0x3e){
+        travel_to(
+            BEACH_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_ZONE,
+            BEACH_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_AREA,
+            BEACH_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_POSITION
+        );
+    }
 }
 
 void special_spawn_condition(int param_1){

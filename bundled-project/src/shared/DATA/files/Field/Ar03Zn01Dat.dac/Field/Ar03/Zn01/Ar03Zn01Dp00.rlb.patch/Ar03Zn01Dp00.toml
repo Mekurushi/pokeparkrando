@@ -1,4 +1,11 @@
 [[edits]]
+table = "pokemonDispositionData"
+row = 30
+
+[edits.set]
+unlock_id = { value = 0xFFFFFFFF }
+
+[[edits]]
 table = "itemKindTotalNumData"
 row = 1
 
