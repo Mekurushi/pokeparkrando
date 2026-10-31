@@ -41,6 +41,7 @@ extern void choose_fast_travel_destination(int param_1, int object_id, int curre
 extern void show_npc_dialog_mode_0(int param_1, string dialog_id);
 extern void rotate_object(int object_id, int x_rotation, int y_rotation, int z_rotation);
 extern int ask_quiz_question(int param_1, string question_id, string answer_1_id, string answer_2_id, string answer_3_id, string correct_answer_id);
+extern void start_carvanha_scene(int param_1);
 
 config int BATTLE_COUNT;
 config bool EACH_ZONE;
@@ -466,7 +467,86 @@ void blastoise_dialog(int param_1){
 }
 
 void bidoof_dialog(int param_1){
-    // TODO: bridge logic
+    const int BIDOOF_OBJECT_ID = 0x84;
+    int event_script = get_module("EventScript");
+    int global_manager = get_module("GlobalManager");
+    lock_player_and_get_accessor();
+
+    int wood_level = @syscall(0,0x15,1,global_manager,"fBippasWoodLevel");
+    int held_item_kind = get_held_item_kind();
+
+    int bidoof_accessor = lock_npc_and_get_accessor(BIDOOF_OBJECT_ID);
+    face_player_and_npc(BIDOOF_OBJECT_ID,0);
+
+    int has_pelipper_prisma = @syscall(0,0x15,0x51,global_manager,0x6);
+    if(wood_level == 1 && has_pelipper_prisma == 0){
+        @syscall(0,0x15,0x28,bidoof_accessor,0xa40,0,1.0,1.0);
+        show_npc_dialog(param_1,"31_60002");
+        end_event_script(param_1);
+        return;
+    }
+
+    if(wood_level == 3){
+        @syscall(0,0x15,0x28,bidoof_accessor,0xa40,0,1.0,1.0);
+        @syscall(0,0x15,2,bidoof_accessor,0x13,10);
+        show_npc_dialog(param_1,"31_12500");
+        end_event_script(param_1);
+        return;
+    }
+
+    if(held_item_kind == -1){
+        @syscall(0,0x15,0x28,bidoof_accessor,0xa40,0,1.0,1.0);
+        wood_level = @syscall(0,0x15,1,global_manager,"fBippasWoodLevel");
+        if(wood_level == 0){
+            show_npc_dialog(param_1,"31_60001");
+        }
+        else if(wood_level == 1){
+            show_npc_dialog(param_1,"31_60090");
+        }
+        else if(wood_level == 2){
+            show_npc_dialog(param_1,"31_60111");
+        }
+        end_event_script(param_1);
+        return;
+    }
+    else if(held_item_kind == 1){
+        @syscall(0,0x15,0x28,bidoof_accessor,0xa40,0,1.0,1.0);
+        @syscall(0,0x15,2,bidoof_accessor,0xb,10);
+        wood_level = @syscall(0,0x15,1,global_manager,"fBippasWoodLevel");
+        if(wood_level == 0){
+            show_npc_dialog(param_1,"31_60003");
+            fade_out(0,0,0,0x2d);
+            remove_held_item();
+            @syscall(0,0x15,0,global_manager,"fBippasWoodLevel",1);
+            start_carvanha_scene(param_1);
+            end_event_script(param_1);
+        }
+        else if(wood_level == 1){
+            show_npc_dialog(param_1,"31_60100");
+            @syscall(0,0x15,0,global_manager,"fBippasWoodLevel",2);
+            fade_out(0,0,0,0x2d);
+            remove_held_item();
+        }
+        else if(wood_level == 2){
+            show_npc_dialog(param_1,"31_60110");
+            @syscall(0,0x15,0,global_manager,"fBippasWoodLevel",3);
+            fade_out(0,0,0,0x2d);
+            remove_held_item();
+        }
+    }
+    else{
+        @syscall(0,0x15,0x28,bidoof_accessor,0xa40,0,1.0,1.0);
+        show_npc_dialog(param_1,"31_60121");
+    }
+
+    fade_out(0,0,0,0x2d);
+    respawn_field();
+    special_spawn_condition(param_1);
+    update_npc_story_state(param_1);
+    @syscall(0,0x15,0xca,event_script,-1);
+    wait_frames(1);
+    fade_in(0,0,0,0x2d);
+    end_event_script(param_1);
 }
 
 void lapras_dialog(int param_1){

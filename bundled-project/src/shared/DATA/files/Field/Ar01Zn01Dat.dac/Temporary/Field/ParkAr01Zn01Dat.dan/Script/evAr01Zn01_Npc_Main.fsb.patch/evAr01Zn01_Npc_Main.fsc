@@ -106,9 +106,6 @@ config int MEADOW_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_AREA;
 config int MEADOW_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_POSITION;
 
 void AR01ZN01_INI(int param_1){
-    // activate logs
-    @syscall(0,7,1);
-
     int event_script = get_module("EventScript");
     @syscall(0,0x15,0x65,event_script,0,0,0,1);
     setup_field(param_1);
@@ -119,9 +116,6 @@ void AR01ZN01_INI(int param_1){
 }
 
 void AR01ZN01_DEF(int param_1){
-    // activate logs
-    @syscall(0,7,1);
-
     setup_field(param_1);
     fade_in(0,0,0,0x1e);
     clear_wand_check();

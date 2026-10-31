@@ -11,6 +11,9 @@ bool is_attraction_menu_entry_available(int attraction_id){
 }
 
 void MAIN(){
+    // activate logs
+    @syscall(0,7,1);
+    
     int start_menu = get_module("mnStartMenu");
     int global_manager = get_module("GlobalManager");
     int first_open = 1;
