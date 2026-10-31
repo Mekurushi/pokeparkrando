@@ -82,6 +82,7 @@ staravia_dialog = 0x66c40
 pidgeotto_dialog = 0x66efc
 blastoise_dialog = 0x671b8
 bidoof_dialog = 0x605fc
+ELAPLACEAREA = 0x616ec
 lapras_dialog = 0x61740
 pelipper_dialog = 0x61bfc
 gyarados_dialog = 0x6234c

@@ -51,6 +51,9 @@ config int BATTLE_COUNT;
 config bool EACH_ZONE;
 config int BEACH_ZONE_RECYCLE_AREA_GYARADOS_ATTRACTION_ID;
 config int BEACH_ZONE_MAIN_AREA_PELIPPER_ATTRACTION_ID;
+config int BEACH_ZONE_LAPRAS_AREA_BEACH_ZONE_LAPRAS_ZONE;
+config int BEACH_ZONE_LAPRAS_AREA_BEACH_ZONE_LAPRAS_AREA;
+config int BEACH_ZONE_LAPRAS_AREA_BEACH_ZONE_LAPRAS_POSITION;
 config int BEACH_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_ZONE;
 config int BEACH_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_AREA;
 config int BEACH_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_POSITION;
@@ -577,6 +580,17 @@ void bidoof_dialog(int param_1){
     wait_frames(1);
     fade_in(0,0,0,0x2d);
     end_event_script(param_1);
+}
+
+void ELAPLACEAREA(int param_1){
+    int event_script = get_module("EventScript");
+    fade_out_sound(15);
+    @syscall(0,0x15,400,event_script,3,0);
+    travel_to(
+        BEACH_ZONE_LAPRAS_AREA_BEACH_ZONE_LAPRAS_ZONE,
+        BEACH_ZONE_LAPRAS_AREA_BEACH_ZONE_LAPRAS_AREA,
+        BEACH_ZONE_LAPRAS_AREA_BEACH_ZONE_LAPRAS_POSITION
+    );
 }
 
 void lapras_dialog(int param_1){

@@ -487,5 +487,17 @@ fn build_config() -> BuildConfig {
             "BEACH_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_POSITION".into(),
             BuildConfigValue::Integer(1),
         ),
+        (
+            "BEACH_ZONE_LAPRAS_AREA_BEACH_ZONE_LAPRAS_ZONE".into(),
+            BuildConfigValue::Integer(3),
+        ),
+        (
+            "BEACH_ZONE_LAPRAS_AREA_BEACH_ZONE_LAPRAS_AREA".into(),
+            BuildConfigValue::Integer(2),
+        ),
+        (
+            "BEACH_ZONE_LAPRAS_AREA_BEACH_ZONE_LAPRAS_POSITION".into(),
+            BuildConfigValue::Integer(0),
+        ),
     ])
 }
