@@ -146,6 +146,18 @@ void do_unlock_scenes(int param_1){
         show_unlock_cutscene_at_position(param_1,0x80,"31_00320",10,0,-450.0,-42.0,937.0);
     }
 
+    // TODO: texts
+
+    // Blastoise
+    if(@syscall(0,0x15,0x29,global_manager,0x3d) == 1){
+        show_unlock_cutscene_at_position(param_1,0x83,"31_00350",10,0,-450.0,-42.0,937.0);
+    }
+
+    // Beach Bidoof
+    if(@syscall(0,0x15,0x29,global_manager,0x3e) == 1){
+        show_unlock_cutscene_at_position(param_1,0x84,"31_00350",10,0,-450.0,-42.0,937.0);
+    }
+
     int event_script = get_module("EventScript");
     @syscall(0,0x15,400,event_script,0,1);
     int audio_state = @syscall(0,0x15,0x1f7,event_script,0x17e3);
