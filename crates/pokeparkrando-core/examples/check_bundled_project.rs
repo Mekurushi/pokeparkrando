@@ -240,6 +240,10 @@ fn build_config() -> BuildConfig {
             BuildConfigValue::Integer(0x2),
         ),
         (
+            "BEACH_ZONE_RECYCLE_AREA_GYARADOS_ATTRACTION_ID".into(),
+            BuildConfigValue::Integer(0x5),
+        ),
+        (
             "MEADOW_ZONE_MAIN_AREA_TREEHOUSE_CONNECTION_ZONE".into(),
             BuildConfigValue::Integer(2),
         ),
