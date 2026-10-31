@@ -48,6 +48,7 @@ show_npc_dialog_mode_0 = 0x52008
 rotate_object = 0x537c8
 ask_quiz_question = 0x56870
 start_carvanha_scene = 0x5ea80
+attraction_show_yes_no_question = 0x52074
 A03_Z01_INIT = 0x693d8
 AR03ZN01_DEF = 0x69490
 do_unlock_scenes = 0x5d5b0

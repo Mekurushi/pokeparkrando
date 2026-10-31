@@ -42,6 +42,7 @@ extern void show_npc_dialog_mode_0(int param_1, string dialog_id);
 extern void rotate_object(int object_id, int x_rotation, int y_rotation, int z_rotation);
 extern int ask_quiz_question(int param_1, string question_id, string answer_1_id, string answer_2_id, string answer_3_id, string correct_answer_id);
 extern void start_carvanha_scene(int param_1);
+extern int attraction_show_yes_no_question(int param_1, string dialog_id);
 
 config int BATTLE_COUNT;
 config bool EACH_ZONE;
@@ -550,7 +551,42 @@ void bidoof_dialog(int param_1){
 }
 
 void lapras_dialog(int param_1){
-    // TODO: travel logic
+    const int LAPRAS_OBJECT_ID = 0x86;
+    int player_accessor = lock_player_and_get_accessor();
+
+    int lapras_accessor = lock_npc_and_get_accessor(LAPRAS_OBJECT_ID);
+    face_player_and_npc(LAPRAS_OBJECT_ID,0);
+
+    @syscall(0,0x15,0x28,lapras_accessor,0x1274,0,1.0,1.0);
+    @syscall(0,0x15,2,lapras_accessor,0x1b,10);
+    show_npc_dialog(param_1,"31_60261");
+
+    int wants_to_travel = attraction_show_yes_no_question(param_1,"31_60270");
+    if(wants_to_travel == 1){
+        @syscall(0,0x15,2,lapras_accessor,0x1b,10);
+        drop_held_item_animation();
+        if(!is_location_checked(LAPRAS_OBJECT_ID)){
+            show_npc_dialog(param_1,"31_60262");
+            @syscall(0,0x15,2,player_accessor,0x39,5);
+            friendship_banner("31_00616");
+            check_location(LAPRAS_OBJECT_ID);
+            show_npc_dialog(param_1,"31_60290");
+        }
+        else{
+            show_npc_dialog(param_1,"31_60290");
+        }
+        fade_out(0,0,0,0x3c);
+        int event_script = get_module("EventScript");
+        @syscall(0,0x15,4,event_script,0,1);
+        end_event_script(param_1);
+    }
+    else{
+        @syscall(0,0x15,2,lapras_accessor,0x1b,10);
+        show_npc_dialog(param_1,"31_60280");
+    }
+
+    update_npc_story_state(param_1);
+    end_event_script(param_1);
 }
 
 void pelipper_dialog(int param_1){
