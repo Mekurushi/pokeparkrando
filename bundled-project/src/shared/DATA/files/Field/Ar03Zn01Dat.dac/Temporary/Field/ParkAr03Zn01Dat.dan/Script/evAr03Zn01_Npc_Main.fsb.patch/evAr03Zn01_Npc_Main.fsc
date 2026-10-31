@@ -46,6 +46,17 @@ extern int attraction_show_yes_no_question(int param_1, string dialog_id);
 extern void enter_attraction(int param_1, int attraction_id);
 extern void fade_out_sound(int duration);
 extern void travel_to(int zone, int area, int position);
+extern void set_player_at(int x, int y, int z);
+extern void set_player_rotation(int x, int y, int z);
+extern void set_npc_state(int object_id, int state);
+extern void do_dialog_with_scene(int param_1, int object_id, string dialog_id, int scene);
+extern void reset_object_after_event(int object_id);
+extern void reset_camera();
+extern void restore_player_control();
+extern void despawn_field();
+extern void face_object_towards_player_synchronously(int object_id, int param_2);
+extern void face_player_towards_object_synchronously(int object_id, int param_2);
+extern void spawn_for_short_duration(int object_id);
 
 config int BATTLE_COUNT;
 config bool EACH_ZONE;
@@ -84,8 +95,6 @@ void A03_Z01_INIT(int param_1){
     int event_script = get_module("EventScript");
     @syscall(0,0x15,0x65,event_script,0,0,0,1);
     setup_field(param_1);
-    SETITEMS(param_1);
-    special_spawn_condition(param_1);
     fade_in(0,0,0,0x1e);
     clear_wand_check();
     end_event_script(param_1);
@@ -1046,6 +1055,247 @@ void totodile2_dialog(int param_1){
     end_event_script(param_1);
 }
 
+void gyarados_friendship_scene(int param_1){
+    const int GYARADOS_OBJECT_ID = 0x88;
+
+    int event_script = get_module("EventScript");
+    int player_accessor = lock_player_and_get_accessor();
+    set_npc_state(GYARADOS_OBJECT_ID,4);
+    despawn_player_object();
+    despawn_field();
+    spawn_player_object();
+    lock_player_and_get_accessor();
+    spawn_object_if_missing(GYARADOS_OBJECT_ID);
+    int gyarados_accessor = lock_npc_and_get_accessor(GYARADOS_OBJECT_ID);
+
+    set_player_at(0x3e,-0x2e,0x5ee);
+    set_player_rotation(0,-0x11,0);
+    set_object_position(GYARADOS_OBJECT_ID,0x32,-0x38,0x614);
+    set_object_rotation_instantly(GYARADOS_OBJECT_ID,0,0x9d,0);
+    face_object_towards_player_synchronously(GYARADOS_OBJECT_ID,0);
+    face_player_towards_object_synchronously(GYARADOS_OBJECT_ID,0);
+
+    vec3 camera_position = vec3{
+        .x = 57.64,
+        .y = -43.73,
+        .z = 1500.0
+    };
+    vec3 camera_target = vec3{
+        .x = 58.1,
+        .y = -41.1,
+        .z = 1512.56
+    };
+    @syscall(0,0x15,0xcb,event_script);
+    @syscall(0,0x15,0xcc,event_script,-1,&camera_position);
+    @syscall(0,0x15,0xcd,event_script,-1,&camera_target);
+
+    wait_frames(0x1e);
+    fade_in(0,0,0,0x1e);
+    wait_frames(0x3c);
+    @syscall(0,0x15,2,gyarados_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,gyarados_accessor,0xc4d,0,1.0,1.0);
+    do_dialog_with_scene(param_1,GYARADOS_OBJECT_ID,"31_60030",0);
+
+    spawn_for_short_duration(0x4e22);
+    wait_frames(0x6e);
+    play_sound_effect(0x7ea,0);
+    int field_info = get_module("mnFieldInfo");
+    @syscall(0,0x15,0x11,field_info,1,"31_60031");
+    wait_frames(0xb4);
+    @syscall(0,0x15,0x12,field_info);
+    wait_frames(0x1e);
+
+    @syscall(0,0x15,0x28,gyarados_accessor,0xc4d,0,1.0,1.0);
+    do_dialog_with_scene(param_1,GYARADOS_OBJECT_ID,"31_60032",0);
+    check_location(GYARADOS_OBJECT_ID);
+    @syscall(0,0x15,1,player_accessor,0x4c);
+    friendship_banner("31_00615");
+
+    fade_out(0,0,0,0x1e);
+    @syscall(0,0x15,0xca,event_script,-1);
+    respawn_field();
+    reset_object_after_event(GYARADOS_OBJECT_ID);
+    wait_frames(0x1e);
+    fade_in(0,0,0,0x1e);
+    @syscall(0,0x15,5,event_script);
+    wait_frames(1);
+}
+
+void pelipper_friendship_scene(int param_1){
+    const int PELIPPER_OBJECT_ID = 0x87;
+
+    int event_script = get_module("EventScript");
+    int player_accessor = lock_player_and_get_accessor();
+    int sound_manager = get_module("SoundManager");
+    despawn_player_object();
+    despawn_field();
+    spawn_player_object();
+    lock_player_and_get_accessor();
+    @syscall(0,0x15,0x16,sound_manager,0xc,0);
+    spawn_object_if_missing(PELIPPER_OBJECT_ID);
+    int pelipper_accessor = lock_npc_and_get_accessor(PELIPPER_OBJECT_ID);
+
+    set_player_at(0x308,0,0x5a6);
+    set_player_rotation(0,0xc0,0);
+    set_object_position(PELIPPER_OBJECT_ID,0x30f,0,0x5b7);
+    set_object_rotation_instantly(PELIPPER_OBJECT_ID,0,0xb4,0);
+    face_object_towards_player_synchronously(PELIPPER_OBJECT_ID,0);
+    face_player_towards_object_synchronously(PELIPPER_OBJECT_ID,0);
+
+    vec3 camera_position = vec3{
+        .x = 753.76,
+        .y = 3.42,
+        .z = 1436.03
+    };
+    vec3 camera_target = vec3{
+        .x = 772.42,
+        .y = 7.38,
+        .z = 1447.52
+    };
+    @syscall(0,0x15,0xcb,event_script);
+    @syscall(0,0x15,0xcc,event_script,-1,&camera_position);
+    @syscall(0,0x15,0xcd,event_script,-1,&camera_target);
+
+    wait_frames(0x1e);
+    fade_in(0,0,0,0x1e);
+    wait_frames(0x3c);
+    @syscall(0,0x15,2,pelipper_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,pelipper_accessor,0xe78,0,1.0,1.0);
+    do_dialog_with_scene(param_1,PELIPPER_OBJECT_ID,"31_60310",0);
+
+    spawn_for_short_duration(0x4e23);
+    wait_frames(0x6e);
+    play_sound_effect(0x7ea,0);
+    int field_info = get_module("mnFieldInfo");
+    @syscall(0,0x15,0x11,field_info,1,"31_60320");
+    wait_frames(0xb4);
+    @syscall(0,0x15,0x12,field_info);
+    wait_frames(0x1e);
+
+    @syscall(0,0x15,2,pelipper_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,pelipper_accessor,0xe78,0,1.0,1.0);
+    do_dialog_with_scene(param_1,PELIPPER_OBJECT_ID,"31_60330",0);
+    check_location(PELIPPER_OBJECT_ID);
+    @syscall(0,0x15,1,player_accessor,0x4c);
+    friendship_banner("31_00614");
+
+    fade_out(0,0,0,0x1e);
+    respawn_field();
+    @syscall(0,0x15,0xca,event_script,-1);
+    reset_object_after_event(PELIPPER_OBJECT_ID);
+    wait_frames(0x1e);
+    @syscall(0,0x15,0x16,sound_manager,0xc,1.0);
+    fade_in(0,0,0,0x1e);
+    @syscall(0,0x15,5,event_script);
+    wait_frames(1);
+}
+
+void RETURN_AT06(int param_1){
+    const int GYARADOS_OBJECT_ID = 0x88;
+
+    int global_manager = get_module("GlobalManager");
+    int event_script = get_module("EventScript");
+    @syscall(0,0x15,0x65,event_script,0,0,0,1);
+
+    setup_field(param_1);
+    lock_player_and_get_accessor();
+    set_player_at(0x34,-0x31,0x5f9);
+    set_player_rotation(0,0x164,0);
+    @syscall(0,0x15,0xca,event_script,0);
+
+    set_npc_state(GYARADOS_OBJECT_ID,4);
+    int has_gyarados_prisma = @syscall(
+        0,0x15,0x51,global_manager,0x5
+    );
+    if(has_gyarados_prisma == 1){
+        if(!is_location_checked(GYARADOS_OBJECT_ID)){
+            gyarados_friendship_scene(param_1);
+        }
+        else{
+            int gyarados_accessor = lock_npc_and_get_accessor(GYARADOS_OBJECT_ID);
+            face_player_and_npc(GYARADOS_OBJECT_ID,0);
+            fade_in(0,0,0,0x1e);
+            wait_frames(0x3c);
+            @syscall(0,0x15,2,gyarados_accessor,0x1b,10);
+            @syscall(0,0x15,0x28,gyarados_accessor,0xc4d,0,1.0,1.0);
+            do_dialog_with_scene(param_1,GYARADOS_OBJECT_ID,"31_60184",0);
+            reset_object_after_event(GYARADOS_OBJECT_ID);
+            reset_camera();
+            @syscall(0,0x15,0xca,event_script,0x1e);
+        }
+    }
+    else{
+        int gyarados_accessor = lock_npc_and_get_accessor(GYARADOS_OBJECT_ID);
+        face_player_and_npc(GYARADOS_OBJECT_ID,0);
+        fade_in(0,0,0,0x1e);
+        wait_frames(0x3c);
+        @syscall(0,0x15,2,gyarados_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,gyarados_accessor,0xc4d,0,1.0,1.0);
+        do_dialog_with_scene(param_1,GYARADOS_OBJECT_ID,"31_60182",0);
+        reset_object_after_event(GYARADOS_OBJECT_ID);
+        reset_camera();
+        @syscall(0,0x15,0xca,event_script,0x1e);
+    }
+
+    clear_wand_check();
+    restore_player_control();
+    reset_camera();
+    end_event_script(param_1);
+}
+
+void RETURN_AT07(int param_1){
+    const int PELIPPER_OBJECT_ID = 0x87;
+
+    int global_manager = get_module("GlobalManager");
+    int event_script = get_module("EventScript");
+    @syscall(0,0x15,0x65,event_script,0,0,0,1);
+
+    setup_field(param_1);
+    lock_player_and_get_accessor();
+    set_player_at(0x30c,0,0x59f);
+    set_player_rotation(0,0x166,0);
+    @syscall(0,0x15,0xca,event_script,0);
+
+    set_npc_state(PELIPPER_OBJECT_ID,4);
+    int has_pelipper_prisma = @syscall(
+        0,0x15,0x51,global_manager,0x6
+    );
+    if(has_pelipper_prisma == 1){
+        if(!is_bestfriend(PELIPPER_OBJECT_ID)){
+            pelipper_friendship_scene(param_1);
+        }
+        else{
+            int pelipper_accessor = lock_npc_and_get_accessor(PELIPPER_OBJECT_ID);
+            face_player_and_npc(PELIPPER_OBJECT_ID,0);
+            fade_in(0,0,0,0x1e);
+            wait_frames(0x3c);
+            @syscall(0,0x15,2,pelipper_accessor,0x1b,10);
+            @syscall(0,0x15,0x28,pelipper_accessor,0xe78,0,1.0,1.0);
+            do_dialog_with_scene(param_1,PELIPPER_OBJECT_ID,"31_60244",0);
+            reset_object_after_event(PELIPPER_OBJECT_ID);
+            reset_camera();
+            @syscall(0,0x15,0xca,event_script,0x1e);
+        }
+    }
+    else{
+        int pelipper_accessor = lock_npc_and_get_accessor(PELIPPER_OBJECT_ID);
+        face_player_and_npc(PELIPPER_OBJECT_ID,0);
+        fade_in(0,0,0,0x1e);
+        wait_frames(0x3c);
+        @syscall(0,0x15,2,pelipper_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,pelipper_accessor,0xe78,0,1.0,1.0);
+        do_dialog_with_scene(param_1,PELIPPER_OBJECT_ID,"31_60242",0);
+        reset_object_after_event(PELIPPER_OBJECT_ID);
+        reset_camera();
+        @syscall(0,0x15,0xca,event_script,0x1e);
+    }
+
+    clear_wand_check();
+    restore_player_control();
+    reset_camera();
+    end_event_script(param_1);
+}
+
 void STAXIAREA(int param_1){
     int global_manager = get_module("GlobalManager");
     int event_script = get_module("EventScript");
@@ -1916,7 +2166,9 @@ void setup_field(int param_1){
     cleanup_debug_object(0x4e23);
     lock_player_and_get_accessor();
     setup_player_for_zone();
+    SETITEMS(param_1);
     do_unlock_scenes(param_1);
+    special_spawn_condition(param_1);
     update_npc_story_state(param_1);
     return;
 }
