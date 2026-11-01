@@ -1,0 +1,171 @@
+extern int get_module(string name);
+extern void wait_frames(int frames);
+extern int lock_player_and_get_accessor();
+extern void face_player_towards_object_synchronously(int object_id, int smooth);
+extern void show_message_box(int mode, string dialog_id);
+extern void restore_player_control();
+extern void end_event_script(int param1);
+extern int get_held_item_kind();
+extern void remove_held_item();
+extern void play_sound_effect(int sound_id, int fade_in_frames);
+extern void fade_out_bgm(int frames);
+extern void despawn_field();
+extern void give_berries(int value);
+extern void respawn_field();
+extern void fade_in_bgm(int frames);
+extern void force_fade_out(int red, int green, int blue, int frames);
+extern void force_fade_in(int red, int green, int blue, int frames);
+extern void update_npc_state(int param_1);
+extern void SETITEMS(int param_1);
+
+config bool UNLOCK_FAST_TRAVEL_WITH_TAXI_STOP;
+config bool REMOVE_ERRAND_POWER_COMP_LOCATIONS;
+
+export void TAXI_STOP(int param_1){
+    int global_manager = get_module("GlobalManager");
+    lock_player_and_get_accessor();
+    face_player_towards_object_synchronously(0x4e2b,1);
+
+    show_message_box(0,"02_80160");
+
+    if(UNLOCK_FAST_TRAVEL_WITH_TAXI_STOP == true){
+        int taxi_stop_unlocked = @syscall(0,0x15,1,global_manager,"f0301FuwarideTaxiStop");
+        if(taxi_stop_unlocked == 0){
+            int field_info = get_module("mnFieldInfo");
+            @syscall(0,0x15,0x11,field_info,1,"31_00371");
+            wait_frames(90);
+            wait_frames(90);
+            @syscall(0,0x15,0x12,field_info);
+            @syscall(0,0x15,0,global_manager,"f0301FuwarideTaxiStop",1);
+        }
+    }
+
+    restore_player_control();
+    end_event_script(param_1);
+    return;
+}
+
+export void RECYCLE(int param_1){
+    int global_manager = get_module("GlobalManager");
+    int recycle_count = @syscall(0,0x15,1,global_manager,"fRecycleBox");
+    lock_player_and_get_accessor();
+
+    int held_item_kind = get_held_item_kind();
+    if(held_item_kind == 7){
+        int object_manager = get_module("ObjectManager");
+        int recycle_box_object_id = @syscall(0,0x15,4,object_manager,0x4e31);
+        int recycle_box_accessor = @syscall(0,0x15,1,object_manager,recycle_box_object_id);
+        @syscall(0,0x15,0,recycle_box_accessor,1);
+        remove_held_item();
+        wait_frames(30);
+        play_sound_effect(0x591,0);
+
+        if(REMOVE_ERRAND_POWER_COMP_LOCATIONS == false && recycle_count < 6){
+            recycle_count = recycle_count + 1;
+            @syscall(0,0x15,0,global_manager,"fRecycleBox",recycle_count);
+            fade_out_bgm(30);
+            wait_frames(30);
+
+            int event_script = get_module("EventScript");
+            force_fade_out(0,0,0,30);
+            despawn_field();
+            @syscall(0,0x15,0xcb,event_script);
+
+            if(recycle_count < 3){
+                vec3 camera_position = vec3{
+                    .x = 125.8,
+                    .y = -22.1,
+                    .z = 1444.83
+                };
+                vec3 camera_target = vec3{
+                    .x = 55.28,
+                    .y = -3.59,
+                    .z = 1228.01
+                };
+                @syscall(0,0x15,0xcc,event_script,-1,&camera_position);
+                @syscall(0,0x15,0xcd,event_script,-1,&camera_target);
+            }else{
+                vec3 camera_position = vec3{
+                    .x = 228.59,
+                    .y = 7.03,
+                    .z = 919.07
+                };
+                vec3 camera_target = vec3{
+                    .x = 202.02,
+                    .y = 3.0,
+                    .z = 930.42
+                };
+                @syscall(0,0x15,0xcc,event_script,-1,&camera_position);
+                @syscall(0,0x15,0xcd,event_script,-1,&camera_target);
+            }
+
+            force_fade_in(0,0,0,30);
+            wait_frames(60);
+            force_fade_out(0,0,0,30);
+
+            int pokemon_object_id = 0;
+            if(recycle_count == 1){
+                @syscall(0,0x15,6,object_manager,0x4e32,3);
+            }else if(recycle_count == 2){
+                @syscall(0,0x15,6,object_manager,0x4e38,3);
+                pokemon_object_id = 0x75;
+            }else if(recycle_count == 3){
+                @syscall(0,0x15,6,object_manager,0x4e39,3);
+            }else if(recycle_count == 4){
+                @syscall(0,0x15,6,object_manager,0x4e37,3);
+                pokemon_object_id = 0x78;
+            }else if(recycle_count == 5){
+                @syscall(0,0x15,6,object_manager,0x4e3a,3);
+            }else{
+                @syscall(0,0x15,6,object_manager,0x4e33,3);
+                @syscall(0,0x15,6,object_manager,0x4e34,3);
+                @syscall(0,0x15,6,object_manager,0x4e35,3);
+                @syscall(0,0x15,6,object_manager,0x4e36,3);
+            }
+
+            wait_frames(10);
+            force_fade_in(0,0,0,30);
+            play_sound_effect(0x7eb,0);
+            wait_frames(90);
+
+            if(recycle_count == 1){
+                show_message_box(1,"31_00660");
+            }else if(recycle_count == 2 || recycle_count == 3){
+                show_message_box(1,"31_00650");
+            }else if(recycle_count == 4){
+                show_message_box(1,"31_00670");
+            }else if(recycle_count == 5){
+                show_message_box(1,"31_00680");
+            }else{
+                show_message_box(1,"31_00690");
+            }
+
+            if(recycle_count <= 5){
+                force_fade_out(0,0,0,30);
+            }else{
+                play_sound_effect(0x7ec,0);
+                wait_frames(240);
+                show_message_box(1,"31_00640");
+                force_fade_out(0,0,0,30);
+            }
+            give_berries(100);
+
+            respawn_field();
+            SETITEMS(param_1);
+            update_npc_state(param_1);
+            @syscall(0,0x15,0xca,event_script,-1);
+            fade_in_bgm(30);
+            force_fade_in(0,0,0,30);
+        }else{
+            give_berries(100);
+            show_message_box(1,"31_00710");
+        }
+    }else if(recycle_count < 6){
+        show_message_box(1,"31_00630");
+    }else{
+        show_message_box(1,"31_00700");
+    }
+
+    restore_player_control();
+    end_event_script(param_1);
+}

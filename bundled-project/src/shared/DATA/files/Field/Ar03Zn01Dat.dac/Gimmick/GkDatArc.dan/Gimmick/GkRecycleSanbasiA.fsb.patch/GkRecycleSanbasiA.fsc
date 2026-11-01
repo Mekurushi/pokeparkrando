@@ -1,0 +1,17 @@
+extern int get_module(string name);
+
+export void STEP01(int param_1){
+  int unk = @syscall(0,0x15,5,param_1);
+  int global_manager = get_module("GlobalManager");
+  int bridge_build = @syscall(0,0x15,1,global_manager,"fMap0301Bridge1Build");
+  if (bridge_build == 0) {
+    int object_manager = get_module("ObjectManager");
+    int object_id = @syscall(0,0x15,0,param_1);
+    unk = @syscall(0,0x15,1,object_manager,object_id);
+    @syscall(0,0x15,6,unk,0);
+  }
+  else {
+    @syscall(0,0x15,0,unk,param_1,1);
+  }
+  return;
+}

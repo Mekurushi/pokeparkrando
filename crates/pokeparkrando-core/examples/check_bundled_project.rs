@@ -123,6 +123,18 @@ fn build_config() -> BuildConfig {
             BuildConfigValue::Integer(0),
         ),
         (
+            "BEACH_ZONE_MAIN_AREA_TREEHOUSE_CONNECTION_ZONE".into(),
+            BuildConfigValue::Integer(2),
+        ),
+        (
+            "BEACH_ZONE_MAIN_AREA_TREEHOUSE_CONNECTION_AREA".into(),
+            BuildConfigValue::Integer(1),
+        ),
+        (
+            "BEACH_ZONE_MAIN_AREA_TREEHOUSE_CONNECTION_POSITION".into(),
+            BuildConfigValue::Integer(1),
+        ),
+        (
             "TREEHOUSE_MEADOW_DRIFBLIM_FAST_TRAVEL_ZONE".into(),
             BuildConfigValue::Integer(1),
         ),
@@ -229,6 +241,10 @@ fn build_config() -> BuildConfig {
         ("FPS_ENHANCEMENT".into(), BuildConfigValue::Boolean(true)),
         (
             "UNLOCK_FAST_TRAVEL_WITH_TAXI_STOP".into(),
+            BuildConfigValue::Boolean(true),
+        ),
+        (
+            "REMOVE_ERRAND_POWER_COMP_LOCATIONS".into(),
             BuildConfigValue::Boolean(true),
         ),
         (

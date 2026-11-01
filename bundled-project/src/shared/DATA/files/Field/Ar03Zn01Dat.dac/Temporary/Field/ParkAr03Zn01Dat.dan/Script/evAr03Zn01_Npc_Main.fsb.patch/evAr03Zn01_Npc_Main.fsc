@@ -167,6 +167,18 @@ void do_unlock_scenes(int param_1){
     return;
 }
 
+void setup_field(int param_1){
+    cleanup_debug_object(0x4e22);
+    cleanup_debug_object(0x4e23);
+    lock_player_and_get_accessor();
+    setup_player_for_zone();
+    SETITEMS(param_1);
+    do_unlock_scenes(param_1);
+    special_spawn_condition(param_1);
+    update_npc_story_state(param_1);
+    return;
+}
+
 void piplup_dialog(int param_1){
     power_competition_dialog(
         param_1,
@@ -2171,18 +2183,6 @@ bool is_bestfriend(int object_id){
     int friend_id = @syscall(0,0x15,0xe,dispos_manager,object_id);
     int is_best_friend = @syscall(0,0x15,0x4b,global_manager,friend_id);
     return is_best_friend == 1;
-}
-
-void setup_field(int param_1){
-    cleanup_debug_object(0x4e22);
-    cleanup_debug_object(0x4e23);
-    lock_player_and_get_accessor();
-    setup_player_for_zone();
-    SETITEMS(param_1);
-    do_unlock_scenes(param_1);
-    special_spawn_condition(param_1);
-    update_npc_story_state(param_1);
-    return;
 }
 
 // stub out set_chapter

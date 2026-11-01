@@ -57,6 +57,12 @@ impl Patcher {
                 "UNLOCK_FAST_TRAVEL_WITH_TAXI_STOP".to_owned(),
                 BuildConfigValue::Boolean(appkprk.options().unlock_fast_travel_with_taxi_stop()),
             ),
+            (
+                "REMOVE_ERRAND_POWER_COMP_LOCATIONS".to_owned(),
+                BuildConfigValue::Boolean(
+                    appkprk.options().remove_errand_power_comp_locations(),
+                ),
+            ),
         ]);
 
         for (entrance, exit) in appkprk.entrances() {
