@@ -1441,296 +1441,6 @@ const int QUIZ_DIALOG_ROUND_INTRO = 1;
 const int QUIZ_DIALOG_CORRECT = 2;
 const int QUIZ_DIALOG_WRONG = 3;
 
-string get_quiz_question_id(int quiz_id, int round, int question, int field){
-    if(quiz_id == 0){
-        if(round == 0){
-            if(question == 0){
-                if(field == 0){ return "31_50000"; }
-                if(field == 1){ return "31_50010"; }
-                if(field == 2){ return "31_50020"; }
-                if(field == 3){ return "31_50030"; }
-                return "31_50040";
-            }
-            if(question == 1){
-                if(field == 0){ return "31_50050"; }
-                if(field == 1){ return "31_50060"; }
-                if(field == 2){ return "31_50070"; }
-                if(field == 3){ return "31_50080"; }
-                return "31_50090";
-            }
-            if(question == 2){
-                if(field == 0){ return "31_50100"; }
-                if(field == 1){ return "31_50110"; }
-                if(field == 2){ return "31_50120"; }
-                if(field == 3){ return "31_50130"; }
-                return "31_50140";
-            }
-            if(field == 0){ return "31_50150"; }
-            if(field == 1){ return "31_50160"; }
-            if(field == 2){ return "31_50170"; }
-            if(field == 3){ return "31_50180"; }
-            return "31_50190";
-        }
-        if(round == 1){
-            if(question == 0){
-                if(field == 0){ return "31_50200"; }
-                if(field == 1){ return "31_50210"; }
-                if(field == 2){ return "31_50220"; }
-                if(field == 3){ return "31_50230"; }
-                return "31_50240";
-            }
-            if(question == 1){
-                if(field == 0){ return "31_50250"; }
-                if(field == 1){ return "31_50260"; }
-                if(field == 2){ return "31_50270"; }
-                if(field == 3){ return "31_50280"; }
-                return "31_50290";
-            }
-            if(question == 2){
-                if(field == 0){ return "31_50300"; }
-                if(field == 1){ return "31_50310"; }
-                if(field == 2){ return "31_50320"; }
-                if(field == 3){ return "31_50330"; }
-                return "31_50340";
-            }
-            if(field == 0){ return "31_50350"; }
-            if(field == 1){ return "31_50360"; }
-            if(field == 2){ return "31_50370"; }
-            if(field == 3){ return "31_50380"; }
-            return "31_50390";
-        }
-        if(question == 0){
-            if(field == 0){ return "31_50400"; }
-            if(field == 1){ return "31_50410"; }
-            if(field == 2){ return "31_50420"; }
-            if(field == 3){ return "31_50430"; }
-            return "31_50440";
-        }
-        if(question == 1){
-            if(field == 0){ return "31_50450"; }
-            if(field == 1){ return "31_50460"; }
-            if(field == 2){ return "31_50470"; }
-            if(field == 3){ return "31_50480"; }
-            return "31_50490";
-        }
-        if(question == 2){
-            if(field == 0){ return "31_50500"; }
-            if(field == 1){ return "31_50510"; }
-            if(field == 2){ return "31_50520"; }
-            if(field == 3){ return "31_50530"; }
-            return "31_50540";
-        }
-        if(field == 0){ return "31_50550"; }
-        if(field == 1){ return "31_50560"; }
-        if(field == 2){ return "31_50570"; }
-        if(field == 3){ return "31_50580"; }
-        return "31_50590";
-    }
-    if(quiz_id == 1){
-        if(round == 0){
-        if(question == 0){
-            if(field == 0){ return "31_50800"; }
-            if(field == 1){ return "31_50810"; }
-            if(field == 2){ return "31_50820"; }
-            if(field == 3){ return "31_50830"; }
-            return "31_50840";
-        }
-        if(question == 1){
-            if(field == 0){ return "31_50850"; }
-            if(field == 1){ return "31_50860"; }
-            if(field == 2){ return "31_50870"; }
-            if(field == 3){ return "31_50880"; }
-            return "31_50890";
-        }
-        if(question == 2){
-            if(field == 0){ return "31_50900"; }
-            if(field == 1){ return "31_50910"; }
-            if(field == 2){ return "31_50920"; }
-            if(field == 3){ return "31_50930"; }
-            return "31_50940";
-        }
-        if(field == 0){ return "31_50950"; }
-        if(field == 1){ return "31_50960"; }
-        if(field == 2){ return "31_50970"; }
-        if(field == 3){ return "31_50980"; }
-        return "31_50990";
-    }
-        if(round == 1){
-        if(question == 0){
-            if(field == 0){ return "31_51000"; }
-            if(field == 1){ return "31_51010"; }
-            if(field == 2){ return "31_51020"; }
-            if(field == 3){ return "31_51030"; }
-            return "31_51040";
-        }
-        if(question == 1){
-            if(field == 0){ return "31_51050"; }
-            if(field == 1){ return "31_51060"; }
-            if(field == 2){ return "31_51070"; }
-            if(field == 3){ return "31_51080"; }
-            return "31_51090";
-        }
-        if(question == 2){
-            if(field == 0){ return "31_51100"; }
-            if(field == 1){ return "31_51110"; }
-            if(field == 2){ return "31_51120"; }
-            if(field == 3){ return "31_51130"; }
-            return "31_51140";
-        }
-        if(field == 0){ return "31_51150"; }
-        if(field == 1){ return "31_51160"; }
-        if(field == 2){ return "31_51170"; }
-        if(field == 3){ return "31_51180"; }
-        return "31_51190";
-    }
-        if(question == 0){
-        if(field == 0){ return "31_51200"; }
-        if(field == 1){ return "31_51210"; }
-        if(field == 2){ return "31_51220"; }
-        if(field == 3){ return "31_51230"; }
-        return "31_51240";
-    }
-        if(question == 1){
-        if(field == 0){ return "31_51250"; }
-        if(field == 1){ return "31_51260"; }
-        if(field == 2){ return "31_51270"; }
-        if(field == 3){ return "31_51280"; }
-        return "31_51290";
-    }
-        if(question == 2){
-        if(field == 0){ return "31_51300"; }
-        if(field == 1){ return "31_51310"; }
-        if(field == 2){ return "31_51320"; }
-        if(field == 3){ return "31_51330"; }
-        return "31_51340";
-    }
-        if(field == 0){ return "31_51350"; }
-        if(field == 1){ return "31_51360"; }
-        if(field == 2){ return "31_51370"; }
-        if(field == 3){ return "31_51380"; }
-        return "31_51390";
-    }
-    if(round == 0){
-        if(question == 0){
-            if(field == 0){ return "31_51600"; }
-            if(field == 1){ return "31_51610"; }
-            if(field == 2){ return "31_51620"; }
-            if(field == 3){ return "31_51630"; }
-            return "31_51640";
-        }
-        if(question == 1){
-            if(field == 0){ return "31_51650"; }
-            if(field == 1){ return "31_51660"; }
-            if(field == 2){ return "31_51670"; }
-            if(field == 3){ return "31_51680"; }
-            return "31_51690";
-        }
-        if(question == 2){
-            if(field == 0){ return "31_51700"; }
-            if(field == 1){ return "31_51710"; }
-            if(field == 2){ return "31_51720"; }
-            if(field == 3){ return "31_51730"; }
-            return "31_51740";
-        }
-        if(field == 0){ return "31_51750"; }
-        if(field == 1){ return "31_51760"; }
-        if(field == 2){ return "31_51770"; }
-        if(field == 3){ return "31_51780"; }
-        return "31_51790";
-    }
-    if(round == 1){
-        if(question == 0){
-            if(field == 0){ return "31_51800"; }
-            if(field == 1){ return "31_51810"; }
-            if(field == 2){ return "31_51820"; }
-            if(field == 3){ return "31_51830"; }
-            return "31_51840";
-        }
-        if(question == 1){
-            if(field == 0){ return "31_51850"; }
-            if(field == 1){ return "31_51860"; }
-            if(field == 2){ return "31_51870"; }
-            if(field == 3){ return "31_51880"; }
-            return "31_51890";
-        }
-        if(question == 2){
-            if(field == 0){ return "31_51900"; }
-            if(field == 1){ return "31_51910"; }
-            if(field == 2){ return "31_51920"; }
-            if(field == 3){ return "31_51930"; }
-            return "31_51940";
-        }
-        if(field == 0){ return "31_51950"; }
-        if(field == 1){ return "31_51960"; }
-        if(field == 2){ return "31_51970"; }
-        if(field == 3){ return "31_51980"; }
-        return "31_51990";
-    }
-    if(question == 0){
-        if(field == 0){ return "31_52000"; }
-        if(field == 1){ return "31_52010"; }
-        if(field == 2){ return "31_52020"; }
-        if(field == 3){ return "31_52030"; }
-        return "31_52040";
-    }
-    if(question == 1){
-        if(field == 0){ return "31_52050"; }
-        if(field == 1){ return "31_52060"; }
-        if(field == 2){ return "31_52070"; }
-        if(field == 3){ return "31_52080"; }
-        return "31_52090";
-    }
-    if(question == 2){
-        if(field == 0){ return "31_52100"; }
-        if(field == 1){ return "31_52110"; }
-        if(field == 2){ return "31_52120"; }
-        if(field == 3){ return "31_52130"; }
-        return "31_52140";
-    }
-    if(field == 0){ return "31_52150"; }
-    if(field == 1){ return "31_52160"; }
-    if(field == 2){ return "31_52170"; }
-    if(field == 3){ return "31_52180"; }
-    return "31_52190";
-}
-
-string get_quiz_dialog_id(int quiz_id, int kind, int index){
-    if(quiz_id == 0){
-        if(kind == QUIZ_DIALOG_INTRO){
-            if(index == 0){ return "31_10560"; }
-            return "31_10591";
-        }
-        if(kind == QUIZ_DIALOG_ROUND_INTRO){
-            if(index == 0){ return "31_10592"; }
-            return "31_10593";
-        }
-        if(kind == QUIZ_DIALOG_CORRECT){ return "31_10595"; }
-        return "31_10596";
-    }
-    if(quiz_id == 1){
-        if(kind == QUIZ_DIALOG_INTRO){
-            if(index == 0){ return "31_12860"; }
-            return "31_12891";
-        }
-        if(kind == QUIZ_DIALOG_ROUND_INTRO){
-            if(index == 0){ return "31_12892"; }
-            return "31_12893";
-        }
-        if(kind == QUIZ_DIALOG_CORRECT){ return "31_12895"; }
-        return "31_12896";
-    }
-    if(kind == QUIZ_DIALOG_INTRO){
-        if(index == 0){ return "31_12960"; }
-        return "31_12991";
-    }
-    if(kind == QUIZ_DIALOG_ROUND_INTRO){
-        if(index == 0){ return "31_12992"; }
-        return "31_12993";
-    }
-    if(kind == QUIZ_DIALOG_CORRECT){ return "31_12995"; }
-    return "31_12996";
-}
-
 void quiz_dialog(
     int param_1,
     int object_id,
@@ -2183,6 +1893,296 @@ bool is_bestfriend(int object_id){
     int friend_id = @syscall(0,0x15,0xe,dispos_manager,object_id);
     int is_best_friend = @syscall(0,0x15,0x4b,global_manager,friend_id);
     return is_best_friend == 1;
+}
+
+string get_quiz_question_id(int quiz_id, int round, int question, int field){
+    if(quiz_id == 0){
+        if(round == 0){
+            if(question == 0){
+                if(field == 0){ return "31_50000"; }
+                if(field == 1){ return "31_50010"; }
+                if(field == 2){ return "31_50020"; }
+                if(field == 3){ return "31_50030"; }
+                return "31_50040";
+            }
+            if(question == 1){
+                if(field == 0){ return "31_50050"; }
+                if(field == 1){ return "31_50060"; }
+                if(field == 2){ return "31_50070"; }
+                if(field == 3){ return "31_50080"; }
+                return "31_50090";
+            }
+            if(question == 2){
+                if(field == 0){ return "31_50100"; }
+                if(field == 1){ return "31_50110"; }
+                if(field == 2){ return "31_50120"; }
+                if(field == 3){ return "31_50130"; }
+                return "31_50140";
+            }
+            if(field == 0){ return "31_50150"; }
+            if(field == 1){ return "31_50160"; }
+            if(field == 2){ return "31_50170"; }
+            if(field == 3){ return "31_50180"; }
+            return "31_50190";
+        }
+        if(round == 1){
+            if(question == 0){
+                if(field == 0){ return "31_50200"; }
+                if(field == 1){ return "31_50210"; }
+                if(field == 2){ return "31_50220"; }
+                if(field == 3){ return "31_50230"; }
+                return "31_50240";
+            }
+            if(question == 1){
+                if(field == 0){ return "31_50250"; }
+                if(field == 1){ return "31_50260"; }
+                if(field == 2){ return "31_50270"; }
+                if(field == 3){ return "31_50280"; }
+                return "31_50290";
+            }
+            if(question == 2){
+                if(field == 0){ return "31_50300"; }
+                if(field == 1){ return "31_50310"; }
+                if(field == 2){ return "31_50320"; }
+                if(field == 3){ return "31_50330"; }
+                return "31_50340";
+            }
+            if(field == 0){ return "31_50350"; }
+            if(field == 1){ return "31_50360"; }
+            if(field == 2){ return "31_50370"; }
+            if(field == 3){ return "31_50380"; }
+            return "31_50390";
+        }
+        if(question == 0){
+            if(field == 0){ return "31_50400"; }
+            if(field == 1){ return "31_50410"; }
+            if(field == 2){ return "31_50420"; }
+            if(field == 3){ return "31_50430"; }
+            return "31_50440";
+        }
+        if(question == 1){
+            if(field == 0){ return "31_50450"; }
+            if(field == 1){ return "31_50460"; }
+            if(field == 2){ return "31_50470"; }
+            if(field == 3){ return "31_50480"; }
+            return "31_50490";
+        }
+        if(question == 2){
+            if(field == 0){ return "31_50500"; }
+            if(field == 1){ return "31_50510"; }
+            if(field == 2){ return "31_50520"; }
+            if(field == 3){ return "31_50530"; }
+            return "31_50540";
+        }
+        if(field == 0){ return "31_50550"; }
+        if(field == 1){ return "31_50560"; }
+        if(field == 2){ return "31_50570"; }
+        if(field == 3){ return "31_50580"; }
+        return "31_50590";
+    }
+    if(quiz_id == 1){
+        if(round == 0){
+        if(question == 0){
+            if(field == 0){ return "31_50800"; }
+            if(field == 1){ return "31_50810"; }
+            if(field == 2){ return "31_50820"; }
+            if(field == 3){ return "31_50830"; }
+            return "31_50840";
+        }
+        if(question == 1){
+            if(field == 0){ return "31_50850"; }
+            if(field == 1){ return "31_50860"; }
+            if(field == 2){ return "31_50870"; }
+            if(field == 3){ return "31_50880"; }
+            return "31_50890";
+        }
+        if(question == 2){
+            if(field == 0){ return "31_50900"; }
+            if(field == 1){ return "31_50910"; }
+            if(field == 2){ return "31_50920"; }
+            if(field == 3){ return "31_50930"; }
+            return "31_50940";
+        }
+        if(field == 0){ return "31_50950"; }
+        if(field == 1){ return "31_50960"; }
+        if(field == 2){ return "31_50970"; }
+        if(field == 3){ return "31_50980"; }
+        return "31_50990";
+    }
+        if(round == 1){
+        if(question == 0){
+            if(field == 0){ return "31_51000"; }
+            if(field == 1){ return "31_51010"; }
+            if(field == 2){ return "31_51020"; }
+            if(field == 3){ return "31_51030"; }
+            return "31_51040";
+        }
+        if(question == 1){
+            if(field == 0){ return "31_51050"; }
+            if(field == 1){ return "31_51060"; }
+            if(field == 2){ return "31_51070"; }
+            if(field == 3){ return "31_51080"; }
+            return "31_51090";
+        }
+        if(question == 2){
+            if(field == 0){ return "31_51100"; }
+            if(field == 1){ return "31_51110"; }
+            if(field == 2){ return "31_51120"; }
+            if(field == 3){ return "31_51130"; }
+            return "31_51140";
+        }
+        if(field == 0){ return "31_51150"; }
+        if(field == 1){ return "31_51160"; }
+        if(field == 2){ return "31_51170"; }
+        if(field == 3){ return "31_51180"; }
+        return "31_51190";
+    }
+        if(question == 0){
+        if(field == 0){ return "31_51200"; }
+        if(field == 1){ return "31_51210"; }
+        if(field == 2){ return "31_51220"; }
+        if(field == 3){ return "31_51230"; }
+        return "31_51240";
+    }
+        if(question == 1){
+        if(field == 0){ return "31_51250"; }
+        if(field == 1){ return "31_51260"; }
+        if(field == 2){ return "31_51270"; }
+        if(field == 3){ return "31_51280"; }
+        return "31_51290";
+    }
+        if(question == 2){
+        if(field == 0){ return "31_51300"; }
+        if(field == 1){ return "31_51310"; }
+        if(field == 2){ return "31_51320"; }
+        if(field == 3){ return "31_51330"; }
+        return "31_51340";
+    }
+        if(field == 0){ return "31_51350"; }
+        if(field == 1){ return "31_51360"; }
+        if(field == 2){ return "31_51370"; }
+        if(field == 3){ return "31_51380"; }
+        return "31_51390";
+    }
+    if(round == 0){
+        if(question == 0){
+            if(field == 0){ return "31_51600"; }
+            if(field == 1){ return "31_51610"; }
+            if(field == 2){ return "31_51620"; }
+            if(field == 3){ return "31_51630"; }
+            return "31_51640";
+        }
+        if(question == 1){
+            if(field == 0){ return "31_51650"; }
+            if(field == 1){ return "31_51660"; }
+            if(field == 2){ return "31_51670"; }
+            if(field == 3){ return "31_51680"; }
+            return "31_51690";
+        }
+        if(question == 2){
+            if(field == 0){ return "31_51700"; }
+            if(field == 1){ return "31_51710"; }
+            if(field == 2){ return "31_51720"; }
+            if(field == 3){ return "31_51730"; }
+            return "31_51740";
+        }
+        if(field == 0){ return "31_51750"; }
+        if(field == 1){ return "31_51760"; }
+        if(field == 2){ return "31_51770"; }
+        if(field == 3){ return "31_51780"; }
+        return "31_51790";
+    }
+    if(round == 1){
+        if(question == 0){
+            if(field == 0){ return "31_51800"; }
+            if(field == 1){ return "31_51810"; }
+            if(field == 2){ return "31_51820"; }
+            if(field == 3){ return "31_51830"; }
+            return "31_51840";
+        }
+        if(question == 1){
+            if(field == 0){ return "31_51850"; }
+            if(field == 1){ return "31_51860"; }
+            if(field == 2){ return "31_51870"; }
+            if(field == 3){ return "31_51880"; }
+            return "31_51890";
+        }
+        if(question == 2){
+            if(field == 0){ return "31_51900"; }
+            if(field == 1){ return "31_51910"; }
+            if(field == 2){ return "31_51920"; }
+            if(field == 3){ return "31_51930"; }
+            return "31_51940";
+        }
+        if(field == 0){ return "31_51950"; }
+        if(field == 1){ return "31_51960"; }
+        if(field == 2){ return "31_51970"; }
+        if(field == 3){ return "31_51980"; }
+        return "31_51990";
+    }
+    if(question == 0){
+        if(field == 0){ return "31_52000"; }
+        if(field == 1){ return "31_52010"; }
+        if(field == 2){ return "31_52020"; }
+        if(field == 3){ return "31_52030"; }
+        return "31_52040";
+    }
+    if(question == 1){
+        if(field == 0){ return "31_52050"; }
+        if(field == 1){ return "31_52060"; }
+        if(field == 2){ return "31_52070"; }
+        if(field == 3){ return "31_52080"; }
+        return "31_52090";
+    }
+    if(question == 2){
+        if(field == 0){ return "31_52100"; }
+        if(field == 1){ return "31_52110"; }
+        if(field == 2){ return "31_52120"; }
+        if(field == 3){ return "31_52130"; }
+        return "31_52140";
+    }
+    if(field == 0){ return "31_52150"; }
+    if(field == 1){ return "31_52160"; }
+    if(field == 2){ return "31_52170"; }
+    if(field == 3){ return "31_52180"; }
+    return "31_52190";
+}
+
+string get_quiz_dialog_id(int quiz_id, int kind, int index){
+    if(quiz_id == 0){
+        if(kind == QUIZ_DIALOG_INTRO){
+            if(index == 0){ return "31_10560"; }
+            return "31_10591";
+        }
+        if(kind == QUIZ_DIALOG_ROUND_INTRO){
+            if(index == 0){ return "31_10592"; }
+            return "31_10593";
+        }
+        if(kind == QUIZ_DIALOG_CORRECT){ return "31_10595"; }
+        return "31_10596";
+    }
+    if(quiz_id == 1){
+        if(kind == QUIZ_DIALOG_INTRO){
+            if(index == 0){ return "31_12860"; }
+            return "31_12891";
+        }
+        if(kind == QUIZ_DIALOG_ROUND_INTRO){
+            if(index == 0){ return "31_12892"; }
+            return "31_12893";
+        }
+        if(kind == QUIZ_DIALOG_CORRECT){ return "31_12895"; }
+        return "31_12896";
+    }
+    if(kind == QUIZ_DIALOG_INTRO){
+        if(index == 0){ return "31_12960"; }
+        return "31_12991";
+    }
+    if(kind == QUIZ_DIALOG_ROUND_INTRO){
+        if(index == 0){ return "31_12992"; }
+        return "31_12993";
+    }
+    if(kind == QUIZ_DIALOG_CORRECT){ return "31_12995"; }
+    return "31_12996";
 }
 
 // stub out set_chapter

@@ -59,9 +59,7 @@ impl Patcher {
             ),
             (
                 "REMOVE_ERRAND_POWER_COMP_LOCATIONS".to_owned(),
-                BuildConfigValue::Boolean(
-                    appkprk.options().remove_errand_power_comp_locations(),
-                ),
+                BuildConfigValue::Boolean(appkprk.options().remove_errand_power_comp_locations()),
             ),
         ]);
 
