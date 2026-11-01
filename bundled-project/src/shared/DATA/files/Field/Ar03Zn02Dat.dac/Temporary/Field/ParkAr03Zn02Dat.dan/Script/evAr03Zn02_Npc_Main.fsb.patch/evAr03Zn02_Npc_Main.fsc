@@ -58,6 +58,21 @@ void teddiursa_dialog(int param_1){
     );
 }
 
+void teddiursa2_dialog(int param_1){
+    quiz_dialog(
+        param_1,
+        0xa4,
+        0x12b0,
+        1,
+        "32_00330",
+        "32_10640",
+        "32_10650",
+        "32_10670",
+        "32_10690",
+        "32_10680"
+    );
+}
+
 void mudkip_dialog(int param_1){
     power_competition_dialog(
         param_1,
@@ -69,6 +84,48 @@ void mudkip_dialog(int param_1){
         "32_10270",
         "32_10290",
         "32_10280"
+    );
+}
+
+void krabby_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0xa1,
+        0xe87,
+        "32_00300",
+        "32_10340",
+        "32_10350",
+        "32_10370",
+        "32_10390",
+        "32_10380"
+    );
+}
+
+void corphish_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0xa2,
+        0xb3f,
+        "32_00310",
+        "32_10440",
+        "32_10450",
+        "32_10470",
+        "32_10490",
+        "32_10480"
+    );
+}
+
+void spheal_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0xa3,
+        0xf86,
+        "32_00320",
+        "32_10540",
+        "32_10550",
+        "32_10570",
+        "32_10590",
+        "32_10580"
     );
 }
 
@@ -350,9 +407,20 @@ bool is_bestfriend(int object_id){
 }
 
 bool is_location_checked(int object_id){
+    // Mudkip
     if(EACH_ZONE && object_id == 0xa0){
         int global_manager = get_module("GlobalManager");
         return @syscall(0,0x15,0x6e,global_manager,7,4) != 0;
+    }
+    // Krabby
+    if(EACH_ZONE && object_id == 0xa1){
+        int global_manager = get_module("GlobalManager");
+        return @syscall(0,0x15,0x6e,global_manager,7,2) != 0;
+    }
+    // Corphish
+    if(EACH_ZONE && object_id == 0xa2){
+        int global_manager = get_module("GlobalManager");
+        return @syscall(0,0x15,0x6e,global_manager,7,3) != 0;
     }
     return is_bestfriend(object_id);
 }
@@ -362,6 +430,18 @@ void check_location(int object_id){
     if(EACH_ZONE && object_id == 0xa0){
         int global_manager = get_module("GlobalManager");
         @syscall(0,0x15,0x6d,global_manager,7,4,1);
+        return;
+    }
+    // Krabby
+    if(EACH_ZONE && object_id == 0xa1){
+        int global_manager = get_module("GlobalManager");
+        @syscall(0,0x15,0x6d,global_manager,7,2,1);
+        return;
+    }
+    // Corphish
+    if(EACH_ZONE && object_id == 0xa2){
+        int global_manager = get_module("GlobalManager");
+        @syscall(0,0x15,0x6d,global_manager,7,3,1);
         return;
     }
     set_bestfriend(object_id);
@@ -549,6 +629,90 @@ string get_quiz_question_id(int quiz_id, int round, int question, int field) {
     }
     return "32_52190";
   }
+  if (quiz_id == 1) {
+    if (round == 0) {
+      if (question == 0) {
+        if (field == 0) { return "32_50000"; }
+        if (field == 1) { return "32_50010"; }
+        if (field == 2) { return "32_50020"; }
+        if (field == 3) { return "32_50030"; }
+        return "32_50040";
+      }
+      if (question == 1) {
+        if (field == 0) { return "32_50050"; }
+        if (field == 1) { return "32_50060"; }
+        if (field == 2) { return "32_50070"; }
+        if (field == 3) { return "32_50080"; }
+        return "32_50090";
+      }
+      if (question == 2) {
+        if (field == 0) { return "32_50100"; }
+        if (field == 1) { return "32_50110"; }
+        if (field == 2) { return "32_50120"; }
+        if (field == 3) { return "32_50130"; }
+        return "32_50140";
+      }
+      if (field == 0) { return "32_50150"; }
+      if (field == 1) { return "32_50160"; }
+      if (field == 2) { return "32_50170"; }
+      if (field == 3) { return "32_50180"; }
+      return "32_50190";
+    }
+    if (round == 1) {
+      if (question == 0) {
+        if (field == 0) { return "32_50200"; }
+        if (field == 1) { return "32_50210"; }
+        if (field == 2) { return "32_50220"; }
+        if (field == 3) { return "32_50230"; }
+        return "32_50240";
+      }
+      if (question == 1) {
+        if (field == 0) { return "32_50250"; }
+        if (field == 1) { return "32_50260"; }
+        if (field == 2) { return "32_50270"; }
+        if (field == 3) { return "32_50280"; }
+        return "32_50290";
+      }
+      if (question == 2) {
+        if (field == 0) { return "32_50300"; }
+        if (field == 1) { return "32_50310"; }
+        if (field == 2) { return "32_50320"; }
+        if (field == 3) { return "32_50330"; }
+        return "32_50340";
+      }
+      if (field == 0) { return "32_50350"; }
+      if (field == 1) { return "32_50360"; }
+      if (field == 2) { return "32_50370"; }
+      if (field == 3) { return "32_50380"; }
+      return "32_50390";
+    }
+    if (question == 0) {
+      if (field == 0) { return "32_50400"; }
+      if (field == 1) { return "32_50410"; }
+      if (field == 2) { return "32_50420"; }
+      if (field == 3) { return "32_50430"; }
+      return "32_50440";
+    }
+    if (question == 1) {
+      if (field == 0) { return "32_50450"; }
+      if (field == 1) { return "32_50460"; }
+      if (field == 2) { return "32_50470"; }
+      if (field == 3) { return "32_50480"; }
+      return "32_50490";
+    }
+    if (question == 2) {
+      if (field == 0) { return "32_50500"; }
+      if (field == 1) { return "32_50510"; }
+      if (field == 2) { return "32_50520"; }
+      if (field == 3) { return "32_50530"; }
+      return "32_50540";
+    }
+    if (field == 0) { return "32_50550"; }
+    if (field == 1) { return "32_50560"; }
+    if (field == 2) { return "32_50570"; }
+    if (field == 3) { return "32_50580"; }
+    return "32_50590";
+  }
   return "";
 }
 
@@ -570,6 +734,18 @@ string get_quiz_dialog_id(int quiz_id, int kind, int index) {
       return "32_10195";
     }
     return "32_10196";
+  }
+  if (quiz_id == 1) {
+    if (kind == QUIZ_DIALOG_INTRO) {
+      if (index == 0) { return "32_10660"; }
+      return "32_10691";
+    }
+    if (kind == QUIZ_DIALOG_ROUND_INTRO) {
+      if (index == 0) { return "32_10692"; }
+      return "32_10693";
+    }
+    if (kind == QUIZ_DIALOG_CORRECT) { return "32_10695"; }
+    return "32_10696";
   }
   return "";
 }

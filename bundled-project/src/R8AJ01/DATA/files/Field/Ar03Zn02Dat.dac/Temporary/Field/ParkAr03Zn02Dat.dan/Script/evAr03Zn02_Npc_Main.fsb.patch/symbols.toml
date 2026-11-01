@@ -31,3 +31,7 @@ fade_in_bgm = 0x514d8
 ask_quiz_question = 0x56870
 teddiursa_dialog = 0x651b0
 mudkip_dialog = 0x65330
+krabby_dialog = 0x65610
+corphish_dialog = 0x658d8
+spheal_dialog = 0x65b7c
+teddiursa2_dialog = 0x65e3c
