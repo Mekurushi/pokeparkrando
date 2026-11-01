@@ -1874,12 +1874,12 @@ void check_location(int object_id){
         int global_manager = get_module("GlobalManager");
         // starly
         if(object_id == 0x72 || object_id == 0x8f || object_id == 0x90){
-            @syscall(0,0x15,0x6d,global_manager,0,7,1);
+            @syscall(0,0x15,0x6d,global_manager,7,0,1);
             return;
         }
         // spearow
         if(object_id == 0x73 || object_id == 0x94){
-            @syscall(0,0x15,0x6d,global_manager,8,13,1);
+            @syscall(0,0x15,0x6d,global_manager,13,8,1);
             return;
         }
     }
