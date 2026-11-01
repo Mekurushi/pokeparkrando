@@ -27,6 +27,7 @@ extern void fade_in_bgm(int frames);
 extern int ask_quiz_question(int param_1, string question_id, string answer_1_id, string answer_2_id, string answer_3_id, string correct_answer_id);
 
 config int BATTLE_COUNT;
+config bool EACH_ZONE;
 
 void sneasel_dialog(int param_1){
     power_competition_dialog(
@@ -54,6 +55,20 @@ void teddiursa_dialog(int param_1){
         "32_10170",
         "32_10190",
         "32_10180"
+    );
+}
+
+void mudkip_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0xa0,
+        0x13af,
+        "32_00290",
+        "32_10240",
+        "32_10250",
+        "32_10270",
+        "32_10290",
+        "32_10280"
     );
 }
 
@@ -92,10 +107,10 @@ void quiz_dialog(
             give_berries(20);
             play_sound_effect(0x802,0);
             @syscall(0,0x15,2,player_accessor,0x4e,5);
-            if(is_bestfriend(object_id) == false){
+            if(is_location_checked(object_id) == false){
                 show_npc_dialog(param_1,first_win_dialog_id);
                 fade_in_bgm(0x1e);
-                set_bestfriend(object_id);
+                check_location(object_id);
                 @syscall(0,0x15,1,player_accessor,0x4c);
                 friendship_banner(friendship_banner_id);
             }
@@ -213,10 +228,10 @@ void power_competition_dialog(
         }
         else{
             give_berries(has_won);
-            if(is_bestfriend(object_id) == false){
+            if(is_location_checked(object_id) == false){
                 show_npc_dialog(param_1,first_win_dialog_id);
                 friendship_banner(friendship_banner_id);
-                set_bestfriend(object_id);
+                check_location(object_id);
             }
             else{
                 show_npc_dialog(param_1,repeat_win_dialog_id);
@@ -332,6 +347,25 @@ bool is_bestfriend(int object_id){
     int friend_id = @syscall(0,0x15,0xe,dispos_manager,object_id);
     int is_best_friend = @syscall(0,0x15,0x4b,global_manager,friend_id);
     return is_best_friend == 1;
+}
+
+bool is_location_checked(int object_id){
+    if(EACH_ZONE && object_id == 0xa0){
+        int global_manager = get_module("GlobalManager");
+        return @syscall(0,0x15,0x6e,global_manager,7,4) != 0;
+    }
+    return is_bestfriend(object_id);
+}
+
+void check_location(int object_id){
+    // Mudkip
+    if(EACH_ZONE && object_id == 0xa0){
+        int global_manager = get_module("GlobalManager");
+        @syscall(0,0x15,0x6d,global_manager,7,4,1);
+        return;
+    }
+    set_bestfriend(object_id);
+    return;
 }
 
 string get_quiz_question_id(int quiz_id, int round, int question, int field) {

@@ -30,3 +30,4 @@ play_sound_effect = 0x5139c
 fade_in_bgm = 0x514d8
 ask_quiz_question = 0x56d2c
 teddiursa_dialog = 0x65504
+mudkip_dialog = 0x65684

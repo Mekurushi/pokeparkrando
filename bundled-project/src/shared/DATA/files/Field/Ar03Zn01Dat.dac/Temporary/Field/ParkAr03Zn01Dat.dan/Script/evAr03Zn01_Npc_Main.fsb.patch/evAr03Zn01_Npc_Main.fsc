@@ -1859,11 +1859,11 @@ bool is_location_checked(int object_id){
     if(EACH_ZONE){
         // starly
         if(object_id == 0x72 || object_id == 0x8f || object_id == 0x90){
-            return @syscall(0,0x15,0x6e,global_manager,0,7) != 0;
+            return @syscall(0,0x15,0x6e,global_manager,7,0) != 0;
         }
         // spearow
         if(object_id == 0x73 || object_id == 0x94){
-            return @syscall(0,0x15,0x6e,global_manager,8,13) != 0;
+            return @syscall(0,0x15,0x6e,global_manager,13,8) != 0;
         }
     }
     return is_bestfriend(object_id);
