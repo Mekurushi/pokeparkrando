@@ -129,6 +129,70 @@ void spheal_dialog(int param_1){
     );
 }
 
+void delibird_dialog(int param_1){
+    //TODO: delibird logic
+}
+
+void kirlia_dialog(int param_1){
+    //TODO: Kirlia logic
+}
+
+void kirlia2_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0xa7,
+        0xbb7,
+        "32_00360",
+        "32_10840",
+        "32_10850",
+        "32_10870",
+        "32_10890",
+        "32_10880"
+    );
+}
+
+void smoochum_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0xa8,
+        0xa7c,
+        "32_00370",
+        "32_10940",
+        "32_10950",
+        "32_10970",
+        "32_10990",
+        "32_10980"
+    );
+}
+
+void squirtle_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0xa9,
+        0xbc6,
+        "32_00380",
+        "32_11040",
+        "32_11050",
+        "32_11070",
+        "32_11090",
+        "32_11080"
+    );
+}
+
+void starly_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0xaa,
+        0xbe4,
+        "32_00390",
+        "32_11140",
+        "32_11150",
+        "32_11170",
+        "32_11190",
+        "32_11180"
+    );
+}
+
 const int QUIZ_DIALOG_INTRO = 0;
 const int QUIZ_DIALOG_ROUND_INTRO = 1;
 const int QUIZ_DIALOG_CORRECT = 2;
@@ -407,42 +471,51 @@ bool is_bestfriend(int object_id){
 }
 
 bool is_location_checked(int object_id){
-    // Mudkip
-    if(EACH_ZONE && object_id == 0xa0){
+    if(EACH_ZONE){
         int global_manager = get_module("GlobalManager");
-        return @syscall(0,0x15,0x6e,global_manager,7,4) != 0;
-    }
-    // Krabby
-    if(EACH_ZONE && object_id == 0xa1){
-        int global_manager = get_module("GlobalManager");
-        return @syscall(0,0x15,0x6e,global_manager,7,2) != 0;
-    }
-    // Corphish
-    if(EACH_ZONE && object_id == 0xa2){
-        int global_manager = get_module("GlobalManager");
-        return @syscall(0,0x15,0x6e,global_manager,7,3) != 0;
+        // Mudkip
+        if(object_id == 0xa0){
+            return @syscall(0,0x15,0x6e,global_manager,7,4) != 0;
+        }
+        // Krabby
+        if(object_id == 0xa1){
+            return @syscall(0,0x15,0x6e,global_manager,7,2) != 0;
+        }
+        // Corphish
+        if(object_id == 0xa2){
+            return @syscall(0,0x15,0x6e,global_manager,7,3) != 0;
+        }
+        // Starly
+        if(object_id == 0xaa){
+            return @syscall(0,0x15,0x6e,global_manager,7,1) != 0;
+        }
     }
     return is_bestfriend(object_id);
 }
 
 void check_location(int object_id){
-    // Mudkip
-    if(EACH_ZONE && object_id == 0xa0){
+    if(EACH_ZONE){
         int global_manager = get_module("GlobalManager");
-        @syscall(0,0x15,0x6d,global_manager,7,4,1);
-        return;
-    }
-    // Krabby
-    if(EACH_ZONE && object_id == 0xa1){
-        int global_manager = get_module("GlobalManager");
-        @syscall(0,0x15,0x6d,global_manager,7,2,1);
-        return;
-    }
-    // Corphish
-    if(EACH_ZONE && object_id == 0xa2){
-        int global_manager = get_module("GlobalManager");
-        @syscall(0,0x15,0x6d,global_manager,7,3,1);
-        return;
+        // Mudkip
+        if(object_id == 0xa0){
+            @syscall(0,0x15,0x6d,global_manager,7,4,1);
+            return;
+        }
+        // Krabby
+        if(object_id == 0xa1){
+            @syscall(0,0x15,0x6d,global_manager,7,2,1);
+            return;
+        }
+        // Corphish
+        if(object_id == 0xa2){
+            @syscall(0,0x15,0x6d,global_manager,7,3,1);
+            return;
+        }
+        // Starly
+        if(object_id == 0xaa){
+            @syscall(0,0x15,0x6d,global_manager,7,1,1);
+            return;
+        }
     }
     set_bestfriend(object_id);
     return;
