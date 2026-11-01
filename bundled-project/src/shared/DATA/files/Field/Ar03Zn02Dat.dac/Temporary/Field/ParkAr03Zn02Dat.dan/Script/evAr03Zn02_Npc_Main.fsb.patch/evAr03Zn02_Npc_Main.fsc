@@ -11,6 +11,8 @@ extern void face_player_and_npc(int object_id, int param_2);
 extern void end_event_script(int param_1);
 extern void friendship_banner(string banner_id);
 extern void set_bestfriend(int object_id);
+extern int get_held_item_kind();
+extern void remove_held_item();
 extern void store_pre_competition_state();
 extern int get_player_accessor();
 extern void drop_held_item_animation();
@@ -193,6 +195,77 @@ void starly_dialog(int param_1){
     );
 }
 
+void staravia_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0xab,
+        0x9e6,
+        "32_00400",
+        "32_11240",
+        "32_11250",
+        "32_11270",
+        "32_11290",
+        "32_11280"
+    );
+}
+
+void taillow_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0xac,
+        0x1355,
+        "32_00410",
+        "32_11340",
+        "32_11350",
+        "32_11370",
+        "32_11390",
+        "32_11380"
+    );
+}
+
+void wingull_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0xad,
+        0xe69,
+        "32_00420",
+        "32_11440",
+        "32_11450",
+        "32_11470",
+        "32_11490",
+        "32_11480"
+    );
+}
+
+void quagsire_dialog(int param_1){
+    errand_dialog(
+        param_1,
+        0xae,
+        0xf59,
+        "32_11540",
+        "32_11570",
+        "32_00430",
+        "32_11560",
+        "32_11550"
+    );
+}
+
+void primeape_dialog(int param_1){
+    power_competition_dialog_with_win_count_check(
+        param_1,
+        0xaf,
+        0xe1e,
+        "32_00440",
+        "32_11640",
+        "32_11650",
+        "32_11670",
+        "32_11690",
+        "32_11680",
+        "32_11601",
+        "32_11600"
+    );
+}
+
 const int QUIZ_DIALOG_INTRO = 0;
 const int QUIZ_DIALOG_ROUND_INTRO = 1;
 const int QUIZ_DIALOG_CORRECT = 2;
@@ -367,6 +440,99 @@ void power_competition_dialog(
     return;
 }
 
+void errand_dialog(
+    int param_1,
+    int object_id,
+    int sound_id,
+    string no_hold_item_dialog_id,
+    string befriend_dialog_id,
+    string friendship_banner_id,
+    string already_befriended_id,
+    string wrong_item_id
+){
+    lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    @syscall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
+    int item_kind = get_held_item_kind();
+    if(item_kind == -1){
+        show_npc_dialog(param_1,no_hold_item_dialog_id);
+    }
+    else if(item_kind == 0x15){
+        if(is_location_checked(object_id) == false){
+            remove_held_item();
+            show_npc_dialog(param_1,befriend_dialog_id);
+            friendship_banner(friendship_banner_id);
+            check_location(object_id);
+        }
+        else{
+            show_npc_dialog(param_1,already_befriended_id);
+            remove_held_item();
+        }
+        give_berries(0x32);
+        complete_event();
+    }
+    else{
+        show_npc_dialog(param_1,wrong_item_id);
+    }
+    end_event_script(param_1);
+    return;
+}
+
+void power_competition_dialog_with_win_count_check(
+    int param_1,
+    int object_id,
+    int sound_id,
+    string friendship_banner_id,
+    string question_dialog_id,
+    string decline_dialog_id,
+    string loss_dialog_id,
+    string first_win_dialog_id,
+    string repeat_win_dialog_id,
+    string win_count_met_dialog_id,
+    string win_count_not_met_dialog_id
+){
+    lock_player_and_get_accessor();
+    lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    int global_manager = get_module("GlobalManager");
+    int has_required_num = @syscall(0,0x15,1,global_manager,"f0302BattleCounter");
+    if(has_required_num == 1){
+        show_npc_dialog(param_1,win_count_met_dialog_id);
+        int response = show_yes_no_question(param_1,question_dialog_id);
+        if(response == 1){
+            int has_won = start_power_competition(param_1,0,object_id);
+            special_spawn_condition(param_1);
+            int object_accessor = get_object_accessor(param_1,object_id,true);
+            fade_in(0,0,0,0x3c);
+            @syscall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
+            if(has_won == -1){
+                show_npc_dialog(param_1,loss_dialog_id);
+            }
+            else{
+                give_berries(has_won);
+                if(is_location_checked(object_id) == false){
+                    show_npc_dialog(param_1,first_win_dialog_id);
+                    friendship_banner(friendship_banner_id);
+                    check_location(object_id);
+                }
+                else{
+                    show_npc_dialog(param_1,repeat_win_dialog_id);
+                }
+            }
+            complete_event();
+        }
+        else{
+            show_npc_dialog(param_1,decline_dialog_id);
+        }
+    }
+    else{
+        show_npc_dialog(param_1,win_count_not_met_dialog_id);
+    }
+    end_event_script(param_1);
+    return;
+}
+
 // player_object_id can be any object id, but is only used as the player id.
 int start_power_competition(int param_1, int player_object_id, int enemy_object_id){
     store_pre_competition_state();
@@ -445,19 +611,19 @@ int start_power_competition(int param_1, int player_object_id, int enemy_object_
 void reset_win_counter(){
     int global_manager = get_module("GlobalManager");
     @syscall(0,0x15,0,global_manager,"zfPowerComp");
-    int counter_num = @syscall(0,0x15,0,global_manager,"f0301BattleCounterNum",0);
+    int counter_num = @syscall(0,0x15,0,global_manager,"f0302BattleCounterNum",0);
     @syscall(0,6,0,"counter");
     return;
 }
 
 void increment_win_counter(){
     int global_manager = get_module("GlobalManager");
-    int counter_num = @syscall(0,0x15,1,global_manager,"f0301BattleCounterNum");
+    int counter_num = @syscall(0,0x15,1,global_manager,"f0302BattleCounterNum");
     int increased_counter = counter_num + 1;
     @syscall(0,6,increased_counter,"counter");
-    @syscall(0,0x15,0,global_manager,"f0301BattleCounterNum",increased_counter);
+    @syscall(0,0x15,0,global_manager,"f0302BattleCounterNum",increased_counter);
     if(increased_counter >= BATTLE_COUNT){
-        @syscall(0,0x15,0,global_manager,"f0301BattleCounter",1);
+        @syscall(0,0x15,0,global_manager,"f0302BattleCounter",1);
     }
     return;
 }
@@ -489,6 +655,18 @@ bool is_location_checked(int object_id){
         if(object_id == 0xaa){
             return @syscall(0,0x15,0x6e,global_manager,7,1) != 0;
         }
+        // Staravia
+        if(object_id == 0xab){
+            return @syscall(0,0x15,0x6e,global_manager,7,6) != 0;
+        }
+        // Taillow
+        if(object_id == 0xac){
+            return @syscall(0,0x15,0x6e,global_manager,7,5) != 0;
+        }
+        // Wingull
+        if(object_id == 0xad){
+            return @syscall(0,0x15,0x6e,global_manager,7,7) != 0;
+        }
     }
     return is_bestfriend(object_id);
 }
@@ -514,6 +692,21 @@ void check_location(int object_id){
         // Starly
         if(object_id == 0xaa){
             @syscall(0,0x15,0x6d,global_manager,7,1,1);
+            return;
+        }
+        // Staravia
+        if(object_id == 0xab){
+            @syscall(0,0x15,0x6d,global_manager,7,6,1);
+            return;
+        }
+        // Taillow
+        if(object_id == 0xac){
+            @syscall(0,0x15,0x6d,global_manager,7,5,1);
+            return;
+        }
+        // Wingull
+        if(object_id == 0xad){
+            @syscall(0,0x15,0x6d,global_manager,7,7,1);
             return;
         }
     }

@@ -53,4 +53,16 @@ table = "FlagTable"
 flag_name = { value = "f0301BattleCounterNum" }
 bit_width = { value = 4 }
 
+[[edits]]
+table = "FlagTable"
+row = 193
 
+[edits.set]
+flag_name = { value = "f0302BattleCounter" }
+
+[[edits]]
+table = "FlagTable"
+row = 201
+
+[edits.set]
+flag_name = { value = "f0302BattleCounterNum" }
