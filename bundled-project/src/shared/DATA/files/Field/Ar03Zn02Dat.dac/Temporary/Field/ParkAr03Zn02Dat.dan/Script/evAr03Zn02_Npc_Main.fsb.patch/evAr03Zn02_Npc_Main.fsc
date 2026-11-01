@@ -1,0 +1,541 @@
+extern int get_module(string name);
+extern int lock_npc_and_get_accessor(int object_id);
+extern int show_yes_no_question(int param_1, string dialog_id);
+extern int get_object_accessor(int param_1, int object_id, bool use_provided_object_id);
+extern void fade_in(int red, int green, int blue, int frames);
+extern void show_npc_dialog(int param_1, string dialog_id);
+extern void give_berries(int value);
+extern void complete_event();
+extern int lock_player_and_get_accessor();
+extern void face_player_and_npc(int object_id, int param_2);
+extern void end_event_script(int param_1);
+extern void friendship_banner(string banner_id);
+extern void set_bestfriend(int object_id);
+extern void store_pre_competition_state();
+extern int get_player_accessor();
+extern void drop_held_item_animation();
+extern void wait_frames(int frames);
+extern int run_power_competition(int player_object_id, int enemy_object_id);
+extern void despawn_player_object();
+extern void spawn_player_object();
+extern void respawn_field();
+extern void face_object_accessors_instantly(int player_accessor, int object_accessor, int immediate);
+extern void restore_pre_competition_state(int object_id);
+extern void special_spawn_condition(int param_1);
+extern void play_sound_effect(int sound_id, int fade_in_frames);
+extern void fade_in_bgm(int frames);
+extern int ask_quiz_question(int param_1, string question_id, string answer_1_id, string answer_2_id, string answer_3_id, string correct_answer_id);
+
+config int BATTLE_COUNT;
+
+void sneasel_dialog(int param_1){
+    power_competition_dialog(
+        param_1,
+        0x9e,
+        0x10c1,
+        "32_00270",
+        "32_10040",
+        "32_10050",
+        "32_10070",
+        "32_10090",
+        "32_10080"
+    );
+}
+
+void teddiursa_dialog(int param_1){
+    quiz_dialog(
+        param_1,
+        0x9f,
+        0x12b0,
+        0,
+        "32_00330",
+        "32_10140",
+        "32_10150",
+        "32_10170",
+        "32_10190",
+        "32_10180"
+    );
+}
+
+const int QUIZ_DIALOG_INTRO = 0;
+const int QUIZ_DIALOG_ROUND_INTRO = 1;
+const int QUIZ_DIALOG_CORRECT = 2;
+const int QUIZ_DIALOG_WRONG = 3;
+
+void quiz_dialog(
+    int param_1,
+    int object_id,
+    int sound_id,
+    int quiz_id,
+    string friendship_banner_id,
+    string question_dialog_id,
+    string decline_dialog_id,
+    string loss_dialog_id,
+    string first_win_dialog_id,
+    string repeat_win_dialog_id
+){
+    int player_accessor = lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    int response = show_yes_no_question(param_1,question_dialog_id);
+    if(response == 1){
+        int has_won = start_quiz(param_1,object_id,quiz_id,player_accessor);
+        @syscall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
+        if(has_won == -1){
+            reset_win_counter();
+            play_sound_effect(0x803,0);
+            show_npc_dialog(param_1,loss_dialog_id);
+            fade_in_bgm(0x1e);
+        }
+        else{
+            increment_win_counter();
+            give_berries(20);
+            play_sound_effect(0x802,0);
+            @syscall(0,0x15,2,player_accessor,0x4e,5);
+            if(is_bestfriend(object_id) == false){
+                show_npc_dialog(param_1,first_win_dialog_id);
+                fade_in_bgm(0x1e);
+                set_bestfriend(object_id);
+                @syscall(0,0x15,1,player_accessor,0x4c);
+                friendship_banner(friendship_banner_id);
+            }
+            else{
+                show_npc_dialog(param_1,repeat_win_dialog_id);
+                fade_in_bgm(0x1e);
+            }
+            @syscall(0,0x15,2,player_accessor,0,5);
+            int global_manager = get_module("GlobalManager");
+            @syscall(0,0x15,0x93,global_manager,5);
+        }
+        int sound_manager = get_module("SoundManager");
+        @syscall(0,0x15,0x16,sound_manager,0xc,1.0);
+        wait_frames(10);
+        complete_event();
+    }
+    else{
+        show_npc_dialog(param_1,decline_dialog_id);
+    }
+    end_event_script(param_1);
+    return;
+}
+
+int start_quiz(int param_1, int object_id, int quiz_id, int player_accessor){
+    int global_manager = get_module("GlobalManager");
+    int event_script = get_module("EventScript");
+    int sound_manager = get_module("SoundManager");
+    @syscall(0,0x15,0x8e,global_manager,5);
+    drop_held_item_animation();
+    @syscall(0,0x15,0x192,event_script,10);
+    wait_frames(10);
+    @syscall(0,0x15,0x16,sound_manager,0xc,0);
+    play_sound_effect(0x1832,0x1e);
+    show_npc_dialog(param_1,get_quiz_dialog_id(quiz_id,QUIZ_DIALOG_INTRO,0));
+    show_npc_dialog(param_1,get_quiz_dialog_id(quiz_id,QUIZ_DIALOG_INTRO,1));
+
+    int object_accessor = get_object_accessor(param_1,object_id,true);
+    for(int round = 0; round < 3; round = round + 1){
+        int question = @syscall(0,0x24,4);
+        if(ask_and_handle_quiz_question(
+            param_1,
+            object_accessor,
+            player_accessor,
+            get_quiz_question_id(quiz_id,round,question,0),
+            get_quiz_question_id(quiz_id,round,question,1),
+            get_quiz_question_id(quiz_id,round,question,2),
+            get_quiz_question_id(quiz_id,round,question,3),
+            get_quiz_question_id(quiz_id,round,question,4),
+            get_quiz_dialog_id(quiz_id,QUIZ_DIALOG_CORRECT,0),
+            get_quiz_dialog_id(quiz_id,QUIZ_DIALOG_WRONG,0)
+        ) != 1){
+            @syscall(0,0x15,0x1f5,event_script,0x1832,10);
+            wait_frames(10);
+            return -1;
+        }
+        if(round < 2){
+            show_npc_dialog(param_1,get_quiz_dialog_id(quiz_id,QUIZ_DIALOG_ROUND_INTRO,round));
+        }
+    }
+    @syscall(0,0x15,0x1f5,event_script,0x1832,10);
+    wait_frames(10);
+    return 1;
+}
+
+int ask_and_handle_quiz_question(
+    int param_1,
+    int object_accessor,
+    int player_accessor,
+    string question_id,
+    string answer_1_id,
+    string answer_2_id,
+    string answer_3_id,
+    string correct_answer_id,
+    string correct_dialog_id,
+    string wrong_dialog_id
+){
+    int result = ask_quiz_question(param_1,question_id,answer_1_id,answer_2_id,answer_3_id,correct_answer_id);
+    if(result == 1){
+        play_sound_effect(0x499,0);
+        @syscall(0,0x15,2,object_accessor,0x20,10);
+        show_npc_dialog(param_1,correct_dialog_id);
+        return 1;
+    }
+    play_sound_effect(0x62,0);
+    @syscall(0,0x15,2,object_accessor,0x21,10);
+    @syscall(0,0x15,2,player_accessor,0x51,5);
+    show_npc_dialog(param_1,wrong_dialog_id);
+    show_npc_dialog(param_1,correct_answer_id);
+    return -1;
+}
+
+void power_competition_dialog(
+    int param_1,
+    int object_id,
+    int sound_id,
+    string friendship_banner_id,
+    string question_dialog_id,
+    string decline_dialog_id,
+    string loss_dialog_id,
+    string first_win_dialog_id,
+    string repeat_win_dialog_id
+){
+    lock_player_and_get_accessor();
+    lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    int response = show_yes_no_question(param_1,question_dialog_id);
+    if(response == 1){
+        int has_won = start_power_competition(param_1,0,object_id);
+        special_spawn_condition(param_1);
+        int object_accessor = get_object_accessor(param_1,object_id,true);
+        fade_in(0,0,0,0x3c);
+        @syscall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
+        if(has_won == -1){
+            show_npc_dialog(param_1,loss_dialog_id);
+        }
+        else{
+            give_berries(has_won);
+            if(is_bestfriend(object_id) == false){
+                show_npc_dialog(param_1,first_win_dialog_id);
+                friendship_banner(friendship_banner_id);
+                set_bestfriend(object_id);
+            }
+            else{
+                show_npc_dialog(param_1,repeat_win_dialog_id);
+            }
+        }
+        complete_event();
+    }
+    else{
+        show_npc_dialog(param_1,decline_dialog_id);
+    }
+    end_event_script(param_1);
+    return;
+}
+
+// player_object_id can be any object id, but is only used as the player id.
+int start_power_competition(int param_1, int player_object_id, int enemy_object_id){
+    store_pre_competition_state();
+
+    int global_manager = get_module("GlobalManager");
+    int event_script = get_module("EventScript");
+    int dispos_manager = get_module("DisposManager");
+    int object_accessor = get_object_accessor(param_1,enemy_object_id,true);
+    int player_event_accessor = get_player_accessor();
+
+    vec3 object_position = vec3{
+        .x = 0.0,
+        .y = 0.0,
+        .z = 0.0
+    };
+
+    vec3 player_position = vec3{
+        .x = 0.0,
+        .y = 0.0,
+        .z = 0.0
+    };
+
+    drop_held_item_animation();
+    @syscall(0,0x15,0x13,object_accessor,&object_position);
+    @syscall(0,0x15,0x13,player_event_accessor,&player_position);
+    @syscall(0,0x15,0xca,event_script,0x1e);
+    wait_frames(0x1e);
+
+    int dispos_id = @syscall(0,0x15,0xc,dispos_manager,enemy_object_id);
+    int result = run_power_competition(player_object_id,enemy_object_id);
+    if(result == -1){
+        reset_win_counter();
+    }
+    else{
+        @syscall(0,0x15,0x93,global_manager,dispos_id);
+        increment_win_counter();
+    }
+
+    despawn_player_object();
+    spawn_player_object();
+
+    int player_accessor = lock_player_and_get_accessor();
+    @syscall(0,0x15,7,player_accessor,player_position.x,player_position.y,player_position.z);
+    @syscall(0,0x15,8,player_accessor,player_position.x,player_position.y,player_position.z);
+    @syscall(0,0x15,0x22,player_accessor,player_position.x,player_position.y,player_position.z,1);
+    int player_state = @syscall(0,0x15,0x30,player_accessor);
+    if(player_state == 0){
+        @syscall(0,0x15,2,player_accessor,0,0);
+    }
+    @syscall(0,0x15,0,player_accessor,0);
+    @syscall(0,0x15,0x8e,global_manager,dispos_id);
+
+    respawn_field();
+    lock_npc_and_get_accessor(enemy_object_id);
+    object_accessor = get_object_accessor(param_1,enemy_object_id,true);
+    @syscall(0,0x15,7,object_accessor,object_position.x,object_position.y,object_position.z);
+    @syscall(0,0x15,8,object_accessor,object_position.x,object_position.y,object_position.z);
+    @syscall(0,0x15,0x22,object_accessor,object_position.x,object_position.y,object_position.z,1);
+
+    int object_state = @syscall(0,0x15,0x10,dispos_manager,enemy_object_id);
+    if(object_state == 0){
+        @syscall(0,0x15,0x2a,object_accessor,5);
+    }
+    else{
+        @syscall(0,0x15,0x2a,object_accessor,10);
+        @syscall(0,0x15,0x2b,object_accessor,4);
+    }
+
+    face_object_accessors_instantly(player_accessor,object_accessor,1);
+    @syscall(0,0x15,0xca,event_script,-1);
+    @syscall(0,0x15,0xd7,event_script,enemy_object_id);
+    restore_pre_competition_state(enemy_object_id);
+    return result;
+}
+
+void reset_win_counter(){
+    int global_manager = get_module("GlobalManager");
+    @syscall(0,0x15,0,global_manager,"zfPowerComp");
+    int counter_num = @syscall(0,0x15,0,global_manager,"f0301BattleCounterNum",0);
+    @syscall(0,6,0,"counter");
+    return;
+}
+
+void increment_win_counter(){
+    int global_manager = get_module("GlobalManager");
+    int counter_num = @syscall(0,0x15,1,global_manager,"f0301BattleCounterNum");
+    int increased_counter = counter_num + 1;
+    @syscall(0,6,increased_counter,"counter");
+    @syscall(0,0x15,0,global_manager,"f0301BattleCounterNum",increased_counter);
+    if(increased_counter >= BATTLE_COUNT){
+        @syscall(0,0x15,0,global_manager,"f0301BattleCounter",1);
+    }
+    return;
+}
+
+bool is_bestfriend(int object_id){
+    int global_manager = get_module("GlobalManager");
+    int dispos_manager = get_module("DisposManager");
+    int friend_id = @syscall(0,0x15,0xe,dispos_manager,object_id);
+    int is_best_friend = @syscall(0,0x15,0x4b,global_manager,friend_id);
+    return is_best_friend == 1;
+}
+
+string get_quiz_question_id(int quiz_id, int round, int question, int field) {
+  if (quiz_id == 0) {
+    if (round == 0) {
+      if (question == 0) {
+        if (field == 0) {
+          return "32_51600";
+        }
+        if (field == 1) {
+          return "32_51610";
+        }
+        if (field == 2) {
+          return "32_51620";
+        }
+        if (field == 3) {
+          return "32_51630";
+        }
+        return "32_51640";
+      }
+      if (question == 1) {
+        if (field == 0) {
+          return "32_51650";
+        }
+        if (field == 1) {
+          return "32_51660";
+        }
+        if (field == 2) {
+          return "32_51670";
+        }
+        if (field == 3) {
+          return "32_51680";
+        }
+        return "32_51690";
+      }
+      if (question == 2) {
+        if (field == 0) {
+          return "32_51700";
+        }
+        if (field == 1) {
+          return "32_51710";
+        }
+        if (field == 2) {
+          return "32_51720";
+        }
+        if (field == 3) {
+          return "32_51730";
+        }
+        return "32_51740";
+      }
+      if (field == 0) {
+        return "32_51750";
+      }
+      if (field == 1) {
+        return "32_51760";
+      }
+      if (field == 2) {
+        return "32_51770";
+      }
+      if (field == 3) {
+        return "32_51780";
+      }
+      return "32_51790";
+    }
+    if (round == 1) {
+      if (question == 0) {
+        if (field == 0) {
+          return "32_51800";
+        }
+        if (field == 1) {
+          return "32_51810";
+        }
+        if (field == 2) {
+          return "32_51820";
+        }
+        if (field == 3) {
+          return "32_51830";
+        }
+        return "32_51840";
+      }
+      if (question == 1) {
+        if (field == 0) {
+          return "32_51850";
+        }
+        if (field == 1) {
+          return "32_51860";
+        }
+        if (field == 2) {
+          return "32_51870";
+        }
+        if (field == 3) {
+          return "32_51880";
+        }
+        return "32_51890";
+      }
+      if (question == 2) {
+        if (field == 0) {
+          return "32_51900";
+        }
+        if (field == 1) {
+          return "32_51910";
+        }
+        if (field == 2) {
+          return "32_51920";
+        }
+        if (field == 3) {
+          return "32_51930";
+        }
+        return "32_51940";
+      }
+      if (field == 0) {
+        return "32_51950";
+      }
+      if (field == 1) {
+        return "32_51960";
+      }
+      if (field == 2) {
+        return "32_51970";
+      }
+      if (field == 3) {
+        return "32_51980";
+      }
+      return "32_51990";
+    }
+    if (question == 0) {
+      if (field == 0) {
+        return "32_52000";
+      }
+      if (field == 1) {
+        return "32_52010";
+      }
+      if (field == 2) {
+        return "32_52020";
+      }
+      if (field == 3) {
+        return "32_52030";
+      }
+      return "32_52040";
+    }
+    if (question == 1) {
+      if (field == 0) {
+        return "32_52050";
+      }
+      if (field == 1) {
+        return "32_52060";
+      }
+      if (field == 2) {
+        return "32_52070";
+      }
+      if (field == 3) {
+        return "32_52080";
+      }
+      return "32_52090";
+    }
+    if (question == 2) {
+      if (field == 0) {
+        return "32_52100";
+      }
+      if (field == 1) {
+        return "32_52110";
+      }
+      if (field == 2) {
+        return "32_52120";
+      }
+      if (field == 3) {
+        return "32_52130";
+      }
+      return "32_52140";
+    }
+    if (field == 0) {
+      return "32_52150";
+    }
+    if (field == 1) {
+      return "32_52160";
+    }
+    if (field == 2) {
+      return "32_52170";
+    }
+    if (field == 3) {
+      return "32_52180";
+    }
+    return "32_52190";
+  }
+  return "";
+}
+
+string get_quiz_dialog_id(int quiz_id, int kind, int index) {
+  if (quiz_id == 0) {
+    if (kind == QUIZ_DIALOG_INTRO) {
+      if (index == 0) {
+        return "32_10160";
+      }
+      return "32_10191";
+    }
+    if (kind == QUIZ_DIALOG_ROUND_INTRO) {
+      if (index == 0) {
+        return "32_10192";
+      }
+      return "32_10193";
+    }
+    if (kind == QUIZ_DIALOG_CORRECT) {
+      return "32_10195";
+    }
+    return "32_10196";
+  }
+  return "";
+}

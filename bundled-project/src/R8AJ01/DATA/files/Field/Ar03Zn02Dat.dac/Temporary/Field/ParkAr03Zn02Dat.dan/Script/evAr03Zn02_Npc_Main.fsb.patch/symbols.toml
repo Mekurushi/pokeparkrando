@@ -1,0 +1,32 @@
+base_address = 0x50000
+
+[functions]
+get_module = 0x50044
+lock_npc_and_get_accessor = 0x511b4
+show_yes_no_question = 0x54d4c
+get_object_accessor = 0x50f20
+fade_in = 0x51f1c
+show_npc_dialog = 0x51f9c
+give_berries = 0x5733c
+complete_event = 0x54bc8
+lock_player_and_get_accessor = 0x50fb0
+face_player_and_npc = 0x521f8
+end_event_script = 0x50080
+friendship_banner = 0x54c90
+set_bestfriend = 0x54948
+store_pre_competition_state = 0x51e3c
+get_player_accessor = 0x50ec0
+drop_held_item_animation = 0x540a4
+wait_frames = 0x500bc
+run_power_competition = 0x50840
+despawn_player_object = 0x54440
+spawn_player_object = 0x543ec
+respawn_field = 0x5130c
+face_object_accessors_instantly = 0x50724
+restore_pre_competition_state = 0x51e68
+special_spawn_condition = 0x57e10
+sneasel_dialog = 0x64f1c
+play_sound_effect = 0x5139c
+fade_in_bgm = 0x514d8
+ask_quiz_question = 0x56870
+teddiursa_dialog = 0x651b0
