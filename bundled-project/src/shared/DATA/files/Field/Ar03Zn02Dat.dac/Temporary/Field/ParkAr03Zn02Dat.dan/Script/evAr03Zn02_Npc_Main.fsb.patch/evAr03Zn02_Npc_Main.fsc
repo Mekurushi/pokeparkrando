@@ -566,7 +566,39 @@ void glaceon_dialog(int param_1){
 }
 
 void lapras_dialog(int param_1){
-    //TODO: Lapras logic
+    const int LAPRAS_OBJECT_ID = 0xb4;
+    int player_accessor = lock_player_and_get_accessor();
+
+    int lapras_accessor = lock_npc_and_get_accessor(LAPRAS_OBJECT_ID);
+    face_player_and_npc(LAPRAS_OBJECT_ID,0);
+
+    @syscall(0,0x15,0x28,lapras_accessor,0x1274,0,1.0,1.0);
+    @syscall(0,0x15,2,lapras_accessor,0x1b,10);
+    show_npc_dialog(param_1,"32_80101");
+
+    int wants_to_travel = show_yes_no_question(param_1,"32_80110");
+    if(wants_to_travel == 1){
+        drop_held_item_animation();
+        if(!is_location_checked(LAPRAS_OBJECT_ID)){
+            show_npc_dialog(param_1,"32_60220");
+            @syscall(0,0x15,2,player_accessor,0x39,5);
+            friendship_banner("32_00490");
+            check_location(LAPRAS_OBJECT_ID);
+            show_npc_dialog(param_1,"32_80130");
+        }
+        else{
+            show_npc_dialog(param_1,"32_80130");
+        }
+        fade_out(0,0,0,0x3c);
+        int event_script = get_module("EventScript");
+        @syscall(0,0x15,4,event_script,0,1);
+        end_event_script(param_1);
+    }
+    else{
+        show_npc_dialog(param_1,"32_80120");
+    }
+
+    end_event_script(param_1);
 }
 
 void froslass_dialog(int param_1){
