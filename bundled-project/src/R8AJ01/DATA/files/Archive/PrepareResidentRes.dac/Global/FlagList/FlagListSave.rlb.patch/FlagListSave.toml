@@ -39,6 +39,27 @@ table = "FlagTable"
 flag_name = { value = "f0101BattleCounterNum" }
 bit_width = { value = 4 }
 
+[[edits]]
+table = "FlagTable"
+row = 104
+
+[edits.set]
+flag_name = { value = "f0302PresentHimeguma" }
+
+[[edits]]
+table = "FlagTable"
+row = 105
+
+[edits.set]
+flag_name = { value = "f0302PresentZenigame" }
+
+[[edits]]
+table = "FlagTable"
+row = 106
+
+[edits.set]
+flag_name = { value = "f0302PresentMuchul" }
+
 [[appends]]
 table = "FlagTable"
 [appends.row]

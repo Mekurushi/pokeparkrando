@@ -1,0 +1,9 @@
+# Glaceon
+[[edits]]
+table = "pokemonDispositionData"
+row = 21
+
+[edits.set]
+walking_ai_enabled = { value = 0x0 }
+damage_disposition = { value = 0x3 }
+field_position_candidates = { value = 0x8 }

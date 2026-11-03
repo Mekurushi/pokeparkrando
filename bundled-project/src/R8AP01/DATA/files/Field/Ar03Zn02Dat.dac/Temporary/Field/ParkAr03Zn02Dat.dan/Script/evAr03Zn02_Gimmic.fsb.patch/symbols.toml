@@ -1,0 +1,20 @@
+base_address = 0x50000
+
+[functions]
+get_module = 0x50044
+lock_player_and_get_accessor = 0x50fb0
+get_held_item_kind = 0x502a0
+fade_out = 0x51e9c
+despawn_field = 0x512e8
+remove_held_item = 0x50510
+wait_frames = 0x500bc
+fade_in = 0x51f1c
+fade_out_bgm = 0x51500
+play_sound_effect = 0x5139c
+respawn_field = 0x5130c
+fade_in_bgm = 0x514d8
+complete_event = 0x54bd0
+show_message_box = 0x50ca4
+restore_player_control = 0x5113c
+end_event_script = 0x50080
+SETCTREE = 0x5886c

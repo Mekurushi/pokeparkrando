@@ -1,0 +1,128 @@
+extern int get_module(string name);
+extern int lock_player_and_get_accessor();
+extern int get_held_item_kind();
+extern void fade_out(int red, int green, int blue, int frames);
+extern void despawn_field();
+extern void remove_held_item();
+extern void wait_frames(int frames);
+extern void fade_in(int red, int green, int blue, int frames);
+extern void fade_out_bgm(int frames);
+extern void play_sound_effect(int sound_id, int fade_in_frames);
+extern void respawn_field();
+extern void fade_in_bgm(int frames);
+extern void complete_event();
+extern void show_message_box(int mode, string message_id);
+extern void restore_player_control();
+extern void end_event_script(int param_1);
+
+void SETCTREE(int param_1){
+    int global_manager = get_module("GlobalManager");
+    int tree_level = @syscall(0,0x15,1,global_manager,"fChristmasTree");
+    int present_stage = @syscall(0,0x15,1,global_manager,"f0302DelibirdPresent");
+    @syscall(0,6,tree_level,"setctree_tree_level");
+    @syscall(0,6,present_stage,"setctree_stage_before");
+    lock_player_and_get_accessor();
+
+    if(get_held_item_kind() == 8){
+        if(tree_level < 4){
+            tree_level = tree_level + 1;
+            @syscall(0,0x15,0,global_manager,"fChristmasTree",tree_level);
+
+            int object_manager = get_module("ObjectManager");
+            int tree_object_id = @syscall(0,0x15,4,object_manager,0x4e2a);
+            int tree_accessor = @syscall(0,0x15,1,object_manager,tree_object_id);
+            int event_script = get_module("EventScript");
+
+            fade_out(0,0,0,30);
+            despawn_field();
+            remove_held_item();
+            @syscall(0,0x15,0xcb,event_script);
+
+            vec3 camera_position = vec3{
+                .x = -1161.5,
+                .y = 134.5,
+                .z = 352.5
+            };
+            vec3 camera_target = vec3{
+                .x = -1087.5,
+                .y = 168.5,
+                .z = 422.0
+            };
+            @syscall(0,0x15,0xcc,event_script,-1,&camera_position);
+            @syscall(0,0x15,0xcd,event_script,-1,&camera_target);
+
+            wait_frames(30);
+            fade_in(0,0,0,30);
+            wait_frames(60);
+            fade_out_bgm(30);
+            fade_out(0,0,0,30);
+            play_sound_effect(0x5c5,0);
+            @syscall(0,0x15,0,tree_accessor,tree_level);
+
+            if(
+                @syscall(0,0x15,1,global_manager,"zfPresentTamazarashi") == 1 &&
+                @syscall(0,0x15,1,global_manager,"f0302PresentTamazarashi") == 1
+            ){
+                @syscall(0,6,0,"setctree_complete_slot");
+                @syscall(0,0x15,0,global_manager,"f0302PresentTamazarashi",3);
+                @syscall(0,0x15,0,global_manager,"zfPresentTamazarashi",0);
+                int present_count = @syscall(0,0x15,1,global_manager,"f0302DelibirdPresent");
+                @syscall(0,0x15,0,global_manager,"f0302DelibirdPresent",present_count + 1);
+            }
+            else if(
+                @syscall(0,0x15,1,global_manager,"zfPresentHimeguma") == 1 &&
+                @syscall(0,0x15,1,global_manager,"f0302PresentHimeguma") == 1
+            ){
+                @syscall(0,6,1,"setctree_complete_slot");
+                @syscall(0,0x15,0,global_manager,"f0302PresentHimeguma",3);
+                @syscall(0,0x15,0,global_manager,"zfPresentHimeguma",0);
+                int present_count = @syscall(0,0x15,1,global_manager,"f0302DelibirdPresent");
+                @syscall(0,0x15,0,global_manager,"f0302DelibirdPresent",present_count + 1);
+            }
+            else if(
+                @syscall(0,0x15,1,global_manager,"zfPresentZenigame") == 1 &&
+                @syscall(0,0x15,1,global_manager,"f0302PresentZenigame") == 1
+            ){
+                @syscall(0,6,2,"setctree_complete_slot");
+                @syscall(0,0x15,0,global_manager,"f0302PresentZenigame",3);
+                @syscall(0,0x15,0,global_manager,"zfPresentZenigame",0);
+                int present_count = @syscall(0,0x15,1,global_manager,"f0302DelibirdPresent");
+                @syscall(0,0x15,0,global_manager,"f0302DelibirdPresent",present_count + 1);
+            }
+            else if(
+                @syscall(0,0x15,1,global_manager,"zfPresentMuchul") == 1 &&
+                @syscall(0,0x15,1,global_manager,"f0302PresentMuchul") == 1
+            ){
+                @syscall(0,6,3,"setctree_complete_slot");
+                @syscall(0,0x15,0,global_manager,"f0302PresentMuchul",3);
+                @syscall(0,0x15,0,global_manager,"zfPresentMuchul",0);
+                int present_count = @syscall(0,0x15,1,global_manager,"f0302DelibirdPresent");
+                @syscall(0,0x15,0,global_manager,"f0302DelibirdPresent",present_count + 1);
+            }
+
+            int updated_present_stage = @syscall(0,0x15,1,global_manager,"f0302DelibirdPresent");
+            @syscall(0,6,updated_present_stage,"setctree_stage_after");
+            fade_in(0,0,0,30);
+            if(tree_level == 4){
+                play_sound_effect(0x7ec,0);
+            }
+            else{
+                play_sound_effect(0x7eb,0);
+            }
+            wait_frames(120);
+            fade_out(0,0,0,30);
+            @syscall(0,0x15,0xca,event_script,-1);
+            respawn_field();
+            fade_in_bgm(30);
+            wait_frames(30);
+            fade_in(0,0,0,30);
+            complete_event();
+        }
+    }
+    else{
+        show_message_box(1,"32_00600");
+    }
+
+    restore_player_control();
+    end_event_script(param_1);
+}

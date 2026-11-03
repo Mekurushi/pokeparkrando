@@ -1,0 +1,20 @@
+[[edits]]
+table = "FlagTable"
+row = 8
+
+[edits.set]
+flag_name = { value = "zfPresentHimeguma" }
+
+[[edits]]
+table = "FlagTable"
+row = 9
+
+[edits.set]
+flag_name = { value = "zfPresentZenigame" }
+
+[[edits]]
+table = "FlagTable"
+row = 10
+
+[edits.set]
+flag_name = { value = "zfPresentMuchul" }
