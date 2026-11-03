@@ -275,8 +275,8 @@ void delibird_present_dialog(int param_1){
     bool squirtle_is_friend = is_friend(0xa9);
     bool smoochum_is_friend = is_friend(0xa8);
     // to match the APWorld logic, could be reduced to only friendship check now
-    bool squirtle_unlocked = @syscall(0,0x15,global_manager,0x29, 0x4C) == 1;
-    bool smoochum_unlocked = @syscall(0,0x15,global_manager,0x29, 0x4B) == 1;
+    bool squirtle_unlocked = @syscall(0,0x15,0x29,global_manager,0x4C) == 1;
+    bool smoochum_unlocked = @syscall(0,0x15,0x29,global_manager,0x4B) == 1;
     @syscall(0,6,spheal_is_friend,"delibird_friend_spheal");
     @syscall(0,6,teddiursa_is_friend,"delibird_friend_teddiursa");
     @syscall(0,6,squirtle_is_friend,"delibird_friend_squirtle");
@@ -356,7 +356,35 @@ void SETCTREE(int param_1){
 }
 
 void kirlia_dialog(int param_1){
-    //TODO: Kirlia logic
+    const int object_id = 0xa6;
+    lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    int global_manager = get_module("GlobalManager");
+    @syscall(0,0x15,2,object_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
+    if(!is_location_checked(object_id)){
+        int completed_present_count = @syscall(0,0x15,1,global_manager,"f0302DelibirdPresent");
+        if (completed_present_count == 1){
+            show_npc_dialog(param_1,"32_90160");
+        }
+        else if(completed_present_count == 2){
+            show_npc_dialog(param_1,"32_90170");
+        }
+        else if(completed_present_count == 3){
+            show_npc_dialog(param_1,"32_90180");     
+        }
+        else if(completed_present_count == 4){
+            show_npc_dialog(param_1,"32_90190");
+            drop_held_item_animation();
+            friendship_banner("32_00531");
+            check_location(object_id);
+        }
+    }
+    else{
+    show_npc_dialog(param_1,"32_90191");
+    }
+    end_event_script(param_1);
 }
 
 void kirlia2_dialog(int param_1){
