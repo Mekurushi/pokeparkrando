@@ -14,6 +14,29 @@ extern void complete_event();
 extern void show_message_box(int mode, string message_id);
 extern void restore_player_control();
 extern void end_event_script(int param_1);
+extern int spawn_object_if_missing(int object_id);
+extern void set_object_position(int object_id, int x, int y, int z);
+extern void set_object_rotation_instantly(int object_id, int x, int y, int z);
+extern void reset_object_after_event(int object_id);
+
+void special_spawn_condition(int param_1){
+    int global_manager = get_module("GlobalManager");
+
+    spawn_object_if_missing(0xb5);
+    set_object_position(0xb5,-1189,-8,-335);
+    set_object_rotation_instantly(0xb5,0,12,0);
+    reset_object_after_event(0xb5);
+
+    spawn_object_if_missing(0xcf);
+    set_object_position(0xcf,-68,-1,221);
+    set_object_rotation_instantly(0xcf,0,165,0);
+    reset_object_after_event(0xcf);
+
+    set_object_position(0xa6,-1080,114,450);
+    set_object_rotation_instantly(0xa6,0,8,0);
+    reset_object_after_event(0xa6);
+    return;
+}
 
 void SETCTREE(int param_1){
     int global_manager = get_module("GlobalManager");

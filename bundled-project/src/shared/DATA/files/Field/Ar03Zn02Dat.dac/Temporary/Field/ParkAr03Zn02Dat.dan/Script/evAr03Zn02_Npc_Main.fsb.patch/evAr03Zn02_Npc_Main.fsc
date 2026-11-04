@@ -25,7 +25,11 @@ extern void spawn_player_object();
 extern void respawn_field();
 extern void face_object_accessors_instantly(int player_accessor, int object_accessor, int immediate);
 extern void restore_pre_competition_state(int object_id);
-extern void special_spawn_condition(int param_1);
+extern int spawn_object_if_missing(int object_id);
+extern void set_object_position(int object_id, int x, int y, int z);
+extern void set_object_rotation_instantly(int object_id, int x, int y, int z);
+extern void FUN_0005461c(int object_id);
+extern void reset_object_after_event(int object_id);
 extern void play_sound_effect(int sound_id, int fade_in_frames);
 extern void fade_in_bgm(int frames);
 extern void fade_out_audio(int frames, bool fade_channel_6, bool fade_channel_8, bool fade_channel_7);
@@ -40,10 +44,103 @@ extern void despawn_field();
 extern void restore_player_control();
 extern void show_message_box(int mode, string message_id);
 extern void finish_special_spawn_condition(int param_1);
+extern void setup_player_for_zone();
+extern void clear_wand_check();
+extern void SETITEMS(int param_1);
+extern void update_npc_story_state(int param_1);
+extern int has_wand_check();
+extern void show_unlock_cutscene_at_position(int param_1, int object_id, string dialog_id, int camera_preset, int param_5, float x, float y, float z);
 
 config int BATTLE_COUNT;
 config bool EACH_ZONE;
 config bool REMOVE_ERRAND_POWER_COMP_LOCATIONS;
+
+void A03_Z02_INIT(int param_1){
+    int event_script = get_module("EventScript");
+    @syscall(0,0x15,0x65,event_script,0,0,0,1);
+    setup_field(param_1);
+    fade_in(0,0,0,0x1e);
+    clear_wand_check();
+    end_event_script(param_1);
+    return;
+}
+
+void A03_Z02_REP(int param_1){
+    setup_field(param_1);
+    fade_in(0,0,0,0x1e);
+    clear_wand_check();
+    end_event_script(param_1);
+    return;
+}
+
+void setup_field(int param_1){
+    lock_player_and_get_accessor();
+    setup_player_for_zone();
+    SETITEMS(param_1);
+    do_unlock_scenes(param_1);
+    special_spawn_condition(param_1);
+    update_npc_story_state(param_1);
+    return;
+}
+
+void do_unlock_scenes(int param_1){
+    int global_manager = get_module("GlobalManager");
+    if(has_wand_check() == 1){
+        fade_out(0,0,0,0x3c);
+    }
+
+    // Sneasel
+    if(@syscall(0,0x15,0x29,global_manager,0x48) == 1){
+        show_unlock_cutscene_at_position(param_1,0x9e,"32_00130",10,0,-259.4,56.0,977.0);
+    }
+    // Delibird
+    if(@syscall(0,0x15,0x29,global_manager,0x4a) == 1){
+        show_unlock_cutscene_at_position(param_1,0xa5,"32_00150",10,0,-1058.0,113.0,520.0);
+    }
+    // Smoochum
+    if(@syscall(0,0x15,0x29,global_manager,0x4b) == 1){
+        show_unlock_cutscene_at_position(param_1,0xa8,"32_00160",0,0,-1058.0,113.0,520.0);
+    }
+    // Squirtle
+    if(@syscall(0,0x15,0x29,global_manager,0x4c) == 1){
+        show_unlock_cutscene_at_position(param_1,0xa9,"32_00170",0,0,-1058.0,113.0,520.0);
+    }
+    // Primeape
+    if(@syscall(0,0x15,0x29,global_manager,0x4e) == 1){
+        show_unlock_cutscene_at_position(param_1,0xaf,"32_00200",10,0,-259.4,56.0,977.0);
+    }
+    // Ursaring
+    if(@syscall(0,0x15,0x29,global_manager,0x4f) == 1){
+        show_unlock_cutscene_at_position(param_1,0xb0,"32_00210",20,0,-109.0,47.0,856.0);
+    }
+
+    int event_script = get_module("EventScript");
+    @syscall(0,0x15,400,event_script,0,1);
+    int audio_state = @syscall(0,0x15,0x1f7,event_script,0x17e4);
+    if(audio_state == 0){
+        fade_in_bgm(0x1e);
+    }
+    return;
+}
+
+void special_spawn_condition(int param_1){
+    int global_manager = get_module("GlobalManager");
+
+    spawn_object_if_missing(0xb5);
+    set_object_position(0xb5,-1189,-8,-335);
+    set_object_rotation_instantly(0xb5,0,12,0);
+    reset_object_after_event(0xb5);
+
+    spawn_object_if_missing(0xcf);
+    set_object_position(0xcf,-68,-1,221);
+    set_object_rotation_instantly(0xcf,0,165,0);
+    reset_object_after_event(0xcf);
+
+    set_object_position(0xa6,-1080,114,450);
+    set_object_rotation_instantly(0xa6,0,8,0);
+    reset_object_after_event(0xa6);
+    return;
+}
 
 void sneasel_dialog(int param_1){
     power_competition_dialog(
@@ -365,7 +462,10 @@ void kirlia_dialog(int param_1){
     @syscall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
     if(!is_location_checked(object_id)){
         int completed_present_count = @syscall(0,0x15,1,global_manager,"f0302DelibirdPresent");
-        if (completed_present_count == 1){
+        if (completed_present_count == 0){
+            show_npc_dialog(param_1,"32_90166");
+        }
+        else if (completed_present_count == 1){
             show_npc_dialog(param_1,"32_90160");
         }
         else if(completed_present_count == 2){
@@ -382,7 +482,7 @@ void kirlia_dialog(int param_1){
         }
     }
     else{
-    show_npc_dialog(param_1,"32_90191");
+        show_npc_dialog(param_1,"32_90191");
     }
     end_event_script(param_1);
 }
