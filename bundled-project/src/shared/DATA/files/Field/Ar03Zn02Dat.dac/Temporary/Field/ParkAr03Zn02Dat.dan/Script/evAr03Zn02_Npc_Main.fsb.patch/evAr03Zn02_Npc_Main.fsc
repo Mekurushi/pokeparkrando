@@ -93,6 +93,10 @@ void do_unlock_scenes(int param_1){
     if(@syscall(0,0x15,0x29,global_manager,0x48) == 1){
         show_unlock_cutscene_at_position(param_1,0x9e,"32_00130",10,0,-259.4,56.0,977.0);
     }
+    // Glalie
+    if(@syscall(0,0x15,0x29,global_manager,0x49) == 1){
+        show_unlock_cutscene_at_position(param_1,0xb2,"32_00140",20,0,-189.0,45.0,886.0);
+    }
     // Delibird
     if(@syscall(0,0x15,0x29,global_manager,0x4a) == 1){
         show_unlock_cutscene_at_position(param_1,0xa5,"32_00150",10,0,-1058.0,113.0,520.0);
@@ -104,6 +108,10 @@ void do_unlock_scenes(int param_1){
     // Squirtle
     if(@syscall(0,0x15,0x29,global_manager,0x4c) == 1){
         show_unlock_cutscene_at_position(param_1,0xa9,"32_00170",0,0,-1058.0,113.0,520.0);
+    }
+    // Mamoswine
+    if(@syscall(0,0x15,0x29,global_manager,0x4d) == 1){
+        show_unlock_cutscene_at_position(param_1,0xb6,"32_00250",20,0,-678.0,45.0,858.0);
     }
     // Primeape
     if(@syscall(0,0x15,0x29,global_manager,0x4e) == 1){
