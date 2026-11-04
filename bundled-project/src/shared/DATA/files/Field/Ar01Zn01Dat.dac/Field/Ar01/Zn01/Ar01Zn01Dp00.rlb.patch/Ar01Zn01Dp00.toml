@@ -4,3 +4,19 @@ row = 30
 
 [edits.set]
 unlock_id = { value = 0xFFFFFFFF }
+
+[[edits]]
+table = "pokemonDispositionData"
+row = 49
+
+[edits.set]
+unlock_id = { value = 0xFFFFFFFF }
+field_position_candidates = { value = 0x10 }
+walking_ai_enabled = { value = 0x0 }
+
+[[edits]]
+table = "pokemonDispositionData"
+row = 0
+
+[edits.set]
+unlock_id = { value = 0xFFFFFFFF }
