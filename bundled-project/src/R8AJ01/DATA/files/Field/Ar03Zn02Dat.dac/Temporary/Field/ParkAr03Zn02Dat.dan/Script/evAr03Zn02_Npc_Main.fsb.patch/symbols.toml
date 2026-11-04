@@ -2,6 +2,10 @@ base_address = 0x50000
 
 [functions]
 get_module = 0x50044
+fade_out_sound = 0x513f4
+travel_to = 0x572dc
+ELAPLACEAREA = 0x621e0
+STAXIAREA = 0x57adc
 lock_npc_and_get_accessor = 0x511b4
 show_yes_no_question = 0x54d4c
 get_object_accessor = 0x50f20
@@ -51,6 +55,10 @@ reset_ice_block_items = 0x6121c
 do_igloo_scene_before = 0x5b32c
 do_igloo_scene_after = 0x5b460
 SETIGLOO = 0x58234
+show_yes_no_message_box = 0x50cf4
+move_object = 0x506ac
+EA03_Z02_D05 = 0x5a6a8
+LIFTTOP = 0x648f4
 sneasel_dialog = 0x64f1c
 play_sound_effect = 0x5139c
 fade_in_bgm = 0x514d8

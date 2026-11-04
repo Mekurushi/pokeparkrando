@@ -53,10 +53,42 @@ extern void reset_ice_block_items();
 extern void do_igloo_scene_before(int param_1, int stage);
 extern void do_igloo_scene_after(int param_1, int stage);
 extern void SETIGLOO(int param_1, int stage);
+extern int show_yes_no_message_box(int mode, string message_id);
+extern void move_object(int object_accessor, float x, float z, int mode);
+extern void EA03_Z02_D05(int param_1);
+extern void fade_out_sound(int duration);
+extern void travel_to(int zone, int area, int position);
 
 config int BATTLE_COUNT;
 config bool EACH_ZONE;
 config bool REMOVE_ERRAND_POWER_COMP_LOCATIONS;
+config int ICE_ZONE_MAIN_AREA_ICE_ZONE_LAPRAS_ZONE;
+config int ICE_ZONE_MAIN_AREA_ICE_ZONE_LAPRAS_AREA;
+config int ICE_ZONE_MAIN_AREA_ICE_ZONE_LAPRAS_POSITION;
+config int ICE_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_ZONE;
+config int ICE_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_AREA;
+config int ICE_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_POSITION;
+config int ICE_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL_ZONE;
+config int ICE_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL_AREA;
+config int ICE_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL_POSITION;
+config int ICE_ZONE_MAIN_AREA_BEACH_DRIFBLIM_FAST_TRAVEL_ZONE;
+config int ICE_ZONE_MAIN_AREA_BEACH_DRIFBLIM_FAST_TRAVEL_AREA;
+config int ICE_ZONE_MAIN_AREA_BEACH_DRIFBLIM_FAST_TRAVEL_POSITION;
+config int ICE_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL_ZONE;
+config int ICE_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL_AREA;
+config int ICE_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL_POSITION;
+config int ICE_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL_ZONE;
+config int ICE_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL_AREA;
+config int ICE_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL_POSITION;
+config int ICE_ZONE_MAIN_AREA_HAUNTED_DRIFBLIM_FAST_TRAVEL_ZONE;
+config int ICE_ZONE_MAIN_AREA_HAUNTED_DRIFBLIM_FAST_TRAVEL_AREA;
+config int ICE_ZONE_MAIN_AREA_HAUNTED_DRIFBLIM_FAST_TRAVEL_POSITION;
+config int ICE_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL_ZONE;
+config int ICE_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL_AREA;
+config int ICE_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL_POSITION;
+config int ICE_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_ZONE;
+config int ICE_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_AREA;
+config int ICE_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_POSITION;
 
 void A03_Z02_INIT(int param_1){
     int event_script = get_module("EventScript");
@@ -84,6 +116,62 @@ void setup_field(int param_1){
     special_spawn_condition(param_1);
     update_npc_story_state(param_1);
     return;
+}
+
+void ELAPLACEAREA(int param_1){
+    int event_script = get_module("EventScript");
+    fade_out_sound(15);
+    @syscall(0,0x15,400,event_script,3,0);
+    travel_to(
+        ICE_ZONE_MAIN_AREA_ICE_ZONE_LAPRAS_ZONE,
+        ICE_ZONE_MAIN_AREA_ICE_ZONE_LAPRAS_AREA,
+        ICE_ZONE_MAIN_AREA_ICE_ZONE_LAPRAS_POSITION
+    );
+}
+
+void STAXIAREA(int param_1){
+    int global_manager = get_module("GlobalManager");
+    int event_script = get_module("EventScript");
+    int sound_manager = get_module("SoundManager");
+
+    @syscall(0,0x15,100,event_script,0,0,0,0x3c);
+    int destination = @syscall(0,0x15,1,global_manager,"rfFuwarideTaxi");
+    @syscall(0,0x15,0x16,sound_manager,6,1.0);
+    @syscall(0,0x15,0x16,sound_manager,8,1.0);
+    @syscall(0,0x15,0x16,sound_manager,7,1.0);
+    fade_out_sound(15);
+    @syscall(0,0x15,400,event_script,3,0);
+
+    if(destination == 0xb){
+        travel_to(ICE_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_ZONE, ICE_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_AREA, ICE_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_POSITION);
+    }
+    else if(destination == 0x15){
+        travel_to(ICE_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL_ZONE, ICE_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL_AREA, ICE_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL_POSITION);
+    }
+    else if(destination == 0x1f){
+        travel_to(ICE_ZONE_MAIN_AREA_BEACH_DRIFBLIM_FAST_TRAVEL_ZONE, ICE_ZONE_MAIN_AREA_BEACH_DRIFBLIM_FAST_TRAVEL_AREA, ICE_ZONE_MAIN_AREA_BEACH_DRIFBLIM_FAST_TRAVEL_POSITION);
+    }
+    else if(destination == 0x20){
+        travel_to(3,2,2);
+    }
+    else if(destination == 0x29){
+        travel_to(ICE_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL_ZONE, ICE_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL_AREA, ICE_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL_POSITION);
+    }
+    else if(destination == 0x2a){
+        travel_to(ICE_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL_ZONE, ICE_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL_AREA, ICE_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL_POSITION);
+    }
+    else if(destination == 0x33){
+        travel_to(ICE_ZONE_MAIN_AREA_HAUNTED_DRIFBLIM_FAST_TRAVEL_ZONE, ICE_ZONE_MAIN_AREA_HAUNTED_DRIFBLIM_FAST_TRAVEL_AREA, ICE_ZONE_MAIN_AREA_HAUNTED_DRIFBLIM_FAST_TRAVEL_POSITION);
+    }
+    else if(destination == 0x34){
+        travel_to(5,2,0);
+    }
+    else if(destination == 0x3d){
+        travel_to(ICE_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL_ZONE, ICE_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL_AREA, ICE_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL_POSITION);
+    }
+    else if(destination == 0x3e){
+        travel_to(ICE_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_ZONE, ICE_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_AREA, ICE_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_POSITION);
+    }
 }
 
 void do_unlock_scenes(int param_1){
@@ -760,6 +848,44 @@ void glalie_dialog(int param_1){
         return;
     }
 
+    end_event_script(param_1);
+    return;
+}
+
+void LIFTTOP(int param_1){
+    lock_player_and_get_accessor();
+    int global_manager = get_module("GlobalManager");
+    int event_script = get_module("EventScript");
+    int lift_available = @syscall(0,0x15,1,global_manager,"f0302Lift");
+
+    if(lift_available == 1){
+        int response = show_yes_no_message_box(1,"32_00550");
+        if(response != 0){
+            drop_held_item_animation();
+            EA03_Z02_D05(param_1);
+
+            int object_manager = get_module("ObjectManager");
+            int player_object = @syscall(0,0x15,4,object_manager,0);
+            int player_accessor = @syscall(0,0x15,1,object_manager,player_object);
+            @syscall(0,0x15,7,player_accessor,-1155.0,-2.0,-274.0);
+            @syscall(0,0x15,8,player_accessor,-1155.0,-2.0,-274.0);
+            @syscall(0,0x15,0x22,player_accessor,-1155.0,-2.0,-274.0,0);
+            move_object(player_accessor,-1161.0,-314.0,0);
+            wait_frames(1);
+            @syscall(0,0x15,0xca,event_script,-1);
+
+            respawn_field();
+            special_spawn_condition(param_1);
+            update_npc_story_state(param_1);
+            fade_in_bgm(30);
+            fade_in(0,0,0,30);
+        }
+    }
+    else{
+        show_message_box(1,"32_00570");
+    }
+
+    restore_player_control();
     end_event_script(param_1);
     return;
 }
