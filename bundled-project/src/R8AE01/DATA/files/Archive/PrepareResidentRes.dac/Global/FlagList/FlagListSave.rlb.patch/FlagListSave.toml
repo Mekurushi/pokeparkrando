@@ -35,6 +35,13 @@ flag_name = { value = "f0101BattleCounter" }
 
 [[edits]]
 table = "FlagTable"
+row = 182
+
+[edits.set]
+flag_name = { value = "f0302MamoswineRevived" }
+
+[[edits]]
+table = "FlagTable"
 row = 200
 
 [edits.set]

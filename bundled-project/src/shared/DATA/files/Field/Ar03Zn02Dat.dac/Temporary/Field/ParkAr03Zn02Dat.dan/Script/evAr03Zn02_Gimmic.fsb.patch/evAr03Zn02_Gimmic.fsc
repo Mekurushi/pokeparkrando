@@ -19,6 +19,9 @@ extern void set_object_position(int object_id, int x, int y, int z);
 extern void set_object_rotation_instantly(int object_id, int x, int y, int z);
 extern void reset_object_after_event(int object_id);
 extern void face_player_towards_object_synchronously(int object_id, int smooth);
+extern void despawn_player_object();
+extern void spawn_player_object();
+extern void wait_for_event_completion(int event_id, int mode);
 
 config bool UNLOCK_FAST_TRAVEL_WITH_TAXI_STOP;
 
@@ -42,6 +45,40 @@ export void TAXI_STOP(int param_1){
     }
 
     restore_player_control();
+    end_event_script(param_1);
+    return;
+}
+
+export void REVIVEMAMMOO(int param_1){
+    int object_manager = get_module("ObjectManager");
+    int ice_object_id = @syscall(0,0x15,4,object_manager,0x4e30);
+    int ice_object = @syscall(0,0x15,1,object_manager,ice_object_id);
+    int ice_state = @syscall(0,0x15,0x21,ice_object);
+
+    if(ice_state == 0){
+        @syscall(0,0x15,0,ice_object,1);
+        play_sound_effect(0x5d2,0);
+    }
+    else if(ice_state == 1){
+        @syscall(0,0x15,0,ice_object,2);
+        play_sound_effect(0x5d2,0);
+    }
+    else if(ice_state == 2){
+        @syscall(0,0x15,0,ice_object,3);
+        play_sound_effect(0x5c7,0);
+        wait_frames(30);
+        
+        @syscall(0,0x15,0,ice_object,4);
+        wait_frames(30);
+        @syscall(0,0x15,0,ice_object,5);
+        int global_manager = get_module("GlobalManager");
+        @syscall(0,0x15,0,global_manager,"f0302MamoswineRevived",1);
+        int field_info = get_module("mnFieldInfo");
+        @syscall(0,0x15,0x11,field_info,1,"32_00250");
+        wait_frames(180);
+        @syscall(0,0x15,0x12,field_info);
+    }
+
     end_event_script(param_1);
     return;
 }
