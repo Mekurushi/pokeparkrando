@@ -165,7 +165,7 @@ void RESULT(){
     }
     if(unk_11 == 0){
         // deathlink
-        @syscall(0,0x15,0,global_manager,"zfPowerComp");
+        @syscall(0,0x15,0,global_manager,"zfPowerComp",0);
     }
 
     int unk_13;
