@@ -6,6 +6,14 @@ row = 30
 unlock_id = { value = 0xFFFFFFFF }
 
 [[edits]]
+table = "pokemonDispositionData"
+row = 0
+
+[edits.set]
+field_position_candidates = { value = 0x10 }
+walking_ai_enabled = { value = 0x0 }
+
+[[edits]]
 table = "itemKindTotalNumData"
 row = 1
 
