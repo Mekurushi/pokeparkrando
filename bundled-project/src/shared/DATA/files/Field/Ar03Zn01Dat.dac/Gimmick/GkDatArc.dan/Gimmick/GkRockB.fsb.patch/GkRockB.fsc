@@ -1,0 +1,16 @@
+extern int get_module(string name);
+
+export void WAIT(int param_1){
+  int global_manager = get_module("GlobalManager");
+  int stone_removed = @syscall(0,0x15,0x51,global_manager,5);
+  if(stone_removed != 0){
+    int object_manager = get_module("ObjectManager");
+    int object_id = @syscall(0,0x15,0,param_1);
+    @syscall(0,0x15,7,object_manager,object_id);
+  }
+  else{
+    int object = @syscall(0,0x15,4,param_1);
+    @syscall(0,0x15,0,object,param_1,0);
+  }
+  return;
+}
