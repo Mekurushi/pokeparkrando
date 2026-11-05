@@ -1,0 +1,18 @@
+extern int get_module(string name);
+
+export void CLOSE(int param_1){
+  int object_manager = get_module("ObjectManager");
+  int object_id = @syscall(0,0x15,0,param_1);
+  int object = @syscall(0,0x15,1,object_manager,object_id);
+
+  int global_manager = get_module("GlobalManager");
+  int gate_open = @syscall(0,0x15,0x51,global_manager,5);
+  if(gate_open == 1){
+    @syscall(0,0x15,0,object,2);
+  }
+  else{
+    @syscall(0,0x15,4,param_1);
+    @syscall(0,0x15,1,object,0);
+  }
+  return;
+}
