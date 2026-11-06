@@ -264,6 +264,10 @@ fn build_config() -> BuildConfig {
             BuildConfigValue::Integer(0x6),
         ),
         (
+            "ICE_ZONE_EMPOLEON_AREA_EMPOLEON_ATTRACTION_ID".into(),
+            BuildConfigValue::Integer(0x8),
+        ),
+        (
             "MEADOW_ZONE_MAIN_AREA_TREEHOUSE_CONNECTION_ZONE".into(),
             BuildConfigValue::Integer(2),
         ),
@@ -538,6 +542,18 @@ fn build_config() -> BuildConfig {
         (
             "ICE_ZONE_MAIN_AREA_EMPOLEON_GATE_POSITION".into(),
             BuildConfigValue::Integer(0),
+        ),
+        (
+            "ICE_ZONE_EMPOLEON_AREA_ICE_ZONE_MAIN_GATE_ZONE".into(),
+            BuildConfigValue::Integer(3),
+        ),
+        (
+            "ICE_ZONE_EMPOLEON_AREA_ICE_ZONE_MAIN_GATE_AREA".into(),
+            BuildConfigValue::Integer(2),
+        ),
+        (
+            "ICE_ZONE_EMPOLEON_AREA_ICE_ZONE_MAIN_GATE_POSITION".into(),
+            BuildConfigValue::Integer(1),
         ),
         (
             "ICE_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_ZONE".into(),
