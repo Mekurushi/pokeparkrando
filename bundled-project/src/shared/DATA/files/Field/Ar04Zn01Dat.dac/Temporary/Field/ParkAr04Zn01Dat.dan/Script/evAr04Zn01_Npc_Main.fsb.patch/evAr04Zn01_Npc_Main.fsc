@@ -21,7 +21,6 @@ extern void spawn_player_object();
 extern void respawn_field();
 extern void face_object_accessors_instantly(int player_accessor, int object_accessor, int immediate);
 extern void restore_pre_competition_state(int object_id);
-extern void special_spawn_condition(int param_1);
 extern void play_sound_effect(int sound_id, int fade_in_frames);
 extern void fade_in_bgm(int frames);
 extern int ask_quiz_question(int param_1, string question_id, string answer_1_id, string answer_2_id, string answer_3_id, string correct_answer_id);
@@ -37,6 +36,18 @@ extern int attraction_show_yes_no_question(int param_1, string dialog_id);
 extern void fade_out(int red, int green, int blue, int frames);
 extern void enter_attraction(int param_1, int attraction_id);
 extern void rotate_object(int object_id, int x, int y, int z);
+extern void despawn_debug_prisma(int object_id);
+extern void setup_player_for_zone();
+extern void do_unlock_scenes(int param_1);
+extern void update_npc_story_state(int param_1);
+extern void clear_wand_check();
+extern void SETGIMMICK(int param_1);
+extern int get_chapter();
+extern void set_object_position(int object_id, int x, int y, int z);
+extern void set_object_rotation_instantly(int object_id, int x, int y, int z);
+extern void spawn_object_if_missing(int object_id);
+extern void reset_object_after_event(int object_id);
+extern void despawn(int object_id);
 
 config int BATTLE_COUNT;
 config int CAVERN_ZONE_MAIN_AREA_BASTIODON_ATTRACTION_ID;
@@ -64,6 +75,39 @@ config int CAVERN_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL_POSITION;
 config int CAVERN_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_ZONE;
 config int CAVERN_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_AREA;
 config int CAVERN_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_POSITION;
+
+void setup_field(int param_1){
+    lock_player_and_get_accessor();
+    setup_player_for_zone();
+    do_unlock_scenes(param_1);
+    special_spawn_condition(param_1);
+    update_npc_story_state(param_1);
+    return;
+}
+
+void A04_Z01_INIT(int param_1){
+    int event_script = get_module("EventScript");
+    @syscall(0,0x15,0x65,event_script,0,0,0,1);
+    despawn_debug_prisma(0x4e23);
+    setup_field(param_1);
+    fade_in(0,0,0,0x1e);
+    clear_wand_check();
+    SETGIMMICK(param_1);
+    end_event_script(param_1);
+    return;
+}
+
+void special_spawn_condition(int param_1){
+    int global_manager = get_module("GlobalManager");
+
+    const int CHATOT_OBJECT_ID = 0x102;
+    spawn_object_if_missing(CHATOT_OBJECT_ID);
+    set_object_position(CHATOT_OBJECT_ID,0x2d1,-0x2e,-0x1de);
+    set_object_rotation_instantly(CHATOT_OBJECT_ID,0,10,0);
+    reset_object_after_event(CHATOT_OBJECT_ID);
+
+    return;
+}
 
 void STAXIAREA(int param_1){
     int global_manager = get_module("GlobalManager");
@@ -293,6 +337,14 @@ void snorlax_dialog(int param_1){
     int object_accessor = lock_npc_and_get_accessor(object_id);
     @syscall(0,0x15,0x28,object_accessor,0x1229,0,1.0,1.0);
     show_npc_dialog(param_1,"41_90000");
+
+    // location after events:
+    /*        
+    spawn_object_if_missing(0xe7);
+    set_object_position(0xe7,0x90,-0x81,-0x2d8);
+    set_object_rotation_instantly(0xe7,0,0x7f,0);
+    reset_object_after_event(0xe7);
+    */
     end_event_script(param_1);
 }
 
