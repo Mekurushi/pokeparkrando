@@ -48,6 +48,12 @@ extern void set_object_rotation_instantly(int object_id, int x, int y, int z);
 extern void spawn_object_if_missing(int object_id);
 extern void reset_object_after_event(int object_id);
 extern void despawn(int object_id);
+extern void set_player_at(int x, int y, int z);
+extern void set_player_rotation(int x, int y, int z);
+extern void do_dialog_with_scene(int param_1, int object_id, string dialog_id, int scene);
+extern void reset_camera();
+extern void restore_player_control();
+extern void spawn_for_short_duration(int object_id);
 
 config int BATTLE_COUNT;
 config int CAVERN_ZONE_MAIN_AREA_BASTIODON_ATTRACTION_ID;
@@ -106,6 +112,112 @@ void special_spawn_condition(int param_1){
     set_object_rotation_instantly(CHATOT_OBJECT_ID,0,10,0);
     reset_object_after_event(CHATOT_OBJECT_ID);
 
+    return;
+}
+
+void RETURN_AT10(int param_1){
+    const int BASTIODON_OBJECT_ID = 0xe8;
+
+    int global_manager = get_module("GlobalManager");
+    int event_script = get_module("EventScript");
+    @syscall(0,0x15,0x65,event_script,0,0,0,1);
+
+    setup_field(param_1);
+    despawn_debug_prisma(0x4e23);
+    despawn_player_object();
+    wait_frames(1);
+    spawn_player_object();
+    set_player_at(0x170,-0x64,-0x3e4);
+    set_player_rotation(0,0x105,0);
+    @syscall(0,0x15,0xca,event_script,-1);
+
+    int return_attraction = @syscall(0,0x15,1,global_manager,"fRetAttraction");
+    if(return_attraction == 10){
+        int has_bastiodon_prisma = @syscall(0,0x15,0x51,global_manager,9);
+        if(has_bastiodon_prisma == 1){
+            if(!is_location_checked(BASTIODON_OBJECT_ID)){
+                bastiodon_friendship_scene(param_1);
+            }
+            else{
+                int bastiodon_accessor = lock_npc_and_get_accessor(BASTIODON_OBJECT_ID);
+                fade_in(0,0,0,0x1e);
+                face_player_and_npc(BASTIODON_OBJECT_ID,0);
+                @syscall(0,0x15,2,bastiodon_accessor,0x1b,10);
+                @syscall(0,0x15,0x28,bastiodon_accessor,0x10fd,0,1.0,1.0);
+                do_dialog_with_scene(param_1,BASTIODON_OBJECT_ID,"41_60333",0);
+                reset_object_after_event(BASTIODON_OBJECT_ID);
+                reset_camera();
+                @syscall(0,0x15,0xca,event_script,0x1e);
+            }
+        }
+        else{
+            int bastiodon_accessor = lock_npc_and_get_accessor(BASTIODON_OBJECT_ID);
+            fade_in(0,0,0,0x1e);
+            face_player_and_npc(BASTIODON_OBJECT_ID,0);
+            @syscall(0,0x15,2,bastiodon_accessor,0x1b,10);
+            @syscall(0,0x15,0x28,bastiodon_accessor,0x10fd,0,1.0,1.0);
+            do_dialog_with_scene(param_1,BASTIODON_OBJECT_ID,"41_60331",0);
+            reset_object_after_event(BASTIODON_OBJECT_ID);
+            reset_camera();
+            @syscall(0,0x15,0xca,event_script,0x1e);
+        }
+    }
+
+    fade_in(0,0,0,0x1e);
+    clear_wand_check();
+    restore_player_control();
+    reset_camera();
+    end_event_script(param_1);
+    return;
+}
+
+void bastiodon_friendship_scene(int param_1){
+    const int BASTIODON_OBJECT_ID = 0xe8;
+
+    int event_script = get_module("EventScript");
+    lock_player_and_get_accessor();
+
+    vec3 camera_position = vec3{
+        .x = 388.66,
+        .y = -92.85,
+        .z = -1006.87
+    };
+    vec3 camera_target = vec3{
+        .x = 374.44,
+        .y = -92.18,
+        .z = -1000.90
+    };
+    @syscall(0,0x15,0xcb,event_script);
+    @syscall(0,0x15,0xcc,event_script,-1,&camera_position);
+    @syscall(0,0x15,0xcd,event_script,-1,&camera_target);
+
+    fade_in(0,0,0,0x1e);
+    int bastiodon_accessor = lock_npc_and_get_accessor(BASTIODON_OBJECT_ID);
+    @syscall(0,0x15,2,bastiodon_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,bastiodon_accessor,0x10fd,0,1.0,1.0);
+    do_dialog_with_scene(param_1,BASTIODON_OBJECT_ID,"41_60340",0);
+
+    spawn_for_short_duration(0x4e23);
+    wait_frames(0x6e);
+    play_sound_effect(0x7ea,0);
+    int field_info = get_module("mnFieldInfo");
+    @syscall(0,0x15,0x11,field_info,1,"41_60350");
+    wait_frames(0xb4);
+    @syscall(0,0x15,0x12,field_info);
+    wait_frames(0x1e);
+
+    @syscall(0,0x15,2,bastiodon_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,bastiodon_accessor,0x10fd,0,1.0,1.0);
+    do_dialog_with_scene(param_1,BASTIODON_OBJECT_ID,"41_60360",0);
+    friendship_banner("41_00460");
+    check_location(BASTIODON_OBJECT_ID);
+
+    reset_object_after_event(BASTIODON_OBJECT_ID);
+    reset_camera();
+    @syscall(0,0x15,0xca,event_script,0x1e);
+    wait_frames(0x23);
+    @syscall(0,0x15,5,event_script);
+    wait_frames(1);
     return;
 }
 
