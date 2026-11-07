@@ -33,8 +33,13 @@ extern void choose_fast_travel_destination(int param_1, int object_id, int curre
 extern void fade_out_audio(int frames, bool fade_channel_6, bool fade_channel_8, bool fade_channel_7);
 extern void fade_out_sound(int duration);
 extern void travel_to(int zone, int area, int position);
+extern int attraction_show_yes_no_question(int param_1, string dialog_id);
+extern void fade_out(int red, int green, int blue, int frames);
+extern void enter_attraction(int param_1, int attraction_id);
+extern void rotate_object(int object_id, int x, int y, int z);
 
 config int BATTLE_COUNT;
+config int CAVERN_ZONE_MAIN_AREA_BASTIODON_ATTRACTION_ID;
 config int CAVERN_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_ZONE;
 config int CAVERN_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_AREA;
 config int CAVERN_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_POSITION;
@@ -292,7 +297,55 @@ void snorlax_dialog(int param_1){
 }
 
 void bastiodon_dialog(int param_1){
-    // TODO: Bastiodon
+    const int BASTIODON_OBJECT_ID = 0xe8;
+    const int ATTRACTION_FEE = 20;
+    const int FRIENDSHIP_COUNT = 50;
+
+    int player_accessor = lock_player_and_get_accessor();
+    int bastiodon_accessor = lock_npc_and_get_accessor(BASTIODON_OBJECT_ID);
+    int global_manager = get_module("GlobalManager");
+
+    face_player_and_npc(BASTIODON_OBJECT_ID,0);
+    @syscall(0,0x15,2,bastiodon_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,bastiodon_accessor,0x10fd,0,1.0,1.0);
+
+    int friendship_count = @syscall(0,0x15,0x42,global_manager);
+    if(friendship_count < FRIENDSHIP_COUNT){
+        show_npc_dialog(param_1,"41_60272");
+    }
+    else{
+        set_berry_counter_visible(true);
+        int wants_to_enter = attraction_show_yes_no_question(param_1,"41_60300");
+        if(wants_to_enter == 1){
+            int berry_count = @syscall(0,0x15,0x15,global_manager);
+            if(berry_count < ATTRACTION_FEE){
+                @syscall(0,0x15,2,bastiodon_accessor,0x1b,10);
+                @syscall(0,0x15,0x28,bastiodon_accessor,0x10fd,0,1.0,1.0);
+                show_npc_dialog(param_1,"41_60330");
+            }
+            else{
+                @syscall(0,0x15,2,bastiodon_accessor,0x1c,10);
+                @syscall(0,0x15,0x28,bastiodon_accessor,0x10fd,0,1.0,1.0);
+                @syscall(0,0x15,0x14,global_manager,-ATTRACTION_FEE);
+                show_npc_dialog(param_1,"41_60320");
+                @syscall(0,0x15,0,global_manager,"fRetAttraction",10);
+                set_berry_counter_visible(false);
+                fade_out(0,0,0,0x1e);
+                @syscall(0,0x15,0,player_accessor,0);
+                enter_attraction(param_1,CAVERN_ZONE_MAIN_AREA_BASTIODON_ATTRACTION_ID);
+            }
+        }
+        else{
+            @syscall(0,0x15,2,bastiodon_accessor,0x1b,10);
+            @syscall(0,0x15,0x28,bastiodon_accessor,0x10fd,0,1.0,1.0);
+            show_npc_dialog(param_1,"41_60310");
+        }
+    }
+
+    set_berry_counter_visible(false);
+    rotate_object(BASTIODON_OBJECT_ID,0,0x55,0);
+    end_event_script(param_1);
+    return;
 }
 
 void drifblim_dialog(int param_1){
