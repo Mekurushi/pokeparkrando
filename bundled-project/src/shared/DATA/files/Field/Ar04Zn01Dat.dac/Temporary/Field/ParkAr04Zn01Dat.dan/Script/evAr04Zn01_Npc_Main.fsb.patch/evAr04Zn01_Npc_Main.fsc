@@ -193,7 +193,7 @@ void marowak_dialog(int param_1){
 }
 
 void machamp_dialog(int param_1){
-    // TODO: Machamp
+    power_competition_dialog(param_1,0xde,0xfd1,"41_00370","41_11240","41_11250","41_11270","41_11290","41_11280");
 }
 
 void zubat_dialog(int param_1){
@@ -217,19 +217,78 @@ void electivire_dialog(int param_1){
 }
 
 void diglett_dialog(int param_1){
-    // TODO: Diglett
+    int object_id = 0xe4;
+    int global_manager = get_module("GlobalManager");
+    lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    @syscall(0,0x15,0x28,object_accessor,0xc3e,0,1.0,1.0);
+
+    int has_prisma = @syscall(0,0x15,0x51,global_manager,0x9);
+    if(has_prisma == 1){
+        if(!is_location_checked(object_id)){
+            show_npc_dialog(param_1,"41_60230");
+            drop_held_item_animation();
+            friendship_banner("41_00430");
+            check_location(object_id);
+        }
+        else{
+            show_npc_dialog(param_1,"41_60240");
+        }
+    }
+    else{
+        show_npc_dialog(param_1,"41_60240");
+    }
+
+    end_event_script(param_1);
 }
 
 void dugtrio_dialog(int param_1){
-    // TODO: Dugtrio
+    int object_id = 0xe5;
+    int global_manager = get_module("GlobalManager");
+    lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    @syscall(0,0x15,0x28,object_accessor,0xf0e,0,1.0,1.0);
+
+    int has_prisma = @syscall(0,0x15,0x51,global_manager,0x9);
+    if(has_prisma == 1){
+        if(!is_location_checked(object_id)){
+            show_npc_dialog(param_1,"41_60261");
+            drop_held_item_animation();
+            friendship_banner("41_00467");
+            check_location(object_id);
+        }
+        else{
+            show_npc_dialog(param_1,"41_60262");
+        }
+    }
+    else{
+        show_npc_dialog(param_1,"41_60260");
+    }
+
+    end_event_script(param_1);
 }
 
 void mr_mime_dialog(int param_1){
-    // TODO: Mr. Mime
+    // TODO: extend when mr mime location is implemented
+    int object_id = 0xe6;
+    lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    @syscall(0,0x15,0x28,object_accessor,0x10ee,0,1.0,1.0);
+    show_npc_dialog(param_1,"41_60000");
+    end_event_script(param_1);
 }
 
 void snorlax_dialog(int param_1){
-    // TODO: Snorlax
+    // TODO: extend when snorlax location is implemented
+    int object_id = 0xe7;
+    lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    @syscall(0,0x15,0x28,object_accessor,0x1229,0,1.0,1.0);
+    show_npc_dialog(param_1,"41_90000");
+    end_event_script(param_1);
 }
 
 void bastiodon_dialog(int param_1){
@@ -444,7 +503,14 @@ void gible2_dialog(int param_1){
 }
 
 void chatot_dialog(int param_1){
-    // TODO: Chatot
+    lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(0x102);
+    face_player_and_npc(0x102,0);
+    @syscall(0,0x15,2,object_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,object_accessor,0x96e,0,1.0,1.0);
+    show_npc_dialog_mode_0(param_1,"02_70380");
+    // TODO: hint system or similiar
+    end_event_script(param_1);
 }
 
 const int QUIZ_DIALOG_INTRO = 0;
