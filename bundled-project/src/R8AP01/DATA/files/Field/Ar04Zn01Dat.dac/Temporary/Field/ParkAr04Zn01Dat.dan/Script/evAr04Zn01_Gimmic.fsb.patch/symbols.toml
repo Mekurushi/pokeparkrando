@@ -1,0 +1,31 @@
+base_address = 0x50000
+
+[functions]
+get_module = 0x50044
+end_event_script = 0x50080
+wait_frames = 0x500bc
+unlock_pokemon = 0x501fc
+lock_player_and_get_accessor = 0x50fb0
+lock_npc_and_get_accessor = 0x511b4
+restore_player_control = 0x5113c
+reset_object_after_event = 0x51268
+despawn_field = 0x512e8
+respawn_field = 0x5130c
+play_sound_effect = 0x5139c
+fade_in_bgm = 0x514d8
+fade_out_bgm = 0x51500
+set_event_frame_visible_with_fade = 0x51ae0
+hide_event_frame = 0x51b08
+fade_out = 0x51e9c
+fade_in = 0x51f1c
+spawn_player_object = 0x543f4
+despawn_player_object = 0x54448
+spawn_object_if_missing = 0x545b8
+despawn = 0x54624
+set_object_position = 0x536c4
+set_object_rotation_instantly = 0x53764
+object_id_to_friend_id = 0x549e4
+complete_event = 0x54bd0
+BOX_COIL1 = 0x58ffc
+BOX_COIL2 = 0x59540
+BOX_COIL3 = 0x59a84

@@ -1,0 +1,242 @@
+extern int get_module(string name);
+extern void end_event_script(int param_1);
+extern void wait_frames(int frames);
+extern void unlock_pokemon(int object_id);
+extern int lock_player_and_get_accessor();
+extern int lock_npc_and_get_accessor(int object_id);
+extern void reset_object_after_event(int object_id);
+extern void despawn_field();
+extern void respawn_field();
+extern void play_sound_effect(int sound_id, int fade_in_frames);
+extern void fade_in_bgm(int frames);
+extern void fade_out_bgm(int frames);
+extern void set_event_frame_visible_with_fade(int visible);
+extern void hide_event_frame(bool immediate);
+extern void fade_out(int red, int green, int blue, int frames);
+extern void fade_in(int red, int green, int blue, int frames);
+extern void spawn_player_object();
+extern void despawn_player_object();
+extern void spawn_object_if_missing(int object_id);
+extern void despawn(int object_id);
+extern int object_id_to_friend_id(int object_id);
+extern void complete_event();
+extern void set_object_position(int object_id, int x, int y, int z);
+extern void set_object_rotation_instantly(int object_id, int x, int y, int z);
+extern void restore_player_control();
+
+bool is_unlocked(int object_id){
+  int disp_manager = get_module("DisposManager");
+  int global_manager = get_module("GlobalManager");
+  int unlock_id = @syscall(0,0x15,4,disp_manager,object_id);
+  if (unlock_id == -2) {
+    return false;
+  }
+  if (unlock_id == -1) {
+    return false;
+  }
+  int is_unlocked = @syscall(0,0x15,0x29,global_manager,unlock_id);
+  return is_unlocked == 1;
+}
+
+void spawn_if_unlocked(int object_id, float x, float y, float z, float rotation_x, float rotation_y, float rotation_z){
+    bool unlocked = is_unlocked(object_id);
+    if(unlocked){
+        int dispos_manager = get_module("DisposManager");
+
+        spawn_object_if_missing(object_id);
+        int object_accessor = lock_npc_and_get_accessor(object_id);
+
+        @syscall(0,0x15,7,object_accessor,x,y,z);
+        @syscall(0,0x15,8,object_accessor,x,y,z);
+        @syscall(0,0x15,0x22,object_accessor,x,y,z,1);
+        @syscall(0,0x15,9,object_accessor,rotation_x,rotation_y,rotation_z);
+        reset_object_after_event(object_id);
+
+        // enables walking again
+        int object_state = @syscall(0,0x15,0x10,dispos_manager,object_id);
+        if(object_state == 0){
+            @syscall(0,0x15,0x2a,object_accessor,5);
+        }
+        else{
+            @syscall(0,0x15,0x2a,object_accessor,10);
+            @syscall(0,0x15,0x2b,object_accessor,4);
+        }
+    }
+}
+
+export void BOX_COIL1(int param_1){
+    const int MAGNEMITE_OBJECT_ID = 0xd7;
+
+    int global_manager = get_module("GlobalManager");
+    bool is_location_checked = @syscall(0,0x15,1,global_manager,"f0401MagnemiteBox1") == 1;
+
+    if(!is_location_checked){
+        int field_info = get_module("mnFieldInfo");
+        @syscall(0,0x15,0,global_manager,"f0401MagnemiteBox1",1);
+
+        int coil_accessor = lock_npc_and_get_accessor(MAGNEMITE_OBJECT_ID);
+        vec3 coil_position;
+        vec3 coil_rotation;
+        @syscall(0,0x15,0x13,coil_accessor,&coil_position);
+        @syscall(0,0x15,0x16,coil_accessor,&coil_rotation);
+        
+        spawn_object_if_missing(MAGNEMITE_OBJECT_ID);
+        set_object_position(MAGNEMITE_OBJECT_ID,0x22b,-0x64,-0x30c);
+        set_object_rotation_instantly(MAGNEMITE_OBJECT_ID,0,0xce,0);
+
+        play_sound_effect(0x7e7,0);
+        @syscall(0,0x15,0x11,field_info,1,"41_00140");
+        wait_frames(0xb4);
+        despawn(MAGNEMITE_OBJECT_ID);
+        @syscall(0,0x15,0x12,field_info);
+        spawn_if_unlocked(MAGNEMITE_OBJECT_ID,coil_position.x,coil_position.y,coil_position.z,coil_rotation.x,coil_rotation.y,coil_rotation.z);
+        complete_event();
+    }
+    else{
+        int object_manager = get_module("ObjectManager");
+        int dispos_manager = get_module("DisposManager");
+        int random_value = @syscall(0,0x24,100) + 1;
+        int berry_object_id;
+        if(random_value == 100){
+            berry_object_id = 0x2ee6;
+        }
+        else if(random_value >= 0x5a && random_value < 100){
+            berry_object_id = 12000;
+        }
+        else{
+            berry_object_id = 0x2ee3;
+        }
+
+        @syscall(0,0x15,5,dispos_manager,berry_object_id);
+        int berry_object = @syscall(0,0x15,4,object_manager,berry_object_id);
+        int berry_accessor = @syscall(0,0x15,1,object_manager,berry_object);
+        vec3 berry_position = vec3{
+            .x = 555.179,
+            .y = -100.87,
+            .z = -780.367
+        };
+        @syscall(0,0x15,7,berry_accessor,berry_position.x,berry_position.y,berry_position.z);
+        @syscall(0,0x15,8,berry_accessor,berry_position.x,berry_position.y,berry_position.z);
+    }
+
+    end_event_script(param_1);
+    return;
+}
+
+export void BOX_COIL2(int param_1){
+    const int MAGNEMITE_OBJECT_ID = 0xf9;
+
+    int global_manager = get_module("GlobalManager");
+    bool is_location_checked = @syscall(0,0x15,1,global_manager,"f0401MagnemiteBox2") == 1;
+
+    if(!is_location_checked){
+        int field_info = get_module("mnFieldInfo");
+        @syscall(0,0x15,0,global_manager,"f0401MagnemiteBox2",1);
+
+        int coil_accessor = lock_npc_and_get_accessor(MAGNEMITE_OBJECT_ID);
+        vec3 coil_position;
+        vec3 coil_rotation;
+        @syscall(0,0x15,0x13,coil_accessor,&coil_position);
+        @syscall(0,0x15,0x16,coil_accessor,&coil_rotation);
+
+        spawn_object_if_missing(MAGNEMITE_OBJECT_ID);
+        set_object_position(MAGNEMITE_OBJECT_ID,-147,-100,-1414);
+        set_object_rotation_instantly(MAGNEMITE_OBJECT_ID,0,116,0);
+
+        play_sound_effect(0x7e7,0);
+        @syscall(0,0x15,0x11,field_info,1,"41_00140");
+        wait_frames(0xb4);
+        despawn(MAGNEMITE_OBJECT_ID);
+        @syscall(0,0x15,0x12,field_info);
+        spawn_if_unlocked(MAGNEMITE_OBJECT_ID,coil_position.x,coil_position.y,coil_position.z,coil_rotation.x,coil_rotation.y,coil_rotation.z);
+        complete_event();
+    }
+    else{
+        int object_manager = get_module("ObjectManager");
+        int dispos_manager = get_module("DisposManager");
+        int random_value = @syscall(0,0x24,100) + 1;
+        int berry_object_id;
+        if(random_value == 100){
+            berry_object_id = 0x2ee6;
+        }
+        else if(random_value >= 0x5a && random_value < 100){
+            berry_object_id = 12000;
+        }
+        else{
+            berry_object_id = 0x2ee3;
+        }
+
+        @syscall(0,0x15,5,dispos_manager,berry_object_id);
+        int berry_object = @syscall(0,0x15,4,object_manager,berry_object_id);
+        int berry_accessor = @syscall(0,0x15,1,object_manager,berry_object);
+        vec3 berry_position = vec3{
+            .x = -147.534,
+            .y = -99.2,
+            .z = -1414.004
+        };
+        @syscall(0,0x15,7,berry_accessor,berry_position.x,berry_position.y,berry_position.z);
+        @syscall(0,0x15,8,berry_accessor,berry_position.x,berry_position.y,berry_position.z);
+    }
+
+    end_event_script(param_1);
+    return;
+}
+
+export void BOX_COIL3(int param_1){
+    const int MAGNEMITE_OBJECT_ID = 0xfa;
+
+    int global_manager = get_module("GlobalManager");
+    bool is_location_checked = @syscall(0,0x15,1,global_manager,"f0401MagnemiteBox3") == 1;
+
+    if(!is_location_checked){
+        int field_info = get_module("mnFieldInfo");
+        @syscall(0,0x15,0,global_manager,"f0401MagnemiteBox3",1);
+
+        int coil_accessor = lock_npc_and_get_accessor(MAGNEMITE_OBJECT_ID);
+        vec3 coil_position;
+        vec3 coil_rotation;
+        @syscall(0,0x15,0x13,coil_accessor,&coil_position);
+        @syscall(0,0x15,0x16,coil_accessor,&coil_rotation);
+
+        spawn_object_if_missing(MAGNEMITE_OBJECT_ID);
+        set_object_position(MAGNEMITE_OBJECT_ID,-397,-100,-1004);
+        set_object_rotation_instantly(MAGNEMITE_OBJECT_ID,0,165,0);
+
+        play_sound_effect(0x7e7,0);
+        @syscall(0,0x15,0x11,field_info,1,"41_00140");
+        wait_frames(0xb4);
+        despawn(MAGNEMITE_OBJECT_ID);
+        @syscall(0,0x15,0x12,field_info);
+        spawn_if_unlocked(MAGNEMITE_OBJECT_ID,coil_position.x,coil_position.y,coil_position.z,coil_rotation.x,coil_rotation.y,coil_rotation.z);
+        complete_event();
+    }
+    else{
+        int object_manager = get_module("ObjectManager");
+        int dispos_manager = get_module("DisposManager");
+        int random_value = @syscall(0,0x24,100) + 1;
+        int berry_object_id;
+        if(random_value == 100){
+            berry_object_id = 0x2ee6;
+        }
+        else if(random_value >= 0x5a && random_value < 100){
+            berry_object_id = 12000;
+        }
+        else{
+            berry_object_id = 0x2ee3;
+        }
+
+        @syscall(0,0x15,5,dispos_manager,berry_object_id);
+        int berry_object = @syscall(0,0x15,4,object_manager,berry_object_id);
+        int berry_accessor = @syscall(0,0x15,1,object_manager,berry_object);
+        vec3 berry_position = vec3{
+            .x = -396.685,
+            .y = -99.8,
+            .z = -1004.455
+        };
+        @syscall(0,0x15,7,berry_accessor,berry_position.x,berry_position.y,berry_position.z);
+        @syscall(0,0x15,8,berry_accessor,berry_position.x,berry_position.y,berry_position.z);
+    }
+
+    end_event_script(param_1);
+    return;
+}

@@ -7,6 +7,27 @@ flag_name = { value = "f0101ShroomishBox" }
 
 [[edits]]
 table = "FlagTable"
+row = 63
+
+[edits.set]
+flag_name = { value = "f0401MagnemiteBox1" }
+
+[[edits]]
+table = "FlagTable"
+row = 87
+
+[edits.set]
+flag_name = { value = "f0401MagnemiteBox2" }
+
+[[edits]]
+table = "FlagTable"
+row = 91
+
+[edits.set]
+flag_name = { value = "f0401MagnemiteBox3" }
+
+[[edits]]
+table = "FlagTable"
 row = 172
 
 [edits.set]
