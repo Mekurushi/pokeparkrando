@@ -1,0 +1,257 @@
+void magby_dialog(int param_1){
+    const int object_id = 0x105;
+    // TODO: Magby
+    return;
+}
+
+void charmander_dialog(int param_1){
+    const int object_id = 0x106;
+    // TODO: Charmander
+    return;
+}
+
+void bonsly_dialog(int param_1){
+    const int object_id = 0x107;
+    // TODO: Bonsly
+    return;
+}
+
+void baltoy_dialog(int param_1){
+    const int object_id = 0x108;
+    // TODO: Baltoy
+    return;
+}
+
+void torkoal_dialog(int param_1){
+    const int object_id = 0x109;
+    // TODO: Torkoal
+    return;
+}
+
+void quilava_dialog(int param_1){
+    const int object_id = 0x10a;
+    // TODO: Quilava
+    return;
+}
+
+void claydol_dialog(int param_1){
+    const int object_id = 0x10b;
+    // TODO: Claydol
+    return;
+}
+
+void geodude_dialog(int param_1){
+    const int object_id = 0x10c;
+    // TODO: Geodude
+    return;
+}
+
+void torchic_dialog(int param_1){
+    const int object_id = 0x10d;
+    // TODO: Torchic
+    return;
+}
+
+void chimchar_dialog(int param_1){
+    const int object_id = 0x10e;
+    // TODO: Chimchar
+    return;
+}
+
+void aaron_dialog(int param_1){
+    const int object_id = 0x10f;
+    // TODO: Aaron
+    return;
+}
+
+void vulpix_dialog(int param_1){
+    const int object_id = 0x110;
+    // TODO: Vulpix
+    return;
+}
+
+void vulpix2_dialog(int param_1){
+    const int object_id = 0x111;
+    // TODO: Vulpix
+    return;
+}
+
+void ninetales_dialog(int param_1){
+    const int object_id = 0x112;
+    // TODO: Ninetales
+    return;
+}
+
+void flareon_dialog(int param_1){
+    const int object_id = 0x113;
+    // TODO: Flareon
+    return;
+}
+
+void hitmonchan_dialog(int param_1){
+    const int object_id = 0x114;
+    // TODO: Hitmonchan
+    return;
+}
+
+void magmortar_dialog(int param_1){
+    const int object_id = 0x115;
+    // TODO: Magmortar
+    return;
+}
+
+void infernape_dialog(int param_1){
+    const int object_id = 0x116;
+    // TODO: Infernape
+    return;
+}
+
+void golem_dialog(int param_1){
+    const int object_id = 0x117;
+    // TODO: Golem
+    return;
+}
+
+void camerupt_dialog(int param_1){
+    const int object_id = 0x118;
+    // TODO: Camerupt
+    return;
+}
+
+void farfetchd_dialog(int param_1){
+    const int object_id = 0x119;
+    // TODO: Farfetch'd
+    return;
+}
+
+void hitmontop_dialog(int param_1){
+    const int object_id = 0x11a;
+    // TODO: Hitmontop
+    return;
+}
+
+void magcargo_dialog(int param_1){
+    const int object_id = 0x11b;
+    // TODO: Magcargo
+    return;
+}
+
+void rhyperior_dialog(int param_1){
+    const int object_id = 0x11c;
+    // TODO: Rhyperior
+    return;
+}
+
+void drifblim_dialog(int param_1){
+    const int object_id = 0x11d;
+    // TODO: Drifblim
+    return;
+}
+
+void ponyta_dialog(int param_1){
+    const int object_id = 0x11e;
+    // TODO: Ponyta
+    return;
+}
+
+void ponyta2_dialog(int param_1){
+    const int object_id = 0x11f;
+    // TODO: Ponyta
+    return;
+}
+
+void groudon_dialog(int param_1){
+    const int object_id = 0x120;
+    // TODO: Groudon
+    return;
+}
+
+void meditite_dialog(int param_1){
+    const int object_id = 0x121;
+    // TODO: Meditite
+    return;
+}
+
+void chatot_dialog(int param_1){
+    const int object_id = 0x122;
+    // TODO: Chatot
+    return;
+}
+
+void magby2_dialog(int param_1){
+    const int object_id = 0x123;
+    // TODO: Magby
+    return;
+}
+
+void magby3_dialog(int param_1){
+    const int object_id = 0x124;
+    // TODO: Magby
+    return;
+}
+
+void magby4_dialog(int param_1){
+    const int object_id = 0x125;
+    // TODO: Magby
+    return;
+}
+
+void torkoal2_dialog(int param_1){
+    const int object_id = 0x126;
+    // TODO: Torkoal
+    return;
+}
+
+void torkoal3_dialog(int param_1){
+    const int object_id = 0x127;
+    // TODO: Torkoal
+    return;
+}
+
+void torkoal4_dialog(int param_1){
+    const int object_id = 0x128;
+    // TODO: Torkoal
+    return;
+}
+
+void torkoal5_dialog(int param_1){
+    const int object_id = 0x129;
+    // TODO: Torkoal
+    return;
+}
+
+void torkoal6_dialog(int param_1){
+    const int object_id = 0x12a;
+    // TODO: Torkoal
+    return;
+}
+
+void torkoal7_dialog(int param_1){
+    const int object_id = 0x12b;
+    // TODO: Torkoal
+    return;
+}
+
+void torkoal8_dialog(int param_1){
+    const int object_id = 0x12c;
+    // TODO: Torkoal
+    return;
+}
+
+void vulpix3_dialog(int param_1){
+    const int object_id = 0x12d;
+    // TODO: Vulpix
+    return;
+}
+
+void vulpix4_dialog(int param_1){
+    const int object_id = 0x12e;
+    // TODO: Vulpix
+    return;
+}
+
+void magmortar2_dialog(int param_1){
+    const int object_id = 0x12f;
+    // TODO: Magmortar
+    return;
+}
