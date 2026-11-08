@@ -87,6 +87,7 @@ void setup_field(int param_1){
     setup_player_for_zone();
     do_unlock_scenes(param_1);
     special_spawn_condition(param_1);
+    gimmic_spawn_conditions(param_1);
     update_npc_story_state(param_1);
     return;
 }
@@ -113,6 +114,31 @@ void special_spawn_condition(int param_1){
     reset_object_after_event(CHATOT_OBJECT_ID);
 
     return;
+}
+
+void gimmic_spawn_conditions(int param_1){
+    int object_manager = get_module("ObjectManager");
+    int global_manager = get_module("GlobalManager");
+    int chapter = get_chapter();
+    int has_bastiodon_prisma = @syscall(0,0x15,0x51,global_manager,9);
+
+    if(has_bastiodon_prisma == 0){
+        int object_spawned = @syscall(0,0x15,10,object_manager,0x4e39);
+        if(object_spawned == 1){
+            @syscall(0,0x15,0xd,object_manager,0x4e39);
+        }
+
+        object_spawned = @syscall(0,0x15,10,object_manager,0x4e3a);
+        if(object_spawned == 1){
+            @syscall(0,0x15,0xd,object_manager,0x4e3a);
+        }
+    }
+    else{
+        int object_accessor = @syscall(0,0x15,4,object_manager,0x4e35);
+        object_accessor = @syscall(0,0x15,1,object_manager,object_accessor);
+        @syscall(0,0x15,0,object_accessor,1);
+    }
+
 }
 
 void RETURN_AT10(int param_1){
@@ -1133,6 +1159,7 @@ void power_competition_dialog(
     if(response == 1){
         int has_won = start_power_competition(param_1,0,object_id);
         special_spawn_condition(param_1);
+        gimmic_spawn_conditions(param_1);
         int object_accessor = get_object_accessor(param_1,object_id,true);
         fade_in(0,0,0,0x3c);
         @syscall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);

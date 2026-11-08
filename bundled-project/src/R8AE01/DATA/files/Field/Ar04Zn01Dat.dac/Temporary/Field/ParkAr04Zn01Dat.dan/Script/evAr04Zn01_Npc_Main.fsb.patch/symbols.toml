@@ -47,6 +47,7 @@ do_unlock_scenes = 0x5b8c0
 update_npc_story_state = 0x5be68
 clear_wand_check = 0x54b4c
 SETGIMMICK = 0x582bc
+gimmic_spawn_conditions = 0x582d8
 A04_Z01_INIT = 0x68f8c
 get_chapter = 0x54a6c
 set_object_position = 0x536c4
