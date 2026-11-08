@@ -147,6 +147,18 @@ fn build_config() -> BuildConfig {
             BuildConfigValue::Integer(0),
         ),
         (
+            "CAVERN_ZONE_MAIN_AREA_TREEHOUSE_CONNECTION_ZONE".into(),
+            BuildConfigValue::Integer(2),
+        ),
+        (
+            "CAVERN_ZONE_MAIN_AREA_TREEHOUSE_CONNECTION_AREA".into(),
+            BuildConfigValue::Integer(1),
+        ),
+        (
+            "CAVERN_ZONE_MAIN_AREA_TREEHOUSE_CONNECTION_POSITION".into(),
+            BuildConfigValue::Integer(2),
+        ),
+        (
             "TREEHOUSE_MEADOW_DRIFBLIM_FAST_TRAVEL_ZONE".into(),
             BuildConfigValue::Integer(1),
         ),
