@@ -1,257 +1,498 @@
+extern int get_module(string name);
+extern int lock_player_and_get_accessor();
+extern int lock_npc_and_get_accessor(int object_id);
+extern void face_player_and_npc(int object_id, int param_2);
+extern int show_yes_no_question(int param_1, string dialog_id);
+extern void show_npc_dialog(int param_1, string dialog_id);
+extern void end_event_script(int param_1);
+extern int get_object_accessor(int param_1, int object_id, bool use_provided_object_id);
+extern void fade_in(int red, int green, int blue, int frames);
+extern void give_berries(int value);
+extern void complete_event();
+extern void friendship_banner(string banner_id);
+extern void set_bestfriend(int object_id);
+extern void store_pre_competition_state();
+extern int get_player_accessor();
+extern void drop_held_item_animation();
+extern void wait_frames(int frames);
+extern int run_power_competition(int player_object_id, int enemy_object_id);
+extern void despawn_player_object();
+extern void spawn_player_object();
+extern void respawn_field();
+extern void face_object_accessors_instantly(int player_accessor, int object_accessor, int immediate);
+extern void restore_pre_competition_state(int object_id);
+extern void special_spawn_condition(int param_1);
+extern int get_held_item_kind();
+extern void remove_held_item();
+
+config int BATTLE_COUNT;
+
 void magby_dialog(int param_1){
-    const int object_id = 0x105;
-    // TODO: Magby
-    return;
+    power_competition_dialog(param_1,0x105,0xa6d,"42_00270","42_10040","42_10050","42_10070","42_10090","42_10080");
 }
 
 void charmander_dialog(int param_1){
-    const int object_id = 0x106;
-    // TODO: Charmander
-    return;
+    power_competition_dialog(param_1,0x106,0x13cd,"42_00280","42_10140","42_10150","42_10170","42_10190","42_10180");
 }
 
 void bonsly_dialog(int param_1){
-    const int object_id = 0x107;
-    // TODO: Bonsly
-    return;
+    power_competition_dialog(param_1,0x107,0xa22,"42_00290","42_10240","42_10250","42_10270","42_10290","42_10280");
 }
 
 void baltoy_dialog(int param_1){
-    const int object_id = 0x108;
-    // TODO: Baltoy
-    return;
+    power_competition_dialog(param_1,0x108,0x12bf,"42_00300","42_10340","42_10350","42_10370","42_10390","42_10380");
 }
 
 void torkoal_dialog(int param_1){
-    const int object_id = 0x109;
-    // TODO: Torkoal
-    return;
+    power_competition_dialog(param_1,0x109,0xe4b,"42_00310","42_10440","42_10450","42_10470","42_10490","42_10480");
 }
 
 void quilava_dialog(int param_1){
-    const int object_id = 0x10a;
-    // TODO: Quilava
-    return;
+    power_competition_dialog(param_1,0x10a,0xd6b,"42_00320","42_10540","42_10550","42_10570","42_10590","42_10580");
 }
 
 void claydol_dialog(int param_1){
-    const int object_id = 0x10b;
-    // TODO: Claydol
-    return;
+    power_competition_dialog(param_1,0x10b,0x12ce,"42_00330","42_10640","42_10650","42_10670","42_10690","42_10680");
 }
 
 void geodude_dialog(int param_1){
-    const int object_id = 0x10c;
-    // TODO: Geodude
-    return;
+    power_competition_dialog(param_1,0x10c,0xea5,"42_00340","42_10740","42_10750","42_10770","42_10790","42_10780");
 }
 
 void torchic_dialog(int param_1){
-    const int object_id = 0x10d;
-    // TODO: Torchic
-    return;
+    power_competition_dialog(param_1,0x10d,0xce3,"42_00350","42_10840","42_10850","42_10870","42_10890","42_10880");
 }
 
 void chimchar_dialog(int param_1){
-    const int object_id = 0x10e;
-    // TODO: Chimchar
-    return;
+    power_competition_dialog(param_1,0x10e,0x99b,"42_00360","42_10940","42_10950","42_10970","42_10990","42_10980");
 }
 
 void aaron_dialog(int param_1){
-    const int object_id = 0x10f;
-    // TODO: Aaron
-    return;
+    multi_item_errand_dialog(param_1,0x10f,0xb03,0xd,0x5,0xb,"42_11040","42_11060","42_00370","42_11000","42_11050");
 }
 
 void vulpix_dialog(int param_1){
-    const int object_id = 0x110;
-    // TODO: Vulpix
-    return;
+    power_competition_dialog(param_1,0x110,0x111b,"42_00380","42_11140","42_11150","42_11170","42_11190","42_11180");
 }
 
 void vulpix2_dialog(int param_1){
     const int object_id = 0x111;
     // TODO: Vulpix
-    return;
+    
 }
 
 void ninetales_dialog(int param_1){
-    const int object_id = 0x112;
-    // TODO: Ninetales
-    return;
+    power_competition_dialog(param_1,0x112,0xe00,"42_00400","42_11340","42_11350","42_11370","42_11390","42_11380");
 }
 
 void flareon_dialog(int param_1){
-    const int object_id = 0x113;
-    // TODO: Flareon
-    return;
+    power_competition_dialog_with_friendship_count_check(param_1,0x113,0xd88,"42_00410",60,"42_11440","42_11450","42_11470","42_11490","42_11480","42_11401","42_11400");
 }
 
 void hitmonchan_dialog(int param_1){
-    const int object_id = 0x114;
-    // TODO: Hitmonchan
-    return;
+    power_competition_dialog(param_1,0x114,0x1337,"42_00420","42_11540","42_11550","42_11570","42_11590","42_11580");
 }
 
 void magmortar_dialog(int param_1){
-    const int object_id = 0x115;
-    // TODO: Magmortar
-    return;
+    power_competition_dialog(param_1,0x115,0x101c,"42_00430","42_11640","42_11650","42_11670","42_11690","42_11680");
 }
 
 void infernape_dialog(int param_1){
-    const int object_id = 0x116;
-    // TODO: Infernape
-    return;
+    power_competition_dialog_with_win_count_check(param_1,0x116,0xf2c,"42_00440","42_11740","42_11750","42_11770","42_11790","42_11780","42_11701","42_11700");
 }
 
 void golem_dialog(int param_1){
     const int object_id = 0x117;
     // TODO: Golem
-    return;
+    
 }
 
 void camerupt_dialog(int param_1){
-    const int object_id = 0x118;
-    // TODO: Camerupt
-    return;
+    power_competition_dialog(param_1,0x118,0xfb3,"42_00460","42_11840","42_11850","42_11870","42_11890","42_11880");
 }
 
 void farfetchd_dialog(int param_1){
-    const int object_id = 0x119;
-    // TODO: Farfetch'd
-    return;
+    power_competition_dialog(param_1,0x119,0xe2d,"42_00470","42_11940","42_11950","42_11970","42_11990","42_11980");
 }
 
 void hitmontop_dialog(int param_1){
     const int object_id = 0x11a;
     // TODO: Hitmontop
-    return;
+    
 }
 
 void magcargo_dialog(int param_1){
     const int object_id = 0x11b;
     // TODO: Magcargo
-    return;
+    
 }
 
 void rhyperior_dialog(int param_1){
     const int object_id = 0x11c;
     // TODO: Rhyperior
-    return;
+    
 }
 
 void drifblim_dialog(int param_1){
     const int object_id = 0x11d;
     // TODO: Drifblim
-    return;
+    
 }
 
 void ponyta_dialog(int param_1){
-    const int object_id = 0x11e;
-    // TODO: Ponyta
-    return;
+    power_competition_dialog(param_1,0x11e,0x1382,"42_00511","42_12240","42_12250","42_12270","42_12290","42_12280");
 }
 
 void ponyta2_dialog(int param_1){
     const int object_id = 0x11f;
     // TODO: Ponyta
-    return;
+    
 }
 
 void groudon_dialog(int param_1){
     const int object_id = 0x120;
     // TODO: Groudon
-    return;
+    
 }
 
 void meditite_dialog(int param_1){
     const int object_id = 0x121;
     // TODO: Meditite
-    return;
+    
 }
 
 void chatot_dialog(int param_1){
     const int object_id = 0x122;
     // TODO: Chatot
-    return;
+    
 }
 
 void magby2_dialog(int param_1){
-    const int object_id = 0x123;
-    // TODO: Magby
-    return;
+    power_competition_dialog(param_1,0x123,0xa6d,"42_00270","42_12540","42_12550","42_12570","42_12590","42_12580");
 }
 
 void magby3_dialog(int param_1){
-    const int object_id = 0x124;
-    // TODO: Magby
-    return;
+    power_competition_dialog(param_1,0x124,0xa6d,"42_00270","42_12640","42_12650","42_12670","42_12690","42_12680");
 }
 
 void magby4_dialog(int param_1){
-    const int object_id = 0x125;
-    // TODO: Magby
-    return;
+    power_competition_dialog(param_1,0x125,0xa6d,"42_00270","42_12740","42_12750","42_12770","42_12790","42_12780");
 }
 
 void torkoal2_dialog(int param_1){
-    const int object_id = 0x126;
-    // TODO: Torkoal
-    return;
+    power_competition_dialog(param_1,0x126,0xe4b,"42_00310","42_12840","42_12850","42_12870","42_12890","42_12880");
 }
 
 void torkoal3_dialog(int param_1){
-    const int object_id = 0x127;
-    // TODO: Torkoal
-    return;
+    power_competition_dialog(param_1,0x127,0xe4b,"42_00310","42_12940","42_12950","42_12970","42_12990","42_12980");
 }
 
 void torkoal4_dialog(int param_1){
-    const int object_id = 0x128;
-    // TODO: Torkoal
-    return;
+    power_competition_dialog(param_1,0x128,0xe4b,"42_00310","42_13040","42_13050","42_13070","42_13090","42_13080");
 }
 
 void torkoal5_dialog(int param_1){
-    const int object_id = 0x129;
-    // TODO: Torkoal
-    return;
+    power_competition_dialog(param_1,0x129,0xe4b,"42_00310","42_13140","42_13150","42_13170","42_13190","42_13180");
 }
 
 void torkoal6_dialog(int param_1){
-    const int object_id = 0x12a;
-    // TODO: Torkoal
-    return;
+    power_competition_dialog(param_1,0x12a,0xe4b,"42_00310","42_13240","42_13250","42_13270","42_13290","42_13280");
 }
 
 void torkoal7_dialog(int param_1){
-    const int object_id = 0x12b;
-    // TODO: Torkoal
-    return;
+    power_competition_dialog(param_1,0x12b,0xe4b,"42_00310","42_13340","42_13350","42_13370","42_13390","42_13380");
 }
 
 void torkoal8_dialog(int param_1){
-    const int object_id = 0x12c;
-    // TODO: Torkoal
-    return;
+    power_competition_dialog(param_1,0x12c,0xe4b,"42_00310","42_13440","42_13450","42_13470","42_13490","42_13480");
 }
 
 void vulpix3_dialog(int param_1){
-    const int object_id = 0x12d;
-    // TODO: Vulpix
-    return;
+    power_competition_dialog(param_1,0x12d,0x111b,"42_00380","42_13540","42_13550","42_13570","42_13590","42_13580");
 }
 
 void vulpix4_dialog(int param_1){
-    const int object_id = 0x12e;
-    // TODO: Vulpix
-    return;
+    power_competition_dialog(param_1,0x12e,0x111b,"42_00380","42_13640","42_13650","42_13670","42_13690","42_13680");
 }
 
 void magmortar2_dialog(int param_1){
-    const int object_id = 0x12f;
-    // TODO: Magmortar
-    return;
+    power_competition_dialog(param_1,0x12f,0x101c,"42_00430","42_13740","42_13750","42_13770","42_13790","42_13780");
+}
+
+void power_competition_dialog(
+    int param_1,
+    int object_id,
+    int sound_id,
+    string friendship_banner_id,
+    string question_dialog_id,
+    string decline_dialog_id,
+    string loss_dialog_id,
+    string first_win_dialog_id,
+    string repeat_win_dialog_id
+){
+    lock_player_and_get_accessor();
+    lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    int response = show_yes_no_question(param_1,question_dialog_id);
+    if(response == 1){
+        int has_won = start_power_competition(param_1,0,object_id);
+        special_spawn_condition(param_1);
+        int object_accessor = get_object_accessor(param_1,object_id,true);
+        fade_in(0,0,0,0x3c);
+        @syscall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
+        if(has_won == -1){
+            show_npc_dialog(param_1,loss_dialog_id);
+        }
+        else{
+            give_berries(has_won);
+            if(!is_location_checked(object_id)){
+                show_npc_dialog(param_1,first_win_dialog_id);
+                friendship_banner(friendship_banner_id);
+                check_location(object_id);
+            }
+            else{
+                show_npc_dialog(param_1,repeat_win_dialog_id);
+            }
+        }
+        complete_event();
+    }
+    else{
+        show_npc_dialog(param_1,decline_dialog_id);
+    }
+    end_event_script(param_1);
+}
+
+void multi_item_errand_dialog(
+    int param_1,
+    int object_id,
+    int sound_id,
+    int required_item_kind_1,
+    int required_item_kind_2,
+    int required_item_kind_3,
+    string no_hold_item_dialog_id,
+    string befriend_dialog_id,
+    string friendship_banner_id,
+    string already_befriended_id,
+    string wrong_item_id
+){
+    lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    @syscall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
+    int item_kind = get_held_item_kind();
+    if(item_kind == -1){
+        show_npc_dialog(param_1,no_hold_item_dialog_id);
+    }
+    else if(item_kind == required_item_kind_1 || item_kind == required_item_kind_2 || item_kind == required_item_kind_3){
+        if(!is_location_checked(object_id)){
+            remove_held_item();
+            show_npc_dialog(param_1,befriend_dialog_id);
+            friendship_banner(friendship_banner_id);
+            check_location(object_id);
+        }
+        else{
+            show_npc_dialog(param_1,already_befriended_id);
+            remove_held_item();
+        }
+        give_berries(0x32);
+        complete_event();
+    }
+    else{
+        show_npc_dialog(param_1,wrong_item_id);
+    }
+    end_event_script(param_1);
+}
+
+void power_competition_dialog_with_win_count_check(
+    int param_1,
+    int object_id,
+    int sound_id,
+    string friendship_banner_id,
+    string question_dialog_id,
+    string decline_dialog_id,
+    string loss_dialog_id,
+    string first_win_dialog_id,
+    string repeat_win_dialog_id,
+    string win_count_met_dialog_id,
+    string win_count_not_met_dialog_id
+){
+    lock_player_and_get_accessor();
+    lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    int global_manager = get_module("GlobalManager");
+    int has_required_num = @syscall(0,0x15,1,global_manager,"f0402BattleCounter");
+    if(has_required_num == 1){
+        show_npc_dialog(param_1,win_count_met_dialog_id);
+        int response = show_yes_no_question(param_1,question_dialog_id);
+        if(response == 1){
+            int has_won = start_power_competition(param_1,0,object_id);
+            special_spawn_condition(param_1);
+            int object_accessor = get_object_accessor(param_1,object_id,true);
+            fade_in(0,0,0,0x3c);
+            @syscall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
+            if(has_won == -1){
+                show_npc_dialog(param_1,loss_dialog_id);
+            }
+            else{
+                give_berries(has_won);
+                if(!is_location_checked(object_id)){
+                    show_npc_dialog(param_1,first_win_dialog_id);
+                    friendship_banner(friendship_banner_id);
+                    check_location(object_id);
+                }
+                else{
+                    show_npc_dialog(param_1,repeat_win_dialog_id);
+                }
+            }
+            complete_event();
+        }
+        else{
+            show_npc_dialog(param_1,decline_dialog_id);
+        }
+    }
+    else{
+        show_npc_dialog(param_1,win_count_not_met_dialog_id);
+    }
+    end_event_script(param_1);
+}
+
+void power_competition_dialog_with_friendship_count_check(
+    int param_1,
+    int object_id,
+    int sound_id,
+    string friendship_banner_id,
+    int friendship_count,
+    string question_dialog_id,
+    string decline_dialog_id,
+    string loss_dialog_id,
+    string first_win_dialog_id,
+    string repeat_win_dialog_id,
+    string friendship_count_met_dialog_id,
+    string friendship_count_not_met_dialog_id
+){
+    lock_player_and_get_accessor();
+    lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    int global_manager = get_module("GlobalManager");
+    int friendship_num = @syscall(0,0x15,0x42,global_manager);
+    if(friendship_num >= friendship_count){
+        show_npc_dialog(param_1,friendship_count_met_dialog_id);
+        int response = show_yes_no_question(param_1,question_dialog_id);
+        if(response == 1){
+            int has_won = start_power_competition(param_1,0,object_id);
+            special_spawn_condition(param_1);
+            int object_accessor = get_object_accessor(param_1,object_id,true);
+            fade_in(0,0,0,0x3c);
+            @syscall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
+            if(has_won == -1){
+                show_npc_dialog(param_1,loss_dialog_id);
+            }
+            else{
+                give_berries(has_won);
+                if(!is_location_checked(object_id)){
+                    show_npc_dialog(param_1,first_win_dialog_id);
+                    friendship_banner(friendship_banner_id);
+                    check_location(object_id);
+                }
+                else{
+                    show_npc_dialog(param_1,repeat_win_dialog_id);
+                }
+            }
+            complete_event();
+        }
+        else{
+            show_npc_dialog(param_1,decline_dialog_id);
+        }
+    }
+    else{
+        show_npc_dialog(param_1,friendship_count_not_met_dialog_id);
+    }
+    end_event_script(param_1);
+}
+
+int start_power_competition(int param_1, int player_object_id, int enemy_object_id){
+    store_pre_competition_state();
+    int global_manager = get_module("GlobalManager");
+    int event_script = get_module("EventScript");
+    int dispos_manager = get_module("DisposManager");
+    int object_accessor = get_object_accessor(param_1,enemy_object_id,true);
+    int player_event_accessor = get_player_accessor();
+    vec3 object_position = vec3{.x = 0.0,.y = 0.0,.z = 0.0};
+    vec3 player_position = vec3{.x = 0.0,.y = 0.0,.z = 0.0};
+    drop_held_item_animation();
+    @syscall(0,0x15,0x13,object_accessor,&object_position);
+    @syscall(0,0x15,0x13,player_event_accessor,&player_position);
+    @syscall(0,0x15,0xca,event_script,0x1e);
+    wait_frames(0x1e);
+    int dispos_id = @syscall(0,0x15,0xc,dispos_manager,enemy_object_id);
+    int result = run_power_competition(player_object_id,enemy_object_id);
+    if(result == -1){
+        reset_win_counter();
+    }
+    else{
+        @syscall(0,0x15,0x93,global_manager,dispos_id);
+        increment_win_counter();
+    }
+    despawn_player_object();
+    spawn_player_object();
+    int player_accessor = lock_player_and_get_accessor();
+    @syscall(0,0x15,7,player_accessor,player_position.x,player_position.y,player_position.z);
+    @syscall(0,0x15,8,player_accessor,player_position.x,player_position.y,player_position.z);
+    @syscall(0,0x15,0x22,player_accessor,player_position.x,player_position.y,player_position.z,1);
+    int player_state = @syscall(0,0x15,0x30,player_accessor);
+    if(player_state == 0){
+        @syscall(0,0x15,2,player_accessor,0,0);
+    }
+    @syscall(0,0x15,0,player_accessor,0);
+    @syscall(0,0x15,0x8e,global_manager,dispos_id);
+    respawn_field();
+    lock_npc_and_get_accessor(enemy_object_id);
+    object_accessor = get_object_accessor(param_1,enemy_object_id,true);
+    @syscall(0,0x15,7,object_accessor,object_position.x,object_position.y,object_position.z);
+    @syscall(0,0x15,8,object_accessor,object_position.x,object_position.y,object_position.z);
+    @syscall(0,0x15,0x22,object_accessor,object_position.x,object_position.y,object_position.z,1);
+    int object_state = @syscall(0,0x15,0x10,dispos_manager,enemy_object_id);
+    if(object_state == 0){
+        @syscall(0,0x15,0x2a,object_accessor,5);
+    }
+    else{
+        @syscall(0,0x15,0x2a,object_accessor,10);
+        @syscall(0,0x15,0x2b,object_accessor,4);
+    }
+    face_object_accessors_instantly(player_accessor,object_accessor,1);
+    @syscall(0,0x15,0xca,event_script,-1);
+    @syscall(0,0x15,0xd7,event_script,enemy_object_id);
+    restore_pre_competition_state(enemy_object_id);
+    return result;
+}
+
+void reset_win_counter(){
+    int global_manager = get_module("GlobalManager");
+    @syscall(0,0x15,0,global_manager,"zfPowerComp",0);
+    @syscall(0,0x15,0,global_manager,"f0402BattleCounterNum",0);
+}
+
+void increment_win_counter(){
+    int global_manager = get_module("GlobalManager");
+    int counter_num = @syscall(0,0x15,1,global_manager,"f0402BattleCounterNum");
+    int increased_counter = counter_num + 1;
+    @syscall(0,0x15,0,global_manager,"f0402BattleCounterNum",increased_counter);
+    if(increased_counter >= BATTLE_COUNT){
+        @syscall(0,0x15,0,global_manager,"f0402BattleCounter",1);
+    }
+}
+
+bool is_location_checked(int object_id){
+    return is_bestfriend(object_id);
+}
+
+bool is_bestfriend(int object_id){
+    int global_manager = get_module("GlobalManager");
+    int dispos_manager = get_module("DisposManager");
+    int friendship_id = @syscall(0,0x15,0xe,dispos_manager,object_id);
+    return @syscall(0,0x15,0x4b,global_manager,friendship_id) == 1;
+}
+
+void check_location(int object_id){
+    set_bestfriend(object_id);
 }

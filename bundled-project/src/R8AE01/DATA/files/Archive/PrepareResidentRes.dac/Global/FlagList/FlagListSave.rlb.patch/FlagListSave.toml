@@ -138,3 +138,18 @@ row = 202
 [edits.set]
 flag_name = { value = "f0401BattleCounterNum" }
 bit_width = { value = 4 }
+
+[[edits]]
+table = "FlagTable"
+row = 195
+
+[edits.set]
+flag_name = { value = "f0402BattleCounter" }
+
+[[edits]]
+table = "FlagTable"
+row = 203
+
+[edits.set]
+flag_name = { value = "f0402BattleCounterNum" }
+bit_width = { value = 4 }
