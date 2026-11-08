@@ -1,0 +1,6 @@
+base_address = 0x50000
+
+[functions]
+get_module = 0x50044
+fade_out_sound = 0x513f4
+ZONECHANGETR = 0x57f90
