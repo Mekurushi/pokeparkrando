@@ -28,6 +28,13 @@ flag_name = { value = "f0401MagnemiteBox3" }
 
 [[edits]]
 table = "FlagTable"
+row = 95
+
+[edits.set]
+flag_name = { value = "f0401DiglettBox" }
+
+[[edits]]
+table = "FlagTable"
 row = 172
 
 [edits.set]

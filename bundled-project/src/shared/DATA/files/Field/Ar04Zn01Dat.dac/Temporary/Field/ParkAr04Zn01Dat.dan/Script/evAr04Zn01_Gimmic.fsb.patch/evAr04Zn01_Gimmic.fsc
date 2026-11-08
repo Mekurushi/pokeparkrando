@@ -64,6 +64,65 @@ void spawn_if_unlocked(int object_id, float x, float y, float z, float rotation_
     }
 }
 
+export void BOX_DIGDA(int param_1){
+    const int DIGLETT_OBJECT_ID = 0xe4;
+
+    int global_manager = get_module("GlobalManager");
+    bool is_location_checked = @syscall(0,0x15,1,global_manager,"f0401DiglettBox") == 1;
+
+    if(!is_location_checked){
+        int field_info = get_module("mnFieldInfo");
+        @syscall(0,0x15,0,global_manager,"f0401DiglettBox",1);
+
+        int diglett_accessor = lock_npc_and_get_accessor(DIGLETT_OBJECT_ID);
+        vec3 diglett_position;
+        vec3 diglett_rotation;
+        @syscall(0,0x15,0x13,diglett_accessor,&diglett_position);
+        @syscall(0,0x15,0x16,diglett_accessor,&diglett_rotation);
+
+        spawn_object_if_missing(DIGLETT_OBJECT_ID);
+        set_object_position(DIGLETT_OBJECT_ID,165,-100,-1056);
+        set_object_rotation_instantly(DIGLETT_OBJECT_ID,0,16,0);
+
+        play_sound_effect(0x7e7,0);
+        @syscall(0,0x15,0x11,field_info,1,"41_00241");
+        wait_frames(0xb4);
+        despawn(DIGLETT_OBJECT_ID);
+        @syscall(0,0x15,0x12,field_info);
+        spawn_if_unlocked(DIGLETT_OBJECT_ID,diglett_position.x,diglett_position.y,diglett_position.z,diglett_rotation.x,diglett_rotation.y,diglett_rotation.z);
+        complete_event();
+    }
+    else{
+        int object_manager = get_module("ObjectManager");
+        int dispos_manager = get_module("DisposManager");
+        int random_value = @syscall(0,0x24,100) + 1;
+        int berry_object_id;
+        if(random_value == 100){
+            berry_object_id = 0x2ee6;
+        }
+        else if(random_value >= 0x5a && random_value < 100){
+            berry_object_id = 12000;
+        }
+        else{
+            berry_object_id = 0x2ee3;
+        }
+
+        @syscall(0,0x15,5,dispos_manager,berry_object_id);
+        int berry_object = @syscall(0,0x15,4,object_manager,berry_object_id);
+        int berry_accessor = @syscall(0,0x15,1,object_manager,berry_object);
+        vec3 berry_position = vec3{
+            .x = 165.51,
+            .y = -99.86,
+            .z = -1055.87
+        };
+        @syscall(0,0x15,7,berry_accessor,berry_position.x,berry_position.y,berry_position.z);
+        @syscall(0,0x15,8,berry_accessor,berry_position.x,berry_position.y,berry_position.z);
+    }
+
+    end_event_script(param_1);
+    return;
+}
+
 export void BOX_COIL1(int param_1){
     const int MAGNEMITE_OBJECT_ID = 0xd7;
 

@@ -26,6 +26,7 @@ set_object_position = 0x536bc
 set_object_rotation_instantly = 0x5375c
 object_id_to_friend_id = 0x549dc
 complete_event = 0x54bc8
+BOX_DIGDA = 0x58460
 BOX_COIL1 = 0x58b50
 BOX_COIL2 = 0x59088
 BOX_COIL3 = 0x595c0
