@@ -1,0 +1,23 @@
+[[edits]]
+table = "EnterZoneScriptList"
+row = 0
+
+[edits.set]
+maximum_chapter = { value = 0xffffffff }
+
+[[removes]]
+table = "EnterZoneScriptList"
+row = 1
+
+[[removes]]
+table = "EnterZoneScriptList"
+row = 2
+
+[[removes]]
+table = "EnterZoneScriptList"
+row = 3
+
+# removing snorlax until location is added
+[[removes]]
+table = "HitThunderboltScriptList"
+row = 0
