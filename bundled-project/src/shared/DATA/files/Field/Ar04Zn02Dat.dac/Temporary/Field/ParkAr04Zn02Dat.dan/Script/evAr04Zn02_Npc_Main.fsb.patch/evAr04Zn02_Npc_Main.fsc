@@ -102,8 +102,88 @@ void infernape_dialog(int param_1){
 
 void golem_dialog(int param_1){
     const int object_id = 0x117;
-    // TODO: Golem
-    
+    lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    @syscall(0,0x15,0x28,object_accessor,0xffe,0,1.0,1.0);
+    if(!is_location_checked(object_id)){
+        drop_held_item_animation();
+        show_npc_dialog(param_1,"42_90000");
+        friendship_banner("42_00450");
+        check_location(object_id);
+        end_event_script(param_1);
+    }
+    else{
+        show_npc_dialog(param_1,"42_90010");
+    }
+    int item_kind = get_held_item_kind();
+    if(item_kind == -1){
+        show_npc_dialog(param_1,"42_90020");
+    }
+    else if(item_kind == 0x5){
+        if(show_yes_no_question(param_1,"42_90040") == 1){
+            give_berries(0x32);
+            remove_held_item();
+            show_npc_dialog(param_1,"42_90100");
+        }
+        else{
+            show_npc_dialog(param_1,"42_90110");
+        }
+    }
+    else if(item_kind == 0xb){
+        if(show_yes_no_question(param_1,"42_90050") == 1){
+            give_berries(0x50);
+            remove_held_item();
+            show_npc_dialog(param_1,"42_90100");
+        }
+        else{
+            show_npc_dialog(param_1,"42_90110");
+        }
+    }
+    else if(item_kind == 0xd){
+        if(show_yes_no_question(param_1,"42_90060") == 1){
+            give_berries(100);
+            remove_held_item();
+            show_npc_dialog(param_1,"42_90100");
+        }
+        else{
+            show_npc_dialog(param_1,"42_90110");
+        }
+    }
+    else if(item_kind == 0xc){
+        if(show_yes_no_question(param_1,"42_90070") == 1){
+            give_berries(300);
+            remove_held_item();
+            show_npc_dialog(param_1,"42_90100");
+        }
+        else{
+            show_npc_dialog(param_1,"42_90110");
+        }
+    }
+    else if(item_kind == 0xe){
+        if(show_yes_no_question(param_1,"42_90080") == 1){
+            give_berries(600);
+            remove_held_item();
+            show_npc_dialog(param_1,"42_90100");
+        }
+        else{
+            show_npc_dialog(param_1,"42_90110");
+        }
+    }
+    else if(item_kind == 0xf){
+        if(show_yes_no_question(param_1,"42_90090") == 1){
+            give_berries(400);
+            remove_held_item();
+            show_npc_dialog(param_1,"42_90100");
+        }
+        else{
+            show_npc_dialog(param_1,"42_90110");
+        }
+    }
+    else{
+        show_npc_dialog(param_1,"42_90030");
+    }
+    end_event_script(param_1);
 }
 
 void camerupt_dialog(int param_1){
