@@ -56,6 +56,7 @@ extern void restore_player_control();
 extern void spawn_for_short_duration(int object_id);
 
 config int BATTLE_COUNT;
+config bool EACH_ZONE;
 config int CAVERN_ZONE_MAIN_AREA_BASTIODON_ATTRACTION_ID;
 config int CAVERN_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_ZONE;
 config int CAVERN_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_AREA;
@@ -1258,6 +1259,25 @@ void increment_win_counter(){
 }
 
 bool is_location_checked(int object_id){
+    if(EACH_ZONE){
+        int global_manager = get_module("GlobalManager");
+        // Bonsly
+        if(object_id == 0xd6){
+            return @syscall(0,0x15,0x6e,global_manager,7,8) != 0;
+        }
+        // Teddiursa
+        if(object_id == 0xea){
+            return @syscall(0,0x15,0x6e,global_manager,7,9) != 0;
+        }
+        // Chimchar
+        if(object_id == 0xd5){
+            return @syscall(0,0x15,0x6e,global_manager,7,10) != 0;
+        }
+        // Sudowoodo
+        if(object_id == 0xeb){
+            return @syscall(0,0x15,0x6e,global_manager,7,11) != 0;
+        }
+    }
     return is_bestfriend(object_id);
 }
 
@@ -1269,6 +1289,29 @@ bool is_bestfriend(int object_id){
 }
 
 void check_location(int object_id){
+    if(EACH_ZONE){
+        int global_manager = get_module("GlobalManager");
+        // Bonsly
+        if(object_id == 0xd6){
+            @syscall(0,0x15,0x6d,global_manager,7,8,1);
+            return;
+        }
+        // Teddiursa
+        if(object_id == 0xea){
+            @syscall(0,0x15,0x6d,global_manager,7,9,1);
+            return;
+        }
+        // Chimchar
+        if(object_id == 0xd5){
+            @syscall(0,0x15,0x6d,global_manager,7,10,1);
+            return;
+        }
+        // Sudowoodo
+        if(object_id == 0xeb){
+            @syscall(0,0x15,0x6d,global_manager,7,11,1);
+            return;
+        }
+    }
     set_bestfriend(object_id);
 }
 
