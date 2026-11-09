@@ -75,10 +75,9 @@ void vulpix_dialog(int param_1){
     power_competition_dialog(param_1,0x110,0x111b,"42_00380","42_11140","42_11150","42_11170","42_11190","42_11180");
 }
 
+// was originally unused; added it but changed spawn position
 void vulpix2_dialog(int param_1){
-    const int object_id = 0x111;
-    // TODO: Vulpix
-    
+    power_competition_dialog(param_1,0x111,0x111b,"42_00380","42_11140","42_11150","42_11170","42_11190","42_11180");
 }
 
 void ninetales_dialog(int param_1){

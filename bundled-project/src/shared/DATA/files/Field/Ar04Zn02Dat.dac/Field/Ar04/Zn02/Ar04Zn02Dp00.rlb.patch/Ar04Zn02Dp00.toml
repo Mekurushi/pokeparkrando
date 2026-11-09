@@ -1,0 +1,17 @@
+# Drifblim
+[[edits]]
+table = "pokemonDispositionData"
+row = 24
+
+[edits.set]
+unlock_id = { value = 0xFFFFFFFF }
+
+# Vulpix
+[[edits]]
+table = "pokemonDispositionData"
+row = 12
+
+[edits.set]
+unlock_id = { value = 0xFFFFFFFF }
+# original spawn was in circle area, changed it so it doesn't break ap logic
+field_position_candidates = { value = 0x1 }

@@ -1,0 +1,7 @@
+# Drifblim
+[[edits]]
+table = "pokemonDispositionData"
+row = 23
+
+[edits.set]
+unlock_id = { value = 0xFFFFFFFF }
