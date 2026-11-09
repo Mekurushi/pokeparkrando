@@ -142,10 +142,9 @@ void ponyta_dialog(int param_1){
     power_competition_dialog(param_1,0x11e,0x1382,"42_00511","42_12240","42_12250","42_12270","42_12290","42_12280");
 }
 
+// originally unused; added it too and modified it to be on the same spawn as the other ponyta
 void ponyta2_dialog(int param_1){
-    const int object_id = 0x11f;
-    // TODO: Ponyta
-    
+    power_competition_dialog(param_1,0x11f,0x1382,"42_00511","42_12240","42_12250","42_12270","42_12290","42_12280");
 }
 
 void groudon_dialog(int param_1){
