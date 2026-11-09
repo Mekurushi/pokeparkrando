@@ -565,9 +565,7 @@ void ponyta2_dialog(int param_1){
 }
 
 void groudon_dialog(int param_1){
-    const int object_id = 0x120;
-    // TODO: Groudon
-    
+    power_competition_dialog(param_1,0x120,0x1463,"42_00520","42_12340","42_12350","42_12370","42_12391","42_12380");
 }
 
 void meditite_dialog(int param_1){
@@ -903,6 +901,11 @@ void increment_win_counter(){
 }
 
 bool is_location_checked(int object_id){
+    // Groudon
+    if(object_id == 0x120){
+        int global_manager = get_module("GlobalManager");
+        return @syscall(0,0x15,0x6e,global_manager,13,5) != 0;
+    }
     return is_bestfriend(object_id);
 }
 
@@ -914,5 +917,11 @@ bool is_bestfriend(int object_id){
 }
 
 void check_location(int object_id){
+    // Groudon
+    if(object_id == 0x120){
+        int global_manager = get_module("GlobalManager");
+        @syscall(0,0x15,0x6d,global_manager,13,5,1);
+        return;
+    }
     set_bestfriend(object_id);
 }
