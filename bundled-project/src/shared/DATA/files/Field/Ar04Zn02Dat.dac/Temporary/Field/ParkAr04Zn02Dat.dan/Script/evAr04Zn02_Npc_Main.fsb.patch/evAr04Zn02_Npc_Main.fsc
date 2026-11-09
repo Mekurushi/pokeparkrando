@@ -25,8 +25,14 @@ extern void special_spawn_condition(int param_1);
 extern int get_held_item_kind();
 extern void remove_held_item();
 extern int get_npc_state(int object_id);
+extern void fade_out(int red, int green, int blue, int frames);
+extern void set_berry_counter_visible(bool visible);
+extern int attraction_show_yes_no_question(int param_1, string dialog_id);
+extern void enter_attraction(int param_1, int attraction_id);
 
 config int BATTLE_COUNT;
+config int MAGMA_ZONE_MAIN_AREA_RHYPERIOR_ATTRACTION_ID;
+config bool REMOVE_ERRAND_POWER_COMP_LOCATIONS;
 
 void magby_dialog(int param_1){
     power_competition_dialog(param_1,0x105,0xa6d,"42_00270","42_10040","42_10050","42_10070","42_10090","42_10080");
@@ -298,8 +304,59 @@ void magcargo_dialog(int param_1){
 
 void rhyperior_dialog(int param_1){
     const int object_id = 0x11c;
-    // TODO: Rhyperior
-    
+    const int attraction_fee = 20;
+    int global_manager = get_module("GlobalManager");
+    int player_accessor = lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    @syscall(0,0x15,2,object_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,object_accessor,0x100d,0,1.0,1.0);
+
+    if(!REMOVE_ERRAND_POWER_COMP_LOCATIONS){
+        int errand_complete = @syscall(0,0x15,1,global_manager,"f0402TalkedDosidon");
+        if(errand_complete == 0){
+            int item_kind = get_held_item_kind();
+            if(item_kind == 0xd){
+                remove_held_item();
+                @syscall(0,0x15,0,global_manager,"f0402TalkedDosidon",1);
+                show_npc_dialog(param_1,"42_60100");
+            }
+            else{
+                show_npc_dialog(param_1,"42_60101");
+            }
+        }
+    }
+
+    show_npc_dialog(param_1,"42_60110");
+    set_berry_counter_visible(true);
+    int wants_to_enter = attraction_show_yes_no_question(param_1,"42_60130");
+    if(wants_to_enter == 1){
+        int berry_count = @syscall(0,0x15,0x15,global_manager);
+        if(berry_count < attraction_fee){
+            @syscall(0,0x15,2,object_accessor,0x1b,10);
+            @syscall(0,0x15,0x28,object_accessor,0x100d,0,1.0,1.0);
+            show_npc_dialog(param_1,"42_60160");
+        }
+        else{
+            @syscall(0,0x15,2,object_accessor,0x1c,10);
+            @syscall(0,0x15,0x28,object_accessor,0x100d,0,1.0,1.0);
+            @syscall(0,0x15,0x14,global_manager,-attraction_fee);
+            show_npc_dialog(param_1,"42_60150");
+            @syscall(0,0x15,0x69,global_manager,MAGMA_ZONE_MAIN_AREA_RHYPERIOR_ATTRACTION_ID,1);
+            @syscall(0,0x15,0,global_manager,"fRetAttraction",0xb);
+            set_berry_counter_visible(false);
+            fade_out(0,0,0,0x1e);
+            @syscall(0,0x15,0,player_accessor,0);
+            enter_attraction(param_1,MAGMA_ZONE_MAIN_AREA_RHYPERIOR_ATTRACTION_ID);
+        }
+    }
+    else{
+        @syscall(0,0x15,2,object_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,object_accessor,0x100d,0,1.0,1.0);
+        show_npc_dialog(param_1,"42_60140");
+    }
+    set_berry_counter_visible(false);
+    end_event_script(param_1);
 }
 
 void drifblim_dialog(int param_1){
