@@ -577,9 +577,14 @@ void meditite_dialog(int param_1){
 }
 
 void chatot_dialog(int param_1){
-    const int object_id = 0x122;
-    // TODO: Chatot
-    
+    lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(0x122);
+    face_player_and_npc(0x122,0);
+    @syscall(0,0x15,2,object_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,object_accessor,0x96e,0,1.0,1.0);
+    show_npc_dialog_mode_0(param_1,"02_70490");
+    // TODO: hint system or similiar
+    end_event_script(param_1);
 }
 
 void magby2_dialog(int param_1){
