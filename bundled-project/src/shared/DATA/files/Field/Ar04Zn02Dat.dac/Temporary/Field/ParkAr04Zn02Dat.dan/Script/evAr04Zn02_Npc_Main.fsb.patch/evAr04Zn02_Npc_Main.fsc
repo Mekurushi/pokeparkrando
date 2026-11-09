@@ -267,8 +267,33 @@ void hitmontop_dialog(int param_1){
 
 void magcargo_dialog(int param_1){
     const int object_id = 0x11b;
-    // TODO: Magcargo
-    
+    lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    if(!is_location_checked(object_id)){
+        int global_manager = get_module("GlobalManager");
+        int has_bastiodon_prisma = @syscall(0,0x15,0x51,global_manager,9);
+        int has_rhyperior_prisma = @syscall(0,0x15,0x51,global_manager,10);
+        if(has_bastiodon_prisma == 0 && has_rhyperior_prisma == 0){
+            show_npc_dialog(param_1,"42_60020");
+        }
+        else if(has_rhyperior_prisma == 0){
+            show_npc_dialog(param_1,"42_60021");
+        }
+        else if(has_bastiodon_prisma == 0){
+            show_npc_dialog(param_1,"42_60022");
+        }
+        else{
+            show_npc_dialog(param_1,"42_60030");
+            show_npc_dialog(param_1,"42_60040");
+            friendship_banner("42_00490");
+            check_location(object_id);
+        }
+    }
+    else{
+        show_npc_dialog(param_1,"42_12100");
+    }
+    end_event_script(param_1);
 }
 
 void rhyperior_dialog(int param_1){
