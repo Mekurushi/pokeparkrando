@@ -24,6 +24,7 @@ extern void restore_pre_competition_state(int object_id);
 extern void special_spawn_condition(int param_1);
 extern int get_held_item_kind();
 extern void remove_held_item();
+extern int get_npc_state(int object_id);
 
 config int BATTLE_COUNT;
 
@@ -196,8 +197,72 @@ void farfetchd_dialog(int param_1){
 
 void hitmontop_dialog(int param_1){
     const int object_id = 0x11a;
-    // TODO: Hitmontop
-    
+    lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    int npc_state = get_npc_state(object_id);
+    if(npc_state == 0){
+        @syscall(0,0x15,0x28,object_accessor,0x1373,0,1.0,1.0);
+        int item_kind = get_held_item_kind();
+        if(item_kind == 0xf){
+            remove_held_item();
+            if(!is_location_checked(object_id)){
+                show_npc_dialog(param_1,"42_12092");
+                friendship_banner("42_00480");
+                check_location(object_id);
+            }
+            else{
+                show_npc_dialog(param_1,"42_12091");
+            }
+            give_berries(400);
+            end_event_script(param_1);
+        }
+        else if(item_kind == 0xd){
+            remove_held_item();
+            show_npc_dialog(param_1,"42_12093");
+            give_berries(100);
+            end_event_script(param_1);
+        }
+        else{
+            show_npc_dialog(param_1,"42_12000");
+        }
+    }
+    else if(npc_state == 1){
+        @syscall(0,0x15,0x28,object_accessor,0x1374,0,1.0,1.0);
+        show_npc_dialog(param_1,"42_12010");
+    }
+    else if(npc_state == 2){
+        @syscall(0,0x15,0x28,object_accessor,0x1375,0,1.0,1.0);
+        show_npc_dialog(param_1,"42_12020");
+    }
+    else if(npc_state == 3){
+        show_npc_dialog(param_1,"42_12030");
+    }
+    else{
+        show_npc_dialog(param_1,"42_12000");
+    }
+    if(npc_state != 2){
+        int response = show_yes_no_question(param_1,"42_12040");
+        if(response == 1){
+            // when the power competition gets his own location add the usual power comp abstraction
+            int result = start_power_competition(param_1,0,object_id);
+            object_accessor = get_object_accessor(param_1,object_id,true);
+            fade_in(0,0,0,0x3c);
+            @syscall(0,0x15,0x28,object_accessor,0x1373,0,1.0,1.0);
+            if(result == -1){
+                show_npc_dialog(param_1,"42_12070");
+            }
+            else{
+                give_berries(result);
+                show_npc_dialog(param_1,"42_12080");
+            }
+            complete_event();
+        }
+        else{
+            show_npc_dialog(param_1,"42_12050");
+        }
+    }
+    end_event_script(param_1);
 }
 
 void magcargo_dialog(int param_1){

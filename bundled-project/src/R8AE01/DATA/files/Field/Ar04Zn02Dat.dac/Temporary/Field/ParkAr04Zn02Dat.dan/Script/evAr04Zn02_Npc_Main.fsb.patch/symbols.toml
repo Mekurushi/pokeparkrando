@@ -27,6 +27,7 @@ restore_pre_competition_state = 0x51e68
 special_spawn_condition = 0x5997c
 get_held_item_kind = 0x502a0
 remove_held_item = 0x50510
+get_npc_state = 0x5468c
 magby_dialog = 0x5eb80
 charmander_dialog = 0x5ee68
 bonsly_dialog = 0x5f114
