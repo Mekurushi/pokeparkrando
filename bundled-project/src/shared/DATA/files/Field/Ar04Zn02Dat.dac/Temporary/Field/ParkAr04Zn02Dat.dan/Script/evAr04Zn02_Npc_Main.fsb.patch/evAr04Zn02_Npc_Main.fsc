@@ -190,6 +190,7 @@ void magby_dialog(int param_1){
 }
 
 void charmander_dialog(int param_1){
+    // TODO: fill the empty Charmander win dialog texts in Ar04Zn02.bmg
     power_competition_dialog(param_1,0x106,0x13cd,"42_00280","42_10140","42_10150","42_10170","42_10190","42_10180");
 }
 

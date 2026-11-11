@@ -27,3 +27,12 @@ unlock_id = { value = 0x1a }
 # original spawn was in main area, changed it to circle too so it doesn't break ap logic
 field_position_candidates = { value = 0x4 }
 skill_game_start_position_group = { value = 0x1b }
+
+# Charmander
+[[edits]]
+table = "pokemonDispositionData"
+row = 1
+
+[edits.set]
+walking_ai_enabled = { value = 0x0 }
+field_position_candidates = { value = 0x19 }
