@@ -26,10 +26,6 @@ table = "HitDashScriptList"
 row = 2
 
 [[removes]]
-table = "HitDashScriptList"
-row = 3
-
-[[removes]]
 table = "TouchAreaScriptList"
 row = 1
 
