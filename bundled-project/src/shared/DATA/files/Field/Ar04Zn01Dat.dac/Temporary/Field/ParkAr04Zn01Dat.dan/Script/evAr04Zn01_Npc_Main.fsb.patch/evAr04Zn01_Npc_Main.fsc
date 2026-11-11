@@ -38,7 +38,9 @@ extern void enter_attraction(int param_1, int attraction_id);
 extern void rotate_object(int object_id, int x, int y, int z);
 extern void despawn_debug_prisma(int object_id);
 extern void setup_player_for_zone();
-extern void do_unlock_scenes(int param_1);
+extern int has_wand_check();
+extern void show_unlock_cutscene_at_position(int param_1, int object_id, string dialog_id, int param_4, int param_5, float x, float y, float z);
+extern void show_unlock_cutscene_at_current_position(int param_1, int object_id, string dialog_id, int param_4, int param_5);
 extern void update_npc_story_state(int param_1);
 extern void clear_wand_check();
 extern void SETGIMMICK(int param_1);
@@ -82,6 +84,83 @@ config int CAVERN_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL_POSITION;
 config int CAVERN_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_ZONE;
 config int CAVERN_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_AREA;
 config int CAVERN_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_POSITION;
+
+void do_unlock_scenes(int param_1){
+    int global_manager = get_module("GlobalManager");
+
+    if(has_wand_check() == 1){
+        fade_out(0,0,0,0x3c);
+    }
+
+    // Magnemite
+    if(@syscall(0,0x15,0x29,global_manager,0x58) == 1){
+        show_unlock_cutscene_at_current_position(param_1,0xd7,"41_00140",20,1);
+    }
+
+    // Phanpy
+    if(@syscall(0,0x15,0x29,global_manager,0x59) == 1){
+        show_unlock_cutscene_at_position(param_1,0xda,"41_00150",0,0,298.7,-100.0,-833.5);
+    }
+
+    // Raichu
+    if(@syscall(0,0x15,0x29,global_manager,0x5f) == 1){
+        show_unlock_cutscene_at_position(param_1,0xe1,"41_00210",0,0,298.7,-100.0,-833.5);
+    }
+
+    // Hitmonlee
+    if(@syscall(0,0x15,0x29,global_manager,0x60) == 1){
+        // TODO: create proper unlock texts
+        show_unlock_cutscene_at_current_position(param_1,0xe2,"41_00160",20,1);
+    }
+
+    // Electivire
+    if(@syscall(0,0x15,0x29,global_manager,0x61) == 1){
+        // TODO: create proper unlock texts
+        show_unlock_cutscene_at_current_position(param_1,0xe3,"41_00190",20,1);
+    }
+
+    // Diglett
+    if(@syscall(0,0x15,0x29,global_manager,0x9a) == 1){
+        show_unlock_cutscene_at_current_position(param_1,0xe4,"41_00241",20,1);
+    }
+
+    // Drifblim; for future usage
+    if(@syscall(0,0x15,0x29,global_manager,0x1f) == 1){
+        show_unlock_cutscene_at_current_position(param_1,0xe9,"41_00240",20,1);
+    }
+
+    // Sudowoodo
+    if(@syscall(0,0x15,0x29,global_manager,0x57) == 1){
+        show_unlock_cutscene_at_position(param_1,0xeb,"41_00170",10,0,21.0,-100.0,-1463.0);
+    }
+
+    // Magnezone
+    if(@syscall(0,0x15,0x29,global_manager,0x67) == 1){
+        show_unlock_cutscene_at_position(param_1,0xee,"41_00244",10,0,21.0,-100.0,-1463.0);
+    }
+
+    // Magnemite 2
+    if(@syscall(0,0x15,0x29,global_manager,0xa8) == 1){
+        show_unlock_cutscene_at_current_position(param_1,0xf9,"41_00140",20,1);
+    }
+
+    // Magnemite 3
+    if(@syscall(0,0x15,0x29,global_manager,0xa9) == 1){
+        show_unlock_cutscene_at_current_position(param_1,0xfa,"41_00140",20,1);
+    }
+
+    // Machamp
+    if(@syscall(0,0x15,0x29,global_manager,0x99) == 1){
+        show_unlock_cutscene_at_position(param_1,0x100,"41_00180",10,0,480.0,-100.0,-1248.5);
+    }
+
+    int event_script = get_module("EventScript");
+    @syscall(0,0x15,400,event_script,0,1);
+    int audio_state = @syscall(0,0x15,0x1f7,event_script,0x17e6);
+    if(audio_state == 0){
+        fade_in_bgm(0x1e);
+    }
+}
 
 void setup_field(int param_1){
     lock_player_and_get_accessor();
