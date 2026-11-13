@@ -1,0 +1,41 @@
+extern int get_module(string name);
+
+export void RUN(int param_1){
+    int global_manager = get_module("GlobalManager");
+    int object_manager = get_module("ObjectManager");
+    int object_id = @syscall(0,0x15,0,param_1);
+    @syscall(0,0x15,1,object_manager,object_id);
+
+    int object = @syscall(0,0x15,4,param_1);
+    @syscall(0,0x15,0,object,param_1,0);
+    int param_1_field_7 = @syscall(0,0x15,7,param_1);
+    int param_1_field_8 = @syscall(0,0x15,8,param_1);
+    int param_1_field_6 = @syscall(0,0x15,6,param_1);
+
+    int firewall_enabled = @syscall(0,0x15,1,global_manager,"f0402FireWallA");
+    if(firewall_enabled == 0){
+        @syscall(0,0x15,5,param_1_field_7,0x501e0000,param_1_field_8,-20.0,0,0,0);
+        @syscall(0,0x15,5,param_1_field_7,0x501e0000,param_1_field_8,0.0,0,0,0);
+        @syscall(0,0x15,5,param_1_field_7,0x501e0000,param_1_field_8,20.0,0,0,0);
+        @syscall(0,0x15,2,param_1_field_6,param_1,0x656,0,1.0,1.0);
+    }
+    else{
+        int param_1_field_1e = @syscall(0,0x15,0x1e,param_1);
+        @syscall(0,0x15,4,param_1_field_1e,1,0);
+    }
+}
+
+export void STOP(int param_1){
+    int global_manager = get_module("GlobalManager");
+    int object_manager = get_module("ObjectManager");
+    int object_id = @syscall(0,0x15,0,param_1);
+    int object_accessor = @syscall(0,0x15,1,object_manager,object_id);
+    int param_1_field_7 = @syscall(0,0x15,7,param_1);
+
+    @pause(0x46);
+    @syscall(0,0x15,0xc,param_1_field_7,0x501e0000,0);
+    @syscall(0,0x15,0,object_accessor,2);
+    int param_1_field_6 = @syscall(0,0x15,6,param_1);
+    @syscall(0,0x15,4,param_1_field_6,0x656,0);
+    @syscall(0,0x15,0,global_manager,"f0402FireWallA",1);
+}
