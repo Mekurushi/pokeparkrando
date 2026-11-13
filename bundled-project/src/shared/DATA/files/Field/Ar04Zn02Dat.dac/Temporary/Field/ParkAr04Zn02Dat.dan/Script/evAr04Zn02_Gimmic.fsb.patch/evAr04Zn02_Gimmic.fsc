@@ -1,0 +1,440 @@
+extern int get_module(string name);
+extern void end_event_script(int param_1);
+extern void wait_frames(int frames);
+extern int lock_player_and_get_accessor();
+extern int lock_npc_and_get_accessor(int object_id);
+extern void restore_player_control();
+extern void reset_object_after_event(int object_id);
+extern void play_sound_effect(int sound_id, int fade_in_frames);
+extern void spawn_object_if_missing(int object_id);
+extern void despawn(int object_id);
+extern void complete_event();
+extern void set_object_position(int object_id, int x, int y, int z);
+extern void set_object_rotation_instantly(int object_id, int x, int y, int z);
+extern void face_player_towards_object_synchronously(int object_id, int immediate);
+extern void show_message_box(int param_1, string dialog_id);
+extern int get_held_item_kind();
+extern void remove_held_item();
+extern int show_yes_no_question(int param_1, string dialog_id);
+extern void fade_out_bgm(int frames);
+extern void fade_out(int red, int green, int blue, int frames);
+extern void fade_in(int red, int green, int blue, int frames);
+extern void despawn_field();
+extern void respawn_field();
+extern void fade_in_bgm(int frames);
+extern void set_player_at(int x, int y, int z);
+extern void set_player_rotation(int x, int y, int z);
+extern int get_chapter();
+extern void set_chapter(int chapter);
+extern void unlock_pokemon(int object_id);
+extern int object_id_to_friend_id(int object_id);
+extern int is_unlock_scene_played(int friend_id);
+extern void despawn_player_object();
+extern void spawn_player_object();
+extern void force_fade_out(int red, int green, int blue, int frames);
+extern void face_object_towards_player_synchronously(int object_id, int immediate);
+extern void do_dialog_with_scene(int param_1, int object_id, string dialog_id, int scene);
+
+config bool UNLOCK_FAST_TRAVEL_WITH_TAXI_STOP;
+
+bool is_unlocked(int object_id){
+  int disp_manager = get_module("DisposManager");
+  int global_manager = get_module("GlobalManager");
+  int unlock_id = @syscall(0,0x15,4,disp_manager,object_id);
+  if (unlock_id == -2) {
+    return false;
+  }
+  if (unlock_id == -1) {
+    return false;
+  }
+  int is_unlocked = @syscall(0,0x15,0x29,global_manager,unlock_id);
+  return is_unlocked == 1;
+}
+
+void spawn_if_unlocked(int object_id, float x, float y, float z, float rotation_x, float rotation_y, float rotation_z){
+    bool unlocked = is_unlocked(object_id);
+    if(unlocked){
+        int dispos_manager = get_module("DisposManager");
+
+        spawn_object_if_missing(object_id);
+        int object_accessor = lock_npc_and_get_accessor(object_id);
+
+        @syscall(0,0x15,7,object_accessor,x,y,z);
+        @syscall(0,0x15,8,object_accessor,x,y,z);
+        @syscall(0,0x15,0x22,object_accessor,x,y,z,1);
+        @syscall(0,0x15,9,object_accessor,rotation_x,rotation_y,rotation_z);
+        reset_object_after_event(object_id);
+
+        // enables walking again
+        int object_state = @syscall(0,0x15,0x10,dispos_manager,object_id);
+        if(object_state == 0){
+            @syscall(0,0x15,0x2a,object_accessor,5);
+        }
+        else{
+            @syscall(0,0x15,0x2a,object_accessor,10);
+            @syscall(0,0x15,0x2b,object_accessor,4);
+        }
+    }
+}
+
+export void BOX_YAJILON(int param_1){
+    const int BALTOY_OBJECT_ID = 0x108;
+
+    int global_manager = get_module("GlobalManager");
+    bool is_location_checked = @syscall(0,0x15,1,global_manager,"f0402BaltoyBox") == 1;
+
+    if(!is_location_checked){
+        int field_info = get_module("mnFieldInfo");
+        @syscall(0,0x15,0,global_manager,"f0402BaltoyBox",1);
+
+        int baltoy_accessor = lock_npc_and_get_accessor(BALTOY_OBJECT_ID);
+        vec3 baltoy_position;
+        vec3 baltoy_rotation;
+        @syscall(0,0x15,0x13,baltoy_accessor,&baltoy_position);
+        @syscall(0,0x15,0x16,baltoy_accessor,&baltoy_rotation);
+        
+        spawn_object_if_missing(BALTOY_OBJECT_ID);
+        set_object_position(BALTOY_OBJECT_ID,-739,-119,-776);
+        set_object_rotation_instantly(BALTOY_OBJECT_ID,0,0xc,0);
+
+        play_sound_effect(0x7e7,0);
+        @syscall(0,0x15,0x11,field_info,1,"42_00241");
+        wait_frames(0xb4);
+        despawn(BALTOY_OBJECT_ID);
+        @syscall(0,0x15,0x12,field_info);
+        spawn_if_unlocked(BALTOY_OBJECT_ID,baltoy_position.x,baltoy_position.y,baltoy_position.z,baltoy_rotation.x,baltoy_rotation.y,baltoy_rotation.z);
+        complete_event();
+    }
+    else{
+        int object_manager = get_module("ObjectManager");
+        int dispos_manager = get_module("DisposManager");
+        int random_value = @syscall(0,0x24,100) + 1;
+        int berry_object_id;
+        if(random_value == 100){
+            berry_object_id = 0x2ee6;
+        }
+        else if(random_value >= 0x5a && random_value < 100){
+            berry_object_id = 12000;
+        }
+        else{
+            berry_object_id = 0x2ee3;
+        }
+
+        @syscall(0,0x15,5,dispos_manager,berry_object_id);
+        int berry_object = @syscall(0,0x15,4,object_manager,berry_object_id);
+        int berry_accessor = @syscall(0,0x15,1,object_manager,berry_object);
+        vec3 berry_position = vec3{
+            .x = -739.0,
+            .y = -119.0,
+            .z = -776.0
+        };
+        @syscall(0,0x15,7,berry_accessor,berry_position.x,berry_position.y,berry_position.z);
+        @syscall(0,0x15,8,berry_accessor,berry_position.x,berry_position.y,berry_position.z);
+    }
+
+    end_event_script(param_1);
+    return;
+}
+
+export void TAXI_STOP(int param_1){
+    int global_manager = get_module("GlobalManager");
+    lock_player_and_get_accessor();
+    face_player_towards_object_synchronously(0x4e2b,1);
+
+    show_message_box(0,"02_80160");
+
+    if(UNLOCK_FAST_TRAVEL_WITH_TAXI_STOP == true){
+        int taxi_stop_unlocked = @syscall(0,0x15,1,global_manager,"f0402FuwarideTaxiStop");
+        if(taxi_stop_unlocked == 0){
+            int field_info = get_module("mnFieldInfo");
+            @syscall(0,0x15,0x11,field_info,1,"42_00240");
+            wait_frames(90);
+            wait_frames(90);
+            @syscall(0,0x15,0x12,field_info);
+            @syscall(0,0x15,0,global_manager,"f0402FuwarideTaxiStop",1);
+        }
+    }
+
+    restore_player_control();
+    end_event_script(param_1);
+    return;
+}
+
+void special_spawn_condition(int param_1){
+    const int CHATOT_OBJECT_ID = 0x122;
+
+    spawn_object_if_missing(CHATOT_OBJECT_ID);
+    set_object_position(CHATOT_OBJECT_ID,-24,1,162);
+    set_object_rotation_instantly(CHATOT_OBJECT_ID,0,257,0);
+    reset_object_after_event(CHATOT_OBJECT_ID);
+}
+
+export void YOKORO(int param_1){
+    const int YOKORO_OBJECT_ID = 0x4e35;
+
+    int player_accessor = lock_player_and_get_accessor();
+    int held_item_kind = get_held_item_kind();
+    if(held_item_kind == 5 || held_item_kind == 0xc){
+        int object_manager = get_module("ObjectManager");
+        int yokoro_object = @syscall(0,0x15,4,object_manager,YOKORO_OBJECT_ID);
+        int yokoro_accessor = @syscall(0,0x15,1,object_manager,yokoro_object);
+        int event_script = get_module("EventScript");
+        int field_info = get_module("mnFieldInfo");
+        int global_manager = get_module("GlobalManager");
+
+        @syscall(0,0x15,0x28,field_info,1);
+        @syscall(0,0x15,0x29,field_info,"42_00542");
+        @syscall(0,0x15,0x29,field_info,"42_00541");
+
+        int result_kind = 0;
+        int spawned_object_id;
+        int response = show_yes_no_question(1,"42_00540");
+        if(response == 0){
+            if(held_item_kind == 5){
+                @syscall(0,0x15,0,global_manager,"f0402IronStick",1);
+                result_kind = 0;
+                for(int index = 3; index < 6; index = index + 1){
+                    spawned_object_id = index + 11000;
+                    if(@syscall(0,0x15,10,object_manager,spawned_object_id) == 0){
+                        break;
+                    }
+                }
+            }
+            else if(held_item_kind == 0xc){
+                @syscall(0,0x15,0,global_manager,"f0402GoldIngot",1);
+                result_kind = 1;
+                spawned_object_id = 0x2b02;
+            }
+        }
+        else if(response == 1){
+            if(held_item_kind == 5){
+                @syscall(0,0x15,0,global_manager,"f0402IronDisk",1);
+                result_kind = 2;
+                for(int index = 6; index < 9; index = index + 1){
+                    spawned_object_id = index + 11000;
+                    if(@syscall(0,0x15,10,object_manager,spawned_object_id) == 0){
+                        break;
+                    }
+                }
+            }
+            else if(held_item_kind == 0xc){
+                @syscall(0,0x15,0,global_manager,"f0402GoldTop",1);
+                result_kind = 3;
+                spawned_object_id = 0x2b03;
+            }
+        }
+
+        fade_out_bgm(30);
+        fade_out(0,0,0,30);
+        despawn_field();
+        set_player_at(-553,-121,-654);
+        set_player_rotation(0,179,0);
+
+        vec3 camera_position = vec3{
+            .x = -540.19,
+            .y = -109.84,
+            .z = -628.89
+        };
+        vec3 camera_target = vec3{
+            .x = -548.31,
+            .y = -113.38,
+            .z = -652.86
+        };
+        @syscall(0,0x15,0xcb,event_script);
+        @syscall(0,0x15,0xcc,event_script,-1,&camera_position);
+        @syscall(0,0x15,0xcd,event_script,-1,&camera_target);
+
+        remove_held_item();
+        wait_frames(30);
+        fade_in(0,0,0,30);
+        wait_frames(30);
+        @syscall(0,0x15,0,yokoro_accessor,1);
+        @syscall(0,0x15,2,player_accessor,0x35,5);
+        wait_frames(15);
+        play_sound_effect(0x660,0);
+        wait_frames(120);
+
+        vec3 moved_camera_position = vec3{
+            .x = -499.24,
+            .y = -98.69,
+            .z = -641.75
+        };
+        vec3 moved_camera_target = vec3{
+            .x = -491.38,
+            .y = -102.34,
+            .z = -665.8
+        };
+        @syscall(0,0x15,0xcf,event_script,-1,&moved_camera_position,120);
+        @syscall(0,0x15,0xd0,event_script,-1,&moved_camera_target,120,0);
+        wait_frames(150);
+
+        int dispos_manager = get_module("DisposManager");
+        @syscall(0,0x15,5,dispos_manager,spawned_object_id);
+        int spawned_object = @syscall(0,0x15,4,object_manager,spawned_object_id);
+        int spawned_object_accessor = @syscall(0,0x15,1,object_manager,spawned_object);
+        @syscall(0,0x15,7,spawned_object_accessor,-481.0,-105.0,-695.0);
+        @syscall(0,0x15,8,spawned_object_accessor,-481.0,-105.0,-695.0);
+        wait_frames(120);
+
+        if(result_kind == 0){
+            play_sound_effect(0x666,0);
+            show_message_box(1,"42_00550");
+        }
+        else if(result_kind == 2){
+            play_sound_effect(0x666,0);
+            show_message_box(1,"42_00560");
+        }
+        else if(result_kind == 1){
+            show_message_box(1,"42_00570");
+        }
+        else if(result_kind == 3){
+            show_message_box(1,"42_00580");
+        }
+
+        fade_out(0,0,0,30);
+        respawn_field();
+        special_spawn_condition(param_1);
+        wait_frames(30);
+        fade_in_bgm(30);
+        @syscall(0,0x15,0xca,event_script,0);
+        fade_in(0,0,0,30);
+
+        if(@syscall(0,0x15,1,global_manager,"f0402UnlockGolem") == 0){
+            @syscall(0,0x15,0,global_manager,"f0402UnlockGolem",1);
+            int wand_check = @syscall(0,0x15,1,global_manager,"zfWandCheck");
+            @syscall(0,0x15,0,global_manager,"zfWandCheck",wand_check + 1);
+            complete_event();
+        }
+    }
+    else{
+        show_message_box(1,"42_00590");
+    }
+
+    restore_player_control();
+    end_event_script(param_1);
+}
+
+// DRILL SWITCH
+export void SWITCHC_ON(int param_1){
+    const int SCENE_OBJECT_ID = 0x11a;
+    const int UNLOCK_OBJECT_ID = 0x109;
+
+    int global_manager = get_module("GlobalManager");
+    int object_manager = get_module("ObjectManager");
+    int switch_object = @syscall(0,0x15,4,object_manager,0x4e30);
+    int drill_object = @syscall(0,0x15,4,object_manager,0x4e34);
+    int switch_accessor = @syscall(0,0x15,1,object_manager,switch_object);
+    int drill_accessor = @syscall(0,0x15,1,object_manager,drill_object);
+    int event_script = get_module("EventScript");
+
+    int drill_switch = @syscall(0,0x15,1,global_manager,"f0402Drill_Switch");
+    if(drill_switch == 1){
+        end_event_script(param_1);
+        return;
+    }
+
+    int drill_count = @syscall(0,0x15,1,global_manager,"f0402Drill_Count");
+    bool can_activate = drill_switch == 0 && drill_count != 2;
+    if(can_activate){
+        @syscall(0,0x15,0,drill_accessor,2);
+    }
+
+    wait_frames(30);
+    lock_player_and_get_accessor();
+
+    drill_switch = @syscall(0,0x15,1,global_manager,"f0402Drill_Switch");
+    drill_count = @syscall(0,0x15,1,global_manager,"f0402Drill_Count");
+    can_activate = drill_switch == 0 && drill_count != 2;
+    if(can_activate){
+        wait_frames(240);
+        @syscall(0,0x15,0,global_manager,"f0402Drill_Switch",1);
+        fade_out(0,0,0,30);
+        despawn_field();
+        spawn_object_if_missing(SCENE_OBJECT_ID);
+        set_object_position(SCENE_OBJECT_ID,-52,0,-8);
+        fade_out_bgm(30);
+        @syscall(0,0x15,0,drill_accessor,1);
+        @syscall(0,0x15,0,switch_accessor,1);
+
+        vec3 camera_position = vec3{
+            .x = 43.02,
+            .y = 41.54,
+            .z = 66.72
+        };
+        vec3 camera_target = vec3{
+            .x = -401.8,
+            .y = -358.7,
+            .z = -677.4
+        };
+        @syscall(0,0x15,0xcb,event_script);
+        @syscall(0,0x15,0xcc,event_script,-1,&camera_position);
+        @syscall(0,0x15,0xcd,event_script,-1,&camera_target);
+        set_player_at(26,0,18);
+        set_player_rotation(0,294,0);
+        fade_in(0,0,0,30);
+        wait_frames(420);
+
+        play_sound_effect(0x666,0);
+        if(@syscall(0,0x15,1,global_manager,"f0402Drill") == 1){
+            show_message_box(1,"42_00520");
+        }
+        else{
+            show_message_box(1,"42_00530");
+        }
+
+        fade_out(0,0,0,30);
+        fade_in_bgm(30);
+        @syscall(0,0x15,0xca,event_script,0);
+
+        respawn_field();
+        special_spawn_condition(param_1);
+        fade_in(0,0,0,30);
+        restore_player_control();
+        end_event_script(param_1);
+        return;
+    }
+
+    fade_out(0,0,0,30);
+    despawn_player_object();
+    despawn_field();
+    spawn_player_object();
+    lock_player_and_get_accessor();
+    spawn_object_if_missing(SCENE_OBJECT_ID);
+    int scene_object_accessor = lock_npc_and_get_accessor(SCENE_OBJECT_ID);
+
+    vec3 camera_position = vec3{
+        .x = -97.43,
+        .y = 7.74,
+        .z = -4.96
+    };
+    vec3 camera_target = vec3{
+        .x = -57.93,
+        .y = 9.04,
+        .z = 2.76
+    };
+    @syscall(0,0x15,0xcb,event_script);
+    @syscall(0,0x15,0xcc,event_script,-1,&camera_position);
+    @syscall(0,0x15,0xcd,event_script,-1,&camera_target);
+    set_object_position(SCENE_OBJECT_ID,-52,0,-8);
+    set_player_at(-61,0,14);
+    set_player_rotation(0,156,0);
+    face_object_towards_player_synchronously(SCENE_OBJECT_ID,0);
+    face_player_towards_object_synchronously(SCENE_OBJECT_ID,0);
+    wait_frames(30);
+    fade_in(0,0,0,30);
+    @syscall(0,0x15,0x28,scene_object_accessor,0x1375,0,1.0,1.0);
+
+    if(drill_count == 2){
+        do_dialog_with_scene(param_1,SCENE_OBJECT_ID,"42_70101",0);
+    }
+
+    force_fade_out(0,0,0,30);
+    respawn_field();
+    special_spawn_condition(param_1);
+    @syscall(0,0x15,0xca,event_script,-1);
+    wait_frames(1);
+    reset_object_after_event(SCENE_OBJECT_ID);
+    fade_in(0,0,0,30);
+    restore_player_control();
+    end_event_script(param_1);
+}

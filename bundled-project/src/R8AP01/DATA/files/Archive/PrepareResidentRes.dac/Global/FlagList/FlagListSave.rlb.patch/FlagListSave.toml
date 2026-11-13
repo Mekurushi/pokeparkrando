@@ -70,6 +70,20 @@ flag_name = { value = "f0302MamoswineRevived" }
 
 [[edits]]
 table = "FlagTable"
+row = 96
+
+[edits.set]
+flag_name = { value = "f0402BaltoyBox" }
+
+[[edits]]
+table = "FlagTable"
+row = 124
+
+[edits.set]
+flag_name = { value = "f0402UnlockGolem" }
+
+[[edits]]
+table = "FlagTable"
 row = 200
 
 [edits.set]
