@@ -159,6 +159,18 @@ fn build_config() -> BuildConfig {
             BuildConfigValue::Integer(1),
         ),
         (
+            "MAGMA_ZONE_MAGCARGO_AREA_BLAZIKEN_GATE_ZONE".into(),
+            BuildConfigValue::Integer(4),
+        ),
+        (
+            "MAGMA_ZONE_MAGCARGO_AREA_BLAZIKEN_GATE_AREA".into(),
+            BuildConfigValue::Integer(3),
+        ),
+        (
+            "MAGMA_ZONE_MAGCARGO_AREA_BLAZIKEN_GATE_POSITION".into(),
+            BuildConfigValue::Integer(0),
+        ),
+        (
             "CAVERN_ZONE_MAIN_AREA_TREEHOUSE_CONNECTION_ZONE".into(),
             BuildConfigValue::Integer(2),
         ),
