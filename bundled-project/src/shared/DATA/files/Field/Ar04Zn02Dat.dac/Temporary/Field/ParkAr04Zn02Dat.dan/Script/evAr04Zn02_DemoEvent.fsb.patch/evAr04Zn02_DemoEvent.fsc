@@ -1,0 +1,24 @@
+extern int get_module(string name);
+extern void fade_out_sound(int duration);
+
+config int MAGMA_ZONE_MAIN_AREA_CAVERN_ZONE_TRUCK_ZONE;
+config int MAGMA_ZONE_MAIN_AREA_CAVERN_ZONE_TRUCK_AREA;
+config int MAGMA_ZONE_MAIN_AREA_CAVERN_ZONE_TRUCK_POSITION;
+
+void ZONECHANGETR(int param_1){
+    int event_script = get_module("EventScript");
+    fade_out_sound(15);
+    @syscall(0,0x15,400,event_script,3,0);
+
+    int global_manager = get_module("GlobalManager");
+    @syscall(
+        0,0x15,0x78,global_manager,
+        MAGMA_ZONE_MAIN_AREA_CAVERN_ZONE_TRUCK_ZONE,
+        MAGMA_ZONE_MAIN_AREA_CAVERN_ZONE_TRUCK_AREA,
+        MAGMA_ZONE_MAIN_AREA_CAVERN_ZONE_TRUCK_POSITION
+    );
+
+    int scene_manager = get_module("SceneManager");
+    @syscall(0,0x15,6,scene_manager,"ZoneChange",1);
+    @syscall(0,0x15,3,scene_manager);
+}

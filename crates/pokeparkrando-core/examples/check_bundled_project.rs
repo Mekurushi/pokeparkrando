@@ -147,6 +147,18 @@ fn build_config() -> BuildConfig {
             BuildConfigValue::Integer(0),
         ),
         (
+            "MAGMA_ZONE_MAIN_AREA_CAVERN_ZONE_TRUCK_ZONE".into(),
+            BuildConfigValue::Integer(4),
+        ),
+        (
+            "MAGMA_ZONE_MAIN_AREA_CAVERN_ZONE_TRUCK_AREA".into(),
+            BuildConfigValue::Integer(1),
+        ),
+        (
+            "MAGMA_ZONE_MAIN_AREA_CAVERN_ZONE_TRUCK_POSITION".into(),
+            BuildConfigValue::Integer(1),
+        ),
+        (
             "CAVERN_ZONE_MAIN_AREA_TREEHOUSE_CONNECTION_ZONE".into(),
             BuildConfigValue::Integer(2),
         ),
