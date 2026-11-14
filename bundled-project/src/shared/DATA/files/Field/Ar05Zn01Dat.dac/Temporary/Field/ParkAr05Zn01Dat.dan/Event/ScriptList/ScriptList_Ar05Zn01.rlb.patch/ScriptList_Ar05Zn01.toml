@@ -1,0 +1,18 @@
+[[edits]]
+table = "EnterZoneScriptList"
+row = 0
+
+[edits.set]
+maximum_chapter = { value = 0x7fffffff }
+
+[[removes]]
+table = "EnterZoneScriptList"
+row = 1
+
+[[removes]]
+table = "EnterZoneScriptList"
+row = 2
+
+[[removes]]
+table = "TouchAreaScriptList"
+row = 1
