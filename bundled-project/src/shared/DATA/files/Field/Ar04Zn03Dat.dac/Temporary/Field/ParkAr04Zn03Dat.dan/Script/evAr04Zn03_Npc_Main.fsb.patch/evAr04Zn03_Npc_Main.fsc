@@ -16,6 +16,15 @@ extern void setup_player_for_zone();
 extern void update_npc_story_state(int param_1);
 extern void fade_in(int red, int green, int blue, int frames);
 extern void clear_wand_check();
+extern void despawn_player_object();
+extern void wait_frames(int frames);
+extern void spawn_player_object();
+extern void set_player_at(int x, int y, int z);
+extern void set_player_rotation(int x, int y, int z);
+extern void do_dialog_with_scene(int param_1, int object_id, string dialog_id, int scene_id);
+extern void reset_object_after_event(int object_id);
+extern void reset_camera();
+extern void restore_player_control();
 
 config int MAGMA_ZONE_BLAZIKEN_AREA_BLAZIKEN_ATTRACTION_ID;
 
@@ -32,6 +41,51 @@ void A04_Z03_INIT(int param_1){
     setup_field(param_1);
     fade_in(0,0,0,0x1e);
     clear_wand_check();
+    end_event_script(param_1);
+}
+
+void RETURN_AT12(int param_1){
+    const int BLAZIKEN_OBJECT_ID = 0x138;
+
+    int global_manager = get_module("GlobalManager");
+    int event_script = get_module("EventScript");
+    @syscall(0,0x15,0x65,event_script,0,0,0,1);
+
+    setup_field(param_1);
+    despawn_debug_prisma(0x4e20);
+    despawn_player_object();
+    wait_frames(1);
+    spawn_player_object();
+    lock_player_and_get_accessor();
+    set_player_at(0,0,-344);
+    set_player_rotation(0,-177,0);
+    @syscall(0,0x15,0xca,event_script,-1);
+
+    int return_attraction = @syscall(0,0x15,1,global_manager,"fRetAttraction");
+    if(return_attraction == 12){
+        int blaziken_accessor = lock_npc_and_get_accessor(BLAZIKEN_OBJECT_ID);
+        fade_in(0,0,0,0x1e);
+        face_player_and_npc(BLAZIKEN_OBJECT_ID,0);
+        @syscall(0,0x15,2,blaziken_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,blaziken_accessor,0xf68,0,1.0,1.0);
+
+        int has_blaziken_prisma = @syscall(0,0x15,0x51,global_manager,0xb);
+        if(has_blaziken_prisma == 1){
+            do_dialog_with_scene(param_1,BLAZIKEN_OBJECT_ID,"43_60074",0);
+        }
+        else{
+            do_dialog_with_scene(param_1,BLAZIKEN_OBJECT_ID,"43_60072",0);
+        }
+
+        reset_object_after_event(BLAZIKEN_OBJECT_ID);
+        reset_camera();
+        @syscall(0,0x15,0xca,event_script,0x1e);
+    }
+
+    fade_in(0,0,0,0x1e);
+    clear_wand_check();
+    restore_player_control();
+    reset_camera();
     end_event_script(param_1);
 }
 
