@@ -324,6 +324,10 @@ fn build_config() -> BuildConfig {
             BuildConfigValue::Integer(0xa),
         ),
         (
+            "MAGMA_ZONE_BLAZIKEN_AREA_BLAZIKEN_ATTRACTION_ID".into(),
+            BuildConfigValue::Integer(0xb),
+        ),
+        (
             "MAGMA_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_ZONE".into(),
             BuildConfigValue::Integer(1),
         ),
