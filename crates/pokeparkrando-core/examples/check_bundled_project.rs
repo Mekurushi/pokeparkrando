@@ -111,6 +111,18 @@ fn build_config() -> BuildConfig {
             BuildConfigValue::Integer(0),
         ),
         (
+            "HAUNTED_ZONE_MAIN_AREA_TREEHOUSE_CONNECTION_ZONE".into(),
+            BuildConfigValue::Integer(2),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_TREEHOUSE_CONNECTION_AREA".into(),
+            BuildConfigValue::Integer(1),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_TREEHOUSE_CONNECTION_POSITION".into(),
+            BuildConfigValue::Integer(3),
+        ),
+        (
             "TREEHOUSE_GRANITE_PASSAGE_GRANITE_ZONE_CONNECTION_ZONE".into(),
             BuildConfigValue::Integer(6),
         ),
