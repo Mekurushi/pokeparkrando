@@ -1,0 +1,28 @@
+base_address = 0x50000
+
+[functions]
+meowth_dialog = 0x5ad9c
+meowth2_dialog = 0x5ada8
+aipom_dialog = 0x5af34
+ambipom_dialog = 0x5b23c
+stunky_dialog = 0x5b4f8
+meowth3_dialog = 0x5b62c
+meowth4_dialog = 0x5b638
+meowth5_dialog = 0x5b644
+raichu_dialog = 0x5b650
+drifloon_dialog = 0x5a024
+gliscor_dialog = 0x5b94c
+murkrow_dialog = 0x5bc48
+kakuna_dialog = 0x5bf10
+metapod_dialog = 0x5c0d0
+meowth6_dialog = 0x5c290
+meowth7_dialog = 0x5c29c
+meowth8_dialog = 0x5c2a8
+meowth9_dialog = 0x5c2b4
+meowth10_dialog = 0x5c2c0
+riolu_dialog = 0x5c2cc
+honchkrow_dialog = 0x5c560
+tangrowth_dialog = 0x59110
+drifblim_dialog = 0x597ac
+chatot_dialog = 0x5a3d8
+electrode_dialog = 0x5c85c

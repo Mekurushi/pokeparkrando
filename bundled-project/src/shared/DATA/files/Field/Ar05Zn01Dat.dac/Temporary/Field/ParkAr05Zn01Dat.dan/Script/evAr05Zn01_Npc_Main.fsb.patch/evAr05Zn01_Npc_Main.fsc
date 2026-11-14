@@ -1,0 +1,124 @@
+void meowth_dialog(int param_1){
+    const int object_id = 0x139;
+    // TODO: Meowth
+}
+
+void meowth2_dialog(int param_1){
+    const int object_id = 0x13a;
+    // TODO: Meowth
+}
+
+void aipom_dialog(int param_1){
+    const int object_id = 0x13b;
+    // TODO: Aipom
+}
+
+void ambipom_dialog(int param_1){
+    const int object_id = 0x13c;
+    // TODO: Ambipom
+}
+
+void stunky_dialog(int param_1){
+    const int object_id = 0x13d;
+    // TODO: Stunky
+}
+
+void meowth3_dialog(int param_1){
+    const int object_id = 0x13e;
+    // TODO: Meowth
+}
+
+void meowth4_dialog(int param_1){
+    const int object_id = 0x13f;
+    // TODO: Meowth
+}
+
+void meowth5_dialog(int param_1){
+    const int object_id = 0x140;
+    // TODO: Meowth
+}
+
+void raichu_dialog(int param_1){
+    const int object_id = 0x141;
+    // TODO: Raichu
+}
+
+void drifloon_dialog(int param_1){
+    const int object_id = 0x142;
+    // TODO: Drifloon
+}
+
+void gliscor_dialog(int param_1){
+    const int object_id = 0x143;
+    // TODO: Gliscor
+}
+
+void murkrow_dialog(int param_1){
+    const int object_id = 0x144;
+    // TODO: Murkrow
+}
+
+void kakuna_dialog(int param_1){
+    const int object_id = 0x145;
+    // TODO: Kakuna
+}
+
+void metapod_dialog(int param_1){
+    const int object_id = 0x146;
+    // TODO: Metapod
+}
+
+void meowth6_dialog(int param_1){
+    const int object_id = 0x147;
+    // TODO: Meowth
+}
+
+void meowth7_dialog(int param_1){
+    const int object_id = 0x148;
+    // TODO: Meowth
+}
+
+void meowth8_dialog(int param_1){
+    const int object_id = 0x149;
+    // TODO: Meowth
+}
+
+void meowth9_dialog(int param_1){
+    const int object_id = 0x14a;
+    // TODO: Meowth
+}
+
+void meowth10_dialog(int param_1){
+    const int object_id = 0x14b;
+    // TODO: Meowth
+}
+
+void riolu_dialog(int param_1){
+    const int object_id = 0x14c;
+    // TODO: Riolu
+}
+
+void honchkrow_dialog(int param_1){
+    const int object_id = 0x14d;
+    // TODO: Honchkrow
+}
+
+void tangrowth_dialog(int param_1){
+    const int object_id = 0x14e;
+    // TODO: Tangrowth
+}
+
+void drifblim_dialog(int param_1){
+    const int object_id = 0x14f;
+    // TODO: Drifblim
+}
+
+void chatot_dialog(int param_1){
+    const int object_id = 0x150;
+    // TODO: Chatot
+}
+
+void electrode_dialog(int param_1){
+    const int object_id = 0x151;
+    // TODO: Electrode
+}
