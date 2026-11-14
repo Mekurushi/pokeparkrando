@@ -1,0 +1,4 @@
+export void INITIALIZE(int param_1){
+    int lamp = @syscall(0,0x15,5,param_1);
+    @syscall(0,0x15,0,lamp,param_1,2);
+}

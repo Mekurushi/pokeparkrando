@@ -1,0 +1,4 @@
+export void WAIT(int param_1){
+    int fountain = @syscall(0,0x15,4,param_1);
+    @syscall(0,0x15,0,fountain,param_1,2);
+}

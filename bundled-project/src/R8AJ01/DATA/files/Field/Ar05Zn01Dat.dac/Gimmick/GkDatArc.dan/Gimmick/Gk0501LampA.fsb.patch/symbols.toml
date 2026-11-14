@@ -1,0 +1,4 @@
+base_address = 0x50000
+
+[functions]
+INITIALIZE = 0x50b90
