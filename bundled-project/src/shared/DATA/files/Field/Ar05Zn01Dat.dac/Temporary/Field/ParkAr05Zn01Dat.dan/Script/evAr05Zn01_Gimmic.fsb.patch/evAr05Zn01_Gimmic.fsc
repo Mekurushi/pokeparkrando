@@ -1,0 +1,196 @@
+extern int get_module(string name);
+extern void wait_frames(int frames);
+extern void end_event_script(int param_1);
+extern void fade_out_audio(int frames, bool fade_channel_6, bool fade_channel_8, bool fade_channel_7);
+extern void play_sound_effect(int sound_id, int fade_in_frames);
+extern int lock_player_and_get_accessor();
+extern int show_yes_no_question(int mode, string dialog_id);
+extern void fade_out(int red, int green, int blue, int frames);
+extern void fade_in(int red, int green, int blue, int frames);
+extern int lock_npc_and_get_accessor(int object_id);
+extern void set_player_at(int x, int y, int z);
+extern void set_player_rotation(int x, int y, int z);
+extern void face_object_towards_player_synchronously(int object_id, int immediate);
+extern void face_player_towards_object_synchronously(int object_id, int immediate);
+extern void set_npc_state(int object_id, int state);
+extern void do_dialog_with_scene(int param_1, int object_id, string dialog_id, int scene);
+extern void reset_object_after_event(int object_id);
+extern void restore_player_control();
+extern void show_message_box(int mode, string dialog_id);
+
+config int HAUNTED_ZONE_MAIN_AREA_MANSION_GATE_ZONE;
+config int HAUNTED_ZONE_MAIN_AREA_MANSION_GATE_AREA;
+config int HAUNTED_ZONE_MAIN_AREA_MANSION_GATE_POSITION;
+config bool UNLOCK_FAST_TRAVEL_WITH_TAXI_STOP;
+
+export void ZONECHANGEDR(int param_1){
+    fade_out_audio(60,true,true,true);
+    wait_frames(5);
+    play_sound_effect(0x6c1,0);
+    @pause(120);
+
+    int event_script = get_module("EventScript");
+    @syscall(0,0x15,400,event_script,3,0);
+
+    int global_manager = get_module("GlobalManager");
+    @syscall(
+        0,0x15,0x78,global_manager,
+        HAUNTED_ZONE_MAIN_AREA_MANSION_GATE_ZONE,
+        HAUNTED_ZONE_MAIN_AREA_MANSION_GATE_AREA,
+        HAUNTED_ZONE_MAIN_AREA_MANSION_GATE_POSITION
+    );
+
+    int scene_manager = get_module("SceneManager");
+    @syscall(0,0x15,6,scene_manager,"ZoneChange",1);
+    @syscall(0,0x15,3,scene_manager);
+    end_event_script(param_1);
+    return;
+}
+
+export void DOOR(int param_1){
+    lock_player_and_get_accessor();
+
+    int global_manager = get_module("GlobalManager");
+    int has_tangrowth_prisma = @syscall(0,0x15,0x51,global_manager,3);
+    if(has_tangrowth_prisma == 1){
+        int enter_mansion = show_yes_no_question(1,"51_00480");
+        if(enter_mansion == 1){
+            ZONECHANGEDR(param_1);
+        }
+    }
+    else{
+        int event_script = get_module("EventScript");
+        fade_out(0,0,0,30);
+
+        int drifloon_accessor = lock_npc_and_get_accessor(0x142);
+        set_player_at(0x52,0xbf,-0x2ec);
+        set_player_rotation(0,0x5a,0);
+        face_object_towards_player_synchronously(0x142,0);
+        face_player_towards_object_synchronously(0x142,0);
+        set_npc_state(0x142,4);
+
+        vec3 camera_position;
+        @syscall(0,0x15,0xcb,event_script);
+        @syscall(0,0x15,0xcc,event_script,-1,&camera_position);
+        @syscall(0,0x15,0xcd,event_script,-1,&camera_position);
+        @pause(30);
+        fade_in(0,0,0,30);
+
+        @syscall(0,0x15,0x28,drifloon_accessor,0xee1,0,1.0,1.0);
+        do_dialog_with_scene(param_1,0x142,"51_60090",0);
+
+        reset_object_after_event(0x142);
+        fade_out(0,0,0,30);
+        @syscall(0,0x15,0xca,event_script,0);
+        fade_in(0,0,0,30);
+    }
+
+    restore_player_control();
+    end_event_script(param_1);
+    return;
+}
+
+export void TAXI_STOP(int param_1){
+    int global_manager = get_module("GlobalManager");
+    lock_player_and_get_accessor();
+    face_player_towards_object_synchronously(0x4e22,1);
+    show_message_box(0,"02_80160");
+
+    if(UNLOCK_FAST_TRAVEL_WITH_TAXI_STOP == true){
+        int taxi_stop_unlocked = @syscall(0,0x15,1,global_manager,"f0501FuwarideTaxiStop");
+        if(taxi_stop_unlocked == 0){
+            int field_info = get_module("mnFieldInfo");
+            @syscall(0,0x15,0x11,field_info,1,"51_00251");
+            wait_frames(90);
+            wait_frames(90);
+            @syscall(0,0x15,0x12,field_info);
+            @syscall(0,0x15,0,global_manager,"f0501FuwarideTaxiStop",1);
+        }
+    }
+
+    restore_player_control();
+    end_event_script(param_1);
+    return;
+}
+
+export void TREECOCOON(int param_1){
+    int global_manager = get_module("GlobalManager");
+    int is_location_checked = @syscall(0,0x15,1,global_manager,"f0501KakunaTree");
+    if(is_location_checked == 0){
+        int field_info = get_module("mnFieldInfo");
+        @syscall(0,0x15,0,global_manager,"f0501KakunaTree",1);
+        @syscall(0,0x15,0x11,field_info,1,"51_00210");
+        wait_frames(180);
+        @syscall(0,0x15,0x12,field_info);
+    }
+    else{
+        int tree_triggered = @syscall(0,0x15,1,global_manager,"zfTreeCocoon");
+        if(tree_triggered == 0){
+            int dispos_manager = get_module("DisposManager");
+            int object_manager = get_module("ObjectManager");
+            @syscall(0,0x15,0,global_manager,"zfTreeCocoon",1);
+
+            int random_roll = @syscall(0,0x24,100) + 1;
+            int item_id;
+            if(random_roll == 100){
+                item_id = 0x2ee6;
+            }
+            else if(random_roll >= 90 && random_roll < 100){
+                item_id = 12000;
+            }
+            else{
+                item_id = 0x2ee3;
+            }
+
+            @syscall(0,0x15,5,dispos_manager,item_id);
+            int item_object = @syscall(0,0x15,4,object_manager,item_id);
+            int item_accessor = @syscall(0,0x15,1,object_manager,item_object);
+            @syscall(0,0x15,7,item_accessor,158.64,205.91,-727.64);
+            @syscall(0,0x15,8,item_accessor,158.64,205.91,-727.64);
+        }
+    }
+
+    end_event_script(param_1);
+    return;
+}
+
+export void TREETRANSEL(int param_1){
+    int global_manager = get_module("GlobalManager");
+    int is_location_checked = @syscall(0,0x15,1,global_manager,"f0501MetapodTree");
+    if(is_location_checked == 0){
+        int field_info = get_module("mnFieldInfo");
+        @syscall(0,0x15,0,global_manager,"f0501MetapodTree",1);
+        @syscall(0,0x15,0x11,field_info,1,"51_00200");
+        wait_frames(180);
+        @syscall(0,0x15,0x12,field_info);
+    }
+    else{
+        int tree_triggered = @syscall(0,0x15,1,global_manager,"zfTreeTransel");
+        if(tree_triggered == 0){
+            int dispos_manager = get_module("DisposManager");
+            int object_manager = get_module("ObjectManager");
+            @syscall(0,0x15,0,global_manager,"zfTreeTransel",1);
+
+            int random_roll = @syscall(0,0x24,100) + 1;
+            int item_id;
+            if(random_roll == 100){
+                item_id = 0x2ee6;
+            }
+            else if(random_roll >= 90 && random_roll < 100){
+                item_id = 12000;
+            }
+            else{
+                item_id = 0x2ee3;
+            }
+
+            @syscall(0,0x15,5,dispos_manager,item_id);
+            int item_object = @syscall(0,0x15,4,object_manager,item_id);
+            int item_accessor = @syscall(0,0x15,1,object_manager,item_object);
+            @syscall(0,0x15,7,item_accessor,-1.01,205.92,-730.72);
+            @syscall(0,0x15,8,item_accessor,-1.01,205.92,-730.72);
+        }
+    }
+
+    end_event_script(param_1);
+    return;
+}

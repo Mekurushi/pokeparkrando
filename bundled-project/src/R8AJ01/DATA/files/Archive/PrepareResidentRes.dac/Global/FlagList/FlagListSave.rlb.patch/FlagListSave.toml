@@ -169,3 +169,17 @@ table = "FlagTable"
 flag_name = { value = "f0501BattleCounterNum" }
 bit_width = { value = 4 }
 
+[[edits]]
+table = "FlagTable"
+row = 53
+
+[edits.set]
+flag_name = { value = "f0501KakunaTree" }
+
+[[edits]]
+table = "FlagTable"
+row = 76
+
+[edits.set]
+flag_name = { value = "f0501MetapodTree" }
+

@@ -183,6 +183,18 @@ fn build_config() -> BuildConfig {
             BuildConfigValue::Integer(1),
         ),
         (
+            "HAUNTED_ZONE_MAIN_AREA_MANSION_GATE_ZONE".into(),
+            BuildConfigValue::Integer(5),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_MANSION_GATE_AREA".into(),
+            BuildConfigValue::Integer(2),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_MANSION_GATE_POSITION".into(),
+            BuildConfigValue::Integer(0),
+        ),
+        (
             "CAVERN_ZONE_MAIN_AREA_TREEHOUSE_CONNECTION_ZONE".into(),
             BuildConfigValue::Integer(2),
         ),
