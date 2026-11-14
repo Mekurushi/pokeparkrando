@@ -1,26 +1,200 @@
+extern int get_module(string name);
+extern int lock_npc_and_get_accessor(int object_id);
+extern int show_yes_no_question(int param_1, string dialog_id);
+extern int get_object_accessor(int param_1, int object_id, bool use_provided_object_id);
+extern void fade_in(int red, int green, int blue, int frames);
+extern void show_npc_dialog(int param_1, string dialog_id);
+extern void give_berries(int value);
+extern void complete_event();
+extern int lock_player_and_get_accessor();
+extern void face_player_and_npc(int object_id, int param_2);
+extern void end_event_script(int param_1);
+extern void friendship_banner(string banner_id);
+extern void set_bestfriend(int object_id);
+extern void store_pre_competition_state();
+extern int get_player_accessor();
+extern void drop_held_item_animation();
+extern void wait_frames(int frames);
+extern int run_power_competition(int player_object_id, int enemy_object_id);
+extern void despawn_player_object();
+extern void spawn_player_object();
+extern void respawn_field();
+extern void face_object_accessors_instantly(int player_accessor, int object_accessor, int immediate);
+extern void restore_pre_competition_state(int object_id);
+extern void play_sound_effect(int sound_id, int fade_in_frames);
+extern void fade_in_bgm(int frames);
+extern int ask_quiz_question(int param_1, string question_id, string answer_1_id, string answer_2_id, string answer_3_id, string correct_answer_id);
+extern int get_npc_state(int object_id);
+extern void show_npc_dialog_mode_0(int param_1, string dialog_id);
+extern void set_berry_counter_visible(bool visible);
+extern void choose_fast_travel_destination(int param_1, int object_id, int current_destination);
+extern void fade_out_audio(int frames, bool fade_channel_6, bool fade_channel_8, bool fade_channel_7);
+extern void fade_out_sound(int duration);
+extern void travel_to(int zone, int area, int position);
+extern int attraction_show_yes_no_question(int param_1, string dialog_id);
+extern void fade_out(int red, int green, int blue, int frames);
+extern void enter_attraction(int param_1, int attraction_id);
+extern void do_unlock_scenes(int param_1);
+extern void update_npc_story_state(int param_1);
+extern void despawn_debug_prisma(int object_id);
+extern void set_player_at(int x, int y, int z);
+extern void set_player_rotation(int x, int y, int z);
+extern void set_npc_state(int object_id, int state);
+extern void do_dialog_with_scene(int param_1, int object_id, string dialog_id, int scene_id);
+extern void reset_object_after_event(int object_id);
+extern void reset_camera();
+extern void clear_wand_check();
+extern void despawn_field();
+extern void spawn_object_if_missing(int object_id);
+extern void set_object_position(int object_id, int x, int y, int z);
+extern void face_object_towards_player_synchronously(int object_id, int smooth);
+extern void face_player_towards_object_synchronously(int object_id, int smooth);
+extern void spawn_for_short_duration(int object_id);
+extern void setup_player_for_zone();
+extern void set_object_rotation_instantly(int object_id, int x, int y, int z);
+extern void restore_player_control();
+
+config int BATTLE_COUNT;
+config int HAUNTED_ZONE_MAIN_AREA_TANGROWTH_ATTRACTION_ID;
+config int HAUNTED_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_ZONE;
+config int HAUNTED_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_AREA;
+config int HAUNTED_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_POSITION;
+config int HAUNTED_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL_ZONE;
+config int HAUNTED_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL_AREA;
+config int HAUNTED_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL_POSITION;
+config int HAUNTED_ZONE_MAIN_AREA_BEACH_DRIFBLIM_FAST_TRAVEL_ZONE;
+config int HAUNTED_ZONE_MAIN_AREA_BEACH_DRIFBLIM_FAST_TRAVEL_AREA;
+config int HAUNTED_ZONE_MAIN_AREA_BEACH_DRIFBLIM_FAST_TRAVEL_POSITION;
+config int HAUNTED_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL_ZONE;
+config int HAUNTED_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL_AREA;
+config int HAUNTED_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL_POSITION;
+config int HAUNTED_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL_ZONE;
+config int HAUNTED_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL_AREA;
+config int HAUNTED_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL_POSITION;
+config int HAUNTED_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL_ZONE;
+config int HAUNTED_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL_AREA;
+config int HAUNTED_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL_POSITION;
+config int HAUNTED_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL_ZONE;
+config int HAUNTED_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL_AREA;
+config int HAUNTED_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL_POSITION;
+config int HAUNTED_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_ZONE;
+config int HAUNTED_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_AREA;
+config int HAUNTED_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_POSITION;
+
+void special_spawn_conditions(int param_1){
+    const int CHATOT_OBJECT_ID = 0x150;
+
+    spawn_object_if_missing(CHATOT_OBJECT_ID);
+    set_object_position(CHATOT_OBJECT_ID,0x84,0xb7,-0x1bc);
+    set_object_rotation_instantly(CHATOT_OBJECT_ID,0,0x10f,0);
+    reset_object_after_event(CHATOT_OBJECT_ID);
+}
+
+void setup_field(int param_1){
+    lock_player_and_get_accessor();
+    setup_player_for_zone();
+    do_unlock_scenes(param_1);
+    special_spawn_conditions(param_1);
+    update_npc_story_state(param_1);
+}
+
+void A05_Z01_INIT(int param_1){
+    int event_script = get_module("EventScript");
+    @syscall(0,0x15,0x65,event_script,0,0,0,1);
+    despawn_debug_prisma(0x4e21);
+    setup_field(param_1);
+    fade_in(0,0,0,0x1e);
+    clear_wand_check();
+    end_event_script(param_1);
+}
+
+void RETURN_AT04(int param_1){
+    const int TANGROWTH_OBJECT_ID = 0x14e;
+
+    int event_script = get_module("EventScript");
+    int global_manager = get_module("GlobalManager");
+    @syscall(0,0x15,0x65,event_script,0,0,0,1);
+
+    setup_field(param_1);
+    despawn_debug_prisma(0x4e21);
+    despawn_player_object();
+    wait_frames(1);
+    spawn_player_object();
+    lock_player_and_get_accessor();
+    set_player_at(0x93,0xb9,-0x1dd);
+    set_player_rotation(0,0x6d,0);
+    @syscall(0,0x15,0xca,event_script,0);
+    set_npc_state(TANGROWTH_OBJECT_ID,4);
+
+    int has_tangrowth_prisma = @syscall(0,0x15,0x51,global_manager,3);
+    if(has_tangrowth_prisma == 1){
+        if(!is_location_checked(TANGROWTH_OBJECT_ID)){
+            tangrowth_friendship_scene(param_1);
+        }
+        else{
+            int tangrowth_accessor = lock_npc_and_get_accessor(TANGROWTH_OBJECT_ID);
+            face_player_and_npc(TANGROWTH_OBJECT_ID,0);
+            fade_in(0,0,0,0x1e);
+            wait_frames(0x3c);
+            @syscall(0,0x15,2,tangrowth_accessor,0x1b,10);
+            @syscall(0,0x15,0x28,tangrowth_accessor,0x1409,0,1.0,1.0);
+            do_dialog_with_scene(param_1,TANGROWTH_OBJECT_ID,"51_60073",0);
+            reset_object_after_event(TANGROWTH_OBJECT_ID);
+            reset_camera();
+            @syscall(0,0x15,0xca,event_script,0x1e);
+        }
+    }
+    else{
+        int tangrowth_accessor = lock_npc_and_get_accessor(TANGROWTH_OBJECT_ID);
+        face_player_and_npc(TANGROWTH_OBJECT_ID,0);
+        fade_in(0,0,0,0x1e);
+        wait_frames(0x3c);
+        @syscall(0,0x15,2,tangrowth_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,tangrowth_accessor,0x1409,0,1.0,1.0);
+        int attraction_clear_count = @syscall(0,0x15,0x61,global_manager,3);
+        if(attraction_clear_count < 1){
+            do_dialog_with_scene(param_1,TANGROWTH_OBJECT_ID,"51_60072",0);
+        }
+        else{
+            do_dialog_with_scene(param_1,TANGROWTH_OBJECT_ID,"51_60071",0);
+        }
+        reset_object_after_event(TANGROWTH_OBJECT_ID);
+        reset_camera();
+        @syscall(0,0x15,0xca,event_script,0x1e);
+    }
+
+    complete_event();
+    fade_in(0,0,0,0x1e);
+    reset_object_after_event(TANGROWTH_OBJECT_ID);
+    clear_wand_check();
+    end_event_script(param_1);
+}
+
 void meowth_dialog(int param_1){
     const int object_id = 0x139;
     // TODO: Meowth
 }
 
+// only meowth2 is used all other are permanently disabled to spawn and have no dialog, no clue for what they are used but I'll keep it for potential future use
 void meowth2_dialog(int param_1){
-    const int object_id = 0x13a;
-    // TODO: Meowth
+    quiz_dialog(param_1,0x13a,0x1085,0,"51_00290","51_10140","51_10150","51_10170","51_10190","51_10180");
 }
 
 void aipom_dialog(int param_1){
-    const int object_id = 0x13b;
-    // TODO: Aipom
+    power_competition_dialog(param_1,0x13b,0xa13,"51_00300","51_10240","51_10250","51_10270","51_10290","51_10280");
 }
 
 void ambipom_dialog(int param_1){
-    const int object_id = 0x13c;
-    // TODO: Ambipom
+    power_competition_dialog(param_1,0x13c,0xa04,"51_00310","51_10340","51_10350","51_10370","51_10390","51_10380");
 }
 
 void stunky_dialog(int param_1){
     const int object_id = 0x13d;
-    // TODO: Stunky
+    lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    show_npc_dialog(param_1,"51_10400");
+    end_event_script(param_1);
 }
 
 void meowth3_dialog(int param_1){
@@ -39,33 +213,83 @@ void meowth5_dialog(int param_1){
 }
 
 void raichu_dialog(int param_1){
-    const int object_id = 0x141;
-    // TODO: Raichu
+    power_competition_dialog(param_1,0x141,0x12fb,"51_00360","51_10840","51_10850","51_10870","51_10890","51_10880");
 }
 
 void drifloon_dialog(int param_1){
     const int object_id = 0x142;
-    // TODO: Drifloon
+    int global_manager = get_module("GlobalManager");
+    lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    @syscall(0,0x15,0x28,object_accessor,0xee1,0,1.0,1.0);
+    int has_rotom_prisma = @syscall(0,0x15,0x51,global_manager,0xc);
+    if(has_rotom_prisma == 1){
+        if(!is_location_checked(object_id)){
+            show_npc_dialog(param_1,"51_60110");
+            friendship_banner("51_00452");
+            check_location(object_id);
+        }
+        else{
+            show_npc_dialog(param_1,"51_60111");
+        }
+    }
+    else{
+        show_npc_dialog(param_1,"51_60100");
+    }
+    end_event_script(param_1);
 }
 
 void gliscor_dialog(int param_1){
-    const int object_id = 0x143;
-    // TODO: Gliscor
+    power_competition_dialog(param_1,0x143,0x11cf,"51_00370","51_11040","51_11050","51_11070","51_11090","51_11080");
 }
 
 void murkrow_dialog(int param_1){
-    const int object_id = 0x144;
-    // TODO: Murkrow
+    power_competition_dialog(param_1,0x144,0xb4e,"51_00380","51_11140","51_11150","51_11170","51_11190","51_11180");
 }
 
 void kakuna_dialog(int param_1){
     const int object_id = 0x145;
-    // TODO: Kakuna
+    int global_manager = get_module("GlobalManager");
+    lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    @syscall(0,0x15,0x28,object_accessor,0xc11,0,1.0,1.0);
+    int has_rotom_prisma = @syscall(0,0x15,0x51,global_manager,0xc);
+    if(has_rotom_prisma == 1){
+        if(!is_location_checked(object_id)){
+            show_npc_dialog(param_1,"51_11290");
+            check_location(object_id);
+            friendship_banner("51_00453");
+        }
+        show_npc_dialog(param_1,"51_11201");
+    }
+    else{
+        show_npc_dialog(param_1,"51_11200");
+    }
+    end_event_script(param_1);
 }
 
 void metapod_dialog(int param_1){
     const int object_id = 0x146;
-    // TODO: Metapod
+    int global_manager = get_module("GlobalManager");
+    lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    @syscall(0,0x15,0x28,object_accessor,0x1067,0,1.0,1.0);
+    int has_rotom_prisma = @syscall(0,0x15,0x51,global_manager,0xc);
+    if(has_rotom_prisma == 1){
+        if(!is_location_checked(object_id)){
+            show_npc_dialog(param_1,"51_11390");
+            check_location(object_id);
+            friendship_banner("51_00454");
+        }
+        show_npc_dialog(param_1,"51_11301");
+    }
+    else{
+        show_npc_dialog(param_1,"51_11300");
+    }
+    end_event_script(param_1);
 }
 
 void meowth6_dialog(int param_1){
@@ -94,31 +318,776 @@ void meowth10_dialog(int param_1){
 }
 
 void riolu_dialog(int param_1){
-    const int object_id = 0x14c;
-    // TODO: Riolu
+    power_competition_dialog(param_1,0x14c,0xa31,"51_00430","51_11940","51_11950","51_11970","51_11990","51_11980");
 }
 
 void honchkrow_dialog(int param_1){
-    const int object_id = 0x14d;
-    // TODO: Honchkrow
+    power_competition_dialog(param_1,0x14d,0x11fc,"51_00440","51_12040","51_12050","51_12070","51_12090","51_12080");
 }
 
 void tangrowth_dialog(int param_1){
-    const int object_id = 0x14e;
-    // TODO: Tangrowth
+    const int TANGROWTH_OBJECT_ID = 0x14e;
+    const int ATTRACTION_FEE = 30;
+
+    int global_manager = get_module("GlobalManager");
+    int player_accessor = lock_player_and_get_accessor();
+    int tangrowth_accessor = lock_npc_and_get_accessor(TANGROWTH_OBJECT_ID);
+    face_player_and_npc(TANGROWTH_OBJECT_ID,0);
+    @syscall(0,0x15,2,tangrowth_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,tangrowth_accessor,0x1409,0,1.0,1.0);
+    show_npc_dialog(param_1,"51_60020");
+
+    set_berry_counter_visible(true);
+    int wants_to_enter = attraction_show_yes_no_question(param_1,"51_60040");
+    if(wants_to_enter == 1){
+        int berry_count = @syscall(0,0x15,0x15,global_manager);
+        if(berry_count < ATTRACTION_FEE){
+            @syscall(0,0x15,2,tangrowth_accessor,0x1b,10);
+            @syscall(0,0x15,0x28,tangrowth_accessor,0x1409,0,1.0,1.0);
+            show_npc_dialog(param_1,"51_60070");
+        }
+        else{
+            @syscall(0,0x15,2,tangrowth_accessor,0x1c,10);
+            @syscall(0,0x15,0x28,tangrowth_accessor,0x1409,0,1.0,1.0);
+            @syscall(0,0x15,0x14,global_manager,-ATTRACTION_FEE);
+            show_npc_dialog(param_1,"51_60060");
+            @syscall(0,0x15,0,global_manager,"fRetAttraction",4);
+            set_berry_counter_visible(false);
+            fade_out(0,0,0,0x1e);
+            @syscall(0,0x15,0,player_accessor,0);
+            enter_attraction(param_1,HAUNTED_ZONE_MAIN_AREA_TANGROWTH_ATTRACTION_ID);
+        }
+    }
+    else{
+        @syscall(0,0x15,2,tangrowth_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,tangrowth_accessor,0x1409,0,1.0,1.0);
+        show_npc_dialog(param_1,"51_60050");
+    }
+
+    set_berry_counter_visible(false);
+    end_event_script(param_1);
+}
+
+void tangrowth_friendship_scene(int param_1){
+    const int TANGROWTH_OBJECT_ID = 0x14e;
+
+    int event_script = get_module("EventScript");
+    lock_player_and_get_accessor();
+    set_npc_state(TANGROWTH_OBJECT_ID,4);
+    despawn_player_object();
+    despawn_field();
+    spawn_player_object();
+    lock_player_and_get_accessor();
+    spawn_object_if_missing(TANGROWTH_OBJECT_ID);
+    int tangrowth_accessor = lock_npc_and_get_accessor(TANGROWTH_OBJECT_ID);
+    set_player_at(0x93,0xb9,-0x1da);
+    set_player_rotation(0,0x83,0);
+    @syscall(0,0x15,7,tangrowth_accessor,161.21,185.25,-485.37);
+    @syscall(0,0x15,8,tangrowth_accessor,161.21,185.25,-485.37);
+    @syscall(0,0x15,0x22,tangrowth_accessor,161.21,185.25,-485.37,1);
+    face_object_towards_player_synchronously(TANGROWTH_OBJECT_ID,0);
+    face_player_towards_object_synchronously(TANGROWTH_OBJECT_ID,0);
+
+    vec3 camera_position = vec3{
+        .x = 134.71,
+        .y = 191.5,
+        .z = -440.03
+    };
+    vec3 camera_target = vec3{
+        .x = 149.87,
+        .y = 196.58,
+        .z = -466.85
+    };
+    @syscall(0,0x15,0xcb,event_script);
+    @syscall(0,0x15,0xcc,event_script,-1,&camera_position);
+    @syscall(0,0x15,0xcd,event_script,-1,&camera_target);
+
+    fade_in(0,0,0,0x1e);
+    wait_frames(0x1e);
+    @syscall(0,0x15,2,tangrowth_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,tangrowth_accessor,0x1409,0,1.0,1.0);
+    do_dialog_with_scene(param_1,TANGROWTH_OBJECT_ID,"51_60000",0);
+
+    spawn_for_short_duration(0x4e21);
+    wait_frames(0x6e);
+    play_sound_effect(0x7ea,0);
+    int field_info = get_module("mnFieldInfo");
+    @syscall(0,0x15,0x11,field_info,1,"51_60001");
+    wait_frames(0xb4);
+    @syscall(0,0x15,0x12,field_info);
+    wait_frames(0x1e);
+
+    @syscall(0,0x15,2,tangrowth_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,tangrowth_accessor,0x1409,0,1.0,1.0);
+    do_dialog_with_scene(param_1,TANGROWTH_OBJECT_ID,"51_60002",0);
+    friendship_banner("51_00450");
+    check_location(TANGROWTH_OBJECT_ID);
+
+    fade_out(0,0,0,0x1e);
+    reset_object_after_event(TANGROWTH_OBJECT_ID);
+    @syscall(0,0x15,0xca,event_script,0);
+    respawn_field();
+    wait_frames(0x1e);
+    fade_in(0,0,0,0x1e);
+    reset_camera();
 }
 
 void drifblim_dialog(int param_1){
     const int object_id = 0x14f;
-    // TODO: Drifblim
+    int player_accessor = lock_player_and_get_accessor();
+    int event_script = get_module("EventScript");
+    int global_manager = get_module("GlobalManager");
+    int field_info = get_module("mnFieldInfo");
+
+    drop_held_item_animation();
+    @syscall(0,0x15,0,global_manager,"rfFuwarideTaxi",0);
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+
+    int service_count = @syscall(0,0x15,1,global_manager,"fFuwarideService");
+    int service_dialog_state = @syscall(0,0x15,1,global_manager,"fTalkFuwarideService");
+    if(service_count == 3 && service_dialog_state == 0){
+        @syscall(0,0x15,2,object_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
+        show_npc_dialog_mode_0(param_1,"02_80151");
+        @syscall(0,0x15,0,global_manager,"fTalkFuwarideService",1);
+        @syscall(0,0x15,2,player_accessor,0x4c,5);
+        play_sound_effect(0x7fa,0);
+        @syscall(0,0x15,0x11,field_info,0,"02_80153");
+        wait_frames(180);
+        @syscall(0,0x15,0x12,field_info);
+        check_location(object_id);
+    }
+
+    service_dialog_state = @syscall(0,0x15,1,global_manager,"fTalkFuwarideService");
+    if(service_count == 10 && service_dialog_state == 1){
+        @syscall(0,0x15,2,object_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
+        show_npc_dialog_mode_0(param_1,"02_80152");
+        @syscall(0,0x15,0,global_manager,"fTalkFuwarideService",2);
+    }
+
+    @syscall(0,0x15,2,object_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
+
+    int berry_cost = 0;
+    if(service_count >= 0){
+        if(service_count < 3){
+            set_berry_counter_visible(true);
+            show_npc_dialog_mode_0(param_1,"02_80110");
+            berry_cost = 20;
+        }
+        else if(service_count < 10){
+            set_berry_counter_visible(true);
+            show_npc_dialog_mode_0(param_1,"02_80111");
+            berry_cost = 10;
+        }
+        else{
+            show_npc_dialog_mode_0(param_1,"02_80112");
+        }
+    }
+    else{
+        show_npc_dialog_mode_0(param_1,"02_80112");
+    }
+
+    @syscall(0,0x15,2,object_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
+    int berry_count = @syscall(0,0x15,0x15,global_manager);
+    if(berry_count < berry_cost){
+        show_npc_dialog_mode_0(param_1,"02_80120");
+        set_berry_counter_visible(false);
+    }
+    else{
+        choose_fast_travel_destination(param_1,object_id,0x33);
+        int destination = @syscall(0,0x15,1,global_manager,"rfFuwarideTaxi");
+
+        @syscall(0,0x15,2,object_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,object_accessor,0xef0,0,1.0,1.0);
+        if(destination == 99){
+            show_npc_dialog_mode_0(param_1,"02_80140");
+            set_berry_counter_visible(false);
+        }
+        else{
+            @syscall(0,0x15,0x14,global_manager,-berry_cost);
+            show_npc_dialog_mode_0(param_1,"02_80150");
+            set_berry_counter_visible(false);
+            @syscall(0,0x15,0,global_manager,"fFuwarideService",service_count + 1);
+            drop_held_item_animation();
+            fade_out_audio(30,false,false,false);
+            @syscall(0,0x15,4,event_script,0,1);
+        }
+    }
+
+    end_event_script(param_1);
 }
 
 void chatot_dialog(int param_1){
     const int object_id = 0x150;
-    // TODO: Chatot
+    lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    @syscall(0,0x15,2,object_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,object_accessor,0x96e,0,1.0,1.0);
+    show_npc_dialog_mode_0(param_1,"02_70610");
+    // TODO: hint system or similiar
+    end_event_script(param_1);
 }
 
 void electrode_dialog(int param_1){
-    const int object_id = 0x151;
-    // TODO: Electrode
+    const int ELECTRODE_OBJECT_ID = 0x151;
+
+    lock_player_and_get_accessor();
+    int electrode_accessor = lock_npc_and_get_accessor(ELECTRODE_OBJECT_ID);
+    face_player_and_npc(ELECTRODE_OBJECT_ID,0);
+
+    int npc_state = get_npc_state(ELECTRODE_OBJECT_ID);
+    if(npc_state == 0){
+        @syscall(0,0x15,0x28,electrode_accessor,0xed2,0,1.0,1.0);
+        show_npc_dialog(param_1,"51_12100");
+    }
+    else if(npc_state == 1){
+        @syscall(0,0x15,0x28,electrode_accessor,0xed3,0,1.0,1.0);
+        show_npc_dialog(param_1,"51_12110");
+    }
+    else if(npc_state == 2){
+        @syscall(0,0x15,0x28,electrode_accessor,0xed4,0,1.0,1.0);
+        show_npc_dialog(param_1,"51_12120");
+    }
+    else if(npc_state == 3){
+        show_npc_dialog(param_1,"51_10130");
+    }
+    else{
+        show_npc_dialog(param_1,"51_10100");
+    }
+
+    end_event_script(param_1);
+}
+
+void power_competition_dialog(
+    int param_1,
+    int object_id,
+    int sound_id,
+    string friendship_banner_id,
+    string question_dialog_id,
+    string decline_dialog_id,
+    string loss_dialog_id,
+    string first_win_dialog_id,
+    string repeat_win_dialog_id
+){
+    lock_player_and_get_accessor();
+    lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    int response = show_yes_no_question(param_1,question_dialog_id);
+    if(response == 1){
+        int has_won = start_power_competition(param_1,0,object_id);
+        special_spawn_conditions(param_1);
+        int object_accessor = get_object_accessor(param_1,object_id,true);
+        fade_in(0,0,0,0x3c);
+        @syscall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
+        if(has_won == -1){
+            show_npc_dialog(param_1,loss_dialog_id);
+        }
+        else{
+            give_berries(has_won);
+            if(is_location_checked(object_id) == false){
+                show_npc_dialog(param_1,first_win_dialog_id);
+                friendship_banner(friendship_banner_id);
+                check_location(object_id);
+            }
+            else{
+                show_npc_dialog(param_1,repeat_win_dialog_id);
+            }
+        }
+        complete_event();
+    }
+    else{
+        show_npc_dialog(param_1,decline_dialog_id);
+    }
+    end_event_script(param_1);
+}
+
+int start_power_competition(int param_1, int player_object_id, int enemy_object_id){
+    store_pre_competition_state();
+    int global_manager = get_module("GlobalManager");
+    int event_script = get_module("EventScript");
+    int dispos_manager = get_module("DisposManager");
+    int object_accessor = get_object_accessor(param_1,enemy_object_id,true);
+    int player_event_accessor = get_player_accessor();
+    vec3 object_position = vec3{.x = 0.0,.y = 0.0,.z = 0.0};
+    vec3 player_position = vec3{.x = 0.0,.y = 0.0,.z = 0.0};
+    drop_held_item_animation();
+    @syscall(0,0x15,0x13,object_accessor,&object_position);
+    @syscall(0,0x15,0x13,player_event_accessor,&player_position);
+    @syscall(0,0x15,0xca,event_script,0x1e);
+    wait_frames(0x1e);
+    int dispos_id = @syscall(0,0x15,0xc,dispos_manager,enemy_object_id);
+    int result = run_power_competition(player_object_id,enemy_object_id);
+    if(result == -1){
+        reset_win_counter();
+    }
+    else{
+        @syscall(0,0x15,0x93,global_manager,dispos_id);
+        increment_win_counter();
+    }
+    despawn_player_object();
+    spawn_player_object();
+    int player_accessor = lock_player_and_get_accessor();
+    @syscall(0,0x15,7,player_accessor,player_position.x,player_position.y,player_position.z);
+    @syscall(0,0x15,8,player_accessor,player_position.x,player_position.y,player_position.z);
+    @syscall(0,0x15,0x22,player_accessor,player_position.x,player_position.y,player_position.z,1);
+    int player_state = @syscall(0,0x15,0x30,player_accessor);
+    if(player_state == 0){
+        @syscall(0,0x15,2,player_accessor,0,0);
+    }
+    @syscall(0,0x15,0,player_accessor,0);
+    @syscall(0,0x15,0x8e,global_manager,dispos_id);
+    respawn_field();
+    lock_npc_and_get_accessor(enemy_object_id);
+    object_accessor = get_object_accessor(param_1,enemy_object_id,true);
+    @syscall(0,0x15,7,object_accessor,object_position.x,object_position.y,object_position.z);
+    @syscall(0,0x15,8,object_accessor,object_position.x,object_position.y,object_position.z);
+    @syscall(0,0x15,0x22,object_accessor,object_position.x,object_position.y,object_position.z,1);
+    int object_state = @syscall(0,0x15,0x10,dispos_manager,enemy_object_id);
+    if(object_state == 0){
+        @syscall(0,0x15,0x2a,object_accessor,5);
+    }
+    else{
+        @syscall(0,0x15,0x2a,object_accessor,10);
+        @syscall(0,0x15,0x2b,object_accessor,4);
+    }
+    face_object_accessors_instantly(player_accessor,object_accessor,1);
+    @syscall(0,0x15,0xca,event_script,-1);
+    @syscall(0,0x15,0xd7,event_script,enemy_object_id);
+    restore_pre_competition_state(enemy_object_id);
+    return result;
+}
+
+void reset_win_counter(){
+    int global_manager = get_module("GlobalManager");
+    @syscall(0,0x15,0,global_manager,"zfPowerComp",0);
+    @syscall(0,0x15,0,global_manager,"f0501BattleCounterNum",0);
+}
+
+void increment_win_counter(){
+    int global_manager = get_module("GlobalManager");
+    int counter_num = @syscall(0,0x15,1,global_manager,"f0501BattleCounterNum");
+    int increased_counter = counter_num + 1;
+    @syscall(0,0x15,0,global_manager,"f0501BattleCounterNum",increased_counter);
+    if(increased_counter >= BATTLE_COUNT){
+        @syscall(0,0x15,0,global_manager,"f0501BattleCounter",1);
+    }
+}
+
+bool is_bestfriend(int object_id){
+    int global_manager = get_module("GlobalManager");
+    int dispos_manager = get_module("DisposManager");
+    int friendship_id = @syscall(0,0x15,0xe,dispos_manager,object_id);
+    return @syscall(0,0x15,0x4b,global_manager,friendship_id) == 1;
+}
+
+bool is_location_checked(int object_id){
+    return is_bestfriend(object_id);
+}
+
+void check_location(int object_id){
+    set_bestfriend(object_id);
+}
+
+const int QUIZ_DIALOG_INTRO = 0;
+const int QUIZ_DIALOG_ROUND_INTRO = 1;
+const int QUIZ_DIALOG_CORRECT = 2;
+const int QUIZ_DIALOG_WRONG = 3;
+
+void quiz_dialog(
+    int param_1,
+    int object_id,
+    int sound_id,
+    int quiz_id,
+    string friendship_banner_id,
+    string question_dialog_id,
+    string decline_dialog_id,
+    string loss_dialog_id,
+    string first_win_dialog_id,
+    string repeat_win_dialog_id
+){
+    int player_accessor = lock_player_and_get_accessor();
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    int response = show_yes_no_question(param_1,question_dialog_id);
+    if(response == 1){
+        int has_won = start_quiz(param_1,object_id,quiz_id,player_accessor);
+        @syscall(0,0x15,0x28,object_accessor,sound_id,0,1.0,1.0);
+        if(has_won == -1){
+            reset_win_counter();
+            play_sound_effect(0x803,0);
+            show_npc_dialog(param_1,loss_dialog_id);
+            fade_in_bgm(0x1e);
+        }
+        else{
+            increment_win_counter();
+            give_berries(20);
+            play_sound_effect(0x802,0);
+            @syscall(0,0x15,2,player_accessor,0x4e,5);
+            if(is_location_checked(object_id) == false){
+                show_npc_dialog(param_1,first_win_dialog_id);
+                fade_in_bgm(0x1e);
+                check_location(object_id);
+                @syscall(0,0x15,1,player_accessor,0x4c);
+                friendship_banner(friendship_banner_id);
+            }
+            else{
+                show_npc_dialog(param_1,repeat_win_dialog_id);
+                fade_in_bgm(0x1e);
+            }
+            @syscall(0,0x15,2,player_accessor,0,5);
+            int global_manager = get_module("GlobalManager");
+            @syscall(0,0x15,0x93,global_manager,5);
+        }
+        int sound_manager = get_module("SoundManager");
+        @syscall(0,0x15,0x16,sound_manager,0xc,1.0);
+        wait_frames(10);
+        complete_event();
+    }
+    else{
+        show_npc_dialog(param_1,decline_dialog_id);
+    }
+    end_event_script(param_1);
+}
+
+int start_quiz(int param_1, int object_id, int quiz_id, int player_accessor){
+    int global_manager = get_module("GlobalManager");
+    int event_script = get_module("EventScript");
+    int sound_manager = get_module("SoundManager");
+    @syscall(0,0x15,0x8e,global_manager,5);
+    drop_held_item_animation();
+    @syscall(0,0x15,0x192,event_script,10);
+    wait_frames(10);
+    @syscall(0,0x15,0x16,sound_manager,0xc,0);
+    play_sound_effect(0x1832,0x1e);
+    show_npc_dialog(param_1,get_quiz_dialog_id(quiz_id,QUIZ_DIALOG_INTRO,0));
+    show_npc_dialog(param_1,get_quiz_dialog_id(quiz_id,QUIZ_DIALOG_INTRO,1));
+    int object_accessor = get_object_accessor(param_1,object_id,true);
+    for(int round = 0; round < 3; round = round + 1){
+        int question = @syscall(0,0x24,4);
+        if(ask_and_handle_quiz_question(
+               param_1,object_accessor,player_accessor,get_quiz_question_id(quiz_id,round,question,0),
+               get_quiz_question_id(quiz_id,round,question,1),get_quiz_question_id(quiz_id,round,question,2),
+               get_quiz_question_id(quiz_id,round,question,3),get_quiz_question_id(quiz_id,round,question,4),
+               get_quiz_dialog_id(quiz_id,QUIZ_DIALOG_CORRECT,0),
+               get_quiz_dialog_id(quiz_id,QUIZ_DIALOG_WRONG,0)) != 1){
+            @syscall(0,0x15,0x1f5,event_script,0x1832,10);
+            wait_frames(10);
+            return -1;
+        }
+        if(round < 2){
+            show_npc_dialog(param_1,get_quiz_dialog_id(quiz_id,QUIZ_DIALOG_ROUND_INTRO,round));
+        }
+    }
+    @syscall(0,0x15,0x1f5,event_script,0x1832,10);
+    wait_frames(10);
+    return 1;
+}
+
+int ask_and_handle_quiz_question(
+    int param_1,
+    int object_accessor,
+    int player_accessor,
+    string question_id,
+    string answer_1_id,
+    string answer_2_id,
+    string answer_3_id,
+    string correct_answer_id,
+    string correct_dialog_id,
+    string wrong_dialog_id
+){
+    int result = ask_quiz_question(param_1,question_id,answer_1_id,answer_2_id,answer_3_id,correct_answer_id);
+    if(result == 1){
+        play_sound_effect(0x499,0);
+        @syscall(0,0x15,2,object_accessor,0x20,10);
+        show_npc_dialog(param_1,correct_dialog_id);
+        return 1;
+    }
+    play_sound_effect(0x62,0);
+    @syscall(0,0x15,2,object_accessor,0x21,10);
+    @syscall(0,0x15,2,player_accessor,0x51,5);
+    show_npc_dialog(param_1,wrong_dialog_id);
+    show_npc_dialog(param_1,correct_answer_id);
+    return -1;
+}
+
+string get_quiz_question_id(int quiz_id, int round, int question, int field){
+    if(round == 0){
+        if(question == 0){
+            if(field == 0){
+                return "51_50000";
+            }
+            if(field == 1){
+                return "51_50010";
+            }
+            if(field == 2){
+                return "51_50020";
+            }
+            if(field == 3){
+                return "51_50030";
+            }
+            return "51_50040";
+        }
+        if(question == 1){
+            if(field == 0){
+                return "51_50050";
+            }
+            if(field == 1){
+                return "51_50060";
+            }
+            if(field == 2){
+                return "51_50070";
+            }
+            if(field == 3){
+                return "51_50080";
+            }
+            return "51_50090";
+        }
+        if(question == 2){
+            if(field == 0){
+                return "51_50100";
+            }
+            if(field == 1){
+                return "51_50110";
+            }
+            if(field == 2){
+                return "51_50120";
+            }
+            if(field == 3){
+                return "51_50130";
+            }
+            return "51_50140";
+        }
+        if(field == 0){
+            return "51_50150";
+        }
+        if(field == 1){
+            return "51_50160";
+        }
+        if(field == 2){
+            return "51_50170";
+        }
+        if(field == 3){
+            return "51_50180";
+        }
+        return "51_50190";
+    }
+    if(round == 1){
+        if(question == 0){
+            if(field == 0){
+                return "51_50200";
+            }
+            if(field == 1){
+                return "51_50210";
+            }
+            if(field == 2){
+                return "51_50220";
+            }
+            if(field == 3){
+                return "51_50230";
+            }
+            return "51_50240";
+        }
+        if(question == 1){
+            if(field == 0){
+                return "51_50250";
+            }
+            if(field == 1){
+                return "51_50260";
+            }
+            if(field == 2){
+                return "51_50270";
+            }
+            if(field == 3){
+                return "51_50280";
+            }
+            return "51_50290";
+        }
+        if(question == 2){
+            if(field == 0){
+                return "51_50300";
+            }
+            if(field == 1){
+                return "51_50310";
+            }
+            if(field == 2){
+                return "51_50320";
+            }
+            if(field == 3){
+                return "51_50330";
+            }
+            return "51_50340";
+        }
+        if(field == 0){
+            return "51_50350";
+        }
+        if(field == 1){
+            return "51_50360";
+        }
+        if(field == 2){
+            return "51_50370";
+        }
+        if(field == 3){
+            return "51_50380";
+        }
+        return "51_50390";
+    }
+    if(question == 0){
+        if(field == 0){
+            return "51_50400";
+        }
+        if(field == 1){
+            return "51_50410";
+        }
+        if(field == 2){
+            return "51_50420";
+        }
+        if(field == 3){
+            return "51_50430";
+        }
+        return "51_50440";
+    }
+    if(question == 1){
+        if(field == 0){
+            return "51_50450";
+        }
+        if(field == 1){
+            return "51_50460";
+        }
+        if(field == 2){
+            return "51_50470";
+        }
+        if(field == 3){
+            return "51_50480";
+        }
+        return "51_50490";
+    }
+    if(question == 2){
+        if(field == 0){
+            return "51_50500";
+        }
+        if(field == 1){
+            return "51_50510";
+        }
+        if(field == 2){
+            return "51_50520";
+        }
+        if(field == 3){
+            return "51_50530";
+        }
+        return "51_50540";
+    }
+    if(field == 0){
+        return "51_50550";
+    }
+    if(field == 1){
+        return "51_50560";
+    }
+    if(field == 2){
+        return "51_50570";
+    }
+    if(field == 3){
+        return "51_50580";
+    }
+    return "51_50590";
+}
+
+string get_quiz_dialog_id(int quiz_id, int kind, int index){
+    if(kind == QUIZ_DIALOG_INTRO){
+        if(index == 0){
+            return "51_10160";
+        }
+        return "51_10191";
+    }
+    if(kind == QUIZ_DIALOG_ROUND_INTRO){
+        if(index == 0){
+            return "51_10192";
+        }
+        return "51_10193";
+    }
+    if(kind == QUIZ_DIALOG_CORRECT){
+        return "51_10195";
+    }
+    return "51_10196";
+}
+
+void STAXIAREA(int param_1){
+    int global_manager = get_module("GlobalManager");
+    int event_script = get_module("EventScript");
+    int sound_manager = get_module("SoundManager");
+
+    @syscall(0,0x15,100,event_script,0,0,0,0x3c);
+    int destination = @syscall(0,0x15,1,global_manager,"rfFuwarideTaxi");
+    @syscall(0,0x15,0x16,sound_manager,6,1.0);
+    @syscall(0,0x15,0x16,sound_manager,8,1.0);
+    @syscall(0,0x15,0x16,sound_manager,7,1.0);
+    fade_out_sound(15);
+    @syscall(0,0x15,400,event_script,3,0);
+
+    if(destination == 0xb){
+        travel_to(
+            HAUNTED_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_ZONE,
+            HAUNTED_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_AREA,
+            HAUNTED_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_POSITION
+        );
+    }
+    else if(destination == 0x15){
+        travel_to(
+            HAUNTED_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL_ZONE,
+            HAUNTED_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL_AREA,
+            HAUNTED_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL_POSITION
+        );
+    }
+    else if(destination == 0x1f){
+        travel_to(
+            HAUNTED_ZONE_MAIN_AREA_BEACH_DRIFBLIM_FAST_TRAVEL_ZONE,
+            HAUNTED_ZONE_MAIN_AREA_BEACH_DRIFBLIM_FAST_TRAVEL_AREA,
+            HAUNTED_ZONE_MAIN_AREA_BEACH_DRIFBLIM_FAST_TRAVEL_POSITION
+        );
+    }
+    else if(destination == 0x20){
+        travel_to(
+            HAUNTED_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL_ZONE,
+            HAUNTED_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL_AREA,
+            HAUNTED_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL_POSITION
+        );
+    }
+    else if(destination == 0x29){
+        travel_to(
+            HAUNTED_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL_ZONE,
+            HAUNTED_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL_AREA,
+            HAUNTED_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL_POSITION
+        );
+    }
+    else if(destination == 0x2a){
+        travel_to(
+            HAUNTED_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL_ZONE,
+            HAUNTED_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL_AREA,
+            HAUNTED_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL_POSITION
+        );
+    }
+    else if(destination == 0x33){
+        travel_to(5,1,2);
+    }
+    else if(destination == 0x34){
+        travel_to(5,2,0);
+    }
+    else if(destination == 0x3d){
+        travel_to(
+            HAUNTED_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL_ZONE,
+            HAUNTED_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL_AREA,
+            HAUNTED_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL_POSITION
+        );
+    }
+    else if(destination == 0x3e){
+        travel_to(
+            HAUNTED_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_ZONE,
+            HAUNTED_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_AREA,
+            HAUNTED_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_POSITION
+        );
+    }
 }

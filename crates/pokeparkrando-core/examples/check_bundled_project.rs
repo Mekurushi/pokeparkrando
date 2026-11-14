@@ -340,6 +340,10 @@ fn build_config() -> BuildConfig {
             BuildConfigValue::Integer(0xb),
         ),
         (
+            "HAUNTED_ZONE_MAIN_AREA_TANGROWTH_ATTRACTION_ID".into(),
+            BuildConfigValue::Integer(0x3),
+        ),
+        (
             "MAGMA_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_ZONE".into(),
             BuildConfigValue::Integer(1),
         ),
@@ -913,6 +917,102 @@ fn build_config() -> BuildConfig {
         ),
         (
             "CAVERN_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_POSITION".into(),
+            BuildConfigValue::Integer(1),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_ZONE".into(),
+            BuildConfigValue::Integer(1),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_AREA".into(),
+            BuildConfigValue::Integer(1),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_POSITION".into(),
+            BuildConfigValue::Integer(3),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL_ZONE".into(),
+            BuildConfigValue::Integer(2),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL_AREA".into(),
+            BuildConfigValue::Integer(1),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_TREEHOUSE_DRIFBLIM_FAST_TRAVEL_POSITION".into(),
+            BuildConfigValue::Integer(5),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_BEACH_DRIFBLIM_FAST_TRAVEL_ZONE".into(),
+            BuildConfigValue::Integer(3),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_BEACH_DRIFBLIM_FAST_TRAVEL_AREA".into(),
+            BuildConfigValue::Integer(1),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_BEACH_DRIFBLIM_FAST_TRAVEL_POSITION".into(),
+            BuildConfigValue::Integer(2),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL_ZONE".into(),
+            BuildConfigValue::Integer(3),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL_AREA".into(),
+            BuildConfigValue::Integer(2),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_ICE_DRIFBLIM_FAST_TRAVEL_POSITION".into(),
+            BuildConfigValue::Integer(2),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL_ZONE".into(),
+            BuildConfigValue::Integer(4),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL_AREA".into(),
+            BuildConfigValue::Integer(1),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_CAVERN_DRIFBLIM_FAST_TRAVEL_POSITION".into(),
+            BuildConfigValue::Integer(2),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL_ZONE".into(),
+            BuildConfigValue::Integer(4),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL_AREA".into(),
+            BuildConfigValue::Integer(2),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_MAGMA_DRIFBLIM_FAST_TRAVEL_POSITION".into(),
+            BuildConfigValue::Integer(2),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL_ZONE".into(),
+            BuildConfigValue::Integer(6),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL_AREA".into(),
+            BuildConfigValue::Integer(1),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_GRANITE_DRIFBLIM_FAST_TRAVEL_POSITION".into(),
+            BuildConfigValue::Integer(2),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_ZONE".into(),
+            BuildConfigValue::Integer(6),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_AREA".into(),
+            BuildConfigValue::Integer(2),
+        ),
+        (
+            "HAUNTED_ZONE_MAIN_AREA_FLOWER_DRIFBLIM_FAST_TRAVEL_POSITION".into(),
             BuildConfigValue::Integer(1),
         ),
     ])
