@@ -1,0 +1,204 @@
+void duskull_dialog(int param_1){
+    const int object_id = 0x16c;
+    // TODO: Duskull
+}
+
+void stunky_dialog(int param_1){
+    const int object_id = 0x16d;
+    // TODO: Stunky
+}
+
+void voltorb_dialog(int param_1){
+    const int object_id = 0x16e;
+    // TODO: Voltorb
+}
+
+void misdreavus_dialog(int param_1){
+    const int object_id = 0x16f;
+    // TODO: Misdreavus
+}
+
+void gastly_dialog(int param_1){
+    const int object_id = 0x170;
+    // TODO: Gastly
+}
+
+void duskull2_dialog(int param_1){
+    const int object_id = 0x171;
+    // TODO: Duskull
+}
+
+void elekid_dialog(int param_1){
+    const int object_id = 0x172;
+    // TODO: Elekid
+}
+
+void abra_dialog(int param_1){
+    const int object_id = 0x173;
+    // TODO: Abra
+}
+
+void haunter_dialog(int param_1){
+    const int object_id = 0x174;
+    // TODO: Haunter
+}
+
+void pichu_dialog(int param_1){
+    const int object_id = 0x175;
+    // TODO: Pichu
+}
+
+void pichu2_dialog(int param_1){
+    const int object_id = 0x176;
+    // TODO: Pichu
+}
+
+void spinarak_dialog(int param_1){
+    const int object_id = 0x177;
+    // TODO: Spinarak
+}
+
+void electrode_dialog(int param_1){
+    const int object_id = 0x178;
+    // TODO: Electrode
+}
+
+void umbreon_dialog(int param_1){
+    const int object_id = 0x179;
+    // TODO: Umbreon
+}
+
+void drifloon_dialog(int param_1){
+    const int object_id = 0x17a;
+    // TODO: Drifloon
+}
+
+void skuntank_dialog(int param_1){
+    const int object_id = 0x17b;
+    // TODO: Skuntank
+}
+
+void mismagius_dialog(int param_1){
+    const int object_id = 0x17c;
+    // TODO: Mismagius
+}
+
+void luxray_dialog(int param_1){
+    const int object_id = 0x17d;
+    // TODO: Luxray
+}
+
+void espeon_dialog(int param_1){
+    const int object_id = 0x17e;
+    // TODO: Espeon
+}
+
+void gengar_dialog(int param_1){
+    const int object_id = 0x17f;
+    // TODO: Gengar
+}
+
+void sableye_dialog(int param_1){
+    const int object_id = 0x180;
+    // TODO: Sableye
+}
+
+void dusknoir_dialog(int param_1){
+    const int object_id = 0x181;
+    // TODO: Dusknoir
+}
+
+void darkrai_dialog(int param_1){
+    const int object_id = 0x182;
+    // TODO: Darkrai
+}
+
+void chatot_dialog(int param_1){
+    const int object_id = 0x183;
+    // TODO: Chatot
+}
+
+void riolu_dialog(int param_1){
+    const int object_id = 0x184;
+    // TODO: Riolu
+}
+
+void breloom_dialog(int param_1){
+    const int object_id = 0x185;
+    // TODO: Breloom
+}
+
+void electabuzz_dialog(int param_1){
+    const int object_id = 0x186;
+    // TODO: Electabuzz
+}
+
+void gastly2_dialog(int param_1){
+    const int object_id = 0x187;
+    // TODO: Gastly
+}
+
+void gastly3_dialog(int param_1){
+    const int object_id = 0x188;
+    // TODO: Gastly
+}
+
+void gastly4_dialog(int param_1){
+    const int object_id = 0x189;
+    // TODO: Gastly
+}
+
+void gastly5_dialog(int param_1){
+    const int object_id = 0x18a;
+    // TODO: Gastly
+}
+
+void gastly6_dialog(int param_1){
+    const int object_id = 0x18b;
+    // TODO: Gastly
+}
+
+void gastly7_dialog(int param_1){
+    const int object_id = 0x18c;
+    // TODO: Gastly
+}
+
+void gastly8_dialog(int param_1){
+    const int object_id = 0x18d;
+    // TODO: Gastly
+}
+
+void gastly9_dialog(int param_1){
+    const int object_id = 0x18e;
+    // TODO: Gastly
+}
+
+void gastly10_dialog(int param_1){
+    const int object_id = 0x18f;
+    // TODO: Gastly
+}
+
+void gastly11_dialog(int param_1){
+    const int object_id = 0x190;
+    // TODO: Gastly
+}
+
+void haunter2_dialog(int param_1){
+    const int object_id = 0x191;
+    // TODO: Haunter
+}
+
+void haunter3_dialog(int param_1){
+    const int object_id = 0x192;
+    // TODO: Haunter
+}
+
+void drifloon2_dialog(int param_1){
+    const int object_id = 0x193;
+    // TODO: Drifloon
+}
+
+void drifloon3_dialog(int param_1){
+    const int object_id = 0x194;
+    // TODO: Drifloon
+}
