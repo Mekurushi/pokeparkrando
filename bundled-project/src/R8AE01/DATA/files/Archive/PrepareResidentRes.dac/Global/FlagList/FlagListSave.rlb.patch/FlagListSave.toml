@@ -196,3 +196,18 @@ row = 76
 
 [edits.set]
 flag_name = { value = "f0501MetapodTree" }
+
+[[edits]]
+table = "FlagTable"
+row = 197
+
+[edits.set]
+flag_name = { value = "f0502BattleCounter" }
+
+[[edits]]
+table = "FlagTable"
+row = 205
+
+[edits.set]
+flag_name = { value = "f0502BattleCounterNum" }
+bit_width = { value = 4 }
