@@ -67,3 +67,6 @@ face_object_accessors_instantly = 0x50724
 restore_pre_competition_state = 0x51e68
 special_spawn_conditions = 0x5b9f8
 show_npc_dialog_mode_0 = 0x52008
+ask_quiz_question = 0x56d2c
+play_sound_effect = 0x5139c
+fade_in_bgm = 0x514d8
