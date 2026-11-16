@@ -192,6 +192,13 @@ flag_name = { value = "f0501KakunaTree" }
 
 [[edits]]
 table = "FlagTable"
+row = 55
+
+[edits.set]
+flag_name = { value = "f0502VoltorbJar" }
+
+[[edits]]
+table = "FlagTable"
 row = 76
 
 [edits.set]

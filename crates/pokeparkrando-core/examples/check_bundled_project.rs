@@ -207,6 +207,30 @@ fn build_config() -> BuildConfig {
             BuildConfigValue::Integer(0),
         ),
         (
+            "HAUNTED_ZONE_MANSION_AREA_MAIN_AREA_CONNECTION_ZONE".into(),
+            BuildConfigValue::Integer(5),
+        ),
+        (
+            "HAUNTED_ZONE_MANSION_AREA_MAIN_AREA_CONNECTION_AREA".into(),
+            BuildConfigValue::Integer(1),
+        ),
+        (
+            "HAUNTED_ZONE_MANSION_AREA_MAIN_AREA_CONNECTION_POSITION".into(),
+            BuildConfigValue::Integer(1),
+        ),
+        (
+            "HAUNTED_ZONE_MANSION_AREA_ROTOM_AREA_CONNECTION_ZONE".into(),
+            BuildConfigValue::Integer(5),
+        ),
+        (
+            "HAUNTED_ZONE_MANSION_AREA_ROTOM_AREA_CONNECTION_AREA".into(),
+            BuildConfigValue::Integer(3),
+        ),
+        (
+            "HAUNTED_ZONE_MANSION_AREA_ROTOM_AREA_CONNECTION_POSITION".into(),
+            BuildConfigValue::Integer(0),
+        ),
+        (
             "CAVERN_ZONE_MAIN_AREA_TREEHOUSE_CONNECTION_ZONE".into(),
             BuildConfigValue::Integer(2),
         ),
