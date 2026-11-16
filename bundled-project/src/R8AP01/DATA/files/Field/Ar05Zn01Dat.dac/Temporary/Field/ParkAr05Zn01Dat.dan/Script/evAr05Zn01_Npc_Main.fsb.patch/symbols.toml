@@ -87,3 +87,6 @@ tangrowth_dialog = 0x595bc
 drifblim_dialog = 0x59c58
 chatot_dialog = 0x5a884
 electrode_dialog = 0x5ccdc
+has_wand_check = 0x54b78
+show_unlock_cutscene_at_position = 0x55eb4
+show_unlock_cutscene_at_current_position = 0x55840

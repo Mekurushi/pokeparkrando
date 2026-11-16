@@ -368,6 +368,10 @@ fn build_config() -> BuildConfig {
             BuildConfigValue::Integer(0x3),
         ),
         (
+            "HAUNTED_ZONE_MANSION_AREA_DUSKNOIR_ATTRACTION_ID".into(),
+            BuildConfigValue::Integer(0x4),
+        ),
+        (
             "MAGMA_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_ZONE".into(),
             BuildConfigValue::Integer(1),
         ),

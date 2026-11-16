@@ -34,7 +34,6 @@ extern void travel_to(int zone, int area, int position);
 extern int attraction_show_yes_no_question(int param_1, string dialog_id);
 extern void fade_out(int red, int green, int blue, int frames);
 extern void enter_attraction(int param_1, int attraction_id);
-extern void do_unlock_scenes(int param_1);
 extern void update_npc_story_state(int param_1);
 extern void despawn_debug_prisma(int object_id);
 extern void set_player_at(int x, int y, int z);
@@ -53,6 +52,9 @@ extern void spawn_for_short_duration(int object_id);
 extern void setup_player_for_zone();
 extern void set_object_rotation_instantly(int object_id, int x, int y, int z);
 extern void restore_player_control();
+extern int has_wand_check();
+extern void show_unlock_cutscene_at_position(int param_1, int object_id, string dialog_id, int param_4, int param_5, float x, float y, float z);
+extern void show_unlock_cutscene_at_current_position(int param_1, int object_id, string dialog_id, int param_4, int param_5);
 
 config int BATTLE_COUNT;
 config int HAUNTED_ZONE_MAIN_AREA_TANGROWTH_ATTRACTION_ID;
@@ -88,6 +90,46 @@ void special_spawn_conditions(int param_1){
     set_object_position(CHATOT_OBJECT_ID,0x84,0xb7,-0x1bc);
     set_object_rotation_instantly(CHATOT_OBJECT_ID,0,0x10f,0);
     reset_object_after_event(CHATOT_OBJECT_ID);
+}
+
+void do_unlock_scenes(int param_1){
+    int global_manager = get_module("GlobalManager");
+
+    if(has_wand_check() == 1){
+        fade_out(0,0,0,0x3c);
+    }
+
+    // Kakuna
+    if(@syscall(0,0x15,0x29,global_manager,0x71) == 1){
+        show_unlock_cutscene_at_current_position(param_1,0x145,"51_00210",10,0);
+    }
+
+    // Metapod
+    if(@syscall(0,0x15,0x29,global_manager,0x72) == 1){
+        show_unlock_cutscene_at_current_position(param_1,0x146,"51_00200",10,0);
+    }
+
+    // Ambipom
+    if(@syscall(0,0x15,0x29,global_manager,0x19) == 1){
+        show_unlock_cutscene_at_position(param_1,0x13c,"51_00180",10,0,68.0,182.0,-473.0);
+    }
+
+    // Honchkrow
+    if(@syscall(0,0x15,0x29,global_manager,0xa0) == 1){
+        show_unlock_cutscene_at_position(param_1,0x14d,"51_00252",10,0,68.0,182.0,-473.0);
+    }
+
+    // Drifblim
+    if(@syscall(0,0x15,0x29,global_manager,0x1f) == 1){
+        show_unlock_cutscene_at_current_position(param_1,0x14f,"51_00251",10,0);
+    }
+
+    int event_script = get_module("EventScript");
+    @syscall(0,0x15,400,event_script,0,1);
+    int audio_state = @syscall(0,0x15,0x1f7,event_script,0x17e9);
+    if(audio_state == 0){
+        fade_in_bgm(0x1e);
+    }
 }
 
 void setup_field(int param_1){
@@ -151,13 +193,7 @@ void RETURN_AT04(int param_1){
         wait_frames(0x3c);
         @syscall(0,0x15,2,tangrowth_accessor,0x1b,10);
         @syscall(0,0x15,0x28,tangrowth_accessor,0x1409,0,1.0,1.0);
-        int attraction_clear_count = @syscall(0,0x15,0x61,global_manager,3);
-        if(attraction_clear_count < 1){
-            do_dialog_with_scene(param_1,TANGROWTH_OBJECT_ID,"51_60072",0);
-        }
-        else{
-            do_dialog_with_scene(param_1,TANGROWTH_OBJECT_ID,"51_60071",0);
-        }
+        do_dialog_with_scene(param_1,TANGROWTH_OBJECT_ID,"51_60071",0);
         reset_object_after_event(TANGROWTH_OBJECT_ID);
         reset_camera();
         @syscall(0,0x15,0xca,event_script,0x1e);
