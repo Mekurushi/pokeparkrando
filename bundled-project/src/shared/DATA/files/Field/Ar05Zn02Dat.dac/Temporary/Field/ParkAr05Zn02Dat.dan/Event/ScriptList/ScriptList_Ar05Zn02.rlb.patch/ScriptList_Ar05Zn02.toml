@@ -1,0 +1,86 @@
+[[edits]]
+table = "EnterZoneScriptList"
+row = 0
+
+[edits.set]
+maximum_chapter = { value = 0x7fffffff }
+
+[[removes]]
+table = "EnterZoneScriptList"
+row = 1
+
+[[removes]]
+table = "EnterZoneScriptList"
+row = 2
+
+[[removes]]
+table = "EnterZoneScriptList"
+row = 3
+
+[[removes]]
+table = "EnterZoneScriptList"
+row = 4
+
+[[removes]]
+table = "EnterZoneScriptList"
+row = 5
+
+[[removes]]
+table = "EnterZoneScriptList"
+row = 6
+
+[[removes]]
+table = "EnterZoneScriptList"
+row = 7
+
+[[removes]]
+table = "EnterZoneScriptList"
+row = 8
+
+[[removes]]
+table = "CheckObjectScriptList"
+row = 41
+
+[[removes]]
+table = "TouchAreaScriptList"
+row = 2
+
+[[removes]]
+table = "TouchAreaScriptList"
+row = 3
+
+[[removes]]
+table = "TouchAreaScriptList"
+row = 4
+
+[[removes]]
+table = "TouchAreaScriptList"
+row = 5
+
+[[removes]]
+table = "TouchAreaScriptList"
+row = 6
+
+[[removes]]
+table = "TouchAreaScriptList"
+row = 7
+
+[[removes]]
+table = "TouchAreaScriptList"
+row = 8
+
+[[removes]]
+table = "TouchAreaScriptList"
+row = 9
+
+[[removes]]
+table = "TouchAreaScriptList"
+row = 10
+
+[[removes]]
+table = "TouchAreaScriptList"
+row = 11
+
+[[removes]]
+table = "TouchAreaScriptList"
+row = 12
