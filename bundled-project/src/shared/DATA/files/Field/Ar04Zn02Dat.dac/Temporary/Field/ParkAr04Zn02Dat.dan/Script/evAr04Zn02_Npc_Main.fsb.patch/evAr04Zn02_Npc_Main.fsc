@@ -49,6 +49,7 @@ extern void show_unlock_cutscene_at_position(int param_1, int object_id, string 
 extern void show_unlock_cutscene_at_current_position(int param_1, int object_id, string dialog_id, int param_4, int param_5);
 
 config int BATTLE_COUNT;
+config bool EACH_ZONE;
 config int MAGMA_ZONE_CIRCLE_AREA_RHYPERIOR_ATTRACTION_ID;
 config bool REMOVE_ERRAND_POWER_COMP_LOCATIONS;
 config int MAGMA_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_ZONE;
@@ -1261,6 +1262,33 @@ void increment_win_counter(){
 }
 
 bool is_location_checked(int object_id){
+    if(EACH_ZONE){
+        int global_manager = get_module("GlobalManager");
+        // Bonsly
+        if(object_id == 0x107){
+            return @syscall(0,0x15,0x6e,global_manager,7,12) != 0;
+        }
+        // Chimchar
+        if(object_id == 0x10e){
+            return @syscall(0,0x15,0x6e,global_manager,7,13) != 0;
+        }
+        // Aaron
+        if(object_id == 0x10f){
+            return @syscall(0,0x15,0x6e,global_manager,7,14) != 0;
+        }
+        // Torchic
+        if(object_id == 0x10d){
+            return @syscall(0,0x15,0x6e,global_manager,7,15) != 0;
+        }
+        // Geodude
+        if(object_id == 0x10c){
+            return @syscall(0,0x15,0x6e,global_manager,7,16) != 0;
+        }
+        // Baltoy
+        if(object_id == 0x108){
+            return @syscall(0,0x15,0x6e,global_manager,7,17) != 0;
+        }
+    }
     // Groudon
     if(object_id == 0x120){
         int global_manager = get_module("GlobalManager");
@@ -1277,6 +1305,40 @@ bool is_bestfriend(int object_id){
 }
 
 void check_location(int object_id){
+
+    if(EACH_ZONE){
+        int global_manager = get_module("GlobalManager");
+        // Bonsly
+        if(object_id == 0x107){
+            @syscall(0,0x15,0x6d,global_manager,7,12,1);
+            return;
+        }
+        // Chimchar
+        if(object_id == 0x10e){
+            @syscall(0,0x15,0x6d,global_manager,7,13,1);
+            return;
+        }
+        // Aaron
+        if(object_id == 0x10f){
+            @syscall(0,0x15,0x6d,global_manager,7,14,1);
+            return;
+        }
+        // Torchic
+        if(object_id == 0x10d){
+            @syscall(0,0x15,0x6d,global_manager,7,15,1);
+            return;
+        }
+        // Geodude
+        if(object_id == 0x10c){
+            @syscall(0,0x15,0x6d,global_manager,7,16,1);
+            return;
+        }
+        // Baltoy
+        if(object_id == 0x108){
+            @syscall(0,0x15,0x6d,global_manager,7,17,1);
+            return;
+        }
+    }
     // Groudon
     if(object_id == 0x120){
         int global_manager = get_module("GlobalManager");

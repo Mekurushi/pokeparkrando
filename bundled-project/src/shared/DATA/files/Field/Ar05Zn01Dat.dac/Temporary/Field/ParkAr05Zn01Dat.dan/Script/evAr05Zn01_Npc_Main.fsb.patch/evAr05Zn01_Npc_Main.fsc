@@ -57,6 +57,7 @@ extern void show_unlock_cutscene_at_position(int param_1, int object_id, string 
 extern void show_unlock_cutscene_at_current_position(int param_1, int object_id, string dialog_id, int param_4, int param_5);
 
 config int BATTLE_COUNT;
+config bool EACH_ZONE;
 config int HAUNTED_ZONE_MAIN_AREA_TANGROWTH_ATTRACTION_ID;
 config int HAUNTED_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_ZONE;
 config int HAUNTED_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_AREA;
@@ -722,10 +723,52 @@ bool is_bestfriend(int object_id){
 }
 
 bool is_location_checked(int object_id){
+    if(EACH_ZONE){
+        int global_manager = get_module("GlobalManager");
+        // Raichu
+        if(object_id == 0x141){
+            return @syscall(0,0x15,0x6e,global_manager,7,18) != 0;
+        }
+        // Meowth
+        if(object_id == 0x13a){
+            return @syscall(0,0x15,0x6e,global_manager,7,19) != 0;
+        }
+        // Aipom
+        if(object_id == 0x13b){
+            return @syscall(0,0x15,0x6e,global_manager,7,20) != 0;
+        }
+        // Ambipom
+        if(object_id == 0x13c){
+            return @syscall(0,0x15,0x6e,global_manager,7,21) != 0;
+        }
+    }
     return is_bestfriend(object_id);
 }
 
 void check_location(int object_id){
+    if(EACH_ZONE){
+        int global_manager = get_module("GlobalManager");
+        // Raichu
+        if(object_id == 0x141){
+            @syscall(0,0x15,0x6d,global_manager,7,18,1);
+            return;
+        }
+        // Meowth
+        if(object_id == 0x13a){
+            @syscall(0,0x15,0x6d,global_manager,7,19,1);
+            return;
+        }
+        // Aipom
+        if(object_id == 0x13b){
+            @syscall(0,0x15,0x6d,global_manager,7,20,1);
+            return;
+        }
+        // Ambipom
+        if(object_id == 0x13c){
+            @syscall(0,0x15,0x6d,global_manager,7,21,1);
+            return;
+        }
+    }
     set_bestfriend(object_id);
 }
 

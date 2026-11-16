@@ -47,6 +47,7 @@ extern void reset_camera();
 extern void spawn_for_short_duration(int object_id);
 
 config int BATTLE_COUNT;
+config bool EACH_ZONE;
 config int HAUNTED_ZONE_MANSION_AREA_DUSKNOIR_ATTRACTION_ID;
 
 void special_spawn_conditions(int param_1){
@@ -859,6 +860,13 @@ bool is_bestfriend(int object_id){
 }
 
 bool is_location_checked(int object_id){
+    if(EACH_ZONE){
+        // Abra
+        if(object_id == 0x173){
+            int global_manager = get_module("GlobalManager");
+            return @syscall(0,0x15,0x6e,global_manager,7,22) != 0;
+        }
+    }
     // Darkrai
     if(object_id == 0x182){
         int global_manager = get_module("GlobalManager");
@@ -868,6 +876,14 @@ bool is_location_checked(int object_id){
 }
 
 void check_location(int object_id){
+    if(EACH_ZONE){
+        // Abra
+        if(object_id == 0x173){
+            int global_manager = get_module("GlobalManager");
+            @syscall(0,0x15,0x6d,global_manager,7,22,1);
+            return;
+        }
+    }
     // Darkrai
     if(object_id == 0x182){
         int global_manager = get_module("GlobalManager");
