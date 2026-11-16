@@ -157,9 +157,19 @@ void do_unlock_scenes(int param_1){
     }
 }
 
+void set_chase_ai_path_state(int param_1){
+    int global_manager = get_module("GlobalManager");
+    // f0502DoorA is the flag for all doors; needs to be updated if this is changed
+    int doors_unlocked = @syscall(0,0x15,1,global_manager,"f0502DoorA");
+    if(doors_unlocked == 1){
+        @syscall(0,0x15,0x2d,param_1,5,2,5);
+    }
+}
+
 void setup_field(int param_1){
     lock_player_and_get_accessor();
     setup_player_for_zone();
+    set_chase_ai_path_state(param_1);
     do_unlock_scenes(param_1);
     special_spawn_conditions(param_1);
     update_npc_story_state(param_1);
