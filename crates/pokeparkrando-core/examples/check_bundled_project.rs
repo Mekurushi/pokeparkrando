@@ -207,27 +207,39 @@ fn build_config() -> BuildConfig {
             BuildConfigValue::Integer(0),
         ),
         (
-            "HAUNTED_ZONE_MANSION_AREA_MAIN_AREA_CONNECTION_ZONE".into(),
+            "HAUNTED_ZONE_MANSION_AREA_MAIN_AREA_GATE_ZONE".into(),
             BuildConfigValue::Integer(5),
         ),
         (
-            "HAUNTED_ZONE_MANSION_AREA_MAIN_AREA_CONNECTION_AREA".into(),
+            "HAUNTED_ZONE_MANSION_AREA_MAIN_AREA_GATE_AREA".into(),
             BuildConfigValue::Integer(1),
         ),
         (
-            "HAUNTED_ZONE_MANSION_AREA_MAIN_AREA_CONNECTION_POSITION".into(),
+            "HAUNTED_ZONE_MANSION_AREA_MAIN_AREA_GATE_POSITION".into(),
             BuildConfigValue::Integer(1),
         ),
         (
-            "HAUNTED_ZONE_MANSION_AREA_ROTOM_AREA_CONNECTION_ZONE".into(),
+            "HAUNTED_ZONE_BOOKSHELF_AREA_ROTOM_CONNECTION_ZONE".into(),
             BuildConfigValue::Integer(5),
         ),
         (
-            "HAUNTED_ZONE_MANSION_AREA_ROTOM_AREA_CONNECTION_AREA".into(),
+            "HAUNTED_ZONE_BOOKSHELF_AREA_ROTOM_CONNECTION_AREA".into(),
             BuildConfigValue::Integer(3),
         ),
         (
-            "HAUNTED_ZONE_MANSION_AREA_ROTOM_AREA_CONNECTION_POSITION".into(),
+            "HAUNTED_ZONE_BOOKSHELF_AREA_ROTOM_CONNECTION_POSITION".into(),
+            BuildConfigValue::Integer(0),
+        ),
+        (
+            "HAUNTED_ZONE_ROTOM_AREA_BOOKSHELF_AREA_CONNECTION_ZONE".into(),
+            BuildConfigValue::Integer(5),
+        ),
+        (
+            "HAUNTED_ZONE_ROTOM_AREA_BOOKSHELF_AREA_CONNECTION_AREA".into(),
+            BuildConfigValue::Integer(3),
+        ),
+        (
+            "HAUNTED_ZONE_ROTOM_AREA_BOOKSHELF_AREA_CONNECTION_POSITION".into(),
             BuildConfigValue::Integer(0),
         ),
         (
