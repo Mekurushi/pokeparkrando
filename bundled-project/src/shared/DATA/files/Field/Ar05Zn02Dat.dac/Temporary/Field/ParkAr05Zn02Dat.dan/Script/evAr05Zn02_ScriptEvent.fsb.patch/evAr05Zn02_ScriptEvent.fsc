@@ -10,12 +10,12 @@ extern void fade_in(int red, int green, int blue, int frames);
 extern void restore_player_control();
 extern void end_event_script(int param_1);
 
-config int HAUNTED_ZONE_MANSION_AREA_MAIN_AREA_CONNECTION_ZONE;
-config int HAUNTED_ZONE_MANSION_AREA_MAIN_AREA_CONNECTION_AREA;
-config int HAUNTED_ZONE_MANSION_AREA_MAIN_AREA_CONNECTION_POSITION;
-config int HAUNTED_ZONE_MANSION_AREA_ROTOM_AREA_CONNECTION_ZONE;
-config int HAUNTED_ZONE_MANSION_AREA_ROTOM_AREA_CONNECTION_AREA;
-config int HAUNTED_ZONE_MANSION_AREA_ROTOM_AREA_CONNECTION_POSITION;
+config int HAUNTED_ZONE_MANSION_AREA_MAIN_AREA_GATE_ZONE;
+config int HAUNTED_ZONE_MANSION_AREA_MAIN_AREA_GATE_AREA;
+config int HAUNTED_ZONE_MANSION_AREA_MAIN_AREA_GATE_POSITION;
+config int HAUNTED_ZONE_BOOKSHELF_AREA_ROTOM_CONNECTION_ZONE;
+config int HAUNTED_ZONE_BOOKSHELF_AREA_ROTOM_CONNECTION_AREA;
+config int HAUNTED_ZONE_BOOKSHELF_AREA_ROTOM_CONNECTION_POSITION;
 
 export void EMAPA05_Z01(int param_1){
     int event_script = get_module("EventScript");
@@ -30,9 +30,9 @@ export void EMAPA05_Z01(int param_1){
         int global_manager = get_module("GlobalManager");
         @syscall(
             0,0x15,0x78,global_manager,
-            HAUNTED_ZONE_MANSION_AREA_MAIN_AREA_CONNECTION_ZONE,
-            HAUNTED_ZONE_MANSION_AREA_MAIN_AREA_CONNECTION_AREA,
-            HAUNTED_ZONE_MANSION_AREA_MAIN_AREA_CONNECTION_POSITION
+            HAUNTED_ZONE_MANSION_AREA_MAIN_AREA_GATE_ZONE,
+            HAUNTED_ZONE_MANSION_AREA_MAIN_AREA_GATE_AREA,
+            HAUNTED_ZONE_MANSION_AREA_MAIN_AREA_GATE_POSITION
         );
 
         int scene_manager = get_module("SceneManager");
@@ -66,9 +66,9 @@ export void EMAPA05_Z03(int param_1){
         int global_manager = get_module("GlobalManager");
         @syscall(
             0,0x15,0x78,global_manager,
-            HAUNTED_ZONE_MANSION_AREA_ROTOM_AREA_CONNECTION_ZONE,
-            HAUNTED_ZONE_MANSION_AREA_ROTOM_AREA_CONNECTION_AREA,
-            HAUNTED_ZONE_MANSION_AREA_ROTOM_AREA_CONNECTION_POSITION
+            HAUNTED_ZONE_BOOKSHELF_AREA_ROTOM_CONNECTION_ZONE,
+            HAUNTED_ZONE_BOOKSHELF_AREA_ROTOM_CONNECTION_AREA,
+            HAUNTED_ZONE_BOOKSHELF_AREA_ROTOM_CONNECTION_POSITION
         );
 
         int scene_manager = get_module("SceneManager");
