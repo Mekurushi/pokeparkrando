@@ -1,0 +1,140 @@
+extern int get_module(string name);
+extern int lock_player_and_get_accessor();
+extern int lock_npc_and_get_accessor(int object_id);
+extern void face_player_and_npc(int object_id, int param_2);
+extern void show_npc_dialog(int param_1, string dialog_id);
+extern void set_berry_counter_visible(bool visible);
+extern int attraction_show_yes_no_question(int param_1, string dialog_id);
+extern void fade_out(int red, int green, int blue, int frames);
+extern void enter_attraction(int param_1, int attraction_id);
+extern void end_event_script(int param_1);
+extern void despawn_debug_prisma(int object_id);
+extern void fade_in(int red, int green, int blue, int frames);
+extern void setup_player_for_zone();
+extern void update_npc_story_state(int param_1);
+extern void despawn_player_object();
+extern void wait_frames(int frames);
+extern void spawn_player_object();
+extern void set_player_at(int x, int y, int z);
+extern void face_player_towards_object_synchronously(int object_id, int param_2);
+extern void do_dialog_with_scene(int param_1, int object_id, string dialog_id, int scene);
+extern void reset_object_after_event(int object_id);
+extern void reset_camera();
+extern void complete_event();
+extern void clear_wand_check();
+
+config int HAUNTED_ZONE_ROTOM_AREA_ROTOM_ATTRACTION_ID;
+
+void setup_field(int param_1){
+    lock_player_and_get_accessor();
+    setup_player_for_zone();
+    update_npc_story_state(param_1);
+}
+
+void A05_Z03_INIT(int param_1){
+    int event_script = get_module("EventScript");
+    @syscall(0,0x15,0x65,event_script,0,0,0,1);
+    despawn_debug_prisma(0x4e20);
+    setup_field(param_1);
+    fade_in(0,0,0,0x3c);
+    end_event_script(param_1);
+}
+
+void rotom_dialog(int param_1){
+    const int ROTOM_OBJECT_ID = 0x19f;
+    const int FRIENDSHIP_COUNT = 65;
+    const int ATTRACTION_FEE = 30;
+
+    int global_manager = get_module("GlobalManager");
+    int player_accessor = lock_player_and_get_accessor();
+    int rotom_accessor = lock_npc_and_get_accessor(ROTOM_OBJECT_ID);
+    face_player_and_npc(ROTOM_OBJECT_ID,0);
+    @syscall(0,0x15,2,rotom_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,rotom_accessor,0x112a,0,1.0,1.0);
+
+    int friendship_count = @syscall(0,0x15,0x42,global_manager);
+    if(friendship_count < FRIENDSHIP_COUNT){
+        show_npc_dialog(param_1,"53_60011");
+        end_event_script(param_1);
+        return;
+    }
+
+    show_npc_dialog(param_1,"53_60020");
+    set_berry_counter_visible(true);
+    int wants_to_enter = attraction_show_yes_no_question(param_1,"53_60040");
+    if(wants_to_enter == 1){
+        int berry_count = @syscall(0,0x15,0x15,global_manager);
+        if(berry_count < ATTRACTION_FEE){
+            @syscall(0,0x15,2,rotom_accessor,0x1b,10);
+            @syscall(0,0x15,0x28,rotom_accessor,0x112a,0,1.0,1.0);
+            show_npc_dialog(param_1,"53_60070");
+        }
+        else{
+            @syscall(0,0x15,2,rotom_accessor,0x1c,10);
+            @syscall(0,0x15,0x28,rotom_accessor,0x112a,0,1.0,1.0);
+            @syscall(0,0x15,0x14,global_manager,-ATTRACTION_FEE);
+            show_npc_dialog(param_1,"53_60060");
+            @syscall(0,0x15,0,global_manager,"fRetAttraction",13);
+            set_berry_counter_visible(false);
+            fade_out(0,0,0,0x1e);
+            @syscall(0,0x15,0,player_accessor,0);
+            enter_attraction(param_1,HAUNTED_ZONE_ROTOM_AREA_ROTOM_ATTRACTION_ID);
+        }
+    }
+    else{
+        @syscall(0,0x15,2,rotom_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,rotom_accessor,0x112a,0,1.0,1.0);
+        show_npc_dialog(param_1,"53_60050");
+    }
+
+    set_berry_counter_visible(false);
+    end_event_script(param_1);
+}
+
+void RETURN_AT13(int param_1){
+    const int ROTOM_OBJECT_ID = 0x19f;
+
+    int global_manager = get_module("GlobalManager");
+    int event_script = get_module("EventScript");
+    @syscall(0,0x15,0x65,event_script,0,0,0,1);
+
+    setup_field(param_1);
+    despawn_debug_prisma(0x4e20);
+    despawn_player_object();
+    wait_frames(1);
+    spawn_player_object();
+    lock_player_and_get_accessor();
+    set_player_at(3,0,-341);
+    face_player_towards_object_synchronously(ROTOM_OBJECT_ID,0);
+    @syscall(0,0x15,0xca,event_script,-1);
+
+    int has_rotom_prisma = @syscall(0,0x15,0x51,global_manager,0xc);
+    if(has_rotom_prisma == 1){            
+        int rotom_accessor = lock_npc_and_get_accessor(ROTOM_OBJECT_ID);
+        fade_in(0,0,0,0x1e);
+        face_player_and_npc(ROTOM_OBJECT_ID,0);
+        @syscall(0,0x15,2,rotom_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,rotom_accessor,0x1418,0,1.0,1.0);
+        do_dialog_with_scene(param_1,ROTOM_OBJECT_ID,"53_60073",0);
+        reset_object_after_event(ROTOM_OBJECT_ID);
+        reset_camera();
+        @syscall(0,0x15,0xca,event_script,0x1e);
+    }
+    else{
+        int rotom_accessor = lock_npc_and_get_accessor(ROTOM_OBJECT_ID);
+        fade_in(0,0,0,0x1e);
+        face_player_and_npc(ROTOM_OBJECT_ID,0);
+        @syscall(0,0x15,2,rotom_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,rotom_accessor,0x1418,0,1.0,1.0);
+        do_dialog_with_scene(param_1,ROTOM_OBJECT_ID,"53_60071",0);
+        reset_object_after_event(ROTOM_OBJECT_ID);
+        reset_camera();
+        @syscall(0,0x15,0xca,event_script,0x1e);
+    }
+
+    complete_event();
+    fade_in(0,0,0,0x1e);
+    reset_object_after_event(ROTOM_OBJECT_ID);
+    clear_wand_check();
+    end_event_script(param_1);
+}

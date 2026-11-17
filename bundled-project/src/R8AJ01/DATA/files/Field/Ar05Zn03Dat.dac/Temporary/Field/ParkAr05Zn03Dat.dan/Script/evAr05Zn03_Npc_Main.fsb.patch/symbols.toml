@@ -1,0 +1,28 @@
+base_address = 0x50000
+
+[functions]
+get_module = 0x50044
+lock_player_and_get_accessor = 0x50fb0
+lock_npc_and_get_accessor = 0x511b4
+face_player_and_npc = 0x521f8
+show_npc_dialog = 0x51f9c
+set_berry_counter_visible = 0x5751c
+attraction_show_yes_no_question = 0x52074
+fade_out = 0x51e9c
+enter_attraction = 0x56b3c
+end_event_script = 0x50080
+rotom_dialog = 0x58554
+despawn_debug_prisma = 0x57e94
+fade_in = 0x51f1c
+setup_player_for_zone = 0x54494
+update_npc_story_state = 0x5826c
+despawn_player_object = 0x54440
+wait_frames = 0x500bc
+spawn_player_object = 0x543ec
+set_player_at = 0x52fc0
+face_player_towards_object_synchronously = 0x533ac
+do_dialog_with_scene = 0x52188
+reset_object_after_event = 0x51268
+reset_camera = 0x51ab8
+complete_event = 0x54bc8
+clear_wand_check = 0x54b44
