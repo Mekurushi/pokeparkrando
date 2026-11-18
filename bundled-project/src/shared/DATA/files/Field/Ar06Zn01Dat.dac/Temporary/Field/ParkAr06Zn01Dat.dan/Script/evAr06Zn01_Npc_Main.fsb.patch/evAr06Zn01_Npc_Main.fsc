@@ -1,0 +1,249 @@
+
+ // eA06_Z01_00
+void skorupi1_dialog(int param_1){
+    const int object_id = 0x1a0;
+    // TODO: Skorupi
+}
+
+// eA06_Z01_01
+void skorupi2_dialog(int param_1){
+    const int object_id = 0x1a1;
+    // TODO: Skorupi
+}
+
+// eA06_Z01_02
+void eevee_dialog(int param_1){
+    const int object_id = 0x1a2;
+    // TODO: Eevee
+}
+
+// eA06_Z01_03
+void marowak_dialog(int param_1){
+    const int object_id = 0x1a3;
+    // TODO: Marowak
+}
+
+// eA06_Z01_04
+void claydol_dialog(int param_1){
+    const int object_id = 0x1a4;
+    // TODO: Claydol
+}
+
+// eA06_Z01_05
+void garchomp_dialog(int param_1){
+    const int object_id = 0x1a5;
+    // TODO: Garchomp
+}
+
+// eA06_Z01_06
+void tyranitar_dialog(int param_1){
+    const int object_id = 0x1a6;
+    // TODO: Tyranitar
+}
+
+// eA06_Z01_07
+void baltoy_dialog(int param_1){
+    const int object_id = 0x1a7;
+    // TODO: Baltoy
+}
+
+// eA06_Z01_08
+void taillow_dialog(int param_1){
+    const int object_id = 0x1a8;
+    // TODO: Taillow
+}
+
+// eA06_Z01_09
+void aerodactyl_dialog(int param_1){
+    const int object_id = 0x1a9;
+    // TODO: Aerodactyl
+}
+
+// eA06_Z01_10
+void flygon_dialog(int param_1){
+    const int object_id = 0x1aa;
+    // TODO: Flygon
+}
+
+// eA06_Z01_11
+void togekiss_dialog(int param_1){
+    const int object_id = 0x1ab;
+    // TODO: Togekiss
+}
+
+// eA06_Z01_12
+void bronzor_dialog(int param_1){
+    const int object_id = 0x1ac;
+    // TODO: Bronzor
+}
+
+// eA06_Z01_13
+void hoppip_dialog(int param_1){
+    const int object_id = 0x1ad;
+    // TODO: Hoppip
+}
+
+// eA06_Z01_14
+void drifloon_dialog(int param_1){
+    const int object_id = 0x1ae;
+    // TODO: Drifloon
+}
+
+// eA06_Z01_15
+void lopunny_dialog(int param_1){
+    const int object_id = 0x1af;
+    // TODO: Lopunny
+}
+
+// eA06_Z01_16
+void arcanine_dialog(int param_1){
+    const int object_id = 0x1b0;
+    // TODO: Arcanine
+}
+
+// eA06_Z01_17
+void charizard_dialog(int param_1){
+    const int object_id = 0x1b1;
+    // TODO: Charizard
+}
+
+// eA06_Z01_18
+void staraptor_dialog(int param_1){
+    const int object_id = 0x1b2;
+    // TODO: Staraptor
+}
+
+// eA06_Z01_19
+void porygonz_dialog(int param_1){
+    const int object_id = 0x1b3;
+    // TODO: Porygon-Z
+}
+
+// eA06_Z01_20
+void jolteon_dialog(int param_1){
+    const int object_id = 0x1b4;
+    // TODO: Jolteon
+}
+
+// eA06_Z01_21
+void jumpluff_dialog(int param_1){
+    const int object_id = 0x1b5;
+    // TODO: Jumpluff
+}
+
+// eA06_Z01_22
+void salamence_dialog(int param_1){
+    const int object_id = 0x1b6;
+    // TODO: Salamence
+}
+
+// eA06_Z01_23
+void absol_dialog(int param_1){
+    const int object_id = 0x1b7;
+    // TODO: Absol
+}
+
+// eA06_Z01_24
+void drifblim_dialog(int param_1){
+    const int object_id = 0x1b8;
+    // TODO: Drifblim
+}
+
+// eA06_Z01_25
+void furret_dialog(int param_1){
+    const int object_id = 0x1b9;
+    // TODO: Furret
+}
+
+// eA06_Z01_26
+void chatot_dialog(int param_1){
+    const int object_id = 0x1ba;
+    // TODO: Chatot
+}
+
+// eA06_Z01_27
+void jirachi_dialog(int param_1){
+    const int object_id = 0x1bb;
+    // TODO: Jirachi
+}
+
+// eA06_Z01_28
+void blastoise_dialog(int param_1){
+    const int object_id = 0x1bc;
+    // TODO: Blastoise
+}
+
+// eA06_Z01_29
+void electivire_dialog(int param_1){
+    const int object_id = 0x1bd;
+    // TODO: Electivire
+}
+
+// the ones below are unused and don't have disposition data nor dialogs;
+// it's possible to add pokemon in their stead so they are placeholders for now
+
+// eA06_Z01_30
+void unknown_npc1_dialog(int param_1){
+    const int object_id = 0x1be;
+    // TODO: Unknown NPC
+}
+
+// eA06_Z01_31
+void unknown_npc2_dialog(int param_1){
+    const int object_id = 0x1bf;
+    // TODO: Unknown NPC
+}
+
+// eA06_Z01_32
+void unknown_npc3_dialog(int param_1){
+    const int object_id = 0x1c0;
+    // TODO: Unknown NPC
+}
+
+// eA06_Z01_33
+void unknown_npc4_dialog(int param_1){
+    const int object_id = 0x1c1;
+    // TODO: Unknown NPC
+}
+
+// eA06_Z01_34
+void unknown_npc5_dialog(int param_1){
+    const int object_id = 0x1c2;
+    // TODO: Unknown NPC
+}
+
+// eA06_Z01_35
+void unknown_npc6_dialog(int param_1){
+    const int object_id = 0x1c3;
+    // TODO: Unknown NPC
+}
+
+// eA06_Z01_36
+void unknown_npc7_dialog(int param_1){
+    const int object_id = 0x1c4;
+    // TODO: Unknown NPC
+}
+
+// eA06_Z01_37
+void unknown_npc8_dialog(int param_1){
+    const int object_id = 0x1c5;
+    // TODO: Unknown NPC
+}
+
+// eA06_Z01_38
+void unknown_npc9_dialog(int param_1){
+    const int object_id = 0x1c6;
+    // TODO: Unknown NPC
+}
+
+// eA06_Z01_39
+void unknown_npc10_dialog(int param_1){
+    const int object_id = 0x1c7;
+    // TODO: Unknown NPC
+}
+
+// eA06_Z01_40
+void unknown_npc11_dialog(int param_1){
+    const int object_id = 0x1c8;
+    // TODO: Unknown NPC
+}
