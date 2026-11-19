@@ -412,6 +412,14 @@ fn build_config() -> BuildConfig {
             BuildConfigValue::Integer(0xc),
         ),
         (
+            "GRANITE_ZONE_MAIN_AREA_ABSOL_ATTRACTION_ID".into(),
+            BuildConfigValue::Integer(0x0),
+        ),
+        (
+            "GRANITE_ZONE_MAIN_AREA_SALAMENCE_ATTRACTION_ID".into(),
+            BuildConfigValue::Integer(0xe),
+        ),
+        (
             "MAGMA_ZONE_MAIN_AREA_MEADOW_DRIFBLIM_FAST_TRAVEL_ZONE".into(),
             BuildConfigValue::Integer(1),
         ),

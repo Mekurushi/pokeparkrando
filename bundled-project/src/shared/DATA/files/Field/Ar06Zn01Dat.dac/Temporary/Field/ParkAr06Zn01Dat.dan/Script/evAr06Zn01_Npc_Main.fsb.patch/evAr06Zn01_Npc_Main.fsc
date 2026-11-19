@@ -21,7 +21,6 @@ extern void spawn_player_object();
 extern void respawn_field();
 extern void face_object_accessors_instantly(int player_accessor, int object_accessor, int immediate);
 extern void restore_pre_competition_state(int object_id);
-extern void special_spawn_conditions(int param_1);
 extern int ask_quiz_question(int param_1, string question_id, string answer_1_id, string answer_2_id, string answer_3_id, string correct_answer_id);
 extern void play_sound_effect(int sound_id, int fade_in_frames);
 extern void fade_in_bgm(int frames);
@@ -29,19 +28,152 @@ extern void show_npc_dialog_mode_0(int param_1, string dialog_id);
 extern void set_berry_counter_visible(bool visible);
 extern void choose_fast_travel_destination(int param_1, int object_id, int zone_id);
 extern void fade_out_audio(int frames, bool fade_sound_effects, bool fade_voices, bool stop_sequence);
+extern int attraction_show_yes_no_question(int param_1, string dialog_id);
+extern void fade_out(int red, int green, int blue, int frames);
+extern void enter_attraction(int param_1, int attraction_id);
+extern void despawn_debug_prisma(int object_id);
+extern void setup_player_for_zone();
+extern void update_npc_story_state(int param_1);
+extern void clear_wand_check();
+extern void spawn_object_if_missing(int object_id);
+extern void set_object_position(int object_id, int x, int y, int z);
+extern void set_object_rotation_instantly(int object_id, int x, int y, int z);
+extern int has_wand_check();
+extern void show_unlock_cutscene_at_position(int param_1, int object_id, string dialog_id, int param_4, int param_5, float x, float y, float z);
+extern void show_unlock_cutscene_at_current_position(int param_1, int object_id, string dialog_id, int param_4, int param_5);
+extern void set_player_at(int x, int y, int z);
+extern void face_player_towards_object_synchronously(int object_id, int smooth);
+extern void do_dialog_with_scene(int param_1, int object_id, string dialog_id, int scene_id);
+extern void reset_object_after_event(int object_id);
+extern void reset_camera();
+extern void spawn_for_short_duration(int object_id);
 
 config int BATTLE_COUNT;
+config int GRANITE_ZONE_MAIN_AREA_ABSOL_ATTRACTION_ID;
+config int GRANITE_ZONE_MAIN_AREA_SALAMENCE_ATTRACTION_ID;
+
+void special_spawn_conditions(int param_1){
+    const int CHATOT_OBJECT_ID = 0x1ba;
+
+    spawn_object_if_missing(CHATOT_OBJECT_ID);
+    set_object_position(CHATOT_OBJECT_ID,-100,0,192);
+    set_object_rotation_instantly(CHATOT_OBJECT_ID,0,91,0);
+}
+
+void do_unlock_scenes(int param_1){
+    int global_manager = get_module("GlobalManager");
+
+    if(has_wand_check() == 1){
+        fade_out(0,0,0,0x3c);
+    }
+
+    // Aerodactyl
+    if(@syscall(0,0x15,0x29,global_manager,0xb4) == 1){
+        show_unlock_cutscene_at_position(param_1,0x1a9,"61_00180",0x1e,1,-846.0,140.0,-1442.79);
+    }
+
+    // Jolteon
+    if(@syscall(0,0x15,0x29,global_manager,0x8d) == 1){
+        show_unlock_cutscene_at_position(param_1,0x1b4,"61_00200",10,0,-846.0,140.0,-1442.79);
+    }
+
+    // Claydol
+    if(@syscall(0,0x15,0x29,global_manager,0x65) == 1){
+        show_unlock_cutscene_at_position(param_1,0x1a4,"61_00170",10,0,71.5,110.0,-840.29);
+    }
+
+    // Garchomp
+    if(@syscall(0,0x15,0x29,global_manager,0x85) == 1){
+        // TODO: create proper unlock text
+        show_unlock_cutscene_at_current_position(param_1,0x1a5,"61_00040",10,0);
+    }
+
+    // Tyranitar
+    if(@syscall(0,0x15,0x29,global_manager,0x86) == 1){
+        // TODO: create proper unlock text
+        show_unlock_cutscene_at_current_position(param_1,0x1a6,"61_00050",10,0);
+    }
+
+    // Baltoy
+    if(@syscall(0,0x15,0x29,global_manager,0x9d) == 1){
+        // TODO: create proper unlock text
+        show_unlock_cutscene_at_current_position(param_1,0x1a7,"61_00060",10,0);
+    }
+
+    // Drifblim
+    if(@syscall(0,0x15,0x29,global_manager,0x1f) == 1){
+        show_unlock_cutscene_at_current_position(param_1,0x1b8,"61_00230",10,0);
+    }
+
+    // Jirachi
+    if(@syscall(0,0x15,0x29,global_manager,0xa6) == 1){
+        // TODO: create proper unlock text
+        show_unlock_cutscene_at_current_position(param_1,0x1bb,"61_00080",10,0);
+    }
+
+    int event_script = get_module("EventScript");
+    @syscall(0,0x15,400,event_script,0,1);
+    int audio_state = @syscall(0,0x15,0x1f7,event_script,0x17ea);
+    if(audio_state == 0){
+        fade_in_bgm(0x1e);
+    }
+}
+
+void setup_field(int param_1){
+    lock_player_and_get_accessor();
+    setup_player_for_zone();
+    do_unlock_scenes(param_1);
+    special_spawn_conditions(param_1);
+    update_npc_story_state(param_1);
+}
+
+void A06_Z01_INIT(int param_1){
+    int event_script = get_module("EventScript");
+    @syscall(0,0x15,0x65,event_script,0,0,0,1);
+    despawn_debug_prisma(0x4e21);
+    despawn_debug_prisma(0x4e22);
+    setup_field(param_1);
+    fade_in(0,0,0,0x1e);
+    clear_wand_check();
+    end_event_script(param_1);
+}
+
+void AR06ZN01_DEF(int param_1){
+    despawn_debug_prisma(0x4e21);
+    despawn_debug_prisma(0x4e22);
+    setup_field(param_1);
+    fade_in(0,0,0,0x1e);
+    clear_wand_check();
+    end_event_script(param_1);
+}
 
  // eA06_Z01_00
 void skorupi1_dialog(int param_1){
     const int object_id = 0x1a0;
-    // TODO: Skorupi
+    int global_manager = get_module("GlobalManager");
+    int object_accessor = lock_npc_and_get_accessor(object_id);
+    face_player_and_npc(object_id,0);
+    @syscall(0,0x15,0x28,object_accessor,0xac7,0,1.0,1.0);
+
+    if(@syscall(0,0x15,1,global_manager,"f0601FireWallB") == 1){
+        if(!is_location_checked(object_id)){
+            show_npc_dialog(param_1,"61_10090");
+            friendship_banner("61_00240");
+            check_location(object_id);
+        }
+        else{
+            show_npc_dialog(param_1,"61_10001");
+        }
+    }
+    else{
+        show_npc_dialog(param_1,"61_10000");
+    }
+    end_event_script(param_1);
 }
 
 // eA06_Z01_01
 void skorupi2_dialog(int param_1){
-    const int object_id = 0x1a1;
-    // TODO: Skorupi
+    power_competition_dialog(param_1,0x1a1,0x111b,"61_00250","61_10240","61_10250","61_10270","61_10290","61_10280");
 }
 
 // eA06_Z01_02
@@ -193,14 +325,316 @@ void jumpluff_dialog(int param_1){
 
 // eA06_Z01_22
 void salamence_dialog(int param_1){
-    const int object_id = 0x1b6;
-    // TODO: Salamence
+    const int SALAMENCE_OBJECT_ID = 0x1b6;
+    const int FRIENDSHIP_COUNT = 80;
+    const int ATTRACTION_FEE = 40;
+
+    int global_manager = get_module("GlobalManager");
+    int player_accessor = lock_player_and_get_accessor();
+    int salamence_accessor = lock_npc_and_get_accessor(SALAMENCE_OBJECT_ID);
+    face_player_and_npc(SALAMENCE_OBJECT_ID,0);
+    @syscall(0,0x15,2,salamence_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,salamence_accessor,0x1265,0,1.0,1.0);
+
+    int friendship_count = @syscall(0,0x15,0x42,global_manager);
+    if(friendship_count < FRIENDSHIP_COUNT){
+        show_npc_dialog(param_1,"61_60351");
+        end_event_script(param_1);
+        return;
+    }
+
+    if(is_location_checked(SALAMENCE_OBJECT_ID)){
+        show_npc_dialog(param_1,"61_60360");
+    }
+    else{
+        show_npc_dialog(param_1,"61_60370");
+    }
+
+    set_berry_counter_visible(true);
+    int wants_to_enter = attraction_show_yes_no_question(param_1,"61_60380");
+    if(wants_to_enter == 1){
+        int berry_count = @syscall(0,0x15,0x15,global_manager);
+        if(berry_count < ATTRACTION_FEE){
+            @syscall(0,0x15,2,salamence_accessor,0x1b,10);
+            @syscall(0,0x15,0x28,salamence_accessor,0x1265,0,1.0,1.0);
+            show_npc_dialog(param_1,"61_60410");
+        }
+        else{
+            @syscall(0,0x15,2,salamence_accessor,0x1c,10);
+            @syscall(0,0x15,0x28,salamence_accessor,0x1265,0,1.0,1.0);
+            @syscall(0,0x15,0x14,global_manager,-ATTRACTION_FEE);
+            show_npc_dialog(param_1,"61_60400");
+            @syscall(0,0x15,0,global_manager,"fRetAttraction",0xf);
+            set_berry_counter_visible(false);
+            fade_out(0,0,0,0x1e);
+            @syscall(0,0x15,0,player_accessor,0);
+            enter_attraction(param_1,GRANITE_ZONE_MAIN_AREA_SALAMENCE_ATTRACTION_ID);
+        }
+    }
+    else{
+        @syscall(0,0x15,2,salamence_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,salamence_accessor,0x1265,0,1.0,1.0);
+        show_npc_dialog(param_1,"61_60390");
+    }
+
+    set_berry_counter_visible(false);
+    end_event_script(param_1);
+}
+
+void RETURN_AT15(int param_1){
+    const int SALAMENCE_OBJECT_ID = 0x1b6;
+
+    int global_manager = get_module("GlobalManager");
+    int event_script = get_module("EventScript");
+    @syscall(0,0x15,0x65,event_script,0,0,0,1);
+
+    setup_field(param_1);
+    despawn_debug_prisma(0x4e21);
+    despawn_debug_prisma(0x4e22);
+    despawn_player_object();
+    wait_frames(1);
+    spawn_player_object();
+    lock_player_and_get_accessor();
+    set_player_at(-1326,140,-1469);
+    face_player_towards_object_synchronously(SALAMENCE_OBJECT_ID,0);
+    @syscall(0,0x15,0xca,event_script,-1);
+
+    int has_salamence_prisma = @syscall(0,0x15,0x51,global_manager,0xe);
+    if(has_salamence_prisma == 1){
+        if(!is_location_checked(SALAMENCE_OBJECT_ID)){
+            salamence_friendship_scene(param_1);
+        }
+        else{
+            int salamence_accessor = lock_npc_and_get_accessor(SALAMENCE_OBJECT_ID);
+            fade_in(0,0,0,0x1e);
+            face_player_and_npc(SALAMENCE_OBJECT_ID,0);
+            @syscall(0,0x15,2,salamence_accessor,0x1b,10);
+            @syscall(0,0x15,0x28,salamence_accessor,0x1265,0,1.0,1.0);
+            do_dialog_with_scene(param_1,SALAMENCE_OBJECT_ID,"61_60450",0);
+            reset_object_after_event(SALAMENCE_OBJECT_ID);
+            reset_camera();
+            @syscall(0,0x15,0xca,event_script,0x1e);
+        }
+    }
+    else{
+        int salamence_accessor = lock_npc_and_get_accessor(SALAMENCE_OBJECT_ID);
+        fade_in(0,0,0,0x1e);
+        face_player_and_npc(SALAMENCE_OBJECT_ID,0);
+        @syscall(0,0x15,2,salamence_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,salamence_accessor,0x1265,0,1.0,1.0);
+        do_dialog_with_scene(param_1,SALAMENCE_OBJECT_ID,"61_60430",0);
+        reset_object_after_event(SALAMENCE_OBJECT_ID);
+        reset_camera();
+        @syscall(0,0x15,0xca,event_script,0x1e);
+    }
+
+    complete_event();
+    fade_in(0,0,0,0x1e);
+    reset_object_after_event(SALAMENCE_OBJECT_ID);
+    clear_wand_check();
+    end_event_script(param_1);
+}
+
+void salamence_friendship_scene(int param_1){
+    const int SALAMENCE_OBJECT_ID = 0x1b6;
+
+    int event_script = get_module("EventScript");
+    int player_accessor = lock_player_and_get_accessor();
+    int salamence_accessor = lock_npc_and_get_accessor(SALAMENCE_OBJECT_ID);
+
+    vec3 camera_position = vec3{
+        .x = -1305.56,
+        .y = 146.0,
+        .z = -1454.12
+    };
+    vec3 camera_target = vec3{
+        .x = -1341.58,
+        .y = 151.9,
+        .z = -1471.5
+    };
+    @syscall(0,0x15,0xcb,event_script);
+    @syscall(0,0x15,0xcc,event_script,-1,&camera_position);
+    @syscall(0,0x15,0xcd,event_script,-1,&camera_target);
+
+    face_object_accessors_instantly(player_accessor,salamence_accessor,1);
+    fade_in(0,0,0,0x3c);
+    wait_frames(0x1e);
+    @syscall(0,0x15,2,salamence_accessor,0x1c,10);
+    @syscall(0,0x15,0x28,salamence_accessor,0x1265,0,1.0,1.0);
+    do_dialog_with_scene(param_1,SALAMENCE_OBJECT_ID,"61_60460",0);
+
+    spawn_for_short_duration(0x4e22);
+    wait_frames(0x6e);
+    play_sound_effect(0x7ea,0);
+    int field_info = get_module("mnFieldInfo");
+    @syscall(0,0x15,0x11,field_info,1,"61_60470");
+    wait_frames(0xb4);
+    @syscall(0,0x15,0x12,field_info);
+    wait_frames(0x1e);
+
+    @syscall(0,0x15,2,salamence_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,salamence_accessor,0x1265,0,1.0,1.0);
+    do_dialog_with_scene(param_1,SALAMENCE_OBJECT_ID,"61_60480",0);
+    friendship_banner("61_00460");
+    check_location(SALAMENCE_OBJECT_ID);
+
+    reset_object_after_event(SALAMENCE_OBJECT_ID);
+    @syscall(0,0x15,0xca,event_script,0x1e);
+    wait_frames(0x23);
+    reset_camera();
 }
 
 // eA06_Z01_23
 void absol_dialog(int param_1){
-    const int object_id = 0x1b7;
-    // TODO: Absol
+    const int ABSOL_OBJECT_ID = 0x1b7;
+    const int ATTRACTION_FEE = 40;
+
+    int global_manager = get_module("GlobalManager");
+    int player_accessor = lock_player_and_get_accessor();
+    int absol_accessor = lock_npc_and_get_accessor(ABSOL_OBJECT_ID);
+    face_player_and_npc(ABSOL_OBJECT_ID,0);
+    @syscall(0,0x15,2,absol_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,absol_accessor,0xd4c,0,1.0,1.0);
+
+    if(is_location_checked(ABSOL_OBJECT_ID)){
+        show_npc_dialog(param_1,"61_60010");
+    }
+    else{
+        show_npc_dialog(param_1,"61_60020");
+    }
+
+    set_berry_counter_visible(true);
+    int wants_to_enter = attraction_show_yes_no_question(param_1,"61_60030");
+    if(wants_to_enter == 1){
+        int berry_count = @syscall(0,0x15,0x15,global_manager);
+        if(berry_count < ATTRACTION_FEE){
+            @syscall(0,0x15,2,absol_accessor,0x1b,10);
+            @syscall(0,0x15,0x28,absol_accessor,0xd4c,0,1.0,1.0);
+            show_npc_dialog(param_1,"61_60060");
+        }
+        else{
+            @syscall(0,0x15,2,absol_accessor,0x1c,10);
+            @syscall(0,0x15,0x28,absol_accessor,0xd4c,0,1.0,1.0);
+            @syscall(0,0x15,0x14,global_manager,-ATTRACTION_FEE);
+            show_npc_dialog(param_1,"61_60050");
+            @syscall(0,0x15,0,global_manager,"fRetAttraction",1);
+            set_berry_counter_visible(false);
+            fade_out(0,0,0,0x1e);
+            @syscall(0,0x15,0,player_accessor,0);
+            enter_attraction(param_1,GRANITE_ZONE_MAIN_AREA_ABSOL_ATTRACTION_ID);
+        }
+    }
+    else{
+        @syscall(0,0x15,2,absol_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,absol_accessor,0xd4c,0,1.0,1.0);
+        show_npc_dialog(param_1,"61_60040");
+    }
+
+    set_berry_counter_visible(false);
+    end_event_script(param_1);
+}
+
+void RETURN_AT01(int param_1){
+    const int ABSOL_OBJECT_ID = 0x1b7;
+
+    int global_manager = get_module("GlobalManager");
+    int event_script = get_module("EventScript");
+    @syscall(0,0x15,0x65,event_script,0,0,0,1);
+
+    setup_field(param_1);
+    despawn_debug_prisma(0x4e21);
+    despawn_debug_prisma(0x4e22);
+    despawn_player_object();
+    wait_frames(1);
+    spawn_player_object();
+    lock_player_and_get_accessor();
+    set_player_at(151,70,-554);
+    face_player_towards_object_synchronously(ABSOL_OBJECT_ID,0);
+    @syscall(0,0x15,0xca,event_script,-1);
+
+    int has_absol_prisma = @syscall(0,0x15,0x51,global_manager,0);
+    if(has_absol_prisma == 1){
+        if(!is_location_checked(ABSOL_OBJECT_ID)){
+            absol_friendship_scene(param_1);
+        }
+        else{
+            int absol_accessor = lock_npc_and_get_accessor(ABSOL_OBJECT_ID);
+            fade_in(0,0,0,0x1e);
+            face_player_and_npc(ABSOL_OBJECT_ID,0);
+            @syscall(0,0x15,2,absol_accessor,0x1b,10);
+            @syscall(0,0x15,0x28,absol_accessor,0xd4c,0,1.0,1.0);
+            do_dialog_with_scene(param_1,ABSOL_OBJECT_ID,"61_60090",0);
+            reset_object_after_event(ABSOL_OBJECT_ID);
+            reset_camera();
+            @syscall(0,0x15,0xca,event_script,0x1e);
+        }
+    }
+    else{
+        int absol_accessor = lock_npc_and_get_accessor(ABSOL_OBJECT_ID);
+        fade_in(0,0,0,0x1e);
+        face_player_and_npc(ABSOL_OBJECT_ID,0);
+        @syscall(0,0x15,2,absol_accessor,0x1b,10);
+        @syscall(0,0x15,0x28,absol_accessor,0xd4c,0,1.0,1.0);
+        do_dialog_with_scene(param_1,ABSOL_OBJECT_ID,"61_60070",0);
+        reset_object_after_event(ABSOL_OBJECT_ID);
+        reset_camera();
+        @syscall(0,0x15,0xca,event_script,0x1e);
+    }
+
+    complete_event();
+    fade_in(0,0,0,0x1e);
+    reset_object_after_event(ABSOL_OBJECT_ID);
+    clear_wand_check();
+    end_event_script(param_1);
+}
+
+void absol_friendship_scene(int param_1){
+    const int ABSOL_OBJECT_ID = 0x1b7;
+
+    int event_script = get_module("EventScript");
+    int player_accessor = lock_player_and_get_accessor();
+    int absol_accessor = lock_npc_and_get_accessor(ABSOL_OBJECT_ID);
+
+    vec3 camera_position = vec3{
+        .x = 134.16,
+        .y = 76.52,
+        .z = -530.94
+    };
+    vec3 camera_target = vec3{
+        .x = 141.85,
+        .y = 77.36,
+        .z = -536.36
+    };
+    @syscall(0,0x15,0xcb,event_script);
+    @syscall(0,0x15,0xcc,event_script,-1,&camera_position);
+    @syscall(0,0x15,0xcd,event_script,-1,&camera_target);
+
+    face_object_accessors_instantly(player_accessor,absol_accessor,1);
+    fade_in(0,0,0,0x3c);
+    wait_frames(0x1e);
+    @syscall(0,0x15,2,absol_accessor,0x1c,10);
+    @syscall(0,0x15,0x28,absol_accessor,0xd4c,0,1.0,1.0);
+    do_dialog_with_scene(param_1,ABSOL_OBJECT_ID,"61_60100",0);
+
+    spawn_for_short_duration(0x4e21);
+    wait_frames(0x6e);
+    play_sound_effect(0x7ea,0);
+    int field_info = get_module("mnFieldInfo");
+    @syscall(0,0x15,0x11,field_info,1,"61_60110");
+    wait_frames(0xb4);
+    @syscall(0,0x15,0x12,field_info);
+    wait_frames(0x1e);
+
+    @syscall(0,0x15,2,absol_accessor,0x1b,10);
+    @syscall(0,0x15,0x28,absol_accessor,0xd4c,0,1.0,1.0);
+    do_dialog_with_scene(param_1,ABSOL_OBJECT_ID,"61_60120",0);
+    friendship_banner("61_00470");
+    check_location(ABSOL_OBJECT_ID);
+
+    reset_object_after_event(ABSOL_OBJECT_ID);
+    @syscall(0,0x15,0xca,event_script,0x1e);
+    wait_frames(0x23);
+    reset_camera();
 }
 
 // eA06_Z01_24
