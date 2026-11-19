@@ -49,6 +49,7 @@ extern void reset_camera();
 extern void spawn_for_short_duration(int object_id);
 
 config int BATTLE_COUNT;
+config bool EACH_ZONE;
 config int GRANITE_ZONE_MAIN_AREA_ABSOL_ATTRACTION_ID;
 config int GRANITE_ZONE_MAIN_AREA_SALAMENCE_ATTRACTION_ID;
 
@@ -1009,6 +1010,25 @@ bool is_bestfriend(int object_id){
 }
 
 bool is_location_checked(int object_id){
+    if(EACH_ZONE){
+        int global_manager = get_module("GlobalManager");
+        // Drifloon
+        if(object_id == 0x1ae){
+            return @syscall(0,0x15,0x6e,global_manager,7,23) != 0;
+        }
+        // Taillow
+        if(object_id == 0x1a8){
+            return @syscall(0,0x15,0x6e,global_manager,7,24) != 0;
+        }
+        // Marowak
+        if(object_id == 0x1a3){
+            return @syscall(0,0x15,0x6e,global_manager,7,25) != 0;
+        }
+        // Baltoy
+        if(object_id == 0x1a7){
+            return @syscall(0,0x15,0x6e,global_manager,13,0) != 0;
+        }
+    }
     // Jirachi
     if(object_id == 0x1bb){
         int global_manager = get_module("GlobalManager");
@@ -1018,6 +1038,29 @@ bool is_location_checked(int object_id){
 }
 
 void check_location(int object_id){
+    if(EACH_ZONE){
+        int global_manager = get_module("GlobalManager");
+        // Drifloon
+        if(object_id == 0x1ae){
+            @syscall(0,0x15,0x6d,global_manager,7,23,1);
+            return;
+        }
+        // Taillow
+        if(object_id == 0x1a8){
+            @syscall(0,0x15,0x6d,global_manager,7,24,1);
+            return;
+        }
+        // Marowak
+        if(object_id == 0x1a3){
+            @syscall(0,0x15,0x6d,global_manager,7,25,1);
+            return;
+        }
+        // Baltoy
+        if(object_id == 0x1a7){
+            @syscall(0,0x15,0x6d,global_manager,13,0,1);
+            return;
+        }
+    }
     // Jirachi
     if(object_id == 0x1bb){
         int global_manager = get_module("GlobalManager");
