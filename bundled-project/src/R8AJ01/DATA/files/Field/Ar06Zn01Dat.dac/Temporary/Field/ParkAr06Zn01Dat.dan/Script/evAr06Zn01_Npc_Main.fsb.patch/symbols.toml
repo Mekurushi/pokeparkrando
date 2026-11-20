@@ -95,6 +95,7 @@ do_dialog_with_scene = 0x52188
 reset_object_after_event = 0x51268
 reset_camera = 0x51ab8
 spawn_for_short_duration = 0x589e8
+despawn = 0x5461c
 RETURN_AT15 = 0x62988
 salamence_friendship_scene = 0x5cf7c
 RETURN_AT01 = 0x62640

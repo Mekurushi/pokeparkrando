@@ -47,6 +47,7 @@ extern void do_dialog_with_scene(int param_1, int object_id, string dialog_id, i
 extern void reset_object_after_event(int object_id);
 extern void reset_camera();
 extern void spawn_for_short_duration(int object_id);
+extern void despawn(int object_id);
 
 config int BATTLE_COUNT;
 config bool EACH_ZONE;
@@ -114,13 +115,14 @@ void do_unlock_scenes(int param_1){
 
     int event_script = get_module("EventScript");
     @syscall(0,0x15,400,event_script,0,1);
-    int audio_state = @syscall(0,0x15,0x1f7,event_script,0x17ea);
+    int audio_state = @syscall(0,0x15,0x1f7,event_script,0x17ec);
     if(audio_state == 0){
         fade_in_bgm(0x1e);
     }
 }
 
 void setup_field(int param_1){
+    set_chase_ai_path_state();
     lock_player_and_get_accessor();
     setup_player_for_zone();
     do_unlock_scenes(param_1);
@@ -156,7 +158,7 @@ void skorupi1_dialog(int param_1){
     face_player_and_npc(object_id,0);
     @syscall(0,0x15,0x28,object_accessor,0xac7,0,1.0,1.0);
 
-    if(@syscall(0,0x15,1,global_manager,"f0601FireWallB") == 1){
+    if(@syscall(0,0x15,1,global_manager,"f0601SkorupiLever") == 1){
         if(!is_location_checked(object_id)){
             show_npc_dialog(param_1,"61_10090");
             friendship_banner("61_00240");
@@ -930,8 +932,51 @@ void power_competition_dialog_with_friendship_count_check(
     end_event_script(param_1);
 }
 
+void set_chase_ai_path_state(){
+    int global_manager = get_module("GlobalManager");
+    if(@syscall(0,0x15,1,global_manager,"fMap0601RotBridge") == 0){
+        @syscall(0,0x15,0x2d,global_manager,6,1,2);
+    }
+    else{
+        @syscall(0,0x15,0x2d,global_manager,6,1,5);
+    }
+
+}
+
+void restore_paths(){
+    int object_manager = get_module("ObjectManager");
+    int global_manager = get_module("GlobalManager");
+    if(@syscall(0,0x15,1,global_manager,"f0601SkorupiLever") == 0){
+        int object_handle_fire = @syscall(0,0x15,0x4,object_manager,0x4e29);
+        int object_accessor_fire = @syscall(0,0x15,0x1,object_manager,object_handle_fire);
+        @syscall(0,0x15,0x0,object_accessor_fire,0x0);    
+    }
+
+    // true because the gate is permanently open right now
+    // kept like this to make a future gate condition easier
+    if(true == false){
+        int object_handle_gate = @syscall(0,0x15,0x4,object_manager,0x4e26);
+        int object_accessor_gate = @syscall(0,0x15,0x1,object_manager,object_handle_gate);
+        @syscall(0,0x15,0x0,object_accessor_gate,0x0);
+    }
+}
+
+void free_paths_for_chase(){
+    set_chase_ai_path_state();
+
+    int object_manager = get_module("ObjectManager");
+    int object_handle_fire = @syscall(0,0x15,0x4,object_manager,0x4e29);
+    int object_accessor_fire = @syscall(0,0x15,0x1,object_manager,object_handle_fire);
+    @syscall(0,0x15,0x0,object_accessor_fire,0x1);
+
+    int object_handle_gate = @syscall(0,0x15,0x4,object_manager,0x4e26);
+    int object_accessor_gate = @syscall(0,0x15,0x1,object_manager,object_handle_gate);
+    @syscall(0,0x15,0x0,object_accessor_gate,0x1);
+}
+
 int start_power_competition(int param_1, int player_object_id, int enemy_object_id){
     store_pre_competition_state();
+    free_paths_for_chase();
     int global_manager = get_module("GlobalManager");
     int event_script = get_module("EventScript");
     int dispos_manager = get_module("DisposManager");
@@ -983,6 +1028,7 @@ int start_power_competition(int param_1, int player_object_id, int enemy_object_
     @syscall(0,0x15,0xca,event_script,-1);
     @syscall(0,0x15,0xd7,event_script,enemy_object_id);
     restore_pre_competition_state(enemy_object_id);
+    restore_paths();
     return result;
 }
 
