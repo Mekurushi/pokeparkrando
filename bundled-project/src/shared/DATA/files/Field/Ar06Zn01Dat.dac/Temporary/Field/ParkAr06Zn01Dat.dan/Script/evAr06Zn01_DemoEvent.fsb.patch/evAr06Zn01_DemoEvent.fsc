@@ -1,0 +1,11 @@
+extern void spawn_object_if_missing(int object_id);
+extern void set_object_position(int object_id, int x, int y, int z);
+extern void set_object_rotation_instantly(int object_id, int x, int y, int z);
+
+void special_spawn_conditions(int param_1){
+    const int CHATOT_OBJECT_ID = 0x1ba;
+
+    spawn_object_if_missing(CHATOT_OBJECT_ID);
+    set_object_position(CHATOT_OBJECT_ID,-100,0,192);
+    set_object_rotation_instantly(CHATOT_OBJECT_ID,0,91,0);
+}

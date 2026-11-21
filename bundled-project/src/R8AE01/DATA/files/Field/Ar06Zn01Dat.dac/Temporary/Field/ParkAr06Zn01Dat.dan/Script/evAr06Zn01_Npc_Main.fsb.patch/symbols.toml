@@ -100,3 +100,6 @@ RETURN_AT15 = 0x62e98
 salamence_friendship_scene = 0x5d468
 RETURN_AT01 = 0x62b48
 absol_friendship_scene = 0x5acc8
+fade_out_sound = 0x513f4
+travel_to = 0x57788
+STAXIAREA = 0x57f88
