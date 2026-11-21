@@ -240,3 +240,18 @@ row = 178
 
 [edits.set]
 flag_name = { value = "f0601SkorupiLever" }
+
+[[edits]]
+table = "FlagTable"
+row = 199
+
+[edits.set]
+flag_name = { value = "f0602BattleCounter" }
+
+[[edits]]
+table = "FlagTable"
+row = 207
+
+[edits.set]
+flag_name = { value = "f0602BattleCounterNum" }
+bit_width = { value = 4 }
