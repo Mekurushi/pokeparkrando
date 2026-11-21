@@ -167,7 +167,7 @@ void EMAPA06_Z01(int param_1){
     int event_script = get_module("EventScript");
     lock_player_and_get_accessor();
 
-    int accepted = show_yes_no_question(1,"21_00560");
+    int accepted = show_yes_no_question(1,"21_00570");
     if(accepted == 1){
         fade_out_audio(60,true,true,true);
         @syscall(0,0x15,400,event_script,3,0);
