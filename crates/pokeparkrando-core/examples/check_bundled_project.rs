@@ -159,6 +159,18 @@ fn build_config() -> BuildConfig {
             BuildConfigValue::Integer(0),
         ),
         (
+            "FLOWER_ZONE_MAIN_AREA_GRANITE_ZONE_GATE_ZONE".into(),
+            BuildConfigValue::Integer(6),
+        ),
+        (
+            "FLOWER_ZONE_MAIN_AREA_GRANITE_ZONE_GATE_AREA".into(),
+            BuildConfigValue::Integer(1),
+        ),
+        (
+            "FLOWER_ZONE_MAIN_AREA_GRANITE_ZONE_GATE_POSITION".into(),
+            BuildConfigValue::Integer(1),
+        ),
+        (
             "BEACH_ZONE_MAIN_AREA_TREEHOUSE_CONNECTION_ZONE".into(),
             BuildConfigValue::Integer(2),
         ),
