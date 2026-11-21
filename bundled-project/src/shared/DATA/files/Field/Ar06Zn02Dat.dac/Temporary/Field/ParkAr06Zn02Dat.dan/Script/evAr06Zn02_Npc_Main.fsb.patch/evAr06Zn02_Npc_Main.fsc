@@ -1,0 +1,233 @@
+// eA06_Z02_00
+void bellossom1_dialog(int param_1){
+    const int object_id = 0x1d3;
+    // TODO: Bellossom
+}
+
+// eA06_Z02_01
+void bellossom2_dialog(int param_1){
+    const int object_id = 0x1d4;
+    // TODO: Bellossom
+}
+
+// eA06_Z02_02
+void bellossom3_dialog(int param_1){
+    const int object_id = 0x1d5;
+    // TODO: Bellossom
+}
+
+// eA06_Z02_03
+void mareep_dialog(int param_1){
+    const int object_id = 0x1d6;
+    // TODO: Mareep
+}
+
+// eA06_Z02_04
+void cyndaquil_dialog(int param_1){
+    const int object_id = 0x1d7;
+    // TODO: Cyndaquil
+}
+
+// eA06_Z02_05
+void furret_dialog(int param_1){
+    const int object_id = 0x1d8;
+    // TODO: Furret
+}
+
+// eA06_Z02_06
+void bellossom4_dialog(int param_1){
+    const int object_id = 0x1d9;
+    // TODO: Bellossom
+}
+
+// eA06_Z02_07
+void teddiursa_dialog(int param_1){
+    const int object_id = 0x1da;
+    // TODO: Teddiursa
+}
+
+// eA06_Z02_08
+void bellossom5_dialog(int param_1){
+    const int object_id = 0x1db;
+    // TODO: Bellossom
+}
+
+// eA06_Z02_09
+void bellossom6_dialog(int param_1){
+    const int object_id = 0x1dc;
+    // TODO: Bellossom
+}
+
+// eA06_Z02_10
+void bellossom7_dialog(int param_1){
+    const int object_id = 0x1dd;
+    // TODO: Bellossom
+}
+
+// eA06_Z02_11
+void bellossom8_dialog(int param_1){
+    const int object_id = 0x1de;
+    // TODO: Bellossom
+}
+
+// eA06_Z02_12
+void budew_dialog(int param_1){
+    const int object_id = 0x1df;
+    // TODO: Budew
+}
+
+// eA06_Z02_13
+void skiploom_dialog(int param_1){
+    const int object_id = 0x1e0;
+    // TODO: Skiploom
+}
+
+// eA06_Z02_14
+void meditite_dialog(int param_1){
+    const int object_id = 0x1e1;
+    // TODO: Meditite
+}
+
+// eA06_Z02_15
+void lucario_dialog(int param_1){
+    const int object_id = 0x1e2;
+    // TODO: Lucario
+}
+
+// eA06_Z02_16
+void dragonite_dialog(int param_1){
+    const int object_id = 0x1e3;
+    // TODO: Dragonite
+}
+
+// eA06_Z02_17
+void shaymin_dialog(int param_1){
+    const int object_id = 0x1e4;
+    // TODO: Shaymin
+}
+
+// eA06_Z02_18
+void shaymin_sky_dialog(int param_1){
+    const int object_id = 0x1e5;
+    // TODO: Shaymin Sky
+}
+
+// eA06_Z02_19
+void bellossom9_dialog(int param_1){
+    const int object_id = 0x1e6;
+    // TODO: Bellossom
+}
+
+// eA06_Z02_20
+void drifblim_dialog(int param_1){
+    const int object_id = 0x1e7;
+    // TODO: Drifblim
+}
+
+// eA06_Z02_21
+void rayquaza_dialog(int param_1){
+    const int object_id = 0x1e8;
+    // TODO: Rayquaza
+}
+
+// eA06_Z02_22
+void piplup_dialog(int param_1){
+    const int object_id = 0x1e9;
+    // TODO: Piplup
+}
+
+// eA06_Z02_23
+void charmander_dialog(int param_1){
+    const int object_id = 0x1ea;
+    // TODO: Charmander
+}
+
+// eA06_Z02_24
+void chikorita_dialog(int param_1){
+    const int object_id = 0x1eb;
+    // TODO: Chikorita
+}
+
+// eA06_Z02_25
+void chatot_dialog(int param_1){
+    const int object_id = 0x1ec;
+    // TODO: Chatot
+}
+
+// the ones below are unused and don't have disposition data;
+// it's possible to add pokemon in their stead so they are placeholders for now
+
+// eA06_Z02_26
+void unknown_npc1_dialog(int param_1){
+    const int object_id = 0x1ed;
+}
+
+// eA06_Z02_27
+void unknown_npc2_dialog(int param_1){
+    const int object_id = 0x1ee;
+}
+
+// eA06_Z02_28
+void unknown_npc3_dialog(int param_1){
+    const int object_id = 0x1ef;
+}
+
+// eA06_Z02_29
+void unknown_npc4_dialog(int param_1){
+    const int object_id = 0x1f0;
+}
+
+// eA06_Z02_30
+void unknown_npc5_dialog(int param_1){
+    const int object_id = 0x1f1;
+}
+
+// eA06_Z02_31
+void unknown_npc6_dialog(int param_1){
+    const int object_id = 0x1f2;
+}
+
+// eA06_Z02_32
+void unknown_npc7_dialog(int param_1){
+    const int object_id = 0x1f3;
+}
+
+// eA06_Z02_33
+void unknown_npc8_dialog(int param_1){
+    const int object_id = 0x1f4;
+}
+
+// eA06_Z02_34
+void unknown_npc9_dialog(int param_1){
+    const int object_id = 0x1f5;
+}
+
+// eA06_Z02_35
+void unknown_npc10_dialog(int param_1){
+    const int object_id = 0x1f6;
+}
+
+// eA06_Z02_36
+void unknown_npc11_dialog(int param_1){
+    const int object_id = 0x1f7;
+}
+
+// eA06_Z02_37
+void unknown_npc12_dialog(int param_1){
+    const int object_id = 0x1f8;
+}
+
+// eA06_Z02_38
+void unknown_npc13_dialog(int param_1){
+    const int object_id = 0x1f9;
+}
+
+// eA06_Z02_39
+void unknown_npc14_dialog(int param_1){
+    const int object_id = 0x1fa;
+}
+
+// eA06_Z02_40
+void unknown_npc15_dialog(int param_1){
+    const int object_id = 0x1fb;
+}
