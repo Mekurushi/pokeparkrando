@@ -8,6 +8,19 @@ extern void restore_player_control();
 extern int spawn_object_if_missing(int object_id);
 extern void set_object_position(int object_id, int x, int y, int z);
 extern void set_object_rotation_instantly(int object_id, int x, int y, int z);
+extern void play_sound_effect(int sound_id, int fade_in_frames);
+extern void force_fade_out(int red, int green, int blue, int frames);
+extern void force_fade_in(int red, int green, int blue, int frames);
+extern void fade_out_bgm(int frames);
+extern void fade_in_bgm(int frames);
+extern void fade_in(int red, int green, int blue, int frames);
+extern void set_player_at(int x, int y, int z);
+extern void set_player_rotation(int x, int y, int z);
+extern void despawn_player_object();
+extern void spawn_player_object();
+extern void respawn_field();
+extern void set_object_variant(int object_id, int variant);
+extern void despawn_field();
 
 config bool UNLOCK_FAST_TRAVEL_WITH_TAXI_STOP;
 
@@ -41,4 +54,154 @@ export void TAXI_STOP(int param_1){
     restore_player_control();
     end_event_script(param_1);
     return;
+}
+
+export void SWITCHB(int param_1){
+    int global_manager = get_module("GlobalManager");
+    @syscall(0,0x15,0,global_manager,"f0601FireWallB",1);
+    @syscall(0,0x15,0,global_manager,"f0601DoorAOpen",1);
+    @syscall(0,0x15,0,global_manager,"f0601SkorupiLever",1);
+
+    int object_manager = get_module("ObjectManager");
+    int firewall_handle = @syscall(0,0x15,4,object_manager,0x4e29);
+    int switch_handle = @syscall(0,0x15,4,object_manager,0x4e30);
+    int door_handle = @syscall(0,0x15,4,object_manager,0x4e25);
+    int firewall_accessor = @syscall(0,0x15,1,object_manager,firewall_handle);
+    int switch_accessor = @syscall(0,0x15,1,object_manager,switch_handle);
+    int door_accessor = @syscall(0,0x15,1,object_manager,door_handle);
+    int sound_manager = get_module("SoundManager");
+
+    @pause(3);
+    play_sound_effect(0x753,0);
+    play_sound_effect(0x754,0);
+    @syscall(0,0x15,0x16,sound_manager,0xc,0.0);
+    
+    @syscall(0,0x15,0,firewall_accessor,1);
+    play_sound_effect(0x7e9,0);
+
+    @syscall(0,0x15,0,door_accessor,1);
+    play_sound_effect(0x75b,0);
+    @syscall(0,0x15,0,switch_accessor,2);
+
+    @syscall(0,0x15,0x16,sound_manager,0xc,1.0);
+
+    end_event_script(param_1);
+    return;
+}
+
+export void SWITCHE(int param_1){
+    int global_manager = get_module("GlobalManager");
+    @syscall(0,0x15,0,global_manager,"f0601FireWallA",1);
+
+    int object_manager = get_module("ObjectManager");
+    int firewall_handle = @syscall(0,0x15,4,object_manager,0x4e28);
+    int switch_handle = @syscall(0,0x15,4,object_manager,0x4e31);
+    int firewall_accessor = @syscall(0,0x15,1,object_manager,firewall_handle);
+    int switch_accessor = @syscall(0,0x15,1,object_manager,switch_handle);
+    int sound_manager = get_module("SoundManager");
+
+    @pause(3);
+    play_sound_effect(0x753,0);
+    play_sound_effect(0x754,0);
+    @syscall(0,0x15,0x16,sound_manager,0xc,0.0);
+
+    @syscall(0,0x15,0,firewall_accessor,1);
+    play_sound_effect(0x7e9,0);
+    set_object_variant(0x1ab,4);
+    @syscall(0,0x15,0,switch_accessor,2);
+
+    @syscall(0,0x15,0x16,sound_manager,0xc,1.0);
+    end_event_script(param_1);
+    return;
+}
+
+export void SETBOXA(int param_1){
+    int object_manager = get_module("ObjectManager");
+    int box_1_handle = @syscall(0,0x15,4,object_manager,0x4e2c);
+    int box_2_handle = @syscall(0,0x15,4,object_manager,0x4e2d);
+    int box_3_handle = @syscall(0,0x15,4,object_manager,0x4e2e);
+    int box_4_handle = @syscall(0,0x15,4,object_manager,0x4e2f);
+    int box_1_accessor = @syscall(0,0x15,1,object_manager,box_1_handle);
+    int box_2_accessor = @syscall(0,0x15,1,object_manager,box_2_handle);
+    int box_3_accessor = @syscall(0,0x15,1,object_manager,box_3_handle);
+    int box_4_accessor = @syscall(0,0x15,1,object_manager,box_4_handle);
+
+    int box_1_state = @syscall(0,0x15,0x21,box_1_accessor);
+    int box_2_state = @syscall(0,0x15,0x21,box_2_accessor);
+    int box_3_state = @syscall(0,0x15,0x21,box_3_accessor);
+    int box_4_state = @syscall(0,0x15,0x21,box_4_accessor);
+    if(box_1_state == 0 && box_2_state == 0 && box_3_state == 0 && box_4_state == 0){
+        play_sound_effect(0x761,0);
+        @syscall(0,0x15,0,box_1_accessor,1);
+        play_sound_effect(0x761,0);
+        @syscall(0,0x15,0,box_2_accessor,1);
+        play_sound_effect(0x761,0);
+        @syscall(0,0x15,0,box_3_accessor,1);
+        play_sound_effect(0x761,0);
+        @syscall(0,0x15,0,box_4_accessor,1);
+    }
+
+    end_event_script(param_1);
+    return;
+}
+
+void set_chase_ai_path_state(){
+    int global_manager = get_module("GlobalManager");
+    if(@syscall(0,0x15,1,global_manager,"fMap0601RotBridge") == 0){
+        @syscall(0,0x15,0x2d,global_manager,6,1,2);
+    }
+    else{
+        @syscall(0,0x15,0x2d,global_manager,6,1,5);
+    }
+}
+
+void run_rotating_bridge_switch(int param_1, int switch_object_id, int switch_side){
+    int global_manager = get_module("GlobalManager");
+    int field_info = get_module("mnFieldInfo");
+    int object_manager = get_module("ObjectManager");
+    int bridge_handle = @syscall(0,0x15,4,object_manager,0x4e24);
+    int switch_handle = @syscall(0,0x15,4,object_manager,switch_object_id);
+    int bridge_accessor = @syscall(0,0x15,1,object_manager,bridge_handle);
+    int switch_accessor = @syscall(0,0x15,1,object_manager,switch_handle);
+
+    // early return when the bridge is currently rotating
+    int bridge_state = @syscall(0,0x15,0x21,bridge_accessor);
+    if(bridge_state == 1 || bridge_state == 3 || bridge_state == 5 || bridge_state == 7){
+        end_event_script(param_1);
+        return;
+    }
+
+    if(bridge_state == 0){
+        @syscall(0,0x15,0,bridge_accessor,1);
+        @pause(0x1e);
+        play_sound_effect(0x752,0);
+    }
+    else if(bridge_state == 2){
+        @syscall(0,0x15,0,bridge_accessor,3);
+        @pause(0x1e);
+        play_sound_effect(0x752,0);
+    }
+    else if(bridge_state == 4){
+        play_sound_effect(0x760,0x5a);
+        @pause(7);
+        @syscall(0,0x15,0,bridge_accessor,5);
+    }
+    else if(bridge_state == 6){
+        play_sound_effect(0x760,0x5a);
+        @pause(5);
+        @syscall(0,0x15,0,bridge_accessor,7);
+    }
+
+    int bridge_rotated = @syscall(0,0x15,1,global_manager,"fMap0601RotBridge");
+    if(bridge_rotated == 1){
+        @syscall(0,0x15,0,global_manager,"fMap0601RotBridge",0);
+    }
+    else{
+        @syscall(0,0x15,0,global_manager,"fMap0601RotBridge",1);
+    }
+    @syscall(0,0x15,0x19,field_info);
+    set_chase_ai_path_state();
+
+    @syscall(0,0x15,0,switch_accessor,0);
+    end_event_script(param_1);
 }

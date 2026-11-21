@@ -122,6 +122,7 @@ void do_unlock_scenes(int param_1){
 }
 
 void setup_field(int param_1){
+    set_rotating_bridge_state();
     set_chase_ai_path_state();
     lock_player_and_get_accessor();
     setup_player_for_zone();
@@ -941,6 +942,19 @@ void set_chase_ai_path_state(){
         @syscall(0,0x15,0x2d,global_manager,6,1,5);
     }
 
+}
+
+void set_rotating_bridge_state(){
+    int global_manager = get_module("GlobalManager");
+    int object_manager = get_module("ObjectManager");
+    int bridge_handle = @syscall(0,0x15,4,object_manager,0x4e24);
+    int bridge_accessor = @syscall(0,0x15,1,object_manager,bridge_handle);
+    if(@syscall(0,0x15,1,global_manager,"fMap0601RotBridge") == 1){
+        @syscall(0,0x15,0,bridge_accessor,2);
+    }
+    else{
+        @syscall(0,0x15,0,bridge_accessor,0);
+    }
 }
 
 void restore_paths(){

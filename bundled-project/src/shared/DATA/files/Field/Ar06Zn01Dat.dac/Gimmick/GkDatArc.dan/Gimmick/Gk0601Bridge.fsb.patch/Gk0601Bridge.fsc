@@ -1,0 +1,51 @@
+export void RUN1(int param_1){
+    // enable the collision hitbox immediately so the player can't just run through the air
+    // only necessary for one direction because the levers are only on one side of the rotation
+    // sadly the bridge has only the two collision modes so it's not possible to do anything more sophisticated right now
+    int collision = @syscall(0,0x15,0x1e,param_1);
+    @syscall(0,0x15,4,collision,1,0);
+
+    int bridge = @syscall(0,0x15,4,param_1);
+    @syscall(0,0x15,0,bridge,param_1,1);
+    while(@syscall(0,0x15,4,bridge,param_1) == 0){
+        @pause(1);
+    }
+    int object = @syscall(0,0x15,5,param_1);
+    @syscall(0,0x15,0,object,param_1,2);
+}
+
+export void RUN2(int param_1){
+    int bridge = @syscall(0,0x15,4,param_1);
+    @syscall(0,0x15,0,bridge,param_1,3);
+    while(@syscall(0,0x15,4,bridge,param_1) == 0){
+        @pause(1);
+    }
+    int object = @syscall(0,0x15,5,param_1);
+    @syscall(0,0x15,0,object,param_1,4);
+}
+
+export void RUN3(int param_1){
+    // enable the collision hitbox immediately so the player can't just run through the air
+    // only necessary for one direction because the levers are only on one side of the rotation
+    // sadly the bridge has only the two collision modes so it's not possible to do anything more sophisticated right now
+    int collision = @syscall(0,0x15,0x1e,param_1);
+    @syscall(0,0x15,4,collision,1,0);
+
+    int bridge = @syscall(0,0x15,4,param_1);
+    @syscall(0,0x15,0,bridge,param_1,5);
+    while(@syscall(0,0x15,4,bridge,param_1) == 0){
+        @pause(1);
+    }
+    int object = @syscall(0,0x15,5,param_1);
+    @syscall(0,0x15,0,object,param_1,6);
+}
+
+export void RUN4(int param_1){
+    int bridge = @syscall(0,0x15,4,param_1);
+    @syscall(0,0x15,0,bridge,param_1,7);
+    while(@syscall(0,0x15,4,bridge,param_1) == 0){
+        @pause(1);
+    }
+    int object = @syscall(0,0x15,5,param_1);
+    @syscall(0,0x15,0,object,param_1,0);
+}
