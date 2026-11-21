@@ -5,3 +5,11 @@ row = 20
 
 [edits.set]
 unlock_id = { value = 0xffffffff }
+
+# Shaymin Sky
+[[edits]]
+table = "pokemonDispositionData"
+row = 18
+
+[edits.set]
+unlock_id = { value = 0xffffffff }

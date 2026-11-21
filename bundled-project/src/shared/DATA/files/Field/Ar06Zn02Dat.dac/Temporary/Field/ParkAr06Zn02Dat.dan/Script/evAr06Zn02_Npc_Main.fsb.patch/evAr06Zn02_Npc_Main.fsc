@@ -1,3 +1,80 @@
+extern int get_module(string name);
+extern int lock_player_and_get_accessor();
+extern void fade_in(int red, int green, int blue, int frames);
+extern void end_event_script(int param_1);
+extern void despawn_debug_prisma(int object_id);
+extern void setup_player_for_zone();
+extern void SETITEMS(int param_1);
+extern void update_npc_story_state(int param_1);
+extern void clear_wand_check();
+extern void spawn_object_if_missing(int object_id);
+extern void set_object_position(int object_id, int x, int y, int z);
+extern void set_object_rotation_instantly(int object_id, int x, int y, int z);
+extern int has_wand_check();
+extern void fade_out(int red, int green, int blue, int frames);
+extern void show_unlock_cutscene_at_current_position(int param_1, int object_id, string dialog_id, int param_4, int param_5);
+extern void fade_in_bgm(int frames);
+
+void special_spawn_conditions(int param_1){
+    const int CHATOT_OBJECT_ID = 0x1ec;
+
+    spawn_object_if_missing(CHATOT_OBJECT_ID);
+    set_object_position(CHATOT_OBJECT_ID,1,-1,48);
+    set_object_rotation_instantly(CHATOT_OBJECT_ID,0,170,0);
+}
+
+void do_unlock_scenes(int param_1){
+    int global_manager = get_module("GlobalManager");
+
+    if(has_wand_check() == 1){
+        fade_out(0,0,0,0x3c);
+    }
+
+    // Drifblim
+    if(@syscall(0,0x15,0x29,global_manager,0x1f) == 1){
+        show_unlock_cutscene_at_current_position(param_1,0x1e7,"02_80153",10,0);
+    }
+
+    // Rayquaza
+    if(@syscall(0,0x15,0x29,global_manager,0x95) == 1){
+        show_unlock_cutscene_at_current_position(param_1,0x1e8,"62_00361",10,0);
+    }
+
+    int event_script = get_module("EventScript");
+    @syscall(0,0x15,400,event_script,0,1);
+    int audio_state = @syscall(0,0x15,0x1f7,event_script,0x17ed);
+    if(audio_state == 0){
+        fade_in_bgm(0x1e);
+    }
+}
+
+void setup_field(int param_1){
+    lock_player_and_get_accessor();
+    setup_player_for_zone();
+    SETITEMS(param_1);
+    do_unlock_scenes(param_1);
+    special_spawn_conditions(param_1);
+    update_npc_story_state(param_1);
+}
+
+void A06_Z02_INIT(int param_1){
+    int event_script = get_module("EventScript");
+    @syscall(0,0x15,0x65,event_script,0,0,0,1);
+    despawn_debug_prisma(0x4e20);
+    setup_field(param_1);
+    fade_in(0,0,0,0x1e);
+    clear_wand_check();
+    end_event_script(param_1);
+}
+
+void AR06ZN02_DEF(int param_1){
+    despawn_debug_prisma(0x4e20);
+    setup_field(param_1);
+    fade_in(0,0,0,0x1e);
+    clear_wand_check();
+    end_event_script(param_1);
+}
+
 // eA06_Z02_00
 void bellossom1_dialog(int param_1){
     const int object_id = 0x1d3;

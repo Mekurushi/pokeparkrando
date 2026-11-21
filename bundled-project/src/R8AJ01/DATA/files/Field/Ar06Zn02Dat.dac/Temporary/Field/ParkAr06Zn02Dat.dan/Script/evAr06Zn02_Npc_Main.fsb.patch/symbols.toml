@@ -1,6 +1,26 @@
 base_address = 0x50000
 
 [functions]
+A06_Z02_INIT = 0x5e0c4
+AR06ZN02_DEF = 0x5e150
+special_spawn_conditions = 0x592ac
+do_unlock_scenes = 0x591d8
+update_npc_story_state = 0x593c4
+despawn_debug_prisma = 0x58080
+get_module = 0x50044
+lock_player_and_get_accessor = 0x50fb0
+setup_player_for_zone = 0x54494
+SETITEMS = 0x58108
+fade_in = 0x51f1c
+clear_wand_check = 0x54b44
+end_event_script = 0x50080
+spawn_object_if_missing = 0x545b0
+set_object_position = 0x536bc
+set_object_rotation_instantly = 0x5375c
+has_wand_check = 0x54b70
+fade_out = 0x51e9c
+show_unlock_cutscene_at_current_position = 0x55838
+fade_in_bgm = 0x514d8
 bellossom1_dialog = 0x5c0bc
 bellossom2_dialog = 0x5c0c8
 bellossom3_dialog = 0x5a540
